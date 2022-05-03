@@ -1,0 +1,3 @@
+chimes WAVE_SUCCESS C:\Windows\Media\chimes.wav
+error  WAVE_ERROR   C:\Windows\Media\Windows-kritischer Fehler.wav
+
