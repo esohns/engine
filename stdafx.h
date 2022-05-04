@@ -6,8 +6,8 @@
 #define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
 
 // <limits> does not work correctly with these macros
-//#define NOMINMAX
 #define _USE_MATH_DEFINES
+#define NOMINMAX
 
 // Windows Header Files
 #include "windows.h"

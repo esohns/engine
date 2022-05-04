@@ -176,7 +176,6 @@ ACE_TMAIN (int argc_in,
   {
     ACE_DEBUG ((LM_ERROR,
                 ACE_TEXT ("failed to ACE::init(): \"%m\", aborting\n")));
-    PlaySound(TEXT("C:\\Windows\\Media\\chord.wav"), NULL, SND_FILENAME | SND_SYNC);
     return EXIT_FAILURE;
   } // end IF
 #endif // ACE_WIN32 || ACE_WIN64
