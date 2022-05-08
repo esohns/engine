@@ -145,8 +145,11 @@ do_work (int argc_in,
 {
   bool result = false;
 
+  Common_Tools::initialize (false,
+                            true);
+
   PGE example;
-  if (example.Construct (640, 480,
+  if (example.Construct (600, 480,
                          1, 1,
                          false,  // fullscreen ?
                          false,  // vsync ?
