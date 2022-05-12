@@ -18,9 +18,9 @@ class PGE
     symbol (int32_t x_in, int32_t y_in, bool first_in)
     {
       x = x_in; y = y_in;
-      setRandom (0);
       switchInterval = Common_Tools::getRandomNumber (2, 20);
       first = first_in;
+      setRandom (0);
     }
 
     void setRandom (int32_t frameCount_in)

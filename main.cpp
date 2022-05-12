@@ -145,8 +145,12 @@ do_work (int argc_in,
 {
   bool result = false;
 
-  Common_Tools::initialize (false,
-                            true);
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+  Common_Tools::initialize (false, // initialize COM ?
+                            true); // initialize RNG
+#else
+  Common_Tools::initialize (true); // initialize RNG
+#endif // ACE_WIN32 || ACE_WIN64
 
   PGE example;
   if (example.Construct (600, 480,
