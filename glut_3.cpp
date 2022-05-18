@@ -12,6 +12,8 @@
 #include "ace/Assert.h"
 #include "ace/Log_Msg.h"
 
+#include "common_tools.h"
+
 #include "common_gl_defines.h"
 #include "common_gl_tools.h"
 
@@ -35,7 +37,6 @@ engine_glut_3_reshape (int width_in, int height_in)
   gluPerspective (45.0,
                   width_in / static_cast<GLdouble> (height_in),
                   -1.0, 1.0);
-  //glOrtho (0.0, width_in, 0.0, height_in, -1.0, 1.0);
   COMMON_GL_ASSERT;
 
   glMatrixMode (GL_MODELVIEW);
@@ -97,8 +98,8 @@ engine_glut_3_mouse_move (int x, int y)
     cb_data_p->deltaAngle = (x - cb_data_p->xOrigin) * 0.001f;
 
     // update camera's direction
-    cb_data_p->camera.looking_at.x = sin (cb_data_p->angle + cb_data_p->deltaAngle);
-    cb_data_p->camera.looking_at.z = -cos (cb_data_p->angle + cb_data_p->deltaAngle);
+    //cb_data_p->camera.looking_at.x = sin (cb_data_p->angle + cb_data_p->deltaAngle);
+    //cb_data_p->camera.looking_at.z = -cos (cb_data_p->angle + cb_data_p->deltaAngle);
   } // end IF
 }
 
@@ -111,11 +112,11 @@ engine_glut_3_timer (int v)
 
   //if (cb_data_p->spinning)
   //{
-  //  cb_data_p->angle += 1.0;
-  //  if (cb_data_p->angle > 360.0)
-  //  {
-  //    cb_data_p->angle -= 360.0;
-  //  }
+    cb_data_p->angle += 1.0;
+    if (cb_data_p->angle > 360.0)
+    {
+      cb_data_p->angle -= 360.0;
+    }
   //  glutPostRedisplay();
   //} // end IF
   glutTimerFunc (1000 / 30, engine_glut_3_timer, v);
@@ -128,6 +129,21 @@ engine_glut_3_draw (void)
     static_cast<struct Engine_OpenGL_GLUT_3_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
+  // compute terrain
+  cb_data_p->yOffset -= 0.001;
+  double xoff = 0.0, yoff = cb_data_p->yOffset;
+  for (int y = 0; y < cb_data_p->rows; ++y)
+  {
+    for (int x = 0; x < cb_data_p->columns; ++x)
+    {
+      //cb_data_s.terrain[y * cb_data_s.rows + x] = Common_Tools::getRandomNumber (-10, 10);
+      cb_data_p->terrain[y * cb_data_p->rows + x] =
+        static_cast<float> ((cb_data_p->module.GetValue (xoff, yoff, 0.0) * 10.0) - 10.0);
+      xoff += cb_data_p->step;
+    } // end FOR
+    yoff += cb_data_p->step;
+  } // end FOR
+
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   COMMON_GL_ASSERT;
 
@@ -137,13 +153,13 @@ engine_glut_3_draw (void)
   glLoadIdentity ();
   COMMON_GL_ASSERT;
 
+  //glTranslatef (cb_data_p->size.cx / 2.0F, cb_data_p->size.cy / 2.0F, 0);
+  //glRotatef (static_cast<float> (M_PI) / 3.0F, 1.0F, 0.0F, 0.0F);
+
   // Set the camera
   gluLookAt (cb_data_p->camera.position.x, cb_data_p->camera.position.y, cb_data_p->camera.position.z,
              cb_data_p->camera.looking_at.x, cb_data_p->camera.looking_at.y, cb_data_p->camera.looking_at.z,
              cb_data_p->camera.up.x, cb_data_p->camera.up.y, cb_data_p->camera.up.z);
-
-  //glTranslatef (cb_data_p->size.cx / 2.0F, cb_data_p->size.cy / 2.0F, 0);
-  //glRotatef (static_cast<float> (M_PI) / 3.0F, 1.0F, 0.0F, 0.0F);
 
   // Draw a red x-axis, a green y-axis, and a blue z-axis.  Each of the
   // axes are ten units long.
@@ -162,12 +178,10 @@ engine_glut_3_draw (void)
   for (int y = 0; y < cb_data_p->rows - 1; ++y)
   {
     glBegin (GL_TRIANGLE_STRIP);
-    for (int x = 0; x < cb_data_p->columns - 1; ++x)
+    for (int x = 0; x < cb_data_p->columns; ++x)
     {
-      glVertex3i (x * cb_data_p->scaleFactor, y * cb_data_p->scaleFactor, 0);
-      glVertex3i (x * cb_data_p->scaleFactor, (y + 1) * cb_data_p->scaleFactor, 0);
-      //glVertex3i ((x + 1) * cb_data_p->scaleFactor, y * cb_data_p->scaleFactor, 0);
-      //glVertex3i ((x + 1) * cb_data_p->scaleFactor, (y + 1) * cb_data_p->scaleFactor, 0);
+      glVertex3f (x * cb_data_p->scaleFactor, y * cb_data_p->scaleFactor, cb_data_p->terrain[y * cb_data_p->rows + x]);
+      glVertex3f (x * cb_data_p->scaleFactor, (y + 1) * cb_data_p->scaleFactor, cb_data_p->terrain[(y + 1) * cb_data_p->rows + x]);
     } // end FOR
     glEnd ();
   } // end FOR

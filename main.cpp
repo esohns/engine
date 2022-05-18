@@ -190,7 +190,7 @@ do_work (int argc_in,
     case ENGINE_MODE_DEFAULT:
     {
       PGE example;
-      if (example.Construct (600, 480,
+      if (example.Construct (640, 480,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
@@ -205,7 +205,7 @@ do_work (int argc_in,
     case ENGINE_MODE_2:
     {
       PGE_2 example;
-      if (example.Construct (600, 480,
+      if (example.Construct (640, 480,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
@@ -220,22 +220,22 @@ do_work (int argc_in,
     case ENGINE_MODE_3:
     {
       struct Engine_OpenGL_GLUT_3_CBData cb_data_s;
-      cb_data_s.size.cx = 640;
-      cb_data_s.size.cy = 480;
-      cb_data_s.scaleFactor = 20;
+      cb_data_s.size.cx = 1024;
+      cb_data_s.size.cy = 768;
+      cb_data_s.scaleFactor = 10;
       cb_data_s.columns = cb_data_s.size.cx / cb_data_s.scaleFactor;
       cb_data_s.rows = cb_data_s.size.cy / cb_data_s.scaleFactor;
 
       cb_data_s.angle = 0.0F;
-      cb_data_s.camera.position.x = cb_data_s.size.cx / 2;
-      cb_data_s.camera.position.y = cb_data_s.size.cy / 2;
-      cb_data_s.camera.position.z = 800.0;
-      cb_data_s.camera.looking_at.x = cb_data_s.size.cx / 2;
-      cb_data_s.camera.looking_at.y = cb_data_s.size.cy / 2;
-      cb_data_s.camera.looking_at.z = -1.0;
-      cb_data_s.camera.up.x = 0.0;
-      cb_data_s.camera.up.y = 1.0;
-      cb_data_s.camera.up.z = 0.0;
+      cb_data_s.camera.position.x = 10.0F;
+      cb_data_s.camera.position.y = cb_data_s.size.cy / 2.0F;
+      cb_data_s.camera.position.z = 10.0F;
+      cb_data_s.camera.looking_at.x = cb_data_s.size.cx / 2.0F;
+      cb_data_s.camera.looking_at.y = cb_data_s.size.cy / 2.0F;
+      cb_data_s.camera.looking_at.z = 0.0F;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 0.0F;
+      cb_data_s.camera.up.z = 1.0F;
 
       cb_data_s.deltaAngle = 0.0F;
       cb_data_s.xOrigin = -1;
@@ -243,17 +243,25 @@ do_work (int argc_in,
       cb_data_s.x = 1.25;
       cb_data_s.y = 0.75;
       cb_data_s.z = 0.5;
-      cb_data_s.step = 0.01;
+      cb_data_s.step = 0.03;
+
+      ACE_NEW_NORETURN (cb_data_s.terrain,
+                        float[cb_data_s.columns * cb_data_s.rows]);
+      ACE_ASSERT (cb_data_s.terrain);
+      cb_data_s.yOffset = 0.0;
 
       glutInit (&argc_in, argv_in);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
-      glutInitWindowSize (cb_data_s.size.cx, cb_data_s.size.cy);
+      glutInitWindowSize (640, 480);
 
       int window_i = glutCreateWindow ("engine GLUT 3");
       glutSetWindow (window_i);
       glutSetWindowData (&cb_data_s);
 
       glClearColor (0.0F, 0.0F, 0.0F, 0.0F); // Black Background
+      COMMON_GL_ASSERT;
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
       COMMON_GL_ASSERT;
 
       glutDisplayFunc (engine_glut_3_draw);

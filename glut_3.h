@@ -37,6 +37,10 @@ struct Engine_OpenGL_GLUT_3_CBData
   double                    z;
   double                    step;
   noise::module::Perlin     module;
+
+  // terrain
+  float*                    terrain;
+  double                    yOffset;
 };
 
 #endif // GLUT_3_H
