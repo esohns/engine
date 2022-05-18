@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include "GL/freeglut.h"
+
 #include "ace/config-lite.h"
 #include "ace/ACE.h"
 #include "ace/Get_Opt.h"
@@ -17,6 +19,9 @@
 #include "common_process_tools.h"
 #include "common_tools.h"
 
+#include "common_gl_defines.h"
+#include "common_gl_tools.h"
+
 #include "common_log_tools.h"
 
 #include "common_timer_tools.h"
@@ -30,6 +35,18 @@
 #include "engine_common.h"
 #define OLC_PGE_APPLICATION
 #include "pge.h"
+#include "pge_2.h"
+#include "glut_3.h"
+
+enum Engine_ModeType
+{
+  ENGINE_MODE_DEFAULT = 0,
+  ENGINE_MODE_2,
+  ENGINE_MODE_3,
+  ////////////////////////////////////////
+  ENGINE_MODE_MAX,
+  ENGINE_MODE_INVALID
+};
 
 void
 do_print_usage (const std::string& programName_in)
@@ -51,6 +68,10 @@ do_print_usage (const std::string& programName_in)
             << false
             << ACE_TEXT_ALWAYS_CHAR ("]")
             << std::endl;
+  std::cout << ACE_TEXT_ALWAYS_CHAR ("-m         : program mode [")
+            << ENGINE_MODE_DEFAULT
+            << ACE_TEXT_ALWAYS_CHAR ("]")
+            << std::endl;
   std::cout << ACE_TEXT_ALWAYS_CHAR ("-t         : trace information [")
             << false
             << ACE_TEXT_ALWAYS_CHAR ("]")
@@ -65,6 +86,7 @@ bool
 do_process_arguments (int argc_in,
                       ACE_TCHAR** argv_in, // cannot be const...
                       bool& logToFile_out,
+                      enum Engine_ModeType& mode_out,
                       bool& traceInformation_out,
                       bool& printVersionAndExit_out)
 {
@@ -73,12 +95,13 @@ do_process_arguments (int argc_in,
 
   // initialize results
   logToFile_out = false;
+  mode_out = ENGINE_MODE_DEFAULT;
   traceInformation_out = false;
   printVersionAndExit_out = false;
 
   ACE_Get_Opt argument_parser (argc_in,
                                argv_in,
-                               ACE_TEXT ("ltv"),
+                               ACE_TEXT ("lm:tv"),
                                1,                         // skip command name
                                1,                         // report parsing errors
                                ACE_Get_Opt::PERMUTE_ARGS, // ordering
@@ -93,6 +116,15 @@ do_process_arguments (int argc_in,
       case 'l':
       {
         logToFile_out = true;
+        break;
+      }
+      case 'm':
+      {
+        std::istringstream converter (ACE_TEXT_ALWAYS_CHAR (argument_parser.opt_arg ()),
+                                      std::ios_base::in);
+        int i = 0;
+        converter >> i;
+        mode_out = static_cast<enum Engine_ModeType> (i);
         break;
       }
       case 't':
@@ -141,7 +173,8 @@ do_process_arguments (int argc_in,
 
 bool
 do_work (int argc_in,
-         ACE_TCHAR* argv_in[])
+         ACE_TCHAR* argv_in[],
+         enum Engine_ModeType mode_in)
 {
   bool result = false;
 
@@ -152,16 +185,98 @@ do_work (int argc_in,
   Common_Tools::initialize (true); // initialize RNG
 #endif // ACE_WIN32 || ACE_WIN64
 
-  PGE example;
-  if (example.Construct (600, 480,
-                         1, 1,
-                         false,  // fullscreen ?
-                         false,  // vsync ?
-                         false)) // cohesion ?
+  switch (mode_in)
   {
-    example.Start ();
-    result = true;
-  } // end IF
+    case ENGINE_MODE_DEFAULT:
+    {
+      PGE example;
+      if (example.Construct (600, 480,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_2:
+    {
+      PGE_2 example;
+      if (example.Construct (600, 480,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_3:
+    {
+      struct Engine_OpenGL_GLUT_3_CBData cb_data_s;
+      cb_data_s.size.cx = 640;
+      cb_data_s.size.cy = 480;
+      cb_data_s.scaleFactor = 20;
+      cb_data_s.columns = cb_data_s.size.cx / cb_data_s.scaleFactor;
+      cb_data_s.rows = cb_data_s.size.cy / cb_data_s.scaleFactor;
+
+      cb_data_s.angle = 0.0F;
+      cb_data_s.camera.position.x = cb_data_s.size.cx / 2;
+      cb_data_s.camera.position.y = cb_data_s.size.cy / 2;
+      cb_data_s.camera.position.z = 800.0;
+      cb_data_s.camera.looking_at.x = cb_data_s.size.cx / 2;
+      cb_data_s.camera.looking_at.y = cb_data_s.size.cy / 2;
+      cb_data_s.camera.looking_at.z = -1.0;
+      cb_data_s.camera.up.x = 0.0;
+      cb_data_s.camera.up.y = 1.0;
+      cb_data_s.camera.up.z = 0.0;
+
+      cb_data_s.deltaAngle = 0.0F;
+      cb_data_s.xOrigin = -1;
+
+      cb_data_s.x = 1.25;
+      cb_data_s.y = 0.75;
+      cb_data_s.z = 0.5;
+      cb_data_s.step = 0.01;
+
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (cb_data_s.size.cx, cb_data_s.size.cy);
+
+      int window_i = glutCreateWindow ("engine GLUT 3");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0F, 0.0F, 0.0F, 0.0F); // Black Background
+      COMMON_GL_ASSERT;
+
+      glutDisplayFunc (engine_glut_3_draw);
+      glutReshapeFunc (engine_glut_3_reshape);
+      glutVisibilityFunc (engine_glut_3_visible);
+
+      glutKeyboardFunc (engine_glut_3_key);
+      glutMouseFunc (engine_glut_3_mouse_button);
+      glutMotionFunc (engine_glut_3_mouse_move);
+      glutTimerFunc (100, engine_glut_3_timer, 0);
+
+      glutMainLoop ();
+
+      break;
+    }
+    default:
+    {
+      ACE_DEBUG ((LM_ERROR,
+                  ACE_TEXT ("invalid/unknown mode (was: %d), returning\n"),
+                  mode_in));
+      break;
+    }
+  } // end SWITCH
 
 //clean:
   return result;
@@ -198,6 +313,7 @@ ACE_TMAIN (int argc_in,
   // step1a set defaults
   bool log_to_file = false;
   std::string log_file_name;
+  enum Engine_ModeType mode_type_e = ENGINE_MODE_DEFAULT;
   bool trace_information = false;
   bool print_version_and_exit = false;
 
@@ -205,6 +321,7 @@ ACE_TMAIN (int argc_in,
   if (!do_process_arguments (argc_in,
                              argv_in,
                              log_to_file,
+                             mode_type_e,
                              trace_information,
                              print_version_and_exit))
   {
@@ -245,7 +362,8 @@ ACE_TMAIN (int argc_in,
   timer.start ();
   // step2: do actual work
   result_3 = do_work (argc_in,
-                      argv_in);
+                      argv_in,
+                      mode_type_e);
   timer.stop ();
   if (!result_3)
   {

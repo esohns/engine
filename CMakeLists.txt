@@ -67,15 +67,203 @@ find_path (PGE_INCLUDE_DIR
            olcPixelGameEngine.h
            HINTS ${PGE_DIR})
 
+if (DEFINED ENV{LIB_ROOT})
+ set (LIBNOISE_DIR "$ENV{LIB_ROOT}/libnoise" )
+endif (DEFINED ENV{LIB_ROOT})
+set (LIBNOISE_INCLUDES "${LIBNOISE_DIR}/include")
+if (UNIX)
+ set (LIBNOISE_LIBRARY "libnoise.so")
+elseif (WIN32)
+ set (LIBNOISE_LIBRARY "libnoise.lib")
+endif () 
+find_library (LIBNOISE_LIB ${LIBNOISE_LIBRARY}
+              PATHS ${LIBNOISE_DIR}
+              PATH_SUFFIXES build/msvc/${CMAKE_BUILD_TYPE}
+              DOC "libnoise library"
+              REQUIRED
+              NO_DEFAULT_PATH)
+set (LIBNOISE_LIB_DIR "${LIBNOISE_DIR}/build/msvc/${CMAKE_BUILD_TYPE}")
+
+if (UNIX)
+ set (GLUT_LIB_FILE libglut.so)
+ find_library (GLUT_LIBRARY ${GLUT_LIB_FILE}
+               PATHS /usr /usr/lib
+               PATH_SUFFIXES lib64 x86_64-linux-gnu
+               DOC "searching for ${GLUT_LIB_FILE}"
+               REQUIRED)
+ if (GLUT_LIBRARY)
+  message (STATUS "Found Glut library \"${GLUT_LIBRARY}\"")
+  set (GLUT_FOUND TRUE)
+#   set (GLUT_INCLUDE_DIR "/usr/include")
+  set (GLUT_LIBRARIES "${GLUT_LIBRARY}")
+ else ()
+  message (WARNING "could not find ${GLUT_LIB_FILE}, continuing")
+ endif (GLUT_LIBRARY)
+elseif (WIN32)
+ set (GLUT_LIB_FILE freeglut.lib)
+# unset (LIB_FILE_SUFFIX)
+#     if (CMAKE_BUILD_TYPE STREQUAL Debug)
+#      set (LIB_FILE_SUFFIX d)
+#     endif ()
+#  set (GLUT_LIB_FILE ${GLUT_LIB_FILE}${LIB_FILE_SUFFIX}.lib)
+ set (BIN_PATH_SUFFIX "bin")
+ set (LIB_PATH_BASE "freeglut")
+ set (LIB_PATH_SUFFIX "lib")
+ if (${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE} STREQUAL "x64")
+  set (BIN_PATH_SUFFIX "${BIN_PATH_SUFFIX}/x64")
+  set (LIB_PATH_BASE "${LIB_PATH_BASE}/lib")
+  set (LIB_PATH_SUFFIX "x64")
+ endif (${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE} STREQUAL "x64")
+ find_library (GLUT_LIBRARY ${GLUT_LIB_FILE}
+               PATHS $ENV{LIB_ROOT}/${LIB_PATH_BASE}
+               PATH_SUFFIXES ${LIB_PATH_SUFFIX}
+               DOC "searching for ${GLUT_LIB_FILE}")
+ if (GLUT_LIBRARY)
+  message (STATUS "Found Glut library \"${GLUT_LIBRARY}\"")
+  set (GLUT_INCLUDE_DIRS "$ENV{LIB_ROOT}/freeglut/include")
+  set (GLUT_LIBRARIES "${GLUT_LIBRARY}")
+  set (GLUT_LIB_DIR "$ENV{LIB_ROOT}/freeglut/${BIN_PATH_SUFFIX}")
+ else ()
+  message (WARNING "could not find ${GLUT_LIB_FILE}, continuing")
+ endif (GLUT_LIBRARY)
+endif () 
+add_definitions (-DGLUT_SUPPORT)
+
+if (UNIX)
+ include (FindPkgConfig)
+ pkg_check_modules (PKG_ASSIMP assimp)
+ if (PKG_ASSIMP_FOUND)
+  if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+   include (OS)
+   if (${LSB_RELEASE_ID_SHORT} MATCHES "Fedora")
+# *WORKAROUND*: 'prefix' variable must be prepended to 'includedir'
+    pkg_get_variable (PKG_ASSIMP_PREFIX assimp prefix)
+    set (ASSIMP_INCLUDE_DIRS "${PKG_ASSIMP_PREFIX}/${PKG_ASSIMP_INCLUDE_DIRS}")
+   elseif (${LSB_RELEASE_ID_SHORT} MATCHES "Ubuntu")
+# *WORKAROUND*: there seems to be a problem on Ubuntu
+    set (ASSIMP_INCLUDE_DIRS "/usr/include/assimp")
+   endif ()
+  endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
+  set (ASSIMP_LIBRARIES ${PKG_ASSIMP_LIBRARIES})
+ endif (PKG_ASSIMP_FOUND)
+# find_library (ASSIMP_LIBRARY libassimp.so.3
+#               DOC "searching for libassimp")
+# if (NOT ASSIMP_LIBRARY)
+#  message (FATAL_ERROR "could not find libassimp, aborting")
+# endif (NOT ASSIMP_LIBRARY)
+elseif (WIN32)
+ if (NOT ASSIMP_FOUND)
+  set (ASSIMP_INCLUDE_DIRS "$ENV{LIB_ROOT}/assimp/include;$ENV{LIB_ROOT}/assimp/cmake/include")
+  set (LIB_WITH_SUFFIX "assimp-vc${MSVC_TOOLSET_VERSION}-mt")
+  if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
+      CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+   set (LIB_WITH_SUFFIX "${LIB_WITH_SUFFIX}d")
+  set (LIB_WITH_SUFFIX "${LIB_WITH_SUFFIX}.lib")
+  endif (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
+         CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  set (ASSIMP_LIBRARIES "$ENV{LIB_ROOT}/assimp/cmake/lib/${CMAKE_BUILD_TYPE}/${LIB_WITH_SUFFIX}")
+  set (ASSIMP_LIB_DIR "$ENV{LIB_ROOT}/assimp/cmake/bin/${CMAKE_BUILD_TYPE}")
+ endif (NOT ASSIMP_FOUND)
+endif ()
+
+if (UNIX)
+# include (FindPkgConfig)
+# pkg_check_modules (PKG_LIBPNG libpng)
+ find_library (PNG_LIBRARY libpng16.so.16
+               DOC "searching for libpng")
+ if (NOT PNG_LIBRARY)
+  message (WARNING "could not find libpng, continuing")
+ else ()
+  message (STATUS "Found libpng \"${PNG_LIBRARY}\"")
+  set (PNG_LIBRARIES "${PNG_LIBRARY}")
+ endif (NOT PNG_LIBRARY)
+elseif (WIN32)
+ if (NOT PNG_FOUND)
+  set (PNG_INCLUDE_DIRS "$ENV{LIB_ROOT}/libpng/build;$ENV{LIB_ROOT}/libpng")
+  set (PNG_LIBRARIES "$ENV{LIB_ROOT}/libpng/build/${CMAKE_BUILD_TYPE}/libpng16${LIB_FILE_SUFFIX}.lib")
+  set (PNG_LIB_DIR "$ENV{LIB_ROOT}/zlib/build/${CMAKE_BUILD_TYPE};$ENV{LIB_ROOT}/libpng/build/${CMAKE_BUILD_TYPE}")
+ endif (NOT PNG_FOUND)
+endif ()
+
+if (UNIX)
+ pkg_check_modules (PKG_FFMPEG libavcodec libavformat libswscale libavutil)
+ if (PKG_FFMPEG_FOUND)
+  set (ffmpeg_INCLUDE_DIRS "${PKG_FFMPEG_INCLUDE_DIRS}")
+  set (ffmpeg_LIBRARIES "${PKG_FFMPEG_LIBRARIES}")
+ endif (PKG_FFMPEG_FOUND)
+elseif (WIN32)
+ if (NOT FFMPEG_FOUND)
+  if (EXISTS $ENV{FFMPEG_ROOT})
+   set (FFMPEG_ROOT $ENV{FFMPEG_ROOT})
+  else ()
+   set (FFMPEG_ROOT $ENV{LIB_ROOT}/ffmpeg)
+  endif (EXISTS $ENV{FFMPEG_ROOT})
+  find_library (FFMPEG_LIBRARY_AVCODEC avcodec.lib
+                PATHS ${FFMPEG_ROOT}
+                PATH_SUFFIXES libavcodec lib
+                DOC "searching for avcodec.lib"
+                NO_DEFAULT_PATH)
+  find_library (FFMPEG_LIBRARY_AVFORMAT avformat.lib
+                PATHS ${FFMPEG_ROOT}
+                PATH_SUFFIXES libavformat lib
+                DOC "searching for avformat.lib"
+                NO_DEFAULT_PATH)
+  find_library (FFMPEG_LIBRARY_SWSCALE swscale.lib
+                PATHS ${FFMPEG_ROOT}
+                PATH_SUFFIXES libswscale lib
+                DOC "searching for swscale.lib"
+                NO_DEFAULT_PATH)
+  find_library (FFMPEG_LIBRARY_AVUTIL avutil.lib
+                PATHS ${FFMPEG_ROOT}
+                PATH_SUFFIXES libavutil lib
+                DOC "searching for avutil.lib"
+                NO_DEFAULT_PATH)
+  if (NOT FFMPEG_LIBRARY_AVCODEC)
+   message (WARNING "could not find avcodec.lib, continuing")
+  else ()
+   message (STATUS "Found avcodec.lib library \"${FFMPEG_LIBRARY_AVCODEC}\"")
+  endif (NOT FFMPEG_LIBRARY_AVCODEC)
+  if (NOT FFMPEG_LIBRARY_AVFORMAT)
+   message (WARNING "could not find avformat.lib, continuing")
+  else ()
+   message (STATUS "Found avformat.lib library \"${FFMPEG_LIBRARY_AVFORMAT}\"")
+  endif (NOT FFMPEG_LIBRARY_AVFORMAT)
+  if (NOT FFMPEG_LIBRARY_SWSCALE)
+   message (WARNING "could not find swscale.lib, continuing")
+  else ()
+   message (STATUS "Found swscale.lib library \"${FFMPEG_LIBRARY_SWSCALE}\"")
+  endif (NOT FFMPEG_LIBRARY_SWSCALE)
+  if (NOT FFMPEG_LIBRARY_AVUTIL)
+   message (WARNING "could not find avutil.lib, continuing")
+  else ()
+   message (STATUS "Found avutil.lib library \"${FFMPEG_LIBRARY_AVUTIL}\"")
+  endif (NOT FFMPEG_LIBRARY_AVUTIL)
+  if (FFMPEG_LIBRARY_AVCODEC AND FFMPEG_LIBRARY_AVFORMAT AND FFMPEG_LIBRARY_SWSCALE AND FFMPEG_LIBRARY_AVUTIL)
+   set (ffmpeg_LIBRARIES "${FFMPEG_LIBRARY_AVCODEC};${FFMPEG_LIBRARY_AVFORMAT};${FFMPEG_LIBRARY_SWSCALE};${FFMPEG_LIBRARY_AVUTIL}")
+   if (EXISTS $ENV{FFMPEG_ROOT})
+    set (ffmpeg_INCLUDE_DIRS "${FFMPEG_ROOT}")
+    set (ffmpeg_LIB_DIR "${FFMPEG_ROOT}/libavcodec;${FFMPEG_ROOT}/libavformat;${FFMPEG_ROOT}/libswscale;${FFMPEG_ROOT}/libswresample;${FFMPEG_ROOT}/libavutil" CACHE INTERNAL "")
+#    message (STATUS "ffmpeg_LIB_DIR: ${ffmpeg_LIB_DIR}")
+   else ()
+    set (ffmpeg_INCLUDE_DIRS "${FFMPEG_ROOT}/include")
+    set (ffmpeg_LIB_DIR "${FFMPEG_ROOT}/bin")
+   endif (EXISTS $ENV{FFMPEG_ROOT})
+  endif (FFMPEG_LIBRARY_AVCODEC AND FFMPEG_LIBRARY_AVFORMAT AND FFMPEG_LIBRARY_SWSCALE AND FFMPEG_LIBRARY_AVUTIL)
+ endif (NOT FFMPEG_FOUND)
+endif ()
+
 ############## includes ###############
+include_directories (${PGE_INCLUDE_DIR})
+include_directories (${LIBNOISE_INCLUDES})
+include_directories (${GLUT_INCLUDE_DIRS})
+
 include_directories (${ACE_INCLUDE_DIR})
 
-include_directories (${Common_DIR}/../build)
-include_directories (${Common_DIR}/../src)
-include_directories (${Common_DIR}/../src/log)
-include_directories (${Common_DIR}/../src/timer)
-
-include_directories (${PGE_INCLUDE_DIR})
+include_directories (${Common_DIR}/..)
+include_directories (${Common_DIR}/../../src)
+include_directories (${Common_DIR}/../../src/gl)
+include_directories (${Common_DIR}/../../src/log)
+include_directories (${Common_DIR}/../../src/timer)
 
 include_directories (${CMAKE_CURRENT_BINARY_DIR})
 
@@ -89,6 +277,10 @@ set (engine_EXE_SRCS
      main.cpp
      pge.cpp
      pge.h
+     pge_2.cpp
+     pge_2.h
+     glut_3.cpp
+     glut_3.h
      stdafx.h)
 
 #cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property
@@ -102,10 +294,14 @@ if (UNIX)
  target_link_libraries (${EXECUTABLE} png)
 elseif (WIN32)
 endif ()
+target_link_libraries (${EXECUTABLE} ${LIBNOISE_LIB})
+target_link_libraries (${EXECUTABLE} ${GLUT_LIBRARIES})
+
 target_link_libraries (${EXECUTABLE} ${ACE_LIBRARY})
 
 target_link_libraries (${EXECUTABLE} Common)
 target_link_libraries (${EXECUTABLE} CommonLog)
+target_link_libraries (${EXECUTABLE} CommonOpenGL)
 target_link_libraries (${EXECUTABLE} CommonTimer)
 
 install (TARGETS ${EXECUTABLE}
@@ -132,14 +328,24 @@ cmake_policy (SET CMP0026 OLD)
 cmake_policy (SET CMP0053 OLD)
 include (CreateLaunchers)
 
-set (ARGS "-l")
+set (ARGS "-l -m1")
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS "${ARGS} -t")
 endif (CMAKE_BUILD_TYPE STREQUAL Debug)
+file (TO_CMAKE_PATH ${LIBNOISE_LIB_DIR} LIBNOISE_PATH)
+file (TO_CMAKE_PATH ${GLUT_LIB_DIR} GLUT_PATH)
 file (TO_CMAKE_PATH ${ACE_LIB_DIR} ACE_PATH)
+file (TO_CMAKE_PATH ${ASSIMP_LIB_DIR} ASSIMP_PATH)
+file (TO_CMAKE_PATH "${PNG_LIB_DIR}" PNG_PATH)
+file (TO_CMAKE_PATH "${ffmpeg_LIB_DIR}" FFMPEG_PATH)
 guess_runtime_library_dirs (RUNTIME_LIBRARY_DIRS)
 set (RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
-                          ${ACE_PATH})
+                          ${ACE_PATH}
+                          ${LIBNOISE_PATH}
+                          ${GLUT_PATH}
+                          ${ASSIMP_PATH}
+                          ${PNG_PATH}
+                          ${FFMPEG_PATH})
 if (UNIX)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE}" COMMAND)
 elseif (WIN32)
