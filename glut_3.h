@@ -40,7 +40,7 @@ struct Engine_OpenGL_GLUT_3_CBData
 
   // terrain
   float*                    terrain;
-  double                    yOffset;
+  double                    xOffset;
 };
 
 #endif // GLUT_3_H

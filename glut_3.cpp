@@ -130,20 +130,21 @@ engine_glut_3_draw (void)
   ACE_ASSERT (cb_data_p);
 
   // compute terrain
-  cb_data_p->yOffset -= 0.03;
-  double xoff = 0.0, yoff = cb_data_p->yOffset;
+  cb_data_p->xOffset += 0.03;
+  double xoff;
+  double yoff = 0.0;
   for (int y = 0; y < cb_data_p->rows; ++y)
   {
+    xoff = cb_data_p->xOffset;
     for (int x = 0; x < cb_data_p->columns; ++x)
     {
       //cb_data_s.terrain[y * cb_data_s.rows + x] = Common_Tools::getRandomNumber (-10, 10);
       cb_data_p->terrain[y * cb_data_p->rows + x] =
-        static_cast<float> ((cb_data_p->module.GetValue (cb_data_p->x + xoff, cb_data_p->y + yoff, cb_data_p->z) * 30.0) - 15.0);
+        static_cast<float> ((cb_data_p->module.GetValue (cb_data_p->x + xoff, cb_data_p->y + yoff, cb_data_p->z) * 100.0) - 50.0);
       xoff += cb_data_p->step;
     } // end FOR
     yoff += cb_data_p->step;
   } // end FOR
-  cb_data_p->x += cb_data_p->step;
 
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   COMMON_GL_ASSERT;

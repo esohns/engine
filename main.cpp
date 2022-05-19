@@ -229,7 +229,7 @@ do_work (int argc_in,
       cb_data_s.angle = 0.0F;
       cb_data_s.camera.position.x = 30.0F;
       cb_data_s.camera.position.y = cb_data_s.size.cy / 2.0F;
-      cb_data_s.camera.position.z = 100.0F;
+      cb_data_s.camera.position.z = 600.0F;
       cb_data_s.camera.looking_at.x = cb_data_s.size.cx / 2.0F;
       cb_data_s.camera.looking_at.y = cb_data_s.size.cy / 2.0F;
       cb_data_s.camera.looking_at.z = 0.0F;
@@ -243,14 +243,16 @@ do_work (int argc_in,
       cb_data_s.x = 1.25;
       cb_data_s.y = 0.75;
       cb_data_s.z = 0.5;
-      cb_data_s.step = 0.03;
+      cb_data_s.step = 0.05;
       cb_data_s.module.SetSeed (static_cast<int> (Common_Tools::randomSeed));
-      cb_data_s.module.SetFrequency (1.5);
+      cb_data_s.module.SetFrequency (1.0);
+      cb_data_s.module.SetOctaveCount (4);
+      cb_data_s.module.SetPersistence (0.5);
 
       ACE_NEW_NORETURN (cb_data_s.terrain,
                         float[cb_data_s.columns * cb_data_s.rows]);
       ACE_ASSERT (cb_data_s.terrain);
-      cb_data_s.yOffset = 0.0;
+      cb_data_s.xOffset = 0.0;
 
       glutInit (&argc_in, argv_in);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
