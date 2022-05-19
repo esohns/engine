@@ -130,7 +130,7 @@ engine_glut_3_draw (void)
   ACE_ASSERT (cb_data_p);
 
   // compute terrain
-  cb_data_p->yOffset -= 0.001;
+  cb_data_p->yOffset -= 0.03;
   double xoff = 0.0, yoff = cb_data_p->yOffset;
   for (int y = 0; y < cb_data_p->rows; ++y)
   {
@@ -138,11 +138,12 @@ engine_glut_3_draw (void)
     {
       //cb_data_s.terrain[y * cb_data_s.rows + x] = Common_Tools::getRandomNumber (-10, 10);
       cb_data_p->terrain[y * cb_data_p->rows + x] =
-        static_cast<float> ((cb_data_p->module.GetValue (xoff, yoff, 0.0) * 10.0) - 10.0);
+        static_cast<float> ((cb_data_p->module.GetValue (cb_data_p->x + xoff, cb_data_p->y + yoff, cb_data_p->z) * 30.0) - 15.0);
       xoff += cb_data_p->step;
     } // end FOR
     yoff += cb_data_p->step;
   } // end FOR
+  cb_data_p->x += cb_data_p->step;
 
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   COMMON_GL_ASSERT;
@@ -168,11 +169,6 @@ engine_glut_3_draw (void)
   glColor3f (0.0F, 1.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (0, 10, 0);
   glColor3f (0.0F, 0.0F, 1.0F); glVertex3i (0, 0, 0); glVertex3i (0, 0, 10);
   glEnd ();
-
-  double value = cb_data_p->module.GetValue (cb_data_p->x,
-                                             cb_data_p->y,
-                                             cb_data_p->z);
-  cb_data_p->x += cb_data_p->step;
 
   glColor3f (1.0F, 1.0F, 1.0F);
   for (int y = 0; y < cb_data_p->rows - 1; ++y)

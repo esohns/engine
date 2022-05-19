@@ -220,16 +220,16 @@ do_work (int argc_in,
     case ENGINE_MODE_3:
     {
       struct Engine_OpenGL_GLUT_3_CBData cb_data_s;
-      cb_data_s.size.cx = 1024;
-      cb_data_s.size.cy = 768;
-      cb_data_s.scaleFactor = 10;
+      cb_data_s.size.cx = 2000;
+      cb_data_s.size.cy = 1600;
+      cb_data_s.scaleFactor = 15;
       cb_data_s.columns = cb_data_s.size.cx / cb_data_s.scaleFactor;
       cb_data_s.rows = cb_data_s.size.cy / cb_data_s.scaleFactor;
 
       cb_data_s.angle = 0.0F;
-      cb_data_s.camera.position.x = 10.0F;
+      cb_data_s.camera.position.x = 30.0F;
       cb_data_s.camera.position.y = cb_data_s.size.cy / 2.0F;
-      cb_data_s.camera.position.z = 10.0F;
+      cb_data_s.camera.position.z = 100.0F;
       cb_data_s.camera.looking_at.x = cb_data_s.size.cx / 2.0F;
       cb_data_s.camera.looking_at.y = cb_data_s.size.cy / 2.0F;
       cb_data_s.camera.looking_at.z = 0.0F;
@@ -244,6 +244,8 @@ do_work (int argc_in,
       cb_data_s.y = 0.75;
       cb_data_s.z = 0.5;
       cb_data_s.step = 0.03;
+      cb_data_s.module.SetSeed (static_cast<int> (Common_Tools::randomSeed));
+      cb_data_s.module.SetFrequency (1.5);
 
       ACE_NEW_NORETURN (cb_data_s.terrain,
                         float[cb_data_s.columns * cb_data_s.rows]);
