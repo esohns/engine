@@ -9,6 +9,8 @@
 #define _USE_MATH_DEFINES
 #define NOMINMAX
 
+#include "targetver.h"
+
 // Windows Header Files
 #include "windows.h"
 
@@ -37,3 +39,5 @@
 #include "common.h"
 #include "common_macros.h"
 #include "common_pragmas.h"
+
+#include "engine_common.h"

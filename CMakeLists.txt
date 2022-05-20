@@ -252,10 +252,23 @@ elseif (WIN32)
  endif (NOT FFMPEG_FOUND)
 endif ()
 
+# user interface
+option (GUI_SUPPORT "enable graphical user interface support" ON)
+if (GUI_SUPPORT)
+ add_definitions (-DGUI_SUPPORT)
+ set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${Common_DIR}/../../src/ui/scripts")
+ include (PreUIFramework)
+ include (SetUIFramework)
+ if (GTK_SUPPORT)
+  include (SetGTKVersion)
+ endif (GTK_SUPPORT)
+endif (GUI_SUPPORT)
+
 ############## includes ###############
 include_directories (${PGE_INCLUDE_DIR})
 include_directories (${LIBNOISE_INCLUDES})
 include_directories (${GLUT_INCLUDE_DIRS})
+include_directories (${GTK_INCLUDE_DIRS})
 
 include_directories (${ACE_INCLUDE_DIR})
 
@@ -264,6 +277,8 @@ include_directories (${Common_DIR}/../../src)
 include_directories (${Common_DIR}/../../src/gl)
 include_directories (${Common_DIR}/../../src/log)
 include_directories (${Common_DIR}/../../src/timer)
+include_directories (${Common_DIR}/../../src/ui)
+include_directories (${Common_DIR}/../../src/ui/gtk)
 
 include_directories (${CMAKE_CURRENT_BINARY_DIR})
 
@@ -296,13 +311,21 @@ elseif (WIN32)
 endif ()
 target_link_libraries (${EXECUTABLE} ${LIBNOISE_LIB})
 target_link_libraries (${EXECUTABLE} ${GLUT_LIBRARIES})
+target_link_libraries (${EXECUTABLE} ${GTK_LIBRARIES})
 
 target_link_libraries (${EXECUTABLE} ${ACE_LIBRARY})
 
 target_link_libraries (${EXECUTABLE} Common)
+target_link_libraries (${EXECUTABLE} CommonError)
 target_link_libraries (${EXECUTABLE} CommonLog)
 target_link_libraries (${EXECUTABLE} CommonOpenGL)
 target_link_libraries (${EXECUTABLE} CommonTimer)
+target_link_libraries (${EXECUTABLE} CommonUI)
+target_link_libraries (${EXECUTABLE} CommonUI_GTK)
+
+# add PCH
+target_precompile_headers (${EXECUTABLE}
+                           PRIVATE stdafx.h)
 
 install (TARGETS ${EXECUTABLE}
          RUNTIME
@@ -338,6 +361,7 @@ file (TO_CMAKE_PATH ${ACE_LIB_DIR} ACE_PATH)
 file (TO_CMAKE_PATH ${ASSIMP_LIB_DIR} ASSIMP_PATH)
 file (TO_CMAKE_PATH "${PNG_LIB_DIR}" PNG_PATH)
 file (TO_CMAKE_PATH "${ffmpeg_LIB_DIR}" FFMPEG_PATH)
+file (TO_CMAKE_PATH "${GTK_LIB_DIRS}" GTK_PATH)
 guess_runtime_library_dirs (RUNTIME_LIBRARY_DIRS)
 set (RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
                           ${ACE_PATH}
@@ -345,7 +369,8 @@ set (RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
                           ${GLUT_PATH}
                           ${ASSIMP_PATH}
                           ${PNG_PATH}
-                          ${FFMPEG_PATH})
+                          ${FFMPEG_PATH}
+                          ${GTK_PATH})
 if (UNIX)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE}" COMMAND)
 elseif (WIN32)

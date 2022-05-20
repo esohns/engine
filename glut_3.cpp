@@ -17,6 +17,10 @@
 #include "common_gl_defines.h"
 #include "common_gl_tools.h"
 
+#include "common_ui_defines.h"
+
+#include "common_ui_gtk_manager_common.h"
+
 #include "defines.h"
 #include "engine_common.h"
 
@@ -46,21 +50,16 @@ engine_glut_3_reshape (int width_in, int height_in)
 void
 engine_glut_3_key (unsigned char k, int x, int y)
 {
-  //struct OpenGL_GLUT_WindowData* cb_data_p = 
-  //  static_cast<struct OpenGL_GLUT_WindowData*> (glutGetWindowData ());
-  //ACE_ASSERT (cb_data_p);
-
   switch (k) {
   case 27:  /* Escape */
     //exit (0);
     glutLeaveMainLoop ();
 
-    //ACE_ASSERT (cb_data_p->queue);
-    //ACE_Message_Block* message_block_p = NULL;
-    //ACE_NEW_NORETURN (message_block_p,
-    //                  ACE_Message_Block ());
-    //ACE_ASSERT (message_block_p);
-    //cb_data_p->queue->enqueue (message_block_p);
+    Common_UI_GTK_Manager_t* gtk_manager_p =
+      COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
+    ACE_ASSERT (gtk_manager_p);
+    gtk_manager_p->stop (false,  // wait ?
+                         false);
 
     break;
   }
@@ -234,3 +233,160 @@ engine_glut_3_visible (int vis)
   else
     glutIdleFunc (NULL);
 }
+
+//////////////////////////////////////////
+
+gboolean
+idle_initialize_UI_cb (gpointer userData_in)
+{
+  // sanity check(s)
+  struct Engine_UI_GTK_CBData* ui_cb_data_p =
+    static_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  Common_UI_GTK_BuildersIterator_t iterator =
+    ui_cb_data_p->UIState->builders.find (ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN));
+  ACE_ASSERT (iterator != ui_cb_data_p->UIState->builders.end ());
+
+  GtkWidget* dialog_p =
+    GTK_WIDGET (gtk_builder_get_object ((*iterator).second.second,
+                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_DIALOG_MAIN_NAME)));
+  ACE_ASSERT (dialog_p);
+ 
+  // step2: (auto-)connect signals/slots
+#if GTK_CHECK_VERSION(4,0,0)
+#else
+  gtk_builder_connect_signals ((*iterator).second.second,
+                               ui_cb_data_p);
+#endif // GTK_CHECK_VERSION(4,0,0)
+
+  // step6a: connect default signals
+#if GTK_CHECK_VERSION(4,0,0)
+#else
+  gulong result_2 =
+      g_signal_connect (dialog_p,
+                        ACE_TEXT_ALWAYS_CHAR ("destroy"),
+                        G_CALLBACK (gtk_widget_destroyed),
+                        &dialog_p);
+  ACE_ASSERT (result_2);
+#endif // GTK_CHECK_VERSION(4,0,0)
+
+  // step9: draw main dialog
+#if GTK_CHECK_VERSION(4,0,0)
+  gtk_widget_show (dialog_p);
+#else
+  gtk_widget_show_all (dialog_p);
+#endif // GTK_CHECK_VERSION(4,0,0)
+
+  return G_SOURCE_REMOVE;
+}
+
+gboolean
+idle_finalize_UI_cb (gpointer userData_in)
+{
+  struct Engine_UI_GTK_CBData* ui_cb_data_p =
+    static_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  ACE_UNUSED_ARG (ui_cb_data_p);
+
+  return G_SOURCE_REMOVE;
+}
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+void
+scale_frequency_value_changed_cb (GtkRange* range_in,
+                                  gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
+
+  ui_cb_data_p->GLUT_CBData->module.SetFrequency (gtk_range_get_value (range_in));
+}
+
+void
+scale_octaves_value_changed_cb (GtkRange* range_in,
+                                gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
+
+  ui_cb_data_p->GLUT_CBData->module.SetOctaveCount (static_cast<int> (gtk_range_get_value (range_in)));
+}
+
+void
+scale_persistence_value_changed_cb (GtkRange* range_in,
+                                    gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
+
+  ui_cb_data_p->GLUT_CBData->module.SetPersistence (gtk_range_get_value (range_in));
+}
+
+void
+scale_step_value_changed_cb (GtkRange* range_in,
+                             gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
+
+  ui_cb_data_p->GLUT_CBData->step = gtk_range_get_value (range_in);
+}
+
+void
+button_reset_clicked_cb (GtkButton* button_in,
+                         gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (button_in);
+  struct Engine_UI_GTK_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  Common_UI_GTK_BuildersIterator_t iterator =
+    ui_cb_data_p->UIState->builders.find (ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN));
+  ACE_ASSERT(iterator != ui_cb_data_p->UIState->builders.end ());
+
+  GtkScale* scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_FREQUENCY_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), 1.0);
+  scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_OCTAVES_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), 6.0);
+  scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_PERSISTENCE_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), 0.5);
+
+  scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_STEP_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), 0.05);
+}
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */

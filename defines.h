@@ -32,4 +32,13 @@
   variable += ACE_TEXT_ALWAYS_CHAR (" , Common "); variable += ACE_TEXT_ALWAYS_CHAR (Common_PACKAGE_VERSION_FULL);       \
 } while (0)
 
+// glut 3
+#define ENGINE_GLUT_3_UI_DEFINITION_FILE     "glut_3.gtk3"
+
+#define ENGINE_UI_GTK_DIALOG_MAIN_NAME       "dialog_main"
+#define ENGINE_UI_GTK_SCALE_FREQUENCY_NAME   "scale_frequency"
+#define ENGINE_UI_GTK_SCALE_OCTAVES_NAME     "scale_octaves"
+#define ENGINE_UI_GTK_SCALE_PERSISTENCE_NAME "scale_persistence"
+#define ENGINE_UI_GTK_SCALE_STEP_NAME        "scale_step"
+
 #endif

@@ -26,6 +26,10 @@
 
 #include "common_timer_tools.h"
 
+#include "common_ui_gtk_common.h"
+#include "common_ui_gtk_builder_definition.h"
+#include "common_ui_gtk_manager_common.h"
+
 #if defined (HAVE_CONFIG_H)
 #include "config.h"
 #endif // HAVE_CONFIG_H
@@ -54,8 +58,8 @@ do_print_usage (const std::string& programName_in)
   // enable verbatim boolean output
   std::cout.setf (std::ios::boolalpha);
 
-//  std::string path_root =
-//    Common_File_Tools::getWorkingDirectory ();
+  std::string path_root =
+    Common_File_Tools::getWorkingDirectory ();
 
   std::cout << ACE_TEXT_ALWAYS_CHAR ("usage: ")
             << programName_in
@@ -63,6 +67,14 @@ do_print_usage (const std::string& programName_in)
             << std::endl
             << std::endl;
   std::cout << ACE_TEXT_ALWAYS_CHAR ("currently available options:")
+            << std::endl;
+  std::string ui_definition_file_path = path_root;
+  ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
+  ui_definition_file_path +=
+    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_3_UI_DEFINITION_FILE);
+  std::cout << ACE_TEXT_ALWAYS_CHAR ("-g[PATH]   : ui definition file [")
+            << ui_definition_file_path
+            << ACE_TEXT_ALWAYS_CHAR ("]")
             << std::endl;
   std::cout << ACE_TEXT_ALWAYS_CHAR ("-l         : log to a file [")
             << false
@@ -85,15 +97,20 @@ do_print_usage (const std::string& programName_in)
 bool
 do_process_arguments (int argc_in,
                       ACE_TCHAR** argv_in, // cannot be const...
+                      std::string& UIDefinitionFilePath_out,
                       bool& logToFile_out,
                       enum Engine_ModeType& mode_out,
                       bool& traceInformation_out,
                       bool& printVersionAndExit_out)
 {
-//  std::string path_root =
-//    Common_File_Tools::getWorkingDirectory ();
+  std::string path_root =
+    Common_File_Tools::getWorkingDirectory();
 
   // initialize results
+  UIDefinitionFilePath_out = path_root;
+  UIDefinitionFilePath_out += ACE_DIRECTORY_SEPARATOR_CHAR_A;
+  UIDefinitionFilePath_out +=
+    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_3_UI_DEFINITION_FILE);
   logToFile_out = false;
   mode_out = ENGINE_MODE_DEFAULT;
   traceInformation_out = false;
@@ -101,7 +118,7 @@ do_process_arguments (int argc_in,
 
   ACE_Get_Opt argument_parser (argc_in,
                                argv_in,
-                               ACE_TEXT ("lm:tv"),
+                               ACE_TEXT ("g::lm:tv"),
                                1,                         // skip command name
                                1,                         // report parsing errors
                                ACE_Get_Opt::PERMUTE_ARGS, // ordering
@@ -113,6 +130,13 @@ do_process_arguments (int argc_in,
   {
     switch (option)
     {
+      case 'g':
+      {
+        UIDefinitionFilePath_out =
+          (argument_parser.opt_arg () ? ACE_TEXT_ALWAYS_CHAR (argument_parser.opt_arg ())
+                                      : ACE_TEXT_ALWAYS_CHAR (""));
+        break;
+      }
       case 'l':
       {
         logToFile_out = true;
@@ -174,6 +198,7 @@ do_process_arguments (int argc_in,
 bool
 do_work (int argc_in,
          ACE_TCHAR* argv_in[],
+         const std::string& UIDefinitionFilePath_in,
          enum Engine_ModeType mode_in)
 {
   bool result = false;
@@ -246,7 +271,7 @@ do_work (int argc_in,
       cb_data_s.step = 0.05;
       cb_data_s.module.SetSeed (static_cast<int> (Common_Tools::randomSeed));
       cb_data_s.module.SetFrequency (1.0);
-      cb_data_s.module.SetOctaveCount (4);
+      cb_data_s.module.SetOctaveCount (6);
       cb_data_s.module.SetPersistence (0.5);
 
       ACE_NEW_NORETURN (cb_data_s.terrain,
@@ -254,6 +279,47 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.terrain);
       cb_data_s.yOffset = 0.0;
 
+      // initialize GTK
+      Common_UI_GTK_Configuration_t gtk_configuration;
+      struct Engine_UI_GTK_CBData ui_cb_data;
+      ui_cb_data.GLUT_CBData = &cb_data_s;
+      Common_UI_GtkBuilderDefinition_t gtk_ui_definition;
+      Common_UI_GTK_Manager_t* gtk_manager_p =
+        COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
+      ACE_ASSERT (gtk_manager_p);
+      Common_UI_GTK_State_t& state_r =
+        const_cast<Common_UI_GTK_State_t&> (gtk_manager_p->getR ());
+
+      gtk_configuration.argc = argc_in;
+      gtk_configuration.argv = argv_in;
+      gtk_configuration.CBData = &ui_cb_data;
+      gtk_configuration.eventHooks.finiHook = idle_finalize_UI_cb;
+      gtk_configuration.eventHooks.initHook = idle_initialize_UI_cb;
+      gtk_configuration.definition = &gtk_ui_definition;
+
+      ui_cb_data.UIState = &state_r;
+      ui_cb_data.progressData.state = &state_r;
+
+      state_r.builders[ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN)] =
+        std::make_pair (UIDefinitionFilePath_in, static_cast<GtkBuilder*> (NULL));
+
+      int result = gtk_manager_p->initialize (gtk_configuration);
+      if (!result)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to Common_UI_GTK_Manager_T::initialize(), aborting\n")));
+        return false;
+      } // end IF
+
+      gtk_manager_p->start ();
+      if (!gtk_manager_p->isRunning ())
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to start GTK event dispatch, aborting\n")));
+        return false;
+      } // end IF
+
+      // initialize GLUT
       glutInit (&argc_in, argv_in);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
       glutInitWindowSize (640, 480);
@@ -278,6 +344,9 @@ do_work (int argc_in,
       glutTimerFunc (100, engine_glut_3_timer, 0);
 
       glutMainLoop ();
+
+      gtk_manager_p->stop (true,   // wait ?
+                           false);
 
       break;
     }
@@ -323,6 +392,11 @@ ACE_TMAIN (int argc_in,
   ACE_Time_Value user_time, system_time;
 
   // step1a set defaults
+  std::string path_root = Common_File_Tools::getWorkingDirectory ();
+  std::string ui_definition_file_path = path_root;
+  ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
+  ui_definition_file_path +=
+    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_3_UI_DEFINITION_FILE);
   bool log_to_file = false;
   std::string log_file_name;
   enum Engine_ModeType mode_type_e = ENGINE_MODE_DEFAULT;
@@ -332,6 +406,7 @@ ACE_TMAIN (int argc_in,
   // step1b: parse/process/validate configuration
   if (!do_process_arguments (argc_in,
                              argv_in,
+                             ui_definition_file_path,
                              log_to_file,
                              mode_type_e,
                              trace_information,
@@ -346,7 +421,7 @@ ACE_TMAIN (int argc_in,
     result = EXIT_SUCCESS;
     goto clean;
   } // end IF
-  if (false)
+  if (!Common_File_Tools::isReadable (ui_definition_file_path))
   {
     ACE_DEBUG ((LM_ERROR,
                 ACE_TEXT ("invalid argument(s), aborting\n")));
@@ -375,6 +450,7 @@ ACE_TMAIN (int argc_in,
   // step2: do actual work
   result_3 = do_work (argc_in,
                       argv_in,
+                      ui_definition_file_path,
                       mode_type_e);
   timer.stop ();
   if (!result_3)
