@@ -130,12 +130,12 @@ engine_glut_3_draw (void)
   ACE_ASSERT (cb_data_p);
 
   // compute terrain
-  cb_data_p->xOffset += 0.03;
+  cb_data_p->yOffset += 0.03;
   double xoff;
-  double yoff = 0.0;
+  double yoff = cb_data_p->yOffset;
   for (int y = 0; y < cb_data_p->rows; ++y)
   {
-    xoff = cb_data_p->xOffset;
+    xoff = 0.0;
     for (int x = 0; x < cb_data_p->columns; ++x)
     {
       //cb_data_s.terrain[y * cb_data_s.rows + x] = Common_Tools::getRandomNumber (-10, 10);
@@ -166,9 +166,9 @@ engine_glut_3_draw (void)
   // Draw a red x-axis, a green y-axis, and a blue z-axis.  Each of the
   // axes are ten units long.
   glBegin (GL_LINES);
-  glColor3f (1.0F, 0.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (10, 0, 0);
-  glColor3f (0.0F, 1.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (0, 10, 0);
-  glColor3f (0.0F, 0.0F, 1.0F); glVertex3i (0, 0, 0); glVertex3i (0, 0, 10);
+  glColor3f (1.0F, 0.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (100, 0, 0);
+  glColor3f (0.0F, 1.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
+  glColor3f (0.0F, 0.0F, 1.0F); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
 
   glColor3f (1.0F, 1.0F, 1.0F);
