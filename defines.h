@@ -40,5 +40,6 @@
 #define ENGINE_UI_GTK_SCALE_OCTAVES_NAME     "scale_octaves"
 #define ENGINE_UI_GTK_SCALE_PERSISTENCE_NAME "scale_persistence"
 #define ENGINE_UI_GTK_SCALE_STEP_NAME        "scale_step"
+#define ENGINE_UI_GTK_SCALE_LEVEL_NAME       "scale_level"
 
 #endif

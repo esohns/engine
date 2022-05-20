@@ -139,7 +139,7 @@ engine_glut_3_draw (void)
     {
       //cb_data_s.terrain[y * cb_data_s.rows + x] = Common_Tools::getRandomNumber (-10, 10);
       cb_data_p->terrain[y * cb_data_p->rows + x] =
-        static_cast<float> ((cb_data_p->module.GetValue (cb_data_p->x + xoff, cb_data_p->y + yoff, cb_data_p->z) * 100.0) - 50.0);
+        static_cast<float> ((cb_data_p->module.GetValue (cb_data_p->x + xoff, cb_data_p->y + yoff, cb_data_p->z) * cb_data_p->level) - (cb_data_p->level / 2.0));
       xoff += cb_data_p->step;
     } // end FOR
     yoff += cb_data_p->step;
@@ -352,6 +352,21 @@ scale_step_value_changed_cb (GtkRange* range_in,
 }
 
 void
+scale_level_value_changed_cb (GtkRange* range_in,
+                              gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
+
+  ui_cb_data_p->GLUT_CBData->level =
+    static_cast<int> (gtk_range_get_value (range_in));
+}
+
+void
 button_reset_clicked_cb (GtkButton* button_in,
                          gpointer userData_in)
 {
@@ -385,6 +400,11 @@ button_reset_clicked_cb (GtkButton* button_in,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_STEP_NAME)));
   ACE_ASSERT (scale_p);
   gtk_range_set_value (GTK_RANGE (scale_p), 0.05);
+  scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_LEVEL_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), 100.0);
 }
 
 #ifdef __cplusplus

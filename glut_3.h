@@ -33,6 +33,7 @@ G_MODULE_EXPORT void scale_frequency_value_changed_cb (GtkRange*, gpointer);
 G_MODULE_EXPORT void scale_octaves_value_changed_cb (GtkRange*, gpointer);
 G_MODULE_EXPORT void scale_persistence_value_changed_cb (GtkRange*, gpointer);
 G_MODULE_EXPORT void scale_step_value_changed_cb (GtkRange*, gpointer);
+G_MODULE_EXPORT void scale_level_value_changed_cb (GtkRange*, gpointer);
 G_MODULE_EXPORT void button_reset_clicked_cb (GtkButton*, gpointer);
 #ifdef __cplusplus
 }
@@ -61,6 +62,7 @@ struct Engine_OpenGL_GLUT_3_CBData
   noise::module::Perlin     module;
 
   // terrain
+  double                    level;
   float*                    terrain;
   double                    yOffset; // 'moving' along y
 };

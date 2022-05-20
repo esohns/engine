@@ -274,6 +274,7 @@ do_work (int argc_in,
       cb_data_s.module.SetOctaveCount (6);
       cb_data_s.module.SetPersistence (0.5);
 
+      cb_data_s.level = 100.0;
       ACE_NEW_NORETURN (cb_data_s.terrain,
                         float[cb_data_s.columns * cb_data_s.rows]);
       ACE_ASSERT (cb_data_s.terrain);
