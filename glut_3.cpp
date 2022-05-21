@@ -14,6 +14,7 @@
 
 #include "common_tools.h"
 
+#include "common_gl_common.h"
 #include "common_gl_defines.h"
 #include "common_gl_tools.h"
 
@@ -62,6 +63,24 @@ engine_glut_3_key (unsigned char k, int x, int y)
                          false);
 
     break;
+  }
+}
+
+void
+engine_glut_3_menu (int entry_in)
+{
+  struct Engine_OpenGL_GLUT_3_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_3_CBData*> (glutGetWindowData ());
+  ACE_ASSERT (cb_data_p);
+
+  switch (entry_in)
+  {
+    case ENGINE_GLUT_MODE_WIREFRAME:
+      cb_data_p->wireframe = !cb_data_p->wireframe; break;
+    case ENGINE_GLUT_MODE_COLOR:
+      cb_data_p->color = !cb_data_p->color; break;
+    default:
+      break;
   }
 }
 
@@ -139,7 +158,7 @@ engine_glut_3_draw (void)
     {
       //cb_data_s.terrain[y * cb_data_s.rows + x] = Common_Tools::getRandomNumber (-10, 10);
       cb_data_p->terrain[y * cb_data_p->rows + x] =
-        static_cast<float> ((cb_data_p->module.GetValue (cb_data_p->x + xoff, cb_data_p->y + yoff, cb_data_p->z) * cb_data_p->level) - (cb_data_p->level / 2.0));
+        static_cast<float> ((cb_data_p->module.GetValue (cb_data_p->x + xoff, cb_data_p->y + yoff, cb_data_p->z) * cb_data_p->level));
       xoff += cb_data_p->step;
     } // end FOR
     yoff += cb_data_p->step;
@@ -162,6 +181,10 @@ engine_glut_3_draw (void)
              cb_data_p->camera.looking_at.x, cb_data_p->camera.looking_at.y, cb_data_p->camera.looking_at.z,
              cb_data_p->camera.up.x, cb_data_p->camera.up.y, cb_data_p->camera.up.z);
 
+  glPolygonMode (GL_FRONT_AND_BACK,
+                 cb_data_p->wireframe ? GL_LINE : GL_FILL);
+  COMMON_GL_ASSERT;
+
   // Draw a red x-axis, a green y-axis, and a blue z-axis.  Each of the
   // axes are ten units long.
   glBegin (GL_LINES);
@@ -169,14 +192,30 @@ engine_glut_3_draw (void)
   glColor3f (0.0F, 1.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
   glColor3f (0.0F, 0.0F, 1.0F); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
+  COMMON_GL_ASSERT;
 
-  glColor3f (1.0F, 1.0F, 1.0F);
+  if (!cb_data_p->color)
+    glColor3ub (255, 255, 255);
+
+  Common_GL_Color_t color_s;
   for (int y = 0; y < cb_data_p->rows - 1; ++y)
   {
     glBegin (GL_TRIANGLE_STRIP);
     for (int x = 0; x < cb_data_p->columns; ++x)
     {
+      if (cb_data_p->color)
+      {
+        color_s =
+          Common_GL_Tools::toRGBColor (((cb_data_p->terrain[y * cb_data_p->rows + x] / static_cast<float> (cb_data_p->level)) + 1.0F) / 2.0);
+        glColor3ub (color_s.r, color_s.g, color_s.b);
+      } // end IF
       glVertex3f (x * cb_data_p->scaleFactor, y * cb_data_p->scaleFactor, cb_data_p->terrain[y * cb_data_p->rows + x]);
+      if (cb_data_p->color)
+      {
+        color_s =
+          Common_GL_Tools::toRGBColor (((cb_data_p->terrain[(y + 1) * cb_data_p->rows + x] / static_cast<float> (cb_data_p->level)) + 1.0F) / 2.0);
+        glColor3ub (color_s.r, color_s.g, color_s.b);
+      } // end IF
       glVertex3f (x * cb_data_p->scaleFactor, (y + 1) * cb_data_p->scaleFactor, cb_data_p->terrain[(y + 1) * cb_data_p->rows + x]);
     } // end FOR
     glEnd ();
@@ -190,7 +229,7 @@ engine_glut_3_draw (void)
 }
 
 void
-engine_glut_3_idle(void)
+engine_glut_3_idle (void)
 {
   //static float vel0 = -100.0;
   //static double t0 = -1.;
@@ -338,6 +377,20 @@ scale_persistence_value_changed_cb (GtkRange* range_in,
 }
 
 void
+scale_lacunarity_value_changed_cb (GtkRange* range_in,
+                                   gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
+
+  ui_cb_data_p->GLUT_CBData->module.SetLacunarity (gtk_range_get_value (range_in));
+}
+
+void
 scale_step_value_changed_cb (GtkRange* range_in,
                              gpointer userData_in)
 {
@@ -364,6 +417,20 @@ scale_level_value_changed_cb (GtkRange* range_in,
 
   ui_cb_data_p->GLUT_CBData->level =
     static_cast<int> (gtk_range_get_value (range_in));
+}
+
+void
+scale_speed_value_changed_cb (GtkRange* range_in,
+                              gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
+
+  ui_cb_data_p->GLUT_CBData->yOffset = gtk_range_get_value (range_in);
 }
 
 void
@@ -394,6 +461,11 @@ button_reset_clicked_cb (GtkButton* button_in,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_PERSISTENCE_NAME)));
   ACE_ASSERT (scale_p);
   gtk_range_set_value (GTK_RANGE (scale_p), 0.5);
+  scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_LACUNARITY_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), 2.5);
 
   scale_p =
     GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
@@ -404,7 +476,12 @@ button_reset_clicked_cb (GtkButton* button_in,
     GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_LEVEL_NAME)));
   ACE_ASSERT (scale_p);
-  gtk_range_set_value (GTK_RANGE (scale_p), 100.0);
+  gtk_range_set_value (GTK_RANGE (scale_p), 50.0);
+  scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_SPEED_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), 0.03);
 }
 
 #ifdef __cplusplus

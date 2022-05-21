@@ -250,6 +250,8 @@ do_work (int argc_in,
       cb_data_s.scaleFactor = 15;
       cb_data_s.columns = cb_data_s.size.cx / cb_data_s.scaleFactor;
       cb_data_s.rows = cb_data_s.size.cy / cb_data_s.scaleFactor;
+      cb_data_s.wireframe = true;
+      cb_data_s.color = false;
 
       cb_data_s.angle = 0.0F;
       cb_data_s.camera.position.x = cb_data_s.size.cx / 2.0F;
@@ -274,7 +276,7 @@ do_work (int argc_in,
       cb_data_s.module.SetOctaveCount (6);
       cb_data_s.module.SetPersistence (0.5);
 
-      cb_data_s.level = 100.0;
+      cb_data_s.level = 50.0;
       ACE_NEW_NORETURN (cb_data_s.terrain,
                         float[cb_data_s.columns * cb_data_s.rows]);
       ACE_ASSERT (cb_data_s.terrain);
@@ -343,6 +345,11 @@ do_work (int argc_in,
       glutMouseFunc (engine_glut_3_mouse_button);
       glutMotionFunc (engine_glut_3_mouse_move);
       glutTimerFunc (100, engine_glut_3_timer, 0);
+
+      glutCreateMenu (engine_glut_3_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), ENGINE_GLUT_MODE_WIREFRAME);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("color"), ENGINE_GLUT_MODE_COLOR);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
 
       glutMainLoop ();
 

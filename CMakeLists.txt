@@ -264,6 +264,9 @@ if (GUI_SUPPORT)
  endif (GTK_SUPPORT)
 endif (GUI_SUPPORT)
 
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${Common_DIR}/../../src/gl/scripts")
+include (glm)
+
 ############## includes ###############
 include_directories (${PGE_INCLUDE_DIR})
 include_directories (${LIBNOISE_INCLUDES})
