@@ -54,7 +54,7 @@ find_package (Common 0.0.2
               REQUIRED COMPONENTS lib
               CONFIG
               PATHS ${CMAKE_CURRENT_SOURCE_DIR}/..
-              PATH_SUFFIXES Common/${BUILD_PATH_SUFFIX}
+              PATH_SUFFIXES Common/${BUILD_PATH_SUFFIX}/..
               NO_DEFAULT_PATH)
 if (NOT EXISTS ${Common_DIR})
  message (FATAL_ERROR "could not find package \"Common\", aborting")
@@ -72,16 +72,22 @@ if (DEFINED ENV{LIB_ROOT})
 endif (DEFINED ENV{LIB_ROOT})
 set (LIBNOISE_INCLUDES "${LIBNOISE_DIR}/include")
 if (UNIX)
- set (LIBNOISE_LIBRARY "libnoise.so")
+ set (LIBNOISE_LIBRARY "liblibnoise.so")
+ find_library (LIBNOISE_LIB ${LIBNOISE_LIBRARY}
+               PATHS ${LIBNOISE_DIR}
+               PATH_SUFFIXES build/gcc
+               DOC "libnoise library"
+               REQUIRED
+               NO_DEFAULT_PATH)
 elseif (WIN32)
  set (LIBNOISE_LIBRARY "libnoise.lib")
+ find_library (LIBNOISE_LIB ${LIBNOISE_LIBRARY}
+               PATHS ${LIBNOISE_DIR}
+               PATH_SUFFIXES build/msvc/${CMAKE_BUILD_TYPE}
+               DOC "libnoise library"
+               REQUIRED
+               NO_DEFAULT_PATH)
 endif () 
-find_library (LIBNOISE_LIB ${LIBNOISE_LIBRARY}
-              PATHS ${LIBNOISE_DIR}
-              PATH_SUFFIXES build/msvc/${CMAKE_BUILD_TYPE}
-              DOC "libnoise library"
-              REQUIRED
-              NO_DEFAULT_PATH)
 set (LIBNOISE_LIB_DIR "${LIBNOISE_DIR}/build/msvc/${CMAKE_BUILD_TYPE}")
 
 if (UNIX)
@@ -359,9 +365,9 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS "${ARGS} -t")
 endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 file (TO_CMAKE_PATH ${LIBNOISE_LIB_DIR} LIBNOISE_PATH)
-file (TO_CMAKE_PATH ${GLUT_LIB_DIR} GLUT_PATH)
+file (TO_CMAKE_PATH "${GLUT_LIB_DIR}" GLUT_PATH)
 file (TO_CMAKE_PATH ${ACE_LIB_DIR} ACE_PATH)
-file (TO_CMAKE_PATH ${ASSIMP_LIB_DIR} ASSIMP_PATH)
+file (TO_CMAKE_PATH "${ASSIMP_LIB_DIR}" ASSIMP_PATH)
 file (TO_CMAKE_PATH "${PNG_LIB_DIR}" PNG_PATH)
 file (TO_CMAKE_PATH "${ffmpeg_LIB_DIR}" FFMPEG_PATH)
 file (TO_CMAKE_PATH "${GTK_LIB_DIRS}" GTK_PATH)

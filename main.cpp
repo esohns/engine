@@ -245,20 +245,39 @@ do_work (int argc_in,
     case ENGINE_MODE_3:
     {
       struct Engine_OpenGL_GLUT_3_CBData cb_data_s;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
       cb_data_s.size.cx = 1500;
       cb_data_s.size.cy = 1500;
+#else
+      cb_data_s.size.width = 1500;
+      cb_data_s.size.height = 1500;
+#endif // ACE_WIN32 || ACE_WIN64
       cb_data_s.scaleFactor = 15;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
       cb_data_s.columns = cb_data_s.size.cx / cb_data_s.scaleFactor;
       cb_data_s.rows = cb_data_s.size.cy / cb_data_s.scaleFactor;
+#else
+      cb_data_s.columns = cb_data_s.size.width / cb_data_s.scaleFactor;
+      cb_data_s.rows = cb_data_s.size.height / cb_data_s.scaleFactor;
+#endif // ACE_WIN32 || ACE_WIN64
       cb_data_s.wireframe = true;
       cb_data_s.color = false;
 
       cb_data_s.angle = 0.0F;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
       cb_data_s.camera.position.x = cb_data_s.size.cx / 2.0F;
+#else
+      cb_data_s.camera.position.x = cb_data_s.size.width / 2.0F;
+#endif // ACE_WIN32 || ACE_WIN64
       cb_data_s.camera.position.y = -300.0F;
       cb_data_s.camera.position.z = 600.0F;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
       cb_data_s.camera.looking_at.x = cb_data_s.size.cx / 2.0F;
       cb_data_s.camera.looking_at.y = cb_data_s.size.cy / 2.0F;
+#else
+      cb_data_s.camera.looking_at.x = cb_data_s.size.width / 2.0F;
+      cb_data_s.camera.looking_at.y = cb_data_s.size.height / 2.0F;
+#endif // ACE_WIN32 || ACE_WIN64
       cb_data_s.camera.looking_at.z = 0.0F;
       cb_data_s.camera.up.x = 0.0F;
       cb_data_s.camera.up.y = 0.0F;

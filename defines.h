@@ -33,7 +33,11 @@
 } while (0)
 
 // glut 3
+#if defined (GTK2_USE)
+#define ENGINE_GLUT_3_UI_DEFINITION_FILE     "glut_3.gtk2"
+#else
 #define ENGINE_GLUT_3_UI_DEFINITION_FILE     "glut_3.gtk3"
+#endif // GTK2_USE
 
 #define ENGINE_UI_GTK_DIALOG_MAIN_NAME       "dialog_main"
 #define ENGINE_UI_GTK_SCALE_FREQUENCY_NAME   "scale_frequency"

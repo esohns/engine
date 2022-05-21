@@ -2,7 +2,11 @@
 
 #include "pge_2.h"
 
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
 #include "gl/GL.h"
+#else
+#include "GL/gl.h"
+#endif // ACE_WIN32 || ACE_WIN64
 
 #include "ace/Assert.h"
 #include "ace/Log_Msg.h"
