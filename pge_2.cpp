@@ -50,7 +50,7 @@ PGE_2::OnUserUpdate (float fElapsedTime)
   double value = module_.GetValue (x_, y_, z_);
   x_ += step_;
 
-  glTranslatef (ScreenWidth () / 2, ScreenHeight () / 2, 0);
+  glTranslatef (static_cast<float> (ScreenWidth () / 2), static_cast<float> (ScreenHeight () / 2), 0);
   glRotatef (static_cast<float> (M_PI) / 3.0F, 1.0F, 0.0F, 0.0F);
 
   for (int x = 0; x < columns_; ++x)

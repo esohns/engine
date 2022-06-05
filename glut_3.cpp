@@ -209,14 +209,14 @@ engine_glut_3_draw (void)
           Common_GL_Tools::toRGBColor (((cb_data_p->terrain[y * cb_data_p->rows + x] / static_cast<float> (cb_data_p->level)) + 1.0F) / 2.0);
         glColor3ub (color_s.r, color_s.g, color_s.b);
       } // end IF
-      glVertex3f (x * cb_data_p->scaleFactor, y * cb_data_p->scaleFactor, cb_data_p->terrain[y * cb_data_p->rows + x]);
+      glVertex3f (static_cast<float> (x * cb_data_p->scaleFactor), static_cast<float> (y * cb_data_p->scaleFactor), cb_data_p->terrain[y * cb_data_p->rows + x]);
       if (cb_data_p->color)
       {
         color_s =
           Common_GL_Tools::toRGBColor (((cb_data_p->terrain[(y + 1) * cb_data_p->rows + x] / static_cast<float> (cb_data_p->level)) + 1.0F) / 2.0);
         glColor3ub (color_s.r, color_s.g, color_s.b);
       } // end IF
-      glVertex3f (x * cb_data_p->scaleFactor, (y + 1) * cb_data_p->scaleFactor, cb_data_p->terrain[(y + 1) * cb_data_p->rows + x]);
+      glVertex3f (static_cast<float> (x * cb_data_p->scaleFactor), static_cast<float> ((y + 1) * cb_data_p->scaleFactor), cb_data_p->terrain[(y + 1) * cb_data_p->rows + x]);
     } // end FOR
     glEnd ();
   } // end FOR
