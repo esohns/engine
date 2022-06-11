@@ -361,6 +361,7 @@ do_work (int argc_in,
       glutVisibilityFunc (engine_glut_3_visible);
 
       glutKeyboardFunc (engine_glut_3_key);
+      glutSpecialFunc (engine_glut_3_key_special);
       glutMouseFunc (engine_glut_3_mouse_button);
       glutMotionFunc (engine_glut_3_mouse_move);
       glutTimerFunc (100, engine_glut_3_timer, 0);

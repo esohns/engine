@@ -9,6 +9,8 @@
 #endif // ACE_WIN32 || ACE_WIN64
 #include "GL/freeglut.h"
 
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "ace/Assert.h"
 #include "ace/Log_Msg.h"
 
@@ -49,21 +51,57 @@ engine_glut_3_reshape (int width_in, int height_in)
 }
 
 void
-engine_glut_3_key (unsigned char k, int x, int y)
+engine_glut_3_key (unsigned char key_in,
+                   int x,
+                   int y)
 {
-  switch (k) {
-  case 27:  /* Escape */
-    //exit (0);
-    glutLeaveMainLoop ();
+  struct Engine_OpenGL_GLUT_3_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_3_CBData*> (glutGetWindowData ());
+  ACE_ASSERT (cb_data_p);
 
-    Common_UI_GTK_Manager_t* gtk_manager_p =
-      COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
-    ACE_ASSERT (gtk_manager_p);
-    gtk_manager_p->stop (false,  // wait ?
-                         false);
+  switch (key_in)
+  {
+    case 27:  /* Escape */
+      //exit (0);
+      glutLeaveMainLoop ();
 
-    break;
-  }
+      Common_UI_GTK_Manager_t* gtk_manager_p =
+        COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
+      ACE_ASSERT (gtk_manager_p);
+      gtk_manager_p->stop (false,  // wait ?
+                           false);
+
+      break;
+  } // end SWITCH
+}
+void
+engine_glut_3_key_special (int key_in,
+                           int x,
+                           int y)
+{
+  struct Engine_OpenGL_GLUT_3_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_3_CBData*> (glutGetWindowData ());
+  ACE_ASSERT (cb_data_p);
+
+  switch (key_in)
+  {
+    case GLUT_KEY_LEFT:
+      cb_data_p->camera.rotation.z -= 0.1f;
+      break;
+    case GLUT_KEY_RIGHT:
+      cb_data_p->camera.rotation.z += 0.1f;
+      break;
+    case GLUT_KEY_UP:
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+      cb_data_p->camera.position.x = cb_data_p->size.cx / 2.0F;
+#else
+      cb_data_p->camera.position.x = cb_data_p->size.width / 2.0F;
+#endif // ACE_WIN32 || ACE_WIN64
+      cb_data_p->camera.position.y = -300.0f;
+      cb_data_p->camera.position.z = 600.0f;
+      cb_data_p->camera.rotation.z = 0.0f;
+      break;
+  } // end SWITCH
 }
 
 void
@@ -173,10 +211,20 @@ engine_glut_3_draw (void)
   glLoadIdentity ();
   COMMON_GL_ASSERT;
 
-  //glTranslatef (cb_data_p->size.cx / 2.0F, cb_data_p->size.cy / 2.0F, 0);
-  //glRotatef (static_cast<float> (M_PI) / 3.0F, 1.0F, 0.0F, 0.0F);
+  // rotate the camera
+  glm::mat4 rotation_matrix = glm::rotate (glm::mat4 (1.0f),
+                                           glm::radians (cb_data_p->camera.rotation.z),
+                                           glm::vec3 (0.0f, 0.0f, 1.0f));
+  glm::vec3 rotation_center (cb_data_p->size.cx / 2.0f,
+                             cb_data_p->size.cy / 2.0f,
+                             cb_data_p->camera.position.z);
+  glm::vec4 pos_rot_h =
+    rotation_matrix * glm::vec4 (cb_data_p->camera.position - rotation_center,
+                                 1.0f);
+  glm::vec3 pos_rot = glm::vec3 (pos_rot_h) + rotation_center;
+  cb_data_p->camera.position = pos_rot;
 
-  // Set the camera
+  // set the camera
   gluLookAt (cb_data_p->camera.position.x, cb_data_p->camera.position.y, cb_data_p->camera.position.z,
              cb_data_p->camera.looking_at.x, cb_data_p->camera.looking_at.y, cb_data_p->camera.looking_at.z,
              cb_data_p->camera.up.x, cb_data_p->camera.up.y, cb_data_p->camera.up.z);
@@ -206,14 +254,14 @@ engine_glut_3_draw (void)
       if (cb_data_p->color)
       {
         color_s =
-          Common_GL_Tools::toRGBColor (((cb_data_p->terrain[y * cb_data_p->rows + x] / static_cast<float> (cb_data_p->level)) + 1.0F) / 2.0);
+          Common_GL_Tools::toRGBColor (((static_cast<float> (cb_data_p->terrain[y * cb_data_p->rows + x]) / static_cast<float> (cb_data_p->level)) + 1.0F) / 2.0F);
         glColor3ub (color_s.r, color_s.g, color_s.b);
       } // end IF
       glVertex3f (static_cast<float> (x * cb_data_p->scaleFactor), static_cast<float> (y * cb_data_p->scaleFactor), cb_data_p->terrain[y * cb_data_p->rows + x]);
       if (cb_data_p->color)
       {
         color_s =
-          Common_GL_Tools::toRGBColor (((cb_data_p->terrain[(y + 1) * cb_data_p->rows + x] / static_cast<float> (cb_data_p->level)) + 1.0F) / 2.0);
+          Common_GL_Tools::toRGBColor (((static_cast<float> (cb_data_p->terrain[(y + 1) * cb_data_p->rows + x]) / static_cast<float> (cb_data_p->level)) + 1.0F) / 2.0F);
         glColor3ub (color_s.r, color_s.g, color_s.b);
       } // end IF
       glVertex3f (static_cast<float> (x * cb_data_p->scaleFactor), static_cast<float> ((y + 1) * cb_data_p->scaleFactor), cb_data_p->terrain[(y + 1) * cb_data_p->rows + x]);

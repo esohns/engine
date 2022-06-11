@@ -72,7 +72,7 @@ if (DEFINED ENV{LIB_ROOT})
 endif (DEFINED ENV{LIB_ROOT})
 set (LIBNOISE_INCLUDES "${LIBNOISE_DIR}/include")
 if (UNIX)
- set (LIBNOISE_LIBRARY "liblibnoise.so")
+ set (LIBNOISE_LIBRARY "libnoise.so")
  find_library (LIBNOISE_LIB ${LIBNOISE_LIBRARY}
                PATHS ${LIBNOISE_DIR}
                PATH_SUFFIXES build/gcc

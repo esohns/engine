@@ -23,6 +23,7 @@ enum Engine_GLUTMode
 // GLUT routines
 void engine_glut_3_reshape (int, int);
 void engine_glut_3_key (unsigned char, int, int);
+void engine_glut_3_key_special (int, int, int);
 void engine_glut_3_menu (int);
 void engine_glut_3_mouse_button (int, int, int, int);
 void engine_glut_3_mouse_move (int, int);
