@@ -215,9 +215,15 @@ engine_glut_3_draw (void)
   glm::mat4 rotation_matrix = glm::rotate (glm::mat4 (1.0f),
                                            glm::radians (cb_data_p->camera.rotation.z),
                                            glm::vec3 (0.0f, 0.0f, 1.0f));
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
   glm::vec3 rotation_center (cb_data_p->size.cx / 2.0f,
                              cb_data_p->size.cy / 2.0f,
                              cb_data_p->camera.position.z);
+#else
+  glm::vec3 rotation_center (cb_data_p->size.width / 2.0f,
+                             cb_data_p->size.height / 2.0f,
+                             cb_data_p->camera.position.z);
+#endif // ACE_WIN32 || ACE_WIN64
   glm::vec4 pos_rot_h =
     rotation_matrix * glm::vec4 (cb_data_p->camera.position - rotation_center,
                                  1.0f);
