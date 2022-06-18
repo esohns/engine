@@ -11,12 +11,12 @@
     <property name="lower">1.5</property>
     <property name="upper">3.5</property>
     <property name="value">2.5</property>
-    <property name="step_increment">0.10000000000000001</property>
+    <property name="step_increment">0.01</property>
     <property name="page_increment">1</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_level">
     <property name="lower">0.01</property>
-    <property name="upper">500</property>
+    <property name="upper">300</property>
     <property name="value">50</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
