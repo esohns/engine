@@ -41,12 +41,14 @@
 #include "pge.h"
 #include "pge_2.h"
 #include "glut_3.h"
+#include "glut_4.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 0,
   ENGINE_MODE_2,
   ENGINE_MODE_3,
+  ENGINE_MODE_4,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -299,7 +301,7 @@ do_work (int argc_in,
       ACE_NEW_NORETURN (cb_data_s.terrain,
                         float[cb_data_s.columns * cb_data_s.rows]);
       ACE_ASSERT (cb_data_s.terrain);
-      cb_data_s.yOffset = 0.0;
+      cb_data_s.offset = 0.0;
 
       // initialize GTK
       Common_UI_GTK_Configuration_t gtk_configuration;
@@ -357,6 +359,142 @@ do_work (int argc_in,
       COMMON_GL_ASSERT;
 
       glutDisplayFunc (engine_glut_3_draw);
+      glutReshapeFunc (engine_glut_3_reshape);
+      glutVisibilityFunc (engine_glut_3_visible);
+
+      glutKeyboardFunc (engine_glut_3_key);
+      glutSpecialFunc (engine_glut_3_key_special);
+      glutMouseFunc (engine_glut_3_mouse_button);
+      glutMotionFunc (engine_glut_3_mouse_move);
+      glutTimerFunc (100, engine_glut_3_timer, 0);
+
+      glutCreateMenu (engine_glut_3_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), ENGINE_GLUT_MODE_WIREFRAME);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("color"), ENGINE_GLUT_MODE_COLOR);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      gtk_manager_p->stop (true,   // wait ?
+                           false);
+
+      break;
+    }
+    case ENGINE_MODE_4:
+    {
+      struct Engine_OpenGL_GLUT_3_CBData cb_data_s;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+      cb_data_s.size.cx = 1500;
+      cb_data_s.size.cy = 1500;
+#else
+      cb_data_s.size.width = 1500;
+      cb_data_s.size.height = 1500;
+#endif // ACE_WIN32 || ACE_WIN64
+      cb_data_s.scaleFactor = 15;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+      cb_data_s.columns = cb_data_s.size.cx / cb_data_s.scaleFactor;
+      cb_data_s.rows = cb_data_s.size.cy / cb_data_s.scaleFactor;
+#else
+      cb_data_s.columns = cb_data_s.size.width / cb_data_s.scaleFactor;
+      cb_data_s.rows = cb_data_s.size.height / cb_data_s.scaleFactor;
+#endif // ACE_WIN32 || ACE_WIN64
+      cb_data_s.wireframe = true;
+      cb_data_s.color = false;
+
+      cb_data_s.angle = 0.0F;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+      cb_data_s.camera.position.x = cb_data_s.size.cx / 2.0F;
+#else
+      cb_data_s.camera.position.x = cb_data_s.size.width / 2.0F;
+#endif // ACE_WIN32 || ACE_WIN64
+      cb_data_s.camera.position.y = -300.0F;
+      cb_data_s.camera.position.z = 600.0F;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+      cb_data_s.camera.looking_at.x = cb_data_s.size.cx / 2.0F;
+      cb_data_s.camera.looking_at.y = cb_data_s.size.cy / 2.0F;
+#else
+      cb_data_s.camera.looking_at.x = cb_data_s.size.width / 2.0F;
+      cb_data_s.camera.looking_at.y = cb_data_s.size.height / 2.0F;
+#endif // ACE_WIN32 || ACE_WIN64
+      cb_data_s.camera.looking_at.z = 0.0F;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 0.0F;
+      cb_data_s.camera.up.z = 1.0F;
+
+      cb_data_s.deltaAngle = 0.0F;
+      cb_data_s.xOrigin = -1;
+
+      cb_data_s.x = 1.25;
+      cb_data_s.y = 0.75;
+      cb_data_s.z = 0.5;
+      cb_data_s.step = 0.05;
+      cb_data_s.module.SetSeed (static_cast<int> (Common_Tools::randomSeed));
+      cb_data_s.module.SetFrequency (1.0);
+      cb_data_s.module.SetOctaveCount (6);
+      cb_data_s.module.SetPersistence (0.5);
+
+      cb_data_s.level = 50.0;
+      ACE_NEW_NORETURN (cb_data_s.terrain,
+                        float[cb_data_s.columns * cb_data_s.rows]);
+      ACE_ASSERT (cb_data_s.terrain);
+      cb_data_s.offset = 0.0;
+
+      // initialize GTK
+      Common_UI_GTK_Configuration_t gtk_configuration;
+      struct Engine_UI_GTK_CBData ui_cb_data;
+      ui_cb_data.GLUT_CBData = &cb_data_s;
+      Common_UI_GtkBuilderDefinition_t gtk_ui_definition;
+      Common_UI_GTK_Manager_t* gtk_manager_p =
+        COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
+      ACE_ASSERT (gtk_manager_p);
+      Common_UI_GTK_State_t& state_r =
+        const_cast<Common_UI_GTK_State_t&> (gtk_manager_p->getR ());
+
+      gtk_configuration.argc = argc_in;
+      gtk_configuration.argv = argv_in;
+      gtk_configuration.CBData = &ui_cb_data;
+      gtk_configuration.eventHooks.finiHook = idle_finalize_UI_cb;
+      gtk_configuration.eventHooks.initHook = idle_initialize_UI_cb;
+      gtk_configuration.definition = &gtk_ui_definition;
+
+      ui_cb_data.UIState = &state_r;
+      ui_cb_data.progressData.state = &state_r;
+
+      state_r.builders[ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN)] =
+        std::make_pair (UIDefinitionFilePath_in, static_cast<GtkBuilder*> (NULL));
+
+      int result = gtk_manager_p->initialize (gtk_configuration);
+      if (!result)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to Common_UI_GTK_Manager_T::initialize(), aborting\n")));
+        return false;
+      } // end IF
+
+      gtk_manager_p->start ();
+      if (!gtk_manager_p->isRunning ())
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to start GTK event dispatch, aborting\n")));
+        return false;
+      } // end IF
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (640, 480);
+
+      int window_i = glutCreateWindow ("engine GLUT 3");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0F, 0.0F, 0.0F, 0.0F); // Black Background
+      COMMON_GL_ASSERT;
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+      COMMON_GL_ASSERT;
+
+      glutDisplayFunc (engine_glut_4_draw);
       glutReshapeFunc (engine_glut_3_reshape);
       glutVisibilityFunc (engine_glut_3_visible);
 

@@ -86,10 +86,10 @@ engine_glut_3_key_special (int key_in,
   switch (key_in)
   {
     case GLUT_KEY_LEFT:
-      cb_data_p->camera.rotation.z -= 0.1f;
+      cb_data_p->camera.rotation.z -= 0.5f;
       break;
     case GLUT_KEY_RIGHT:
-      cb_data_p->camera.rotation.z += 0.1f;
+      cb_data_p->camera.rotation.z += 0.5f;
       break;
     case GLUT_KEY_UP:
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
@@ -186,9 +186,9 @@ engine_glut_3_draw (void)
   ACE_ASSERT (cb_data_p);
 
   // compute terrain
-  cb_data_p->yOffset += 0.03;
+  cb_data_p->offset += 0.03;
   double xoff;
-  double yoff = cb_data_p->yOffset;
+  double yoff = cb_data_p->offset;
   for (int y = 0; y < cb_data_p->rows; ++y)
   {
     xoff = 0.0;
@@ -484,7 +484,7 @@ scale_speed_value_changed_cb (GtkRange* range_in,
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
-  ui_cb_data_p->GLUT_CBData->yOffset = gtk_range_get_value (range_in);
+  ui_cb_data_p->GLUT_CBData->offset = gtk_range_get_value (range_in);
 }
 
 void

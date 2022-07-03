@@ -79,7 +79,7 @@ struct Engine_OpenGL_GLUT_3_CBData
   // terrain
   double                    level;
   float*                    terrain;
-  double                    yOffset; // 'moving' along y
+  double                    offset; // 'moving' along
 };
 
 struct Engine_UI_GTK_CBData
