@@ -484,7 +484,7 @@ do_work (int argc_in,
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
       glutInitWindowSize (640, 480);
 
-      int window_i = glutCreateWindow ("engine GLUT 3");
+      int window_i = glutCreateWindow ("engine GLUT 4");
       glutSetWindow (window_i);
       glutSetWindowData (&cb_data_s);
 
