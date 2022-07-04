@@ -303,7 +303,7 @@ do_work (int argc_in,
       ACE_NEW_NORETURN (cb_data_s.terrain,
                         float[cb_data_s.columns * cb_data_s.rows]);
       ACE_ASSERT (cb_data_s.terrain);
-      cb_data_s.offset = 0.0;
+      cb_data_s.offset = 0.03;
 
       // initialize GTK
       Common_UI_GTK_Configuration_t gtk_configuration;
@@ -441,7 +441,7 @@ do_work (int argc_in,
       ACE_NEW_NORETURN (cb_data_s.terrain,
                         float[cb_data_s.columns * cb_data_s.rows]);
       ACE_ASSERT (cb_data_s.terrain);
-      cb_data_s.offset = 0.0;
+      cb_data_s.offset = 0.03;
 
       // initialize GTK
       Common_UI_GTK_Configuration_t gtk_configuration;

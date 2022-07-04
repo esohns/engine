@@ -37,10 +37,10 @@
 #define ENGINE_GLUT_3_DEFAULT_NOISE_Y           0.75 // coordinate
 #define ENGINE_GLUT_3_DEFAULT_NOISE_Z           0.5  // coordinate
 #define ENGINE_GLUT_3_DEFAULT_NOISE_STEP        0.05
-#define ENGINE_GLUT_3_DEFAULT_NOISE_FREQUENCY   1.0  // frequency of first octave
-#define ENGINE_GLUT_3_DEFAULT_NOISE_OCTAVES     6    // detail: 1-30
-#define ENGINE_GLUT_3_DEFAULT_NOISE_PERSISTENCE 0.5  // roughness: 0.0-1.0
-#define ENGINE_GLUT_3_DEFAULT_NOISE_LACUNARITY  2.5  // frequency multiplier between successive octaves: 1.5-3.5
+#define ENGINE_GLUT_3_DEFAULT_NOISE_FREQUENCY   noise::module::DEFAULT_PERLIN_FREQUENCY // frequency of first octave
+#define ENGINE_GLUT_3_DEFAULT_NOISE_OCTAVES     noise::module::DEFAULT_PERLIN_OCTAVE_COUNT // detail: 1-30
+#define ENGINE_GLUT_3_DEFAULT_NOISE_PERSISTENCE noise::module::DEFAULT_PERLIN_PERSISTENCE // roughness: 0.0-1.0
+#define ENGINE_GLUT_3_DEFAULT_NOISE_LACUNARITY  noise::module::DEFAULT_PERLIN_LACUNARITY // frequency multiplier between successive octaves: 1.5-3.5
 #define ENGINE_GLUT_3_DEFAULT_NOISE_LEVEL       50.0
 
 #if defined (GTK2_USE)

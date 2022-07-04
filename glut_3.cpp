@@ -504,33 +504,33 @@ button_reset_clicked_cb (GtkButton* button_in,
     GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_FREQUENCY_NAME)));
   ACE_ASSERT (scale_p);
-  gtk_range_set_value (GTK_RANGE (scale_p), 1.0);
+  gtk_range_set_value (GTK_RANGE (scale_p), ENGINE_GLUT_3_DEFAULT_NOISE_FREQUENCY);
   scale_p =
     GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_OCTAVES_NAME)));
   ACE_ASSERT (scale_p);
-  gtk_range_set_value (GTK_RANGE (scale_p), 6.0);
+  gtk_range_set_value (GTK_RANGE (scale_p), ENGINE_GLUT_3_DEFAULT_NOISE_OCTAVES);
   scale_p =
     GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_PERSISTENCE_NAME)));
   ACE_ASSERT (scale_p);
-  gtk_range_set_value (GTK_RANGE (scale_p), 0.5);
+  gtk_range_set_value (GTK_RANGE (scale_p), ENGINE_GLUT_3_DEFAULT_NOISE_PERSISTENCE);
   scale_p =
     GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_LACUNARITY_NAME)));
   ACE_ASSERT (scale_p);
-  gtk_range_set_value (GTK_RANGE (scale_p), 2.5);
+  gtk_range_set_value (GTK_RANGE (scale_p), ENGINE_GLUT_3_DEFAULT_NOISE_LACUNARITY);
 
   scale_p =
     GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_STEP_NAME)));
   ACE_ASSERT (scale_p);
-  gtk_range_set_value (GTK_RANGE (scale_p), 0.05);
+  gtk_range_set_value (GTK_RANGE (scale_p), ENGINE_GLUT_3_DEFAULT_NOISE_STEP);
   scale_p =
     GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_LEVEL_NAME)));
   ACE_ASSERT (scale_p);
-  gtk_range_set_value (GTK_RANGE (scale_p), 50.0);
+  gtk_range_set_value (GTK_RANGE (scale_p), ENGINE_GLUT_3_DEFAULT_NOISE_LEVEL);
   scale_p =
     GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_SPEED_NAME)));
