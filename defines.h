@@ -33,19 +33,29 @@
 } while (0)
 
 // glut 3
+#define ENGINE_GLUT_3_DEFAULT_NOISE_X           1.25 // coordinate
+#define ENGINE_GLUT_3_DEFAULT_NOISE_Y           0.75 // coordinate
+#define ENGINE_GLUT_3_DEFAULT_NOISE_Z           0.5  // coordinate
+#define ENGINE_GLUT_3_DEFAULT_NOISE_STEP        0.05
+#define ENGINE_GLUT_3_DEFAULT_NOISE_FREQUENCY   1.0  // frequency of first octave
+#define ENGINE_GLUT_3_DEFAULT_NOISE_OCTAVES     6    // detail: 1-30
+#define ENGINE_GLUT_3_DEFAULT_NOISE_PERSISTENCE 0.5  // roughness: 0.0-1.0
+#define ENGINE_GLUT_3_DEFAULT_NOISE_LACUNARITY  2.5  // frequency multiplier between successive octaves: 1.5-3.5
+#define ENGINE_GLUT_3_DEFAULT_NOISE_LEVEL       50.0
+
 #if defined (GTK2_USE)
-#define ENGINE_GLUT_3_UI_DEFINITION_FILE     "glut_3.gtk2"
+#define ENGINE_GLUT_3_UI_DEFINITION_FILE        "glut_3.gtk2"
 #else
-#define ENGINE_GLUT_3_UI_DEFINITION_FILE     "glut_3.gtk3"
+#define ENGINE_GLUT_3_UI_DEFINITION_FILE        "glut_3.gtk3"
 #endif // GTK2_USE
 
-#define ENGINE_UI_GTK_DIALOG_MAIN_NAME       "dialog_main"
-#define ENGINE_UI_GTK_SCALE_FREQUENCY_NAME   "scale_frequency"
-#define ENGINE_UI_GTK_SCALE_OCTAVES_NAME     "scale_octaves"
-#define ENGINE_UI_GTK_SCALE_PERSISTENCE_NAME "scale_persistence"
-#define ENGINE_UI_GTK_SCALE_LACUNARITY_NAME  "scale_lacunarity"
-#define ENGINE_UI_GTK_SCALE_STEP_NAME        "scale_step"
-#define ENGINE_UI_GTK_SCALE_LEVEL_NAME       "scale_level"
-#define ENGINE_UI_GTK_SCALE_SPEED_NAME       "scale_speed"
+#define ENGINE_UI_GTK_DIALOG_MAIN_NAME          "dialog_main"
+#define ENGINE_UI_GTK_SCALE_FREQUENCY_NAME      "scale_frequency"
+#define ENGINE_UI_GTK_SCALE_OCTAVES_NAME        "scale_octaves"
+#define ENGINE_UI_GTK_SCALE_PERSISTENCE_NAME    "scale_persistence"
+#define ENGINE_UI_GTK_SCALE_LACUNARITY_NAME     "scale_lacunarity"
+#define ENGINE_UI_GTK_SCALE_STEP_NAME           "scale_step"
+#define ENGINE_UI_GTK_SCALE_LEVEL_NAME          "scale_level"
+#define ENGINE_UI_GTK_SCALE_SPEED_NAME          "scale_speed"
 
 #endif

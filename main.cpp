@@ -288,16 +288,18 @@ do_work (int argc_in,
       cb_data_s.deltaAngle = 0.0F;
       cb_data_s.xOrigin = -1;
 
-      cb_data_s.x = 1.25;
-      cb_data_s.y = 0.75;
-      cb_data_s.z = 0.5;
-      cb_data_s.step = 0.05;
+      cb_data_s.x = ENGINE_GLUT_3_DEFAULT_NOISE_X;
+      cb_data_s.y = ENGINE_GLUT_3_DEFAULT_NOISE_Y;
+      cb_data_s.z = ENGINE_GLUT_3_DEFAULT_NOISE_Z;
+      cb_data_s.step = ENGINE_GLUT_3_DEFAULT_NOISE_STEP;
       cb_data_s.module.SetSeed (static_cast<int> (Common_Tools::randomSeed));
-      cb_data_s.module.SetFrequency (1.0);
-      cb_data_s.module.SetOctaveCount (6);
-      cb_data_s.module.SetPersistence (0.5);
+      cb_data_s.module.SetFrequency (ENGINE_GLUT_3_DEFAULT_NOISE_FREQUENCY);
+      cb_data_s.module.SetOctaveCount (ENGINE_GLUT_3_DEFAULT_NOISE_OCTAVES);
+      cb_data_s.module.SetPersistence (ENGINE_GLUT_3_DEFAULT_NOISE_PERSISTENCE);
+      cb_data_s.module.SetLacunarity (ENGINE_GLUT_3_DEFAULT_NOISE_LACUNARITY);
+      //cb_data_s.module.SetNoiseQuality (noise::QUALITY_BEST);
 
-      cb_data_s.level = 50.0;
+      cb_data_s.level = ENGINE_GLUT_3_DEFAULT_NOISE_LEVEL;
       ACE_NEW_NORETURN (cb_data_s.terrain,
                         float[cb_data_s.columns * cb_data_s.rows]);
       ACE_ASSERT (cb_data_s.terrain);
@@ -424,16 +426,18 @@ do_work (int argc_in,
       cb_data_s.deltaAngle = 0.0F;
       cb_data_s.xOrigin = -1;
 
-      cb_data_s.x = 1.25;
-      cb_data_s.y = 0.75;
-      cb_data_s.z = 0.5;
-      cb_data_s.step = 0.05;
+      cb_data_s.x = ENGINE_GLUT_3_DEFAULT_NOISE_X;
+      cb_data_s.y = ENGINE_GLUT_3_DEFAULT_NOISE_Y;
+      cb_data_s.z = ENGINE_GLUT_3_DEFAULT_NOISE_Z;
+      cb_data_s.step = ENGINE_GLUT_3_DEFAULT_NOISE_STEP;
       cb_data_s.module.SetSeed (static_cast<int> (Common_Tools::randomSeed));
-      cb_data_s.module.SetFrequency (1.0);
-      cb_data_s.module.SetOctaveCount (6);
-      cb_data_s.module.SetPersistence (0.5);
+      cb_data_s.module.SetFrequency (ENGINE_GLUT_3_DEFAULT_NOISE_FREQUENCY);
+      cb_data_s.module.SetOctaveCount (ENGINE_GLUT_3_DEFAULT_NOISE_OCTAVES);
+      cb_data_s.module.SetPersistence (ENGINE_GLUT_3_DEFAULT_NOISE_PERSISTENCE);
+      cb_data_s.module.SetLacunarity (ENGINE_GLUT_3_DEFAULT_NOISE_LACUNARITY);
+      //cb_data_s.module.SetNoiseQuality (noise::QUALITY_BEST);
 
-      cb_data_s.level = 50.0;
+      cb_data_s.level = ENGINE_GLUT_3_DEFAULT_NOISE_LEVEL;
       ACE_NEW_NORETURN (cb_data_s.terrain,
                         float[cb_data_s.columns * cb_data_s.rows]);
       ACE_ASSERT (cb_data_s.terrain);
