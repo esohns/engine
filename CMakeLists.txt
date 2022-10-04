@@ -36,6 +36,7 @@ configure_file (resource.rc.in
                 resource.rc)
 
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts")
+#include (ffmpeg)
 include (ACE)
 if (NOT ACE_LIBRARY)
  message (FATAL_ERROR "could not find ${ACE_LIB_FILE} (was: \"${ACE_LIBRARY}\"), aborting")
@@ -54,7 +55,7 @@ find_package (Common 0.0.2
               REQUIRED COMPONENTS lib
               CONFIG
               PATHS ${CMAKE_CURRENT_SOURCE_DIR}/..
-              PATH_SUFFIXES Common/${BUILD_PATH_SUFFIX}/..
+              PATH_SUFFIXES Common/${BUILD_PATH_SUFFIX}
               NO_DEFAULT_PATH)
 if (NOT EXISTS ${Common_DIR})
  message (FATAL_ERROR "could not find package \"Common\", aborting")
@@ -248,7 +249,7 @@ elseif (WIN32)
    set (ffmpeg_LIBRARIES "${FFMPEG_LIBRARY_AVCODEC};${FFMPEG_LIBRARY_AVFORMAT};${FFMPEG_LIBRARY_SWSCALE};${FFMPEG_LIBRARY_AVUTIL}")
    if (EXISTS $ENV{FFMPEG_ROOT})
     set (ffmpeg_INCLUDE_DIRS "${FFMPEG_ROOT}")
-    set (ffmpeg_LIB_DIR "${FFMPEG_ROOT}/libavcodec;${FFMPEG_ROOT}/libavformat;${FFMPEG_ROOT}/libswscale;${FFMPEG_ROOT}/libswresample;${FFMPEG_ROOT}/libavutil" CACHE INTERNAL "")
+    set (ffmpeg_LIB_DIR "${FFMPEG_ROOT}/bin;${FFMPEG_ROOT}/libavcodec;${FFMPEG_ROOT}/libavformat;${FFMPEG_ROOT}/libswscale;${FFMPEG_ROOT}/libswresample;${FFMPEG_ROOT}/libavutil" CACHE INTERNAL "")
 #    message (STATUS "ffmpeg_LIB_DIR: ${ffmpeg_LIB_DIR}")
    else ()
     set (ffmpeg_INCLUDE_DIRS "${FFMPEG_ROOT}/include")
@@ -256,6 +257,45 @@ elseif (WIN32)
    endif (EXISTS $ENV{FFMPEG_ROOT})
   endif (FFMPEG_LIBRARY_AVCODEC AND FFMPEG_LIBRARY_AVFORMAT AND FFMPEG_LIBRARY_SWSCALE AND FFMPEG_LIBRARY_AVUTIL)
  endif (NOT FFMPEG_FOUND)
+endif ()
+
+if (UNIX)
+ find_package (ImageMagick COMPONENTS MagickCore MagickWand)
+ if (ImageMagick_FOUND)
+  message (STATUS "found ImageMagick")
+  set (IMAGEMAGICK_FOUND TRUE)
+ endif (ImageMagick_FOUND)
+elseif (WIN32)
+ if (NOT unofficial-graphicsmagick_FOUND)
+  find_library (ImageMagick_MagickCore_LIBRARY CORE_RL_MagickCore_.lib
+                PATHS $ENV{LIB_ROOT}/ImageMagick
+                PATH_SUFFIXES lib
+                DOC "searching for CORE_RL_MagickCore_.lib"
+                NO_DEFAULT_PATH)
+#  find_library (ImageMagick_LIBRARY CORE_RL_Magick++_.lib
+#                PATHS $ENV{LIB_ROOT}/ImageMagick
+#                PATH_SUFFIXES lib
+#                DOC "searching for CORE_RL_Magick++_.lib"
+#                NO_DEFAULT_PATH)
+  find_library (ImageMagick_MagickWand_LIBRARY CORE_RL_MagickWand_.lib
+                PATHS $ENV{LIB_ROOT}/ImageMagick
+                PATH_SUFFIXES lib
+                DOC "searching for CORE_RL_MagickWand_.lib"
+                NO_DEFAULT_PATH)
+  if (NOT ImageMagick_MagickCore_LIBRARY)
+   message (WARNING "could not find CORE_RL_MagickCore_.lib, continuing")
+  endif (NOT ImageMagick_MagickCore_LIBRARY)
+  if (NOT ImageMagick_MagickWand_LIBRARY)
+   message (WARNING "could not find CORE_RL_MagickWand_.lib, continuing")
+  endif (NOT ImageMagick_MagickWand_LIBRARY)
+  if (ImageMagick_MagickCore_LIBRARY AND ImageMagick_MagickWand_LIBRARY)
+   message (STATUS "found ImageMagick")
+   set (IMAGEMAGICK_FOUND TRUE)
+   set (ImageMagick_INCLUDE_DIRS "$ENV{LIB_ROOT}/ImageMagick/include")
+   set (ImageMagick_LIBRARIES "${ImageMagick_MagickCore_LIBRARY};${ImageMagick_MagickWand_LIBRARY}")
+   set (ImageMagick_LIB_DIR "$ENV{LIB_ROOT}/ImageMagick")
+  endif (ImageMagick_MagickCore_LIBRARY AND ImageMagick_MagickWand_LIBRARY)
+ endif (NOT unofficial-graphicsmagick_FOUND)
 endif ()
 
 # user interface
@@ -372,6 +412,7 @@ file (TO_CMAKE_PATH ${ACE_LIB_DIR} ACE_PATH)
 file (TO_CMAKE_PATH "${ASSIMP_LIB_DIR}" ASSIMP_PATH)
 file (TO_CMAKE_PATH "${PNG_LIB_DIR}" PNG_PATH)
 file (TO_CMAKE_PATH "${ffmpeg_LIB_DIR}" FFMPEG_PATH)
+file (TO_CMAKE_PATH "${ImageMagick_LIB_DIR}" IMAGEMAGICK_PATH)
 file (TO_CMAKE_PATH "${GTK_LIB_DIRS}" GTK_PATH)
 guess_runtime_library_dirs (RUNTIME_LIBRARY_DIRS)
 set (RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
@@ -381,6 +422,7 @@ set (RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
                           ${ASSIMP_PATH}
                           ${PNG_PATH}
                           ${FFMPEG_PATH}
+                          ${IMAGEMAGICK_PATH}
                           ${GTK_PATH})
 if (UNIX)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE}" COMMAND)
