@@ -232,7 +232,7 @@ do_work (int argc_in,
     case ENGINE_MODE_2:
     {
       PGE_2 example (0.2f, 0.0f, 0.0000001f);
-      if (example.Construct (480, 480,
+      if (example.Construct (ENGINE_PGE_2_DEFAULT_SIZE, ENGINE_PGE_2_DEFAULT_SIZE,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?

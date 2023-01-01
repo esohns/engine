@@ -35,6 +35,7 @@
 // pge 2
 //#define IX(i, j) i + j * resolution_
 //#define SWAP(x0, x) {float* tmp=x0;x0=x;x=tmp;}
+#define ENGINE_PGE_2_DEFAULT_SIZE               320
 
 #define ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS     16
 

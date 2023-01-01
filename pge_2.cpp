@@ -268,8 +268,8 @@ PGE_2::OnUserUpdate (float fElapsedTime)
   int32_t mouse_y = GetMouseY ();
   struct olc::HWButton button_s = GetMouse (olc::Mouse::LEFT);
   if (button_s.bPressed || button_s.bHeld)
-    for (int i = -10; i <= 10; i++)
-      for (int j = -10; j <= 10; j++)
+    for (int i = -7; i <= 7; i++)
+      for (int j = -7; j <= 7; j++)
         addDensity (mouse_x + i, mouse_y + j, Common_Tools::getRandomNumber (150.0f, 250.0f));
   //Draw (mouse_x, mouse_y,
   //      olc::Pixel (255, 255, 255, 255));
@@ -278,16 +278,20 @@ PGE_2::OnUserUpdate (float fElapsedTime)
   //  for (int j = -15; j <= 15; j++)
   //    addDensity (cx + i, cy + j, Common_Tools::getRandomNumber (150.0f, 250.0f));
 
-  for (int i = 0; i < 2; i++)
-  {
-    float angle_f =
-      static_cast<float> (module_.GetValue (ENGINE_GLUT_3_DEFAULT_NOISE_X,
-                                            ENGINE_GLUT_3_DEFAULT_NOISE_Y,
-                                            z_) * M_PI * 2.0);
-    z_ += 0.01;
-    addVelocity (mouse_x, mouse_y,
-                 std::abs (std::cos (angle_f) * 0.1f), std::abs (std::sin (angle_f) * 0.1f));
-  }
+  //for (int i = 0; i < 2; i++)
+  //{
+    //float value_f =
+    //  static_cast<float> (module_.GetValue (ENGINE_GLUT_3_DEFAULT_NOISE_X,
+    //                                        ENGINE_GLUT_3_DEFAULT_NOISE_Y,
+    //                                        z_));
+    //z_ += 0.01;
+
+    //addDensity (cx, cy, value_f * 255.0f);
+
+    //float angle_f = value_f * static_cast<float> (M_PI) * 2.0f;
+    //addVelocity (mouse_x, mouse_y,
+    //             std::abs (std::cos (angle_f) * 0.05f), std::abs (std::sin (angle_f) * 0.05f));
+  //}
 
   float amountX = mouse_x - static_cast<float> (mouse_x_prev);
   float amountY = mouse_y - static_cast<float> (mouse_y_prev);
@@ -295,6 +299,8 @@ PGE_2::OnUserUpdate (float fElapsedTime)
                amountX, amountY);
   mouse_x_prev = mouse_x;
   mouse_y_prev = mouse_y;
+
+  ////////////////////////////////////////
 
   // velocity step
   //SWAP (v_x0_, v_x_);
@@ -316,7 +322,7 @@ PGE_2::OnUserUpdate (float fElapsedTime)
   advect (0, x_, x0_, v_x_, v_y_, dt_);
 
   render_density ();
-  //fade_density ();
+  fade_density ();
 
   //render_velocity ();
 
