@@ -29,21 +29,58 @@ PGE_2::PGE_2 (float dt, float diffusion, float viscosity)
   sAppName = "Example 2";
 }
 
+int
+PGE_2::IX (int x, int y)
+{
+  if (x < 0) { x = 0; }
+  if (x > resolution_ - 1) { x = resolution_ - 1; }
+
+  if (y < 0) { y = 0; }
+  if (y > resolution_ - 1) { y = resolution_ - 1; }
+
+  return (y * resolution_) + x;
+}
+
 void
 PGE_2::set_bounds (int b, float x[])
 {
   for (int i = 1; i < resolution_ - 1; i++)
   {
     x[IX(0,i)]                   = b == 1 ? -x[IX(1,i)] : x[IX(1,i)];
-    x[IX(resolution_ - 2 + 1,i)] = b == 1 ? -x[IX(resolution_ - 2,i)] : x[IX(resolution_ - 2,i)];
+    x[IX(resolution_ - 1,i)]     = b == 1 ? -x[IX(resolution_ - 2,i)] : x[IX(resolution_ - 2,i)];
     x[IX(i,0 )]                  = b == 2 ? -x[IX(i,1)] : x[IX(i,1)];
-    x[IX(i,resolution_ - 2 + 1)] = b == 2 ? -x[IX(i,resolution_ - 2)] : x[IX(i,resolution_ - 2)];
+    x[IX(i,resolution_ - 1)]     = b == 2 ? -x[IX(i,resolution_ - 2)] : x[IX(i,resolution_ - 2)];
   }
 
-  x[IX(0, 0)]                                     = 0.5f * (x[IX(1, 0)] + x[IX(0, 1)]);
-  x[IX(0, resolution_ - 2 + 1)]                   = 0.5f * (x[IX(1, resolution_ - 2 + 1)] + x[IX(0, resolution_ - 2)]);
-  x[IX(resolution_ - 2 + 1, 0)]                   = 0.5f * (x[IX(resolution_ - 2, 0)] + x[IX(resolution_ - 2 + 1, 1)]);
-  x[IX(resolution_ - 2 + 1, resolution_ - 2 + 1)] = 0.5f * (x[IX(resolution_ - 2, resolution_ - 2 + 1)] + x[IX(resolution_ - 2 + 1, resolution_ - 2)]);
+  //x[IX(0, 0)]                                     = 0.5f * (x[IX(1, 0)] + x[IX(0, 1)]);
+  //x[IX(0, resolution_ - 2 + 1)]                   = 0.5f * (x[IX(1, resolution_ - 2 + 1)] + x[IX(0, resolution_ - 2)]);
+  //x[IX(resolution_ - 2 + 1, 0)]                   = 0.5f * (x[IX(resolution_ - 2, 0)] + x[IX(resolution_ - 2 + 1, 1)]);
+  //x[IX(resolution_ - 2 + 1, resolution_ - 2 + 1)] = 0.5f * (x[IX(resolution_ - 2, resolution_ - 2 + 1)] + x[IX(resolution_ - 2 + 1, resolution_ - 2)]);
+  x[IX(0, 0)]                                     = 0.33f * (x[IX(1, 0)] + x[IX(0, 1)] + x[IX(0, 0)]);
+  x[IX(0, resolution_ - 1)]                       = 0.33f * (x[IX(1, resolution_ - 2 + 1)] + x[IX(0, resolution_ - 2)] + x[IX(0, resolution_ - 2 + 1)]);
+  x[IX(resolution_ - 1, 0)]                       = 0.33f * (x[IX(resolution_ - 2, 0)] + x[IX(resolution_ - 1, 1)] + x[IX(resolution_ - 1, 0)]);
+  x[IX(resolution_ - 1, resolution_ - 1)]         = 0.33f * (x[IX(resolution_ - 2, resolution_ - 1)] + x[IX(resolution_ - 1, resolution_ - 2)] + x[IX(resolution_ - 1, resolution_ - 1)]);
+}
+
+void
+PGE_2::solve (int b, float x[], float x0[], float a, float c)
+{
+  float cRecip = 1.0f / c;
+
+  for (int k = 0; k < ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS; k++)
+  {
+    for (int j = 1; j < resolution_ - 1; j++)
+      for (int i = 1; i < resolution_ - 1; i++)
+        x[IX(i, j)] = (x0[IX(i, j)] + a
+          * (x[IX(i + 1, j)]
+            + x[IX(i - 1, j)]
+            + x[IX(i, j + 1)]
+            + x[IX(i, j - 1)]
+            + x[IX(i, j)]
+            + x[IX(i, j)]
+            )) * cRecip;
+    set_bounds (b, x);
+  }
 }
 
 void
@@ -51,20 +88,21 @@ PGE_2::diffuse (int b, float x[], float x0[], float diff, float dt)
 {
   float a = dt * diff * (resolution_ - 2) * (resolution_ - 2);
 
-  for (int k = 0; k < ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS; k++)
-  {
-    for (int i = 1; i < resolution_ - 1; i++)
-      for (int j = 1; j < resolution_ - 1; j++)
-        x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] +
-                                           x[IX(i, j - 1)] + x[IX(i, j + 1)])) / (1 + 4 * a);
-    set_bounds (b, x);
-  }
+  solve (b, x, x0, a, 1 + 6 * a);
+  //for (int k = 0; k < ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS; k++)
+  //{
+  //  for (int i = 1; i < resolution_ - 1; i++)
+  //    for (int j = 1; j < resolution_ - 1; j++)
+  //      x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] +
+  //                                         x[IX(i, j - 1)] + x[IX(i, j + 1)])) / (1 + 4 * a);
+  //  set_bounds (b, x);
+  //}
 }
 
 void
 PGE_2::project (float v_x[], float v_y[], float p[], float div[])
 {
-  float h = 1.0f / resolution_ - 2;
+  float h = 1.0f / resolution_;
 
   for (int i = 1; i < resolution_ - 1; i++)
     for (int j = 1; j < resolution_ - 1; j++)
@@ -75,20 +113,23 @@ PGE_2::project (float v_x[], float v_y[], float p[], float div[])
     }
   set_bounds (0, div); set_bounds (0, p);
 
-  for (int k = 0; k < ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS; k++)
-  {
-    for (int i = 1; i < resolution_ - 1; i++)
-      for (int j = 1; j < resolution_ - 1; j++)
-        p[IX(i, j)] = (div[IX(i, j)] + p[IX(i - 1, j)] + p[IX(i + 1, j)] +
-                                       p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4;
-    set_bounds (0, p);
-  }
+  //for (int k = 0; k < ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS; k++)
+  //{
+  //  for (int i = 1; i < resolution_ - 1; i++)
+  //    for (int j = 1; j < resolution_ - 1; j++)
+  //      p[IX(i, j)] = (div[IX(i, j)] + ((p[IX(i - 1, j)] + p[IX(i + 1, j)] +
+  //                                       p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4));
+  //  set_bounds (0, p);
+  //}
+  solve (0, p, div, 1, 6);
 
   for (int i = 1; i < resolution_ - 1; i++)
     for (int j = 1; j < resolution_ - 1; j++)
     {
-      v_x[IX(i, j)] -= 0.5f * (p[IX(i + 1, j)] - p[IX(i - 1, j)]) / h;
-      v_y[IX(i, j)] -= 0.5f * (p[IX(i, j + 1)] - p[IX(i, j - 1)]) / h;
+      //v_x[IX(i, j)] -= 0.5f * (p[IX(i + 1, j)] - p[IX(i - 1, j)]) / h;
+      //v_y[IX(i, j)] -= 0.5f * (p[IX(i, j + 1)] - p[IX(i, j - 1)]) / h;
+      v_x[IX(i, j)] -= 0.5f * (p[IX(i + 1, j)] - p[IX(i - 1, j)]) * static_cast<float> (resolution_);
+      v_y[IX(i, j)] -= 0.5f * (p[IX(i, j + 1)] - p[IX(i, j - 1)]) * static_cast<float> (resolution_);
     }
   set_bounds (1, v_x); set_bounds (2, v_y);
 }
@@ -96,36 +137,50 @@ PGE_2::project (float v_x[], float v_y[], float p[], float div[])
 void
 PGE_2::advect (int b, float d[], float d0[], float v_x[], float v_y[], float dt)
 {
-  int i0, i1, j0, j1;
-  float dt0 = dt * (resolution_ - 2);
+  float i0, i1, j0, j1;
+
+  float dtx = dt * (resolution_ - 2);
+  float dty = dt * (resolution_ - 2);
+
   float s0, s1, t0, t1;
-  float x, y;
+  float tmp1, tmp2, x, y;
 
-  for (int j = 1; j < resolution_ - 1; j++)
-    for (int i = 1; i < resolution_ - 1; i++)
-    {
-      x = i - dt0 * v_x[IX(i, j)];
-      y = j - dt0 * v_y[IX(i, j)];
+  float Nfloat = static_cast<float> (resolution_);
+  float ifloat, jfloat;
 
-      if (isnan (x) || x < 0.5f)
-        x = 0.5f;
-      if (x > resolution_ - 2 + 0.5f)
-        x = resolution_ - 2 + 0.5f;
-      i0 = int (x); i1 = i0 + 1;
-      if (isnan (y) || y < 0.5f)
-        y = 0.5f;
-      if (y > resolution_ - 2 + 0.5f)
-        y = resolution_ - 2 + 0.5f;
-      j0 = int (y); j1 = j0 + 1;
+  int i, j;
 
-      s1 = x - i0; s0 = 1 - s1;
-      t1 = y - j0; t0 = 1 - t1;
+  for (j = 1, jfloat = 1; j < resolution_ - 1; j++, jfloat++) {
+    for (i = 1, ifloat = 1; i < resolution_ - 1; i++, ifloat++) {
+      tmp1 = dtx * v_x[IX(i, j)];
+      tmp2 = dty * v_y[IX(i, j)];
+      x = ifloat - tmp1;
+      y = jfloat - tmp2;
+
+      if (x < 0.5f) x = 0.5f;
+      if (x > Nfloat + 0.5f) x = Nfloat + 0.5f;
+      i0 = ::floorf(x);
+      i1 = i0 + 1.0f;
+      if (y < 0.5f) y = 0.5f;
+      if (y > Nfloat + 0.5f) y = Nfloat + 0.5f;
+      j0 = ::floorf(y);
+      j1 = j0 + 1.0f;
+
+      s1 = x - i0;
+      s0 = 1.0f - s1;
+      t1 = y - j0;
+      t0 = 1.0f - t1;
+
+      int i0i = static_cast<int> (i0);
+      int i1i = static_cast<int> (i1);
+      int j0i = static_cast<int> (j0);
+      int j1i = static_cast<int> (j1);
 
       d[IX(i, j)] =
-        s0 * (t0 * d0[IX(i0, j0)] + t1 * d0[IX(i0, j1)]) +
-        s1 * (t0 * d0[IX(i1, j0)] + t1 * d0[IX(i1, j1)]);
+        s0 * (t0 * d0[IX(i0i, j0i)] + t1 * d0[IX(i0i, j1i)]) +
+        s1 * (t0 * d0[IX(i1i, j0i)] + t1 * d0[IX(i1i, j1i)]);
     }
-
+  }
   set_bounds (b, d);
 }
 
@@ -166,7 +221,7 @@ PGE_2::render_density ()
   for (int i = 0; i < resolution_; i++)
     for (int j = 0; j < resolution_; j++)
       Draw (i, j,
-            olc::Pixel (255, 255, 255, static_cast<int> (x0_[IX(i, j)]) % 256));
+            olc::Pixel (255, 255, 255, int(x_[IX(i, j)]) > 255 ? 255 : int (x_[IX(i, j)])));
 }
 
 void
@@ -192,7 +247,7 @@ PGE_2::fade_density ()
   for (int i = 0; i < resolution_; i++)
     for (int j = 0; j < resolution_; j++)
     {
-      x_[IX(i, j)] -= 0.02f;
+      x_[IX(i, j)] -= 0.05f;
       if (x_[IX(i, j)] < 0.0f)
         x_[IX(i, j)] = 0.0f;
     }
@@ -206,44 +261,58 @@ PGE_2::OnUserUpdate (float fElapsedTime)
   int cx = int(0.5f * resolution_);
   int cy = int(0.5f * resolution_);
 
+  static int32_t mouse_x_prev = GetMouseX ();
+  static int32_t mouse_y_prev = GetMouseY ();
+
   int32_t mouse_x = GetMouseX ();
   int32_t mouse_y = GetMouseY ();
-  addDensity (mouse_x, mouse_y, Common_Tools::getRandomNumber (50.0f, 250.0f));
+  struct olc::HWButton button_s = GetMouse (olc::Mouse::LEFT);
+  if (button_s.bPressed || button_s.bHeld)
+    for (int i = -10; i <= 10; i++)
+      for (int j = -10; j <= 10; j++)
+        addDensity (mouse_x + i, mouse_y + j, Common_Tools::getRandomNumber (150.0f, 250.0f));
   //Draw (mouse_x, mouse_y,
-  //      olc::Pixel(255, 255, 255, 255));
+  //      olc::Pixel (255, 255, 255, 255));
 
-  for (int i = -1; i <= 1; i++)
-    for (int j = -1; j <= 1; j++)
-      addDensity (cx + i, cy + j, Common_Tools::getRandomNumber (50.0f, 250.0f));
+  //for (int i = -15; i <= 15; i++)
+  //  for (int j = -15; j <= 15; j++)
+  //    addDensity (cx + i, cy + j, Common_Tools::getRandomNumber (150.0f, 250.0f));
 
-  //for (int i = 0; i < 2; i++)
-  //{
+  for (int i = 0; i < 2; i++)
+  {
     float angle_f =
       static_cast<float> (module_.GetValue (ENGINE_GLUT_3_DEFAULT_NOISE_X,
                                             ENGINE_GLUT_3_DEFAULT_NOISE_Y,
                                             z_) * M_PI * 2.0);
     z_ += 0.01;
     addVelocity (mouse_x, mouse_y,
-                 std::abs (std::cos (angle_f * 0.1f)), std::abs (std::sin (angle_f * 0.1f)));
-  //}
+                 std::abs (std::cos (angle_f) * 0.1f), std::abs (std::sin (angle_f) * 0.1f));
+  }
+
+  float amountX = mouse_x - static_cast<float> (mouse_x_prev);
+  float amountY = mouse_y - static_cast<float> (mouse_y_prev);
+  addVelocity (mouse_x, mouse_y,
+               amountX, amountY);
+  mouse_x_prev = mouse_x;
+  mouse_y_prev = mouse_y;
 
   // velocity step
-  SWAP (v_x0_, v_x_);
-  diffuse (1, v_x_, v_x0_, viscosity_, dt_);
-  SWAP (v_y0_, v_y_);
-  diffuse (2, v_y_, v_y0_, viscosity_, dt_);
+  //SWAP (v_x0_, v_x_);
+  diffuse (1, v_x0_, v_x_, viscosity_, dt_);
+  //SWAP (v_y0_, v_y_);
+  diffuse (2, v_y0_, v_y_, viscosity_, dt_);
 
-  project (v_x_, v_y_, v_x0_, v_y0_);
+  project (v_x0_, v_y0_, v_x_, v_y_);
 
-  SWAP (v_x0_, v_x_); SWAP (v_y0_, v_y_);
+  //SWAP (v_x0_, v_x_); SWAP (v_y0_, v_y_);
   advect (1, v_x_, v_x0_, v_x0_, v_y0_, dt_);
   advect (2, v_y_, v_y0_, v_x0_, v_y0_, dt_);
   project (v_x_, v_y_, v_x0_, v_y0_);
 
   // density step
-  SWAP (x0_, x_);
-  diffuse (0, x_, x0_, diffusion_, dt_);
-  SWAP (x0_, x_);
+  //SWAP (x0_, x_);
+  diffuse (0, x0_, x_, diffusion_, dt_);
+  //SWAP (x0_, x_);
   advect (0, x_, x0_, v_x_, v_y_, dt_);
 
   render_density ();

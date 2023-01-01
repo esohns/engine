@@ -16,7 +16,7 @@ class PGE_2
  public:
   PGE_2 (float, float, float);
 
-  inline void addDensity (int x, int y, float amount) { x0_[IX(x, y)] += amount; }
+  inline void addDensity (int x, int y, float amount) { x_[IX(x, y)] += amount; }
   void addVelocity (int, int, float, float);
 
   virtual bool OnUserCreate ();
@@ -24,9 +24,11 @@ class PGE_2
 
  private:
   void set_bounds (int, float[]);
+  void solve (int, float[], float[], float, float);
   void diffuse (int, float[], float[], float, float);
   void project (float[], float[], float[], float[]);
   void advect (int, float[], float[], float[], float[], float);
+  inline int IX (int, int);
 
   void render_density ();
   void render_velocity ();
