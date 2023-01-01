@@ -163,7 +163,7 @@ void
 engine_glut_3_timer (int v)
 {
   struct Engine_OpenGL_GLUT_3_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_3_CBData*> (glutGetWindowData());
+    static_cast<struct Engine_OpenGL_GLUT_3_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   //if (cb_data_p->spinning)

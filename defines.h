@@ -32,6 +32,12 @@
   variable += ACE_TEXT_ALWAYS_CHAR (" , Common "); variable += ACE_TEXT_ALWAYS_CHAR (Common_PACKAGE_VERSION_FULL);       \
 } while (0)
 
+// pge 2
+#define IX(i, j) i + j * resolution_
+#define SWAP(x0, x) {float* tmp=x0;x0=x;x=tmp;}
+
+#define ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS     20
+
 // glut 3
 #define ENGINE_GLUT_3_DEFAULT_NOISE_X           1.25 // coordinate
 #define ENGINE_GLUT_3_DEFAULT_NOISE_Y           0.75 // coordinate
