@@ -71,7 +71,7 @@
                 <property name="relief">half</property>
                 <property name="use_stock">True</property>
                 <property name="focus_on_click">False</property>
-                <signal name="clicked" handler="button_reset_clicked_cb" swapped="no"/>
+                <signal name="clicked" handler="button_reset_3_clicked_cb" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

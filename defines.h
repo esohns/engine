@@ -39,6 +39,20 @@
 
 #define ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS     16
 
+#define ENGINE_PGE_2_DEFAULT_DT                1.0f
+#define ENGINE_PGE_2_DEFAULT_DIFFUSION         0.0f
+#define ENGINE_PGE_2_DEFAULT_VISCOSITY         0.0000001f
+
+#if defined (GTK2_USE)
+#define ENGINE_PGE_2_UI_DEFINITION_FILE        "pge_2.gtk2"
+#else
+#define ENGINE_PGE_2_UI_DEFINITION_FILE        "pge_2.gtk3"
+#endif // GTK2_USE
+
+#define ENGINE_UI_GTK_SCALE_DT_NAME             "scale_dt"
+#define ENGINE_UI_GTK_SCALE_DIFFUSION_NAME      "scale_diffusion"
+#define ENGINE_UI_GTK_SCALE_VISCOSITY_NAME      "scale_viscosity"
+
 // glut 3
 #define ENGINE_GLUT_3_DEFAULT_NOISE_X           1.25 // coordinate
 #define ENGINE_GLUT_3_DEFAULT_NOISE_Y           0.75 // coordinate

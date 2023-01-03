@@ -8,24 +8,176 @@
 
 #include "common_tools.h"
 
+#include "common_ui_defines.h"
+
 #include "defines.h"
 #include "engine_common.h"
 
-PGE_2::PGE_2 (float dt, float diffusion, float viscosity)
+//////////////////////////////////////////
+
+gboolean
+idle_initialize_UI_2_cb (gpointer userData_in)
+{
+  // sanity check(s)
+  struct Engine_UI_GTK_2_CBData* ui_cb_data_p =
+    static_cast<struct Engine_UI_GTK_2_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  Common_UI_GTK_BuildersIterator_t iterator =
+    ui_cb_data_p->UIState->builders.find (ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN));
+  ACE_ASSERT (iterator != ui_cb_data_p->UIState->builders.end ());
+
+  GtkWidget* dialog_p =
+    GTK_WIDGET (gtk_builder_get_object ((*iterator).second.second,
+                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_DIALOG_MAIN_NAME)));
+  ACE_ASSERT (dialog_p);
+ 
+  // step2: (auto-)connect signals/slots
+#if GTK_CHECK_VERSION(4,0,0)
+#else
+  gtk_builder_connect_signals ((*iterator).second.second,
+                               ui_cb_data_p);
+#endif // GTK_CHECK_VERSION(4,0,0)
+
+  // step6a: connect default signals
+#if GTK_CHECK_VERSION(4,0,0)
+#else
+  gulong result_2 =
+      g_signal_connect (dialog_p,
+                        ACE_TEXT_ALWAYS_CHAR ("destroy"),
+                        G_CALLBACK (gtk_widget_destroyed),
+                        &dialog_p);
+  ACE_ASSERT (result_2);
+#endif // GTK_CHECK_VERSION(4,0,0)
+
+  // step9: draw main dialog
+#if GTK_CHECK_VERSION(4,0,0)
+  gtk_widget_show (dialog_p);
+#else
+  gtk_widget_show_all (dialog_p);
+#endif // GTK_CHECK_VERSION(4,0,0)
+
+  return G_SOURCE_REMOVE;
+}
+
+gboolean
+idle_finalize_UI_2_cb (gpointer userData_in)
+{
+  struct Engine_UI_GTK_2_CBData* ui_cb_data_p =
+    static_cast<struct Engine_UI_GTK_2_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  ACE_UNUSED_ARG (ui_cb_data_p);
+
+  return G_SOURCE_REMOVE;
+}
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+void
+scale_dt_value_changed_cb (GtkRange* range_in,
+                           gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_2_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_2_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+
+  ui_cb_data_p->dt = static_cast<float> (gtk_range_get_value (range_in));
+}
+
+void
+scale_diffusion_value_changed_cb (GtkRange* range_in,
+                                  gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_2_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_2_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+
+  ui_cb_data_p->diffusion = static_cast<float> (gtk_range_get_value (range_in));
+}
+
+void
+scale_viscosity_value_changed_cb (GtkRange* range_in,
+                                  gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_2_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_2_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+
+  ui_cb_data_p->viscosity = static_cast<float> (gtk_range_get_value (range_in));
+}
+
+void
+button_reset_2_clicked_cb (GtkButton* button_in,
+                           gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (button_in);
+  struct Engine_UI_GTK_2_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_2_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+  Common_UI_GTK_BuildersIterator_t iterator =
+    ui_cb_data_p->UIState->builders.find (ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN));
+  ACE_ASSERT(iterator != ui_cb_data_p->UIState->builders.end ());
+
+  GtkScale* scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_DT_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), ENGINE_PGE_2_DEFAULT_DT);
+
+  scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_DIFFUSION_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), ENGINE_PGE_2_DEFAULT_DIFFUSION);
+
+  scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_VISCOSITY_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), ENGINE_PGE_2_DEFAULT_VISCOSITY);
+}
+
+void
+button_clear_clicked_cb (GtkButton* button_in,
+                         gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (button_in);
+  struct Engine_UI_GTK_2_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_2_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+
+  ui_cb_data_p->clearScreen = true;
+}
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+//////////////////////////////////////////
+
+PGE_2::PGE_2 (struct Engine_UI_GTK_2_CBData* CBData_in)
  : olc::PixelGameEngine ()
- , resolution_ (0)
- , dt_ (dt)
- , diffusion_ (diffusion)
- , viscosity_ (viscosity)
+ , CBData_ (CBData_in)
  , x_ (NULL)
  , x0_ (NULL)
  , v_x_ (NULL)
  , v_y_ (NULL)
  , v_x0_ (NULL)
  , v_y0_ (NULL)
+ , resolution_(0)
  , z_ (ENGINE_GLUT_3_DEFAULT_NOISE_Z)
  , module_ ()
 {
+  ACE_ASSERT (CBData_);
+
   sAppName = "Example 2";
 }
 
@@ -193,19 +345,25 @@ PGE_2::OnUserCreate ()
   resolution_ = ScreenWidth ();
 
   x_ = new float[resolution_ * resolution_];
-  ACE_OS::memset (x_, 0, sizeof (float) * resolution_ * resolution_);
   x0_ = new float[resolution_ * resolution_];
-  ACE_OS::memset (x0_, 0, sizeof (float) * resolution_ * resolution_);
   v_x_ = new float[resolution_ * resolution_];
-  ACE_OS::memset (v_x_, 0, sizeof (float) * resolution_ * resolution_);
   v_y_ = new float[resolution_ * resolution_];
-  ACE_OS::memset (v_y_, 0, sizeof (float) * resolution_ * resolution_);
   v_x0_ = new float[resolution_ * resolution_];
-  ACE_OS::memset (v_x0_, 0, sizeof (float) * resolution_ * resolution_);
   v_y0_ = new float[resolution_ * resolution_];
-  ACE_OS::memset (v_y0_, 0, sizeof (float) * resolution_ * resolution_);
+  reset ();
 
   return true;
+}
+
+void
+PGE_2::reset ()
+{
+  ACE_OS::memset (x_, 0, sizeof (float) * resolution_ * resolution_);
+  ACE_OS::memset (x0_, 0, sizeof (float) * resolution_ * resolution_);
+  ACE_OS::memset (v_x_, 0, sizeof (float) * resolution_ * resolution_);
+  ACE_OS::memset (v_y_, 0, sizeof (float) * resolution_ * resolution_);
+  ACE_OS::memset (v_x0_, 0, sizeof (float) * resolution_ * resolution_);
+  ACE_OS::memset (v_y0_, 0, sizeof (float) * resolution_ * resolution_);
 }
 
 void
@@ -230,8 +388,8 @@ PGE_2::render_velocity ()
   for (int j = 0; j < resolution_; j++)
     for (int i = 0; i < resolution_; i++)
     {
-      int vx = isnan (v_x_[IX(i, j)]) ? 0 : static_cast<int> (v_x_[IX(i, j)]);
-      int vy = isnan (v_y_[IX(i, j)]) ? 0 : static_cast<int> (v_y_[IX(i, j)]);
+      int vx = static_cast<int> (v_x_[IX(i, j)]);
+      int vy = static_cast<int> (v_y_[IX(i, j)]);
 
       if (vx || vy)
         DrawLine (i, j,
@@ -256,10 +414,15 @@ PGE_2::fade_density ()
 bool
 PGE_2::OnUserUpdate (float fElapsedTime)
 {
-  //olc::PixelGameEngine::Clear (olc::Pixel (0, 0, 0, 255)); // black
+  if (CBData_->clearScreen)
+  {
+    olc::PixelGameEngine::Clear (olc::Pixel (0, 0, 0, 255)); // black
+    reset ();
+    CBData_->clearScreen = false;
+  } // end IF
 
-  int cx = int(0.5f * resolution_);
-  int cy = int(0.5f * resolution_);
+  //int cx = int(0.5f * resolution_);
+  //int cy = int(0.5f * resolution_);
 
   static int32_t mouse_x_prev = GetMouseX ();
   static int32_t mouse_y_prev = GetMouseY ();
@@ -270,9 +433,7 @@ PGE_2::OnUserUpdate (float fElapsedTime)
   if (button_s.bPressed || button_s.bHeld)
     for (int i = -7; i <= 7; i++)
       for (int j = -7; j <= 7; j++)
-        addDensity (mouse_x + i, mouse_y + j, Common_Tools::getRandomNumber (150.0f, 250.0f));
-  //Draw (mouse_x, mouse_y,
-  //      olc::Pixel (255, 255, 255, 255));
+        addDensity (mouse_x + i, mouse_y + j, Common_Tools::getRandomNumber (50.0f, 150.0f));
 
   //for (int i = -15; i <= 15; i++)
   //  for (int j = -15; j <= 15; j++)
@@ -295,8 +456,10 @@ PGE_2::OnUserUpdate (float fElapsedTime)
 
   float amountX = mouse_x - static_cast<float> (mouse_x_prev);
   float amountY = mouse_y - static_cast<float> (mouse_y_prev);
-  addVelocity (mouse_x, mouse_y,
-               amountX, amountY);
+  button_s = GetMouse (olc::Mouse::RIGHT);
+  if (button_s.bPressed || button_s.bHeld)
+    addVelocity (mouse_x, mouse_y,
+                 amountX, amountY);
   mouse_x_prev = mouse_x;
   mouse_y_prev = mouse_y;
 
@@ -304,22 +467,22 @@ PGE_2::OnUserUpdate (float fElapsedTime)
 
   // velocity step
   //SWAP (v_x0_, v_x_);
-  diffuse (1, v_x0_, v_x_, viscosity_, dt_);
+  diffuse (1, v_x0_, v_x_, CBData_->viscosity, CBData_->dt);
   //SWAP (v_y0_, v_y_);
-  diffuse (2, v_y0_, v_y_, viscosity_, dt_);
+  diffuse (2, v_y0_, v_y_, CBData_->viscosity, CBData_->dt);
 
   project (v_x0_, v_y0_, v_x_, v_y_);
 
   //SWAP (v_x0_, v_x_); SWAP (v_y0_, v_y_);
-  advect (1, v_x_, v_x0_, v_x0_, v_y0_, dt_);
-  advect (2, v_y_, v_y0_, v_x0_, v_y0_, dt_);
+  advect (1, v_x_, v_x0_, v_x0_, v_y0_, CBData_->dt);
+  advect (2, v_y_, v_y0_, v_x0_, v_y0_, CBData_->dt);
   project (v_x_, v_y_, v_x0_, v_y0_);
 
   // density step
   //SWAP (x0_, x_);
-  diffuse (0, x0_, x_, diffusion_, dt_);
+  diffuse (0, x0_, x_, CBData_->diffusion, CBData_->dt);
   //SWAP (x0_, x_);
-  advect (0, x_, x0_, v_x_, v_y_, dt_);
+  advect (0, x_, x0_, v_x_, v_y_, CBData_->dt);
 
   render_density ();
   fade_density ();

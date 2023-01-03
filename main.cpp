@@ -231,7 +231,50 @@ do_work (int argc_in,
     }
     case ENGINE_MODE_2:
     {
-      PGE_2 example (0.2f, 0.0f, 0.0000001f);
+      // initialize GTK
+      Common_UI_GTK_Configuration_t gtk_configuration;
+      struct Engine_UI_GTK_2_CBData ui_cb_data;
+      ui_cb_data.clearScreen = false;
+      ui_cb_data.dt = ENGINE_PGE_2_DEFAULT_DT;
+      ui_cb_data.diffusion = ENGINE_PGE_2_DEFAULT_DIFFUSION;
+      ui_cb_data.viscosity = ENGINE_PGE_2_DEFAULT_VISCOSITY;
+      Common_UI_GtkBuilderDefinition_t gtk_ui_definition;
+      Common_UI_GTK_Manager_t* gtk_manager_p =
+        COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
+      ACE_ASSERT (gtk_manager_p);
+      Common_UI_GTK_State_t& state_r =
+        const_cast<Common_UI_GTK_State_t&> (gtk_manager_p->getR ());
+
+      gtk_configuration.argc = argc_in;
+      gtk_configuration.argv = argv_in;
+      gtk_configuration.CBData = &ui_cb_data;
+      gtk_configuration.eventHooks.finiHook = idle_finalize_UI_2_cb;
+      gtk_configuration.eventHooks.initHook = idle_initialize_UI_2_cb;
+      gtk_configuration.definition = &gtk_ui_definition;
+
+      ui_cb_data.UIState = &state_r;
+      ui_cb_data.progressData.state = &state_r;
+
+      state_r.builders[ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN)] =
+        std::make_pair (UIDefinitionFilePath_in, static_cast<GtkBuilder*> (NULL));
+
+      bool result_2 = gtk_manager_p->initialize (gtk_configuration);
+      if (!result_2)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to Common_UI_GTK_Manager_T::initialize(), aborting\n")));
+        return false;
+      } // end IF
+
+      gtk_manager_p->start ();
+      if (!gtk_manager_p->isRunning ())
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to start GTK event dispatch, aborting\n")));
+        return false;
+      } // end IF
+
+      PGE_2 example (&ui_cb_data);
       if (example.Construct (ENGINE_PGE_2_DEFAULT_SIZE, ENGINE_PGE_2_DEFAULT_SIZE,
                              1, 1,
                              false,  // fullscreen ?
@@ -241,6 +284,9 @@ do_work (int argc_in,
         example.Start ();
         result = true;
       } // end IF
+
+      gtk_manager_p->stop (true,   // wait ?
+                           false);
 
       break;
     }
@@ -307,7 +353,7 @@ do_work (int argc_in,
 
       // initialize GTK
       Common_UI_GTK_Configuration_t gtk_configuration;
-      struct Engine_UI_GTK_CBData ui_cb_data;
+      struct Engine_UI_GTK_3_CBData ui_cb_data;
       ui_cb_data.GLUT_CBData = &cb_data_s;
       Common_UI_GtkBuilderDefinition_t gtk_ui_definition;
       Common_UI_GTK_Manager_t* gtk_manager_p =
@@ -319,8 +365,8 @@ do_work (int argc_in,
       gtk_configuration.argc = argc_in;
       gtk_configuration.argv = argv_in;
       gtk_configuration.CBData = &ui_cb_data;
-      gtk_configuration.eventHooks.finiHook = idle_finalize_UI_cb;
-      gtk_configuration.eventHooks.initHook = idle_initialize_UI_cb;
+      gtk_configuration.eventHooks.finiHook = idle_finalize_UI_3_cb;
+      gtk_configuration.eventHooks.initHook = idle_initialize_UI_3_cb;
       gtk_configuration.definition = &gtk_ui_definition;
 
       ui_cb_data.UIState = &state_r;
@@ -329,8 +375,8 @@ do_work (int argc_in,
       state_r.builders[ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN)] =
         std::make_pair (UIDefinitionFilePath_in, static_cast<GtkBuilder*> (NULL));
 
-      int result = gtk_manager_p->initialize (gtk_configuration);
-      if (!result)
+      bool result_2 = gtk_manager_p->initialize (gtk_configuration);
+      if (!result_2)
       {
         ACE_DEBUG ((LM_ERROR,
                     ACE_TEXT ("failed to Common_UI_GTK_Manager_T::initialize(), aborting\n")));
@@ -379,6 +425,8 @@ do_work (int argc_in,
 
       gtk_manager_p->stop (true,   // wait ?
                            false);
+
+      result = true;
 
       break;
     }
@@ -445,7 +493,7 @@ do_work (int argc_in,
 
       // initialize GTK
       Common_UI_GTK_Configuration_t gtk_configuration;
-      struct Engine_UI_GTK_CBData ui_cb_data;
+      struct Engine_UI_GTK_3_CBData ui_cb_data;
       ui_cb_data.GLUT_CBData = &cb_data_s;
       Common_UI_GtkBuilderDefinition_t gtk_ui_definition;
       Common_UI_GTK_Manager_t* gtk_manager_p =
@@ -457,8 +505,8 @@ do_work (int argc_in,
       gtk_configuration.argc = argc_in;
       gtk_configuration.argv = argv_in;
       gtk_configuration.CBData = &ui_cb_data;
-      gtk_configuration.eventHooks.finiHook = idle_finalize_UI_cb;
-      gtk_configuration.eventHooks.initHook = idle_initialize_UI_cb;
+      gtk_configuration.eventHooks.finiHook = idle_finalize_UI_3_cb;
+      gtk_configuration.eventHooks.initHook = idle_initialize_UI_3_cb;
       gtk_configuration.definition = &gtk_ui_definition;
 
       ui_cb_data.UIState = &state_r;
@@ -467,8 +515,8 @@ do_work (int argc_in,
       state_r.builders[ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN)] =
         std::make_pair (UIDefinitionFilePath_in, static_cast<GtkBuilder*> (NULL));
 
-      int result = gtk_manager_p->initialize (gtk_configuration);
-      if (!result)
+      bool result_2 = gtk_manager_p->initialize (gtk_configuration);
+      if (!result_2)
       {
         ACE_DEBUG ((LM_ERROR,
                     ACE_TEXT ("failed to Common_UI_GTK_Manager_T::initialize(), aborting\n")));
@@ -517,6 +565,8 @@ do_work (int argc_in,
 
       gtk_manager_p->stop (true,   // wait ?
                            false);
+
+      result = true;
 
       break;
     }
@@ -591,6 +641,16 @@ ACE_TMAIN (int argc_in,
     result = EXIT_SUCCESS;
     goto clean;
   } // end IF
+
+  // *TODO*: clean this up ASAP
+  if (mode_type_e == ENGINE_MODE_2)
+  {
+    ui_definition_file_path = Common_File_Tools::directory (ui_definition_file_path);
+    ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
+    ui_definition_file_path +=
+      ACE_TEXT_ALWAYS_CHAR (ENGINE_PGE_2_UI_DEFINITION_FILE);
+  } // end IF
+
   if (!Common_File_Tools::isReadable (ui_definition_file_path))
   {
     ACE_DEBUG ((LM_ERROR,

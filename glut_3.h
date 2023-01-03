@@ -33,8 +33,8 @@ void engine_glut_3_idle (void);
 void engine_glut_3_visible (int);
 
 // GTK idle routines
-gboolean idle_initialize_UI_cb (gpointer);
-gboolean idle_finalize_UI_cb (gpointer);
+gboolean idle_initialize_UI_3_cb (gpointer);
+gboolean idle_finalize_UI_3_cb (gpointer);
 
 #ifdef __cplusplus
 extern "C"
@@ -47,7 +47,7 @@ G_MODULE_EXPORT void scale_lacunarity_value_changed_cb (GtkRange*, gpointer);
 G_MODULE_EXPORT void scale_step_value_changed_cb (GtkRange*, gpointer);
 G_MODULE_EXPORT void scale_level_value_changed_cb (GtkRange*, gpointer);
 G_MODULE_EXPORT void scale_speed_value_changed_cb (GtkRange*, gpointer);
-G_MODULE_EXPORT void button_reset_clicked_cb (GtkButton*, gpointer);
+G_MODULE_EXPORT void button_reset_3_clicked_cb (GtkButton*, gpointer);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -82,7 +82,7 @@ struct Engine_OpenGL_GLUT_3_CBData
   double                    offset; // 'moving' along
 };
 
-struct Engine_UI_GTK_CBData
+struct Engine_UI_GTK_3_CBData
  : Common_UI_GTK_CBData
 {
   struct Engine_OpenGL_GLUT_3_CBData* GLUT_CBData;

@@ -330,11 +330,11 @@ engine_glut_3_visible (int vis)
 //////////////////////////////////////////
 
 gboolean
-idle_initialize_UI_cb (gpointer userData_in)
+idle_initialize_UI_3_cb (gpointer userData_in)
 {
   // sanity check(s)
-  struct Engine_UI_GTK_CBData* ui_cb_data_p =
-    static_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  struct Engine_UI_GTK_3_CBData* ui_cb_data_p =
+    static_cast<struct Engine_UI_GTK_3_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   Common_UI_GTK_BuildersIterator_t iterator =
     ui_cb_data_p->UIState->builders.find (ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN));
@@ -374,10 +374,10 @@ idle_initialize_UI_cb (gpointer userData_in)
 }
 
 gboolean
-idle_finalize_UI_cb (gpointer userData_in)
+idle_finalize_UI_3_cb (gpointer userData_in)
 {
-  struct Engine_UI_GTK_CBData* ui_cb_data_p =
-    static_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  struct Engine_UI_GTK_3_CBData* ui_cb_data_p =
+    static_cast<struct Engine_UI_GTK_3_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   ACE_UNUSED_ARG (ui_cb_data_p);
 
@@ -394,8 +394,8 @@ scale_frequency_value_changed_cb (GtkRange* range_in,
 {
   // sanity check(s)
   ACE_ASSERT (range_in);
-  struct Engine_UI_GTK_CBData* ui_cb_data_p =
-    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  struct Engine_UI_GTK_3_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_3_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
@@ -408,8 +408,8 @@ scale_octaves_value_changed_cb (GtkRange* range_in,
 {
   // sanity check(s)
   ACE_ASSERT (range_in);
-  struct Engine_UI_GTK_CBData* ui_cb_data_p =
-    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  struct Engine_UI_GTK_3_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_3_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
@@ -422,8 +422,8 @@ scale_persistence_value_changed_cb (GtkRange* range_in,
 {
   // sanity check(s)
   ACE_ASSERT (range_in);
-  struct Engine_UI_GTK_CBData* ui_cb_data_p =
-    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  struct Engine_UI_GTK_3_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_3_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
@@ -436,8 +436,8 @@ scale_lacunarity_value_changed_cb (GtkRange* range_in,
 {
   // sanity check(s)
   ACE_ASSERT (range_in);
-  struct Engine_UI_GTK_CBData* ui_cb_data_p =
-    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  struct Engine_UI_GTK_3_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_3_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
@@ -450,8 +450,8 @@ scale_step_value_changed_cb (GtkRange* range_in,
 {
   // sanity check(s)
   ACE_ASSERT (range_in);
-  struct Engine_UI_GTK_CBData* ui_cb_data_p =
-    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  struct Engine_UI_GTK_3_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_3_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
@@ -464,8 +464,8 @@ scale_level_value_changed_cb (GtkRange* range_in,
 {
   // sanity check(s)
   ACE_ASSERT (range_in);
-  struct Engine_UI_GTK_CBData* ui_cb_data_p =
-    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  struct Engine_UI_GTK_3_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_3_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
@@ -479,8 +479,8 @@ scale_speed_value_changed_cb (GtkRange* range_in,
 {
   // sanity check(s)
   ACE_ASSERT (range_in);
-  struct Engine_UI_GTK_CBData* ui_cb_data_p =
-    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  struct Engine_UI_GTK_3_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_3_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
@@ -488,13 +488,13 @@ scale_speed_value_changed_cb (GtkRange* range_in,
 }
 
 void
-button_reset_clicked_cb (GtkButton* button_in,
-                         gpointer userData_in)
+button_reset_3_clicked_cb (GtkButton* button_in,
+                           gpointer userData_in)
 {
   // sanity check(s)
   ACE_ASSERT (button_in);
-  struct Engine_UI_GTK_CBData* ui_cb_data_p =
-    reinterpret_cast<struct Engine_UI_GTK_CBData*> (userData_in);
+  struct Engine_UI_GTK_3_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_3_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   Common_UI_GTK_BuildersIterator_t iterator =
     ui_cb_data_p->UIState->builders.find (ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN));
@@ -537,7 +537,6 @@ button_reset_clicked_cb (GtkButton* button_in,
   ACE_ASSERT (scale_p);
   gtk_range_set_value (GTK_RANGE (scale_p), 0.03);
 }
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
