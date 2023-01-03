@@ -68,6 +68,18 @@ find_path (PGE_INCLUDE_DIR
            olcPixelGameEngine.h
            HINTS ${PGE_DIR})
 
+if (WIN32)
+ set (CMAKE_BUILD_TYPE $<CONFIG> CACHE STRING "build type" FORCE)
+endif (WIN32)
+if ($<CONFIG> STREQUAL "Debug" OR
+    $<CONFIG> STREQUAL "RelWithDebInfo" OR
+    ${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR
+    ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+ set (LIB_FILE_SUFFIX "d" CACHE STRING "lib file suffix" FORCE)
+else ()
+ set (LIB_FILE_SUFFIX "" CACHE STRING "lib file suffix" FORCE)
+endif ()
+
 if (DEFINED ENV{LIB_ROOT})
  set (LIBNOISE_DIR "$ENV{LIB_ROOT}/libnoise" )
 endif (DEFINED ENV{LIB_ROOT})
@@ -108,11 +120,6 @@ if (UNIX)
  endif (GLUT_LIBRARY)
 elseif (WIN32)
  set (GLUT_LIB_FILE freeglut.lib)
-# unset (LIB_FILE_SUFFIX)
-#     if (CMAKE_BUILD_TYPE STREQUAL Debug)
-#      set (LIB_FILE_SUFFIX d)
-#     endif ()
-#  set (GLUT_LIB_FILE ${GLUT_LIB_FILE}${LIB_FILE_SUFFIX}.lib)
  set (BIN_PATH_SUFFIX "bin")
  set (LIB_PATH_BASE "freeglut")
  set (LIB_PATH_SUFFIX "lib")
@@ -358,7 +365,6 @@ if (UNIX)
  target_link_libraries (${EXECUTABLE} X11)
  target_link_libraries (${EXECUTABLE} GL)
  target_link_libraries (${EXECUTABLE} png)
-elseif (WIN32)
 endif ()
 target_link_libraries (${EXECUTABLE} ${LIBNOISE_LIB})
 target_link_libraries (${EXECUTABLE} ${GLUT_LIBRARIES})
