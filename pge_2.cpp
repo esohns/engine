@@ -75,6 +75,19 @@ extern "C"
 {
 #endif /* __cplusplus */
 void
+scale_iterations_value_changed_cb (GtkRange* range_in,
+                                   gpointer userData_in)
+{
+  // sanity check(s)
+  ACE_ASSERT (range_in);
+  struct Engine_UI_GTK_2_CBData* ui_cb_data_p =
+    reinterpret_cast<struct Engine_UI_GTK_2_CBData*> (userData_in);
+  ACE_ASSERT (ui_cb_data_p);
+
+  ui_cb_data_p->dt = static_cast<float> (gtk_range_get_value (range_in));
+}
+
+void
 scale_dt_value_changed_cb (GtkRange* range_in,
                            gpointer userData_in)
 {
@@ -84,7 +97,7 @@ scale_dt_value_changed_cb (GtkRange* range_in,
     reinterpret_cast<struct Engine_UI_GTK_2_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
 
-  ui_cb_data_p->dt = static_cast<float> (gtk_range_get_value (range_in));
+  ui_cb_data_p->iterations = static_cast<int> (gtk_range_get_value (range_in));
 }
 
 void
@@ -127,6 +140,12 @@ button_reset_2_clicked_cb (GtkButton* button_in,
   ACE_ASSERT(iterator != ui_cb_data_p->UIState->builders.end ());
 
   GtkScale* scale_p =
+    GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
+                                       ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_ITERATIONS_NAME)));
+  ACE_ASSERT (scale_p);
+  gtk_range_set_value (GTK_RANGE (scale_p), ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS);
+
+  scale_p =
     GTK_SCALE (gtk_builder_get_object ((*iterator).second.second,
                                        ACE_TEXT_ALWAYS_CHAR (ENGINE_UI_GTK_SCALE_DT_NAME)));
   ACE_ASSERT (scale_p);
@@ -181,6 +200,16 @@ PGE_2::PGE_2 (struct Engine_UI_GTK_2_CBData* CBData_in)
   sAppName = "Example 2";
 }
 
+PGE_2::~PGE_2 ()
+{
+  delete [] x_;
+  delete [] x0_;
+  delete [] v_x_;
+  delete [] v_x0_;
+  delete [] v_y_;
+  delete [] v_y0_;
+}
+
 int
 PGE_2::IX (int x, int y)
 {
@@ -215,11 +244,11 @@ PGE_2::set_bounds (int b, float x[])
 }
 
 void
-PGE_2::solve (int b, float x[], float x0[], float a, float c)
+PGE_2::solve (int b, float x[], float x0[], float a, float c, int iterations)
 {
   float cRecip = 1.0f / c;
 
-  for (int k = 0; k < ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS; k++)
+  for (int k = 0; k < iterations; k++)
   {
     for (int j = 1; j < resolution_ - 1; j++)
       for (int i = 1; i < resolution_ - 1; i++)
@@ -236,12 +265,12 @@ PGE_2::solve (int b, float x[], float x0[], float a, float c)
 }
 
 void
-PGE_2::diffuse (int b, float x[], float x0[], float diff, float dt)
+PGE_2::diffuse (int b, float x[], float x0[], float diff, float dt, int iterations)
 {
   float a = dt * diff * (resolution_ - 2) * (resolution_ - 2);
 
-  solve (b, x, x0, a, 1 + 6 * a);
-  //for (int k = 0; k < ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS; k++)
+  solve (b, x, x0, a, 1 + 6 * a, iterations);
+  //for (int k = 0; k < iterations; k++)
   //{
   //  for (int i = 1; i < resolution_ - 1; i++)
   //    for (int j = 1; j < resolution_ - 1; j++)
@@ -252,7 +281,7 @@ PGE_2::diffuse (int b, float x[], float x0[], float diff, float dt)
 }
 
 void
-PGE_2::project (float v_x[], float v_y[], float p[], float div[])
+PGE_2::project (float v_x[], float v_y[], float p[], float div[], int iterations)
 {
   float h = 1.0f / resolution_;
 
@@ -265,7 +294,7 @@ PGE_2::project (float v_x[], float v_y[], float p[], float div[])
     }
   set_bounds (0, div); set_bounds (0, p);
 
-  //for (int k = 0; k < ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS; k++)
+  //for (int k = 0; k < iterations; k++)
   //{
   //  for (int i = 1; i < resolution_ - 1; i++)
   //    for (int j = 1; j < resolution_ - 1; j++)
@@ -273,7 +302,7 @@ PGE_2::project (float v_x[], float v_y[], float p[], float div[])
   //                                       p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4));
   //  set_bounds (0, p);
   //}
-  solve (0, p, div, 1, 6);
+  solve (0, p, div, 1, 6, iterations);
 
   for (int i = 1; i < resolution_ - 1; i++)
     for (int j = 1; j < resolution_ - 1; j++)
@@ -453,13 +482,17 @@ PGE_2::OnUserUpdate (float fElapsedTime)
     //addVelocity (mouse_x, mouse_y,
     //             std::abs (std::cos (angle_f) * 0.05f), std::abs (std::sin (angle_f) * 0.05f));
   //}
-
-  float amountX = mouse_x - static_cast<float> (mouse_x_prev);
-  float amountY = mouse_y - static_cast<float> (mouse_y_prev);
+   
   button_s = GetMouse (olc::Mouse::RIGHT);
   if (button_s.bPressed || button_s.bHeld)
+  {
+    float amountX =
+      (static_cast<float> (mouse_x) - static_cast<float> (mouse_x_prev)) * 1.1f;
+    float amountY =
+      (static_cast<float> (mouse_y) - static_cast<float> (mouse_y_prev)) * 1.1f;
     addVelocity (mouse_x, mouse_y,
                  amountX, amountY);
+  } // end IF
   mouse_x_prev = mouse_x;
   mouse_y_prev = mouse_y;
 
@@ -467,20 +500,20 @@ PGE_2::OnUserUpdate (float fElapsedTime)
 
   // velocity step
   //SWAP (v_x0_, v_x_);
-  diffuse (1, v_x0_, v_x_, CBData_->viscosity, CBData_->dt);
+  diffuse (1, v_x0_, v_x_, CBData_->viscosity, CBData_->dt, CBData_->iterations);
   //SWAP (v_y0_, v_y_);
-  diffuse (2, v_y0_, v_y_, CBData_->viscosity, CBData_->dt);
+  diffuse (2, v_y0_, v_y_, CBData_->viscosity, CBData_->dt, CBData_->iterations);
 
-  project (v_x0_, v_y0_, v_x_, v_y_);
+  project (v_x0_, v_y0_, v_x_, v_y_, CBData_->iterations);
 
   //SWAP (v_x0_, v_x_); SWAP (v_y0_, v_y_);
   advect (1, v_x_, v_x0_, v_x0_, v_y0_, CBData_->dt);
   advect (2, v_y_, v_y0_, v_x0_, v_y0_, CBData_->dt);
-  project (v_x_, v_y_, v_x0_, v_y0_);
+  project (v_x_, v_y_, v_x0_, v_y0_, CBData_->iterations);
 
   // density step
   //SWAP (x0_, x_);
-  diffuse (0, x0_, x_, CBData_->diffusion, CBData_->dt);
+  diffuse (0, x0_, x_, CBData_->diffusion, CBData_->dt, CBData_->iterations);
   //SWAP (x0_, x_);
   advect (0, x_, x0_, v_x_, v_y_, CBData_->dt);
 

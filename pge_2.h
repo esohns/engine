@@ -21,6 +21,7 @@ gboolean idle_finalize_UI_2_cb (gpointer);
 extern "C"
 {
 #endif /* __cplusplus */
+G_MODULE_EXPORT void scale_iterations_value_changed_cb (GtkRange*, gpointer);
 G_MODULE_EXPORT void scale_dt_value_changed_cb (GtkRange*, gpointer);
 G_MODULE_EXPORT void scale_diffusion_value_changed_cb (GtkRange*, gpointer);
 G_MODULE_EXPORT void scale_viscosity_value_changed_cb (GtkRange*, gpointer);
@@ -33,7 +34,8 @@ G_MODULE_EXPORT void button_clear_clicked_cb (GtkButton*, gpointer);
 struct Engine_UI_GTK_2_CBData
  : Common_UI_GTK_CBData
 {
-  bool clearScreen;
+  bool  clearScreen;
+  int   iterations;
   float dt;
   float diffusion;
   float viscosity;
@@ -45,6 +47,7 @@ class PGE_2
 {
  public:
   PGE_2 (struct Engine_UI_GTK_2_CBData*);
+  ~PGE_2 ();
 
   inline void addDensity (int x, int y, float amount) { x_[IX(x, y)] += amount; }
   void addVelocity (int, int, float, float);
@@ -54,9 +57,9 @@ class PGE_2
 
  private:
   void set_bounds (int, float[]);
-  void solve (int, float[], float[], float, float);
-  void diffuse (int, float[], float[], float, float);
-  void project (float[], float[], float[], float[]);
+  void solve (int, float[], float[], float, float, int);
+  void diffuse (int, float[], float[], float, float, int);
+  void project (float[], float[], float[], float[], int);
   void advect (int, float[], float[], float[], float[], float);
   inline int IX (int, int);
 

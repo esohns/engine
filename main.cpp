@@ -235,6 +235,7 @@ do_work (int argc_in,
       Common_UI_GTK_Configuration_t gtk_configuration;
       struct Engine_UI_GTK_2_CBData ui_cb_data;
       ui_cb_data.clearScreen = false;
+      ui_cb_data.iterations = ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS;
       ui_cb_data.dt = ENGINE_PGE_2_DEFAULT_DT;
       ui_cb_data.diffusion = ENGINE_PGE_2_DEFAULT_DIFFUSION;
       ui_cb_data.viscosity = ENGINE_PGE_2_DEFAULT_VISCOSITY;

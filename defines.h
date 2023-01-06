@@ -37,8 +37,7 @@
 //#define SWAP(x0, x) {float* tmp=x0;x0=x;x=tmp;}
 #define ENGINE_PGE_2_DEFAULT_SIZE               320
 
-#define ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS     16
-
+#define ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS    16
 #define ENGINE_PGE_2_DEFAULT_DT                1.0f
 #define ENGINE_PGE_2_DEFAULT_DIFFUSION         0.00000001f
 #define ENGINE_PGE_2_DEFAULT_VISCOSITY         0.00000001f
@@ -49,6 +48,7 @@
 #define ENGINE_PGE_2_UI_DEFINITION_FILE        "pge_2.gtk3"
 #endif // GTK2_USE
 
+#define ENGINE_UI_GTK_SCALE_ITERATIONS_NAME     "scale_iterations"
 #define ENGINE_UI_GTK_SCALE_DT_NAME             "scale_dt"
 #define ENGINE_UI_GTK_SCALE_DIFFUSION_NAME      "scale_diffusion"
 #define ENGINE_UI_GTK_SCALE_VISCOSITY_NAME      "scale_viscosity"
