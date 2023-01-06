@@ -450,12 +450,8 @@ PGE_2::OnUserUpdate (float fElapsedTime)
     CBData_->clearScreen = false;
   } // end IF
 
-  //int cx = int(0.5f * resolution_);
-  //int cy = int(0.5f * resolution_);
-
   static int32_t mouse_x_prev = GetMouseX ();
   static int32_t mouse_y_prev = GetMouseY ();
-
   int32_t mouse_x = GetMouseX ();
   int32_t mouse_y = GetMouseY ();
   struct olc::HWButton button_s = GetMouse (olc::Mouse::LEFT);
@@ -463,6 +459,9 @@ PGE_2::OnUserUpdate (float fElapsedTime)
     for (int i = -7; i <= 7; i++)
       for (int j = -7; j <= 7; j++)
         addDensity (mouse_x + i, mouse_y + j, Common_Tools::getRandomNumber (50.0f, 150.0f));
+
+  //int cx = int(0.5f * resolution_);
+  //int cy = int(0.5f * resolution_);
 
   //for (int i = -15; i <= 15; i++)
   //  for (int j = -15; j <= 15; j++)
@@ -518,7 +517,7 @@ PGE_2::OnUserUpdate (float fElapsedTime)
   advect (0, x_, x0_, v_x_, v_y_, CBData_->dt);
 
   render_density ();
-  fade_density ();
+  //fade_density ();
 
   //render_velocity ();
 
