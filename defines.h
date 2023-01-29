@@ -88,4 +88,8 @@
 #define ENGINE_PGE_6_DEFAULT_WIDTH              600
 #define ENGINE_PGE_6_DEFAULT_NUMBER_OF_FIRES    75
 
+// pge 7
+#define ENGINE_PGE_7_DEFAULT_HEIGHT             240
+#define ENGINE_PGE_7_DEFAULT_WIDTH              320
+
 #endif

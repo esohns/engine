@@ -44,6 +44,7 @@
 #include "glut_4.h"
 #include "pge_5.h"
 #include "pge_6.h"
+#include "pge_7.h"
 
 enum Engine_ModeType
 {
@@ -53,6 +54,7 @@ enum Engine_ModeType
   ENGINE_MODE_4,
   ENGINE_MODE_5,
   ENGINE_MODE_6,
+  ENGINE_MODE_7,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -595,6 +597,21 @@ do_work (int argc_in,
       PGE_6 example;
       if (example.Construct (ENGINE_PGE_6_DEFAULT_WIDTH, ENGINE_PGE_6_DEFAULT_HEIGHT,
                              2, 2,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_7:
+    {
+      PGE_7 example;
+      if (example.Construct (ENGINE_PGE_7_DEFAULT_WIDTH, ENGINE_PGE_7_DEFAULT_HEIGHT,
+                             4, 4,
                              false,  // fullscreen ?
                              false,  // vsync ?
                              false)) // cohesion ?
