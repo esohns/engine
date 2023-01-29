@@ -256,11 +256,11 @@ elseif (WIN32)
    set (ffmpeg_LIBRARIES "${FFMPEG_LIBRARY_AVCODEC};${FFMPEG_LIBRARY_AVFORMAT};${FFMPEG_LIBRARY_SWSCALE};${FFMPEG_LIBRARY_AVUTIL}")
    if (EXISTS $ENV{FFMPEG_ROOT})
     set (ffmpeg_INCLUDE_DIRS "${FFMPEG_ROOT}")
-    set (ffmpeg_LIB_DIR "${FFMPEG_ROOT}/bin;${FFMPEG_ROOT}/libavcodec;${FFMPEG_ROOT}/libavformat;${FFMPEG_ROOT}/libswscale;${FFMPEG_ROOT}/libswresample;${FFMPEG_ROOT}/libavutil" CACHE INTERNAL "")
+    set (ffmpeg_LIB_DIR "${FFMPEG_ROOT}/libavcodec;${FFMPEG_ROOT}/libavformat;${FFMPEG_ROOT}/libswscale;${FFMPEG_ROOT}/libswresample;${FFMPEG_ROOT}/libavutil" CACHE INTERNAL "")
 #    message (STATUS "ffmpeg_LIB_DIR: ${ffmpeg_LIB_DIR}")
    else ()
     set (ffmpeg_INCLUDE_DIRS "${FFMPEG_ROOT}/include")
-    set (ffmpeg_LIB_DIR "${FFMPEG_ROOT}/bin")
+    set (ffmpeg_LIB_DIR "${FFMPEG_ROOT}")
    endif (EXISTS $ENV{FFMPEG_ROOT})
   endif (FFMPEG_LIBRARY_AVCODEC AND FFMPEG_LIBRARY_AVFORMAT AND FFMPEG_LIBRARY_SWSCALE AND FFMPEG_LIBRARY_AVUTIL)
  endif (NOT FFMPEG_FOUND)
@@ -354,6 +354,8 @@ set (engine_EXE_SRCS
      glut_3.h
      glut_4.cpp
      glut_4.h
+     pge_5.cpp
+     pge_5.h
      stdafx.h)
 
 #cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property

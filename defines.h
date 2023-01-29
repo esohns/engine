@@ -79,4 +79,8 @@
 #define ENGINE_UI_GTK_SCALE_LEVEL_NAME          "scale_level"
 #define ENGINE_UI_GTK_SCALE_SPEED_NAME          "scale_speed"
 
+// pge 5
+#define ENGINE_PGE_5_DEFAULT_HEIGHT             240
+#define ENGINE_PGE_5_DEFAULT_WIDTH              320
+
 #endif

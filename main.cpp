@@ -42,13 +42,15 @@
 #include "pge_2.h"
 #include "glut_3.h"
 #include "glut_4.h"
+#include "pge_5.h"
 
 enum Engine_ModeType
 {
-  ENGINE_MODE_DEFAULT = 0,
+  ENGINE_MODE_DEFAULT = 1,
   ENGINE_MODE_2,
   ENGINE_MODE_3,
   ENGINE_MODE_4,
+  ENGINE_MODE_5,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -568,6 +570,21 @@ do_work (int argc_in,
                            false);
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_5:
+    {
+      PGE_5 example;
+      if (example.Construct (ENGINE_PGE_5_DEFAULT_WIDTH, ENGINE_PGE_5_DEFAULT_HEIGHT,
+                             4, 4,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }
