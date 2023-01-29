@@ -7,7 +7,6 @@
 
 #include "defines.h"
 
-// *NOTE*: see also: https://www.dgp.toronto.edu/public_user/stam/reality/Research/pdf/GDC03.pdf
 class PGE_5
  : public olc::PixelGameEngine
 {
