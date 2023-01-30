@@ -60,7 +60,7 @@ PGE_9::addSprite (int pattern_repetitions, int inverse)
   for (int y = 0; y < ScreenHeight (); y++)
     for (int x = pattern_width; x < ScreenWidth (); x++)
     {
-      imagePix = threeDImage->GetPixel(x, y);
+      imagePix = threeDImage->GetPixel (x, y);
       int greyscale = (imagePix.r + imagePix.g + imagePix.b) / 3;
       offset = greyscale / (255 / pattern_repetitions);
 

@@ -100,4 +100,8 @@
 #define ENGINE_PGE_9_DEFAULT_HEIGHT             500
 #define ENGINE_PGE_9_DEFAULT_WIDTH              800
 
+// pge 10
+#define ENGINE_PGE_10_DEFAULT_HEIGHT            480
+#define ENGINE_PGE_10_DEFAULT_WIDTH             640
+
 #endif

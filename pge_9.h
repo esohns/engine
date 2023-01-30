@@ -10,6 +10,9 @@
 #define DISPLAY_DOTS 0
 #define DISPLAY_PATTERN 1
 
+// *NOTE*: see also: https://www.ime.usp.br/~otuyama/stereogram/basic/index.html
+//  and              https://github.com/synesthesiam/magicpy
+//  and              https://github.com/kaltinril/olcGames/stereogram
 class PGE_9
  : public olc::PixelGameEngine
 {
