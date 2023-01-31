@@ -69,7 +69,7 @@ find_path (PGE_INCLUDE_DIR
            HINTS ${PGE_DIR})
 
 if (WIN32)
- set (CMAKE_BUILD_TYPE $<CONFIG> CACHE STRING "build type" FORCE)
+# set (CMAKE_BUILD_TYPE $<CONFIG> CACHE STRING "build type" FORCE)
 endif (WIN32)
 if ($<CONFIG> STREQUAL "Debug" OR
     $<CONFIG> STREQUAL "RelWithDebInfo" OR
@@ -93,7 +93,7 @@ if (UNIX)
                REQUIRED
                NO_DEFAULT_PATH)
 elseif (WIN32)
- set (LIBNOISE_LIBRARY "libnoise.lib")
+ set (LIBNOISE_LIBRARY "noise.lib")
  find_library (LIBNOISE_LIB ${LIBNOISE_LIBRARY}
                PATHS ${LIBNOISE_DIR}
                PATH_SUFFIXES build/msvc/${CMAKE_BUILD_TYPE}
@@ -322,6 +322,7 @@ include (glm)
 
 ############## includes ###############
 include_directories (${PGE_INCLUDE_DIR})
+include_directories (${PGE_INCLUDE_DIR}/extensions)
 include_directories (${LIBNOISE_INCLUDES})
 include_directories (${GLUT_INCLUDE_DIRS})
 include_directories (${GTK_INCLUDE_DIRS})
@@ -366,6 +367,8 @@ set (engine_EXE_SRCS
      pge_9.h
      pge_10.cpp
      pge_10.h
+     pge_11.cpp
+     pge_11.h
      stdafx.h)
 
 #cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property
