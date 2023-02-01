@@ -95,11 +95,11 @@ class PGE_10
 
         int alpha = int((4 * normalizedLifetime * (1 - normalizedLifetime)) * 256);
         //int alpha = int((1 - (4 * normalizedLifetime * (1 - normalizedLifetime))) * 256);
-        alpha = (1-normalizedLifetime) * 256;
+        alpha = (1 - normalizedLifetime) * 256;
         
         color.a = alpha;
-        color.r = alpha * ( 0.80); // Making it slightly purple
-        color.g = alpha * (0.25); // Making it slightly purple
+        color.r = alpha * (0.80);
+        color.g = alpha * (0.25);
         color.b = alpha;
 
         scale = (0.75f + (.25f * normalizedLifetime));
@@ -115,7 +115,7 @@ class PGE_10
 
     Renderable* sprite;
     olc::Decal* decal = NULL;
-    olc::Pixel color; // Control tint and alpha of sprite with this
+    olc::Pixel color;
     float scale = 1.0f; // 1.0 = 100% // 2.0 = 200%
 
     // Control the movement of the particle

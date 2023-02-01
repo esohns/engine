@@ -21,14 +21,14 @@ class PGE_11
  private:
   struct ball
   {
-    olc::vf2d pt;
+    olc::vf2d pos;
     olc::vf2d vel;
     olc::vf2d acc;
     float radius;
   };
 
   void add (const olc::vf2d&, float = 40.0f);
-  float map (float, float, float, float, float);
+  //float map (float, float, float, float, float);
 
   std::vector<ball> balls_;
 };

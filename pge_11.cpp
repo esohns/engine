@@ -31,33 +31,33 @@ void
 PGE_11::add (const olc::vf2d& pos, float r)
 {
   struct ball b;
-  b.pt = pos;
+  b.pos = pos;
   olc::vf2d vel;
-  vel.x = 1 + (int)rand() % 10;
-  vel.y = 1 + (int)rand() % 10;
+  vel.x = 1 + rand () % 10;
+  vel.y = 1 + rand () % 10;
   vel.norm ();
-  b.vel = vel * 10 ;
+  b.vel = vel * 10;
   b.radius = r;
   balls_.emplace_back (b);
 }
 
-float
-PGE_11::map (float s, float a1, float a2, float b1, float b2)
-{
-  return b1 + (s-a1)*(b2-b1)/(a2-a1);
-}
+//float
+//PGE_11::map (float s, float a1, float a2, float b1, float b2)
+//{
+//  return b1 + (s-a1)*(b2-b1)/(a2-a1);
+//}
 
 bool
 PGE_11::OnUserCreate ()
 {
-  srand(time(NULL));
+  srand (time (NULL));
 
   for (int i = 0; i < 7; i++)
   {
-    olc::vf2d RandBall;
-    RandBall.x = rand() % ScreenWidth();
-    RandBall.y = rand() % ScreenHeight();
-    add (RandBall, (float)(rand() % 30 + 2));
+    olc::vf2d position_s;
+    position_s.x = rand () % ScreenWidth ();
+    position_s.y = rand () % ScreenHeight ();
+    add (position_s, (float)(rand () % 30 + 2));
   } // end FOR
  
   return true;
@@ -68,10 +68,10 @@ PGE_11::OnUserUpdate (float fElapsedTime)
 {
   for (auto& ball : balls_)
   {
-    ball.pt += ball.vel * fElapsedTime;
+    ball.pos += ball.vel * fElapsedTime;
 
-    if (ball.pt.x < 0 || ball.pt.x >= ScreenWidth()) ball.vel.x *= -1;
-    if (ball.pt.y < 0 || ball.pt.y >= ScreenHeight()) ball.vel.y *= -1;
+    if (ball.pos.x < 0 || ball.pos.x >= ScreenWidth ()) ball.vel.x *= -1;
+    if (ball.pos.y < 0 || ball.pos.y >= ScreenHeight ()) ball.vel.y *= -1;
   } // end FOR
 
   for (int x = 0; x < ScreenWidth (); x++)
@@ -80,8 +80,8 @@ PGE_11::OnUserUpdate (float fElapsedTime)
       float sum = 0.0f;
       for (auto ball : balls_)
       {
-        olc::vf2d vPoint { (float)x, (float)y };
-        sum += 200 * ball.radius / vPoint.dist (ball.pt);
+        olc::vf2d point_s { (float)x, (float)y };
+        sum += 200 * ball.radius / point_s.dist (ball.pos);
       } // end FOR
       Draw (x, y, olc::Colours::FromHsv (sum, 255, 255));
     } // end FOR
