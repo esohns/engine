@@ -69,11 +69,11 @@ PGE_12::computeDFT (const std::vector<std::complex<float> >& input_in)
     f.com /= (float)N;
     f.nFreq = k;
     f.fAmp = std::sqrt (f.com.real () * f.com.real () + f.com.imag () * f.com.imag ());
-    f.fPhase = atan2 (f.com.imag (), f.com.real ());
+    f.fPhase = std::atan2 (f.com.imag (), f.com.real ());
     output.push_back (f);
   } // end FOR
 
-  // sort in decending amplitude size
+  // *NOTE*: sort in decending amplitude size (optional)
   std::sort (output.begin (), output.end (), [](const t_fourier& a, const t_fourier& b) { return a.fAmp > b.fAmp; });
 
   return output;
@@ -98,10 +98,10 @@ PGE_12::drawEpicycle (olc::vf2d origin_in, float rotation_in, const std::vector<
       olc::vf2d pre_orig = origin_in;
 
       origin_in +=
-        {vF.fAmp * cos (vF.nFreq * fDelta + vF.fPhase + rotation_in),
-         vF.fAmp * sin (vF.nFreq * fDelta + vF.fPhase + rotation_in)};
+        {vF.fAmp * std::cos (vF.nFreq * fDelta + vF.fPhase + rotation_in),
+         vF.fAmp * std::sin (vF.nFreq * fDelta + vF.fPhase + rotation_in)};
 
-      DrawCircle (pre_orig, fabs (vF.fAmp), olc::VERY_DARK_GREY);
+      DrawCircle (pre_orig, std::fabs (vF.fAmp), olc::VERY_DARK_GREY);
 
       DrawLine (pre_orig, origin_in);
     } // end IF
