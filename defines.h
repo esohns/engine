@@ -112,4 +112,8 @@
 #define ENGINE_PGE_12_DEFAULT_HEIGHT            480
 #define ENGINE_PGE_12_DEFAULT_WIDTH             640
 
+// pge 13
+#define ENGINE_PGE_13_DEFAULT_HEIGHT            300
+#define ENGINE_PGE_13_DEFAULT_WIDTH             600
+
 #endif
