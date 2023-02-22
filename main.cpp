@@ -37,6 +37,7 @@
 
 #include "defines.h"
 #include "engine_common.h"
+
 #define OLC_PGE_APPLICATION
 #include "pge.h"
 #include "pge_2.h"
@@ -51,6 +52,7 @@
 #include "pge_11.h"
 #include "pge_12.h"
 #include "pge_13.h"
+#include "pge_14.h"
 
 enum Engine_ModeType
 {
@@ -67,6 +69,7 @@ enum Engine_ModeType
   ENGINE_MODE_11,
   ENGINE_MODE_12,
   ENGINE_MODE_13,
+  ENGINE_MODE_14,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -716,6 +719,21 @@ do_work (int argc_in,
                              2, 2,
                              false,  // fullscreen ?
                              false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_14:
+    {
+      PGE_14 example;
+      if (example.Construct (ENGINE_PGE_14_DEFAULT_WIDTH, ENGINE_PGE_14_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             true,   // vsync ?
                              false)) // cohesion ?
       {
         example.Start ();

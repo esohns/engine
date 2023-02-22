@@ -1,6 +1,8 @@
 #ifndef PGE_13_H
 #define PGE_13_H
 
+#include <vector>
+
 #include "olcPixelGameEngine.h"
 
 #include "ace/Basic_Types.h"
@@ -37,4 +39,4 @@ class PGE_13
   void explode (const olc::vf2d&);
 };
 
-#endif // PGE_12_H
+#endif // PGE_13_H

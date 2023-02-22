@@ -2,6 +2,7 @@
 #define PGE_12_H
 
 #include <complex>
+#include <vector>
 
 #include "olcPixelGameEngine.h"
 

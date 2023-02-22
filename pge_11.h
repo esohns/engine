@@ -1,6 +1,8 @@
 #ifndef PGE_11_H
 #define PGE_11_H
 
+#include <vector>
+
 #include "olcPixelGameEngine.h"
 #include "olcPGEX_AdditionalColours.h"
 
