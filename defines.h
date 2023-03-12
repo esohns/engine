@@ -87,6 +87,9 @@
 #define ENGINE_PGE_6_DEFAULT_HEIGHT             400
 #define ENGINE_PGE_6_DEFAULT_WIDTH              600
 #define ENGINE_PGE_6_DEFAULT_NUMBER_OF_FIRES    75
+#define ENGINE_PGE_6_2_DEFAULT_HEIGHT           240
+#define ENGINE_PGE_6_2_DEFAULT_WIDTH            320
+#define ENGINE_PGE_6_2_DEFAULT_NUMBER_OF_FIRE_LINES 3 // #bottom lines
 
 // pge 7
 #define ENGINE_PGE_7_DEFAULT_HEIGHT             240

@@ -359,6 +359,8 @@ set (engine_EXE_SRCS
      pge_5.h
      pge_6.cpp
      pge_6.h
+     pge_6_2.cpp
+     pge_6_2.h
      pge_7.cpp
      pge_7.h
      pge_8.cpp

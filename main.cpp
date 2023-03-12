@@ -45,6 +45,7 @@
 #include "glut_4.h"
 #include "pge_5.h"
 #include "pge_6.h"
+#include "pge_6_2.h"
 #include "pge_7.h"
 #include "pge_8.h"
 #include "pge_9.h"
@@ -609,8 +610,8 @@ do_work (int argc_in,
     }
     case ENGINE_MODE_6:
     {
-      PGE_6 example;
-      if (example.Construct (ENGINE_PGE_6_DEFAULT_WIDTH, ENGINE_PGE_6_DEFAULT_HEIGHT,
+      PGE_6_2 example;
+      if (example.Construct (ENGINE_PGE_6_2_DEFAULT_WIDTH, ENGINE_PGE_6_2_DEFAULT_HEIGHT,
                              2, 2,
                              false,  // fullscreen ?
                              false,  // vsync ?

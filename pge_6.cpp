@@ -2,8 +2,6 @@
 
 #include "PGE_6.h"
 
-#include <algorithm>
-
 #include "ace/Assert.h"
 #include "ace/Log_Msg.h"
 #include "ace/OS.h"
@@ -28,25 +26,25 @@ PGE_6::~PGE_6 ()
 }
 
 void
-PGE_6::initializePalette (struct fire_pallete pallete_in[])
+PGE_6::initializePalette (struct fire_palette palette_in[])
 {
   for (int a = 0; a < 64; a++)
   {
-    pallete_in[a].red = a * sizeof (int);
-    pallete_in[a].green = 0;
-    pallete_in[a].blue = 0;
+    palette_in[a].red = a * sizeof (ACE_UINT32);
+    palette_in[a].green = 0;
+    palette_in[a].blue = 0;
 
-    pallete_in[a + 64].red = 63 * sizeof (int);
-    pallete_in[a + 64].green = a * sizeof (int);
-    pallete_in[a + 64].blue = 0;
+    palette_in[a + 64].red = 63 * sizeof (ACE_UINT32);
+    palette_in[a + 64].green = a * sizeof (ACE_UINT32);
+    palette_in[a + 64].blue = 0;
 
-    pallete_in[a + 128].red = 63 * sizeof (int);
-    pallete_in[a + 128].green = 63 * sizeof (int);
-    pallete_in[a + 128].blue = a * sizeof (int);
+    palette_in[a + 128].red = 63 * sizeof (ACE_UINT32);
+    palette_in[a + 128].green = 63 * sizeof (ACE_UINT32);
+    palette_in[a + 128].blue = a * sizeof (ACE_UINT32);
 
-    pallete_in[a + 192].red = 63 * sizeof (int);
-    pallete_in[a + 192].green = 63 * sizeof (int);
-    pallete_in[a + 192].blue = 63 * sizeof (int);
+    palette_in[a + 192].red = 63 * sizeof (ACE_UINT32);
+    palette_in[a + 192].green = 63 * sizeof (ACE_UINT32);
+    palette_in[a + 192].blue = 63 * sizeof (ACE_UINT32);
   } // end FOR
 }
 
@@ -60,15 +58,13 @@ PGE_6::moveFire ()
   {
     n = rand() % 100;
     if (n > 50)
-    {
       fire[n2] = fire[n2] + rand() % 7;
-    }
     else
-    {
       fire[n2] = fire[n2] - rand() % 7;
-    }
-    if (fire[n2] > ScreenWidth() - 11) { fire[n2] = (2 * ScreenWidth() / 3) - rand() % (ScreenWidth() / 3); }
-    if (fire[n2] < 21) { fire[n2] = (2 * ScreenWidth() / 3) + rand() % (ScreenWidth() / 3); }
+    if (fire[n2] > ScreenWidth() - 11)
+      fire[n2] = (2 * ScreenWidth() / 3) - rand() % (ScreenWidth() / 3);
+    if (fire[n2] < 21)
+      fire[n2] = (2 * ScreenWidth() / 3) + rand() % (ScreenWidth() / 3);
 
     // Left column
     fireBuffer[yPos + fire[n2] - 1 - ScreenWidth()] = 255;
@@ -166,7 +162,7 @@ PGE_6::draw ()
     {
       place = yOffset + x;
 
-      Draw (x, y, olc::Pixel (pallete[fireBuffer[place]].red, pallete[fireBuffer[place]].green, pallete[fireBuffer[place]].blue));
+      Draw (x, y, olc::Pixel (palette[fireBuffer[place]].red, palette[fireBuffer[place]].green, palette[fireBuffer[place]].blue));
       yOffset = yOffset + ScreenWidth ();
     } // end FOR
   } // end FOR
@@ -175,16 +171,15 @@ PGE_6::draw ()
 bool
 PGE_6::OnUserCreate ()
 {
-  fireBuffer = new int[SCREEN_SIZE];
-  ACE_OS::memset (fireBuffer, 0, sizeof (int) * SCREEN_SIZE);
+  srand (time (NULL));
+
+  fireBuffer = new ACE_UINT32[SCREEN_SIZE];
+  ACE_OS::memset (fireBuffer, 0, sizeof (ACE_UINT32) * SCREEN_SIZE);
 
   for (int i = 0; i < numberOfFires; ++i)
-  {
     fire[i] = (ScreenWidth() / 2) - numberOfFires + i;
-  }
 
-  // Fire specific
-  initializePalette (pallete);
+  initializePalette (palette);
 
   return true;
 }
