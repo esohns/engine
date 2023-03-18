@@ -23,6 +23,9 @@ PGE_6_2::PGE_6_2 ()
 
 PGE_6_2::~PGE_6_2 ()
 {
+  delete [] buffer_1;
+  delete [] buffer_2;
+  delete [] cooling_buffer;
 }
 
 void
@@ -104,6 +107,8 @@ PGE_6_2::OnUserCreate ()
   ACE_OS::memset (buffer_2, 0, sizeof (ACE_UINT8) * ScreenHeight () * ScreenWidth ());
   cooling_buffer = new ACE_UINT8[ScreenHeight() * ScreenWidth()];
   ACE_OS::memset (cooling_buffer, 0, sizeof(ACE_UINT8) * ScreenHeight() * ScreenWidth());
+
+  module.SetNoiseQuality (noise::QUALITY_FAST);
 
   return true;
 }

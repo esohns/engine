@@ -212,13 +212,13 @@ class PGE_14
   RigidBody* selected_shape = nullptr;
   Constraint* selected_constraint = nullptr;
 
-  static float Random(float a, float b)
+  static float Random (float a, float b)
   {
     std::random_device rd;
-    static std::mt19937 m(rd());
-    std::uniform_real_distribution<> dist(a, b);
+    static std::mt19937 m (rd ());
+    std::uniform_real_distribution<> dist (a, b);
 
-    return dist(m);
+    return static_cast<float> (dist (m));
   };
 };
 

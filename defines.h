@@ -123,4 +123,10 @@
 #define ENGINE_PGE_14_DEFAULT_HEIGHT            512
 #define ENGINE_PGE_14_DEFAULT_WIDTH             512
 
+// pge 15
+#define ENGINE_PGE_15_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_15_DEFAULT_WIDTH             800
+#define ENGINE_PGE_15_DEFAULT_SCALE             10
+#define ENGINE_PGE_15_DEFAULT_PARTICLES         700
+
 #endif
