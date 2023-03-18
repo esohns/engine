@@ -29,15 +29,15 @@ PGE_15::~PGE_15 ()
 bool
 PGE_15::OnUserCreate ()
 {
-  columns_ = std::floor (ENGINE_PGE_15_DEFAULT_WIDTH / ENGINE_PGE_15_DEFAULT_SCALE);
-  rows_ = std::floor (ENGINE_PGE_15_DEFAULT_HEIGHT / ENGINE_PGE_15_DEFAULT_SCALE);
+  columns_ =
+    static_cast<ACE_UINT32> (std::floor (ENGINE_PGE_15_DEFAULT_WIDTH / static_cast<double> (ENGINE_PGE_15_DEFAULT_SCALE)));
+  rows_ =
+    static_cast<ACE_UINT32> (std::floor (ENGINE_PGE_15_DEFAULT_HEIGHT / static_cast<double> (ENGINE_PGE_15_DEFAULT_SCALE)));
 
   flowField_ = new olc::vd2d[columns_ * rows_];
 
   for (int i = 0; i < ENGINE_PGE_15_DEFAULT_PARTICLES; i++)
-  {
     particles_.push_back (new particle (ENGINE_PGE_15_DEFAULT_SCALE));
-  }
 
   olc::PixelGameEngine::SetPixelMode (olc::Pixel::ALPHA);
   olc::PixelGameEngine::Clear (olc::WHITE);
@@ -48,6 +48,9 @@ PGE_15::OnUserCreate ()
 bool
 PGE_15::OnUserUpdate (float fElapsedTime)
 {
+  if (olc::PixelGameEngine::GetKey (olc::Key::SPACE).bPressed)
+    olc::PixelGameEngine::Clear (olc::WHITE);
+
   double yoff = 0.0;
   for (ACE_UINT32 y = 0; y < rows_; y++)
   {
@@ -63,7 +66,7 @@ PGE_15::OnUserUpdate (float fElapsedTime)
     } // end FOR
     yoff += step_;
 
-    z_ += 0.0003;
+    z_ += 0.0001;
   } // end FOR
 
   for (std::vector<particle*>::iterator i = particles_.begin ();

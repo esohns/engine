@@ -19,18 +19,18 @@ class PGE_15
     particle (ACE_UINT32 scale_in)
      : scale_ (scale_in)
     {
-      position_ = olc::vd2d (Common_Tools::getRandomNumber (0, ENGINE_PGE_15_DEFAULT_WIDTH - 1),
-                             Common_Tools::getRandomNumber (0, ENGINE_PGE_15_DEFAULT_HEIGHT - 1));
+      position_ = olc::vd2d (static_cast<double> (Common_Tools::getRandomNumber (0, ENGINE_PGE_15_DEFAULT_WIDTH - 1)),
+                             static_cast<double> (Common_Tools::getRandomNumber (0, ENGINE_PGE_15_DEFAULT_HEIGHT - 1)));
       velocity_ = olc::vd2d (0.0, 0.0);
       acceleration_ = olc::vd2d (0.0, 0.0);
-      maxSpeed_ = 3;
+      maxSpeed_ = 4;
       prevPosition_ = position_;
     }
 
     void update ()
     {
       velocity_ += acceleration_;
-      if (velocity_.mag () > static_cast<ACE_INT32> (maxSpeed_))
+      if (velocity_.mag () > static_cast<double> (maxSpeed_))
       {
         olc::vd2d upper_bound = { static_cast<double> (maxSpeed_), static_cast<double> (maxSpeed_) };
         olc::vd2d lower_bound = { -1.0 * static_cast<double> (maxSpeed_), -1.0 * static_cast<double> (maxSpeed_) };
@@ -42,8 +42,8 @@ class PGE_15
 
     void follow (olc::vd2d* vectors_in)
     {
-      ACE_INT32 x = std::floor (static_cast<float> (position_.x / scale_));
-      ACE_INT32 y = std::floor (static_cast<float> (position_.y / scale_));
+      ACE_INT32 x = static_cast<ACE_INT32> (std::floor (position_.x / static_cast<double> (scale_)));
+      ACE_INT32 y = static_cast<ACE_INT32> (std::floor (position_.y / static_cast<double> (scale_)));
       ACE_UINT32 index = x + y * (ENGINE_PGE_15_DEFAULT_WIDTH / scale_);
       applyForce (vectors_in[index]);
     }
