@@ -55,6 +55,7 @@
 #include "pge_13.h"
 #include "pge_14.h"
 #include "pge_15.h"
+#include "glut_16.h"
 
 enum Engine_ModeType
 {
@@ -73,6 +74,7 @@ enum Engine_ModeType
   ENGINE_MODE_13,
   ENGINE_MODE_14,
   ENGINE_MODE_15,
+  ENGINE_MODE_16,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -97,7 +99,7 @@ do_print_usage (const std::string& programName_in)
   std::string ui_definition_file_path = path_root;
   ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
   ui_definition_file_path +=
-    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_3_UI_DEFINITION_FILE);
+    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_16_UI_DEFINITION_FILE);
   std::cout << ACE_TEXT_ALWAYS_CHAR ("-g[PATH]   : ui definition file [")
             << ui_definition_file_path
             << ACE_TEXT_ALWAYS_CHAR ("]")
@@ -136,7 +138,7 @@ do_process_arguments (int argc_in,
   UIDefinitionFilePath_out = path_root;
   UIDefinitionFilePath_out += ACE_DIRECTORY_SEPARATOR_CHAR_A;
   UIDefinitionFilePath_out +=
-    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_3_UI_DEFINITION_FILE);
+    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_16_UI_DEFINITION_FILE);
   logToFile_out = false;
   mode_out = ENGINE_MODE_DEFAULT;
   traceInformation_out = false;
@@ -760,6 +762,117 @@ do_work (int argc_in,
 
       break;
     }
+    case ENGINE_MODE_16:
+    {
+      struct Engine_OpenGL_GLUT_16_CBData cb_data_s;
+      cb_data_s.wireframe = true;
+      cb_data_s.color = false;
+
+      cb_data_s.camera.position.x = 0.0F;
+      cb_data_s.camera.position.y = -600.0F;
+      cb_data_s.camera.position.z = 0.0F;
+      cb_data_s.camera.looking_at.x = 0.0F;
+      cb_data_s.camera.looking_at.y = 0.0F;
+      cb_data_s.camera.looking_at.z = 0.0F;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 0.0F;
+      cb_data_s.camera.up.z = 1.0F;
+
+      cb_data_s.angle = 0.0F;
+      cb_data_s.deltaAngle = 0.0F;
+      cb_data_s.xOrigin = -1;
+
+      cb_data_s.total = 75;
+      cb_data_s.radius = 200;
+      ACE_NEW_NORETURN (cb_data_s.globe,
+                        glm::vec3[(cb_data_s.total + 1) * (cb_data_s.total + 1)]);
+      ACE_ASSERT (cb_data_s.globe);
+      cb_data_s.m = ENGINE_GLUT_16_DEFAULT_M;
+      cb_data_s.n1 = ENGINE_GLUT_16_DEFAULT_N1;
+      cb_data_s.n2 = ENGINE_GLUT_16_DEFAULT_N2;
+      cb_data_s.n3 = ENGINE_GLUT_16_DEFAULT_N3;
+      cb_data_s.a = 1.0F;
+      cb_data_s.b = 1.0F;
+
+      // initialize GTK
+      Common_UI_GTK_Configuration_t gtk_configuration;
+      struct Engine_UI_GTK_16_CBData ui_cb_data;
+      ui_cb_data.GLUT_CBData = &cb_data_s;
+      Common_UI_GtkBuilderDefinition_t gtk_ui_definition;
+      Common_UI_GTK_Manager_t* gtk_manager_p =
+        COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
+      ACE_ASSERT (gtk_manager_p);
+      Common_UI_GTK_State_t& state_r =
+        const_cast<Common_UI_GTK_State_t&> (gtk_manager_p->getR ());
+
+      gtk_configuration.argc = argc_in;
+      gtk_configuration.argv = argv_in;
+      gtk_configuration.CBData = &ui_cb_data;
+      gtk_configuration.eventHooks.finiHook = idle_finalize_UI_16_cb;
+      gtk_configuration.eventHooks.initHook = idle_initialize_UI_16_cb;
+      gtk_configuration.definition = &gtk_ui_definition;
+
+      ui_cb_data.UIState = &state_r;
+      ui_cb_data.progressData.state = &state_r;
+
+      state_r.builders[ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN)] =
+        std::make_pair (UIDefinitionFilePath_in, static_cast<GtkBuilder*> (NULL));
+
+      bool result_2 = gtk_manager_p->initialize (gtk_configuration);
+      if (!result_2)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to Common_UI_GTK_Manager_T::initialize(), aborting\n")));
+        return false;
+      } // end IF
+
+      gtk_manager_p->start ();
+      if (!gtk_manager_p->isRunning ())
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to start GTK event dispatch, aborting\n")));
+        return false;
+      } // end IF
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (640, 480);
+
+      int window_i = glutCreateWindow ("engine GLUT 16");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0F, 0.0F, 0.0F, 0.0F); // Black Background
+      COMMON_GL_ASSERT;
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+      COMMON_GL_ASSERT;
+
+      glutDisplayFunc (engine_glut_16_draw);
+      glutReshapeFunc (engine_glut_3_reshape);
+      glutVisibilityFunc (engine_glut_3_visible);
+
+      glutKeyboardFunc (engine_glut_3_key);
+      glutSpecialFunc (engine_glut_16_key_special);
+      glutMouseFunc (engine_glut_16_mouse_button);
+      glutMotionFunc (engine_glut_16_mouse_move);
+      glutTimerFunc (100, engine_glut_16_timer, 0);
+
+      glutCreateMenu (engine_glut_16_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), ENGINE_GLUT_MODE_WIREFRAME);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("color"), ENGINE_GLUT_MODE_COLOR);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      gtk_manager_p->stop (true,   // wait ?
+                           false);
+
+      result = true;
+
+      break;
+    }
     default:
     {
       ACE_DEBUG ((LM_ERROR,
@@ -806,7 +919,7 @@ ACE_TMAIN (int argc_in,
   std::string ui_definition_file_path = path_root;
   ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
   ui_definition_file_path +=
-    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_3_UI_DEFINITION_FILE);
+    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_16_UI_DEFINITION_FILE);
   bool log_to_file = false;
   std::string log_file_name;
   enum Engine_ModeType mode_type_e = ENGINE_MODE_DEFAULT;

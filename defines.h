@@ -129,4 +129,21 @@
 #define ENGINE_PGE_15_DEFAULT_SCALE             10
 #define ENGINE_PGE_15_DEFAULT_PARTICLES         700
 
+// glut 16
+#define ENGINE_GLUT_16_DEFAULT_M                7.0F
+#define ENGINE_GLUT_16_DEFAULT_N1               0.2F
+#define ENGINE_GLUT_16_DEFAULT_N2               1.7F
+#define ENGINE_GLUT_16_DEFAULT_N3               1.7F
+
+#if defined (GTK2_USE)
+#define ENGINE_GLUT_16_UI_DEFINITION_FILE       "glut_16.gtk2"
+#else
+#define ENGINE_GLUT_16_UI_DEFINITION_FILE       "glut_16.gtk3"
+#endif // GTK2_USE
+
+#define ENGINE_UI_GTK_SCALE_M_NAME              "scale_m"
+#define ENGINE_UI_GTK_SCALE_N1_NAME             "scale_n1"
+#define ENGINE_UI_GTK_SCALE_N2_NAME             "scale_n2"
+#define ENGINE_UI_GTK_SCALE_N3_NAME             "scale_n3"
+
 #endif

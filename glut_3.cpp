@@ -55,10 +55,6 @@ engine_glut_3_key (unsigned char key_in,
                    int x,
                    int y)
 {
-  struct Engine_OpenGL_GLUT_3_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_3_CBData*> (glutGetWindowData ());
-  ACE_ASSERT (cb_data_p);
-
   switch (key_in)
   {
     case 27:  /* Escape */
@@ -74,6 +70,7 @@ engine_glut_3_key (unsigned char key_in,
       break;
   } // end SWITCH
 }
+
 void
 engine_glut_3_key_special (int key_in,
                            int x,
