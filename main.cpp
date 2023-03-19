@@ -778,9 +778,13 @@ do_work (int argc_in,
       cb_data_s.camera.up.y = 0.0F;
       cb_data_s.camera.up.z = 1.0F;
 
-      cb_data_s.angle = 0.0F;
-      cb_data_s.deltaAngle = 0.0F;
+      cb_data_s.spinning = false;
+      cb_data_s.xangle = 0.0F;
+      cb_data_s.xdeltaAngle = 0.0F;
       cb_data_s.xOrigin = -1;
+      cb_data_s.yangle = 0.0F;
+      cb_data_s.ydeltaAngle = 0.0F;
+      cb_data_s.yOrigin = -1;
 
       cb_data_s.total = 75;
       cb_data_s.radius = 200;

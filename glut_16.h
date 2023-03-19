@@ -16,9 +16,10 @@ struct Engine_OpenGL_GLUT_16_CBData
   struct Common_GL_Camera   camera;
 
   // mouse
-  float                     angle;
-  float                     deltaAngle;
-  int                       xOrigin;
+  bool                      spinning;
+  float                     xangle, yangle;
+  float                     xdeltaAngle, ydeltaAngle;
+  int                       xOrigin, yOrigin;
 
   // shape parameters
   int                       total;

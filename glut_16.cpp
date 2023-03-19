@@ -210,9 +210,18 @@ engine_glut_16_key_special (int key_in,
       cb_data_p->camera.rotation.z += 0.5f;
       break;
     case GLUT_KEY_UP:
+      cb_data_p->camera.rotation.x -= 0.5f;
+      break;
+    case GLUT_KEY_DOWN:
+      cb_data_p->camera.rotation.x += 0.5f;
+      break;
+    case GLUT_KEY_HOME:
       cb_data_p->camera.position.x = 0.0F;
       cb_data_p->camera.position.y = -600.0f;
       cb_data_p->camera.position.z = 0.0f;
+
+      cb_data_p->camera.rotation.x = 0.0f;
+      cb_data_p->camera.rotation.y = 0.0f;
       cb_data_p->camera.rotation.z = 0.0f;
       break;
   } // end SWITCH
@@ -256,11 +265,22 @@ engine_glut_16_mouse_button (int button, int state, int x, int y)
   {
     if (state == GLUT_UP)
     {
-      cb_data_p->angle += cb_data_p->deltaAngle;
+      //cb_data_p->spinning = false;
+      cb_data_p->xangle += cb_data_p->xdeltaAngle;
       cb_data_p->xOrigin = -1;
+      cb_data_p->yangle += cb_data_p->ydeltaAngle;
+      cb_data_p->yOrigin = -1;
+
+      cb_data_p->camera.rotation.x = 0.0F;
+      cb_data_p->camera.rotation.y = 0.0F;
+      cb_data_p->camera.rotation.z = 0.0F;
     } // end IF
     else
+    {
+      //cb_data_p->spinning = true;
       cb_data_p->xOrigin = x;
+      cb_data_p->yOrigin = y;
+    } // end ELSE
   } // end IF
 }
 
@@ -274,11 +294,20 @@ engine_glut_16_mouse_move (int x, int y)
   // this will only be true when the left button is down
 	if (cb_data_p->xOrigin >= 0)
   {
-    cb_data_p->deltaAngle = (x - cb_data_p->xOrigin) * 0.001f;
+    cb_data_p->xdeltaAngle = (x - cb_data_p->xOrigin) * 0.001f;
 
     // update camera's direction
-    //cb_data_p->camera.looking_at.x = sin (cb_data_p->angle + cb_data_p->deltaAngle);
-    //cb_data_p->camera.looking_at.z = -cos (cb_data_p->angle + cb_data_p->deltaAngle);
+    cb_data_p->camera.rotation.x = std::sin (cb_data_p->xangle + cb_data_p->xdeltaAngle);
+    cb_data_p->camera.rotation.z = -std::cos (cb_data_p->xangle + cb_data_p->xdeltaAngle);
+  } // end IF
+
+  if (cb_data_p->yOrigin >= 0)
+  {
+    cb_data_p->ydeltaAngle = (y - cb_data_p->yOrigin) * 0.001f;
+
+    // update camera's direction
+    cb_data_p->camera.rotation.y = std::sin (cb_data_p->yangle + cb_data_p->ydeltaAngle);
+    cb_data_p->camera.rotation.z = -std::cos (cb_data_p->yangle + cb_data_p->ydeltaAngle);
   } // end IF
 }
 
@@ -289,15 +318,22 @@ engine_glut_16_timer (int v)
     static_cast<struct Engine_OpenGL_GLUT_16_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
-  //if (cb_data_p->spinning)
-  //{
-    cb_data_p->angle += 1.0;
-    if (cb_data_p->angle > 360.0)
+  if (cb_data_p->spinning)
+  {
+    cb_data_p->xangle += 1.0;
+    if (cb_data_p->xangle > 360.0)
     {
-      cb_data_p->angle -= 360.0;
-    }
-  //  glutPostRedisplay();
-  //} // end IF
+      cb_data_p->xangle -= 360.0;
+    } // end IF
+
+    cb_data_p->yangle += 1.0;
+    if (cb_data_p->yangle > 360.0)
+    {
+      cb_data_p->yangle -= 360.0;
+    } // end IF
+    glutPostRedisplay ();
+  } // end IF
+
   glutTimerFunc (1000 / 30, engine_glut_16_timer, v);
 }
 
@@ -319,8 +355,14 @@ engine_glut_16_draw (void)
 
   // rotate the camera
   glm::mat4 rotation_matrix = glm::rotate (glm::mat4 (1.0f),
-                                           glm::radians (cb_data_p->camera.rotation.z),
-                                           glm::vec3 (0.0f, 0.0f, 1.0f));
+                                           glm::radians (cb_data_p->camera.rotation.x),
+                                           glm::vec3 (1.0f, 0.0f, 0.0f));
+  rotation_matrix *= glm::rotate (glm::mat4 (1.0f),
+                                  glm::radians (cb_data_p->camera.rotation.y),
+                                  glm::vec3 (0.0f, 1.0f, 0.0f));
+  rotation_matrix *= glm::rotate (glm::mat4 (1.0f),
+                                  glm::radians (cb_data_p->camera.rotation.z),
+                                  glm::vec3 (0.0f, 0.0f, 1.0f));
   glm::vec3 rotation_center (0.0f, 0.0f, 0.0f);
   glm::vec4 pos_rot_h =
     rotation_matrix * glm::vec4 (cb_data_p->camera.position - rotation_center,
@@ -338,7 +380,7 @@ engine_glut_16_draw (void)
   COMMON_GL_ASSERT;
 
   Common_GL_Color_t color_s = { 255, 255, 255 };
-  if (!cb_data_p->color)
+  //if (!cb_data_p->color)
     glColor3ub (color_s.r, color_s.g, color_s.b);
 
   for (int i = 0; i < cb_data_p->total + 1; ++i)
