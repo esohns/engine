@@ -318,21 +318,21 @@ engine_glut_16_timer (int v)
     static_cast<struct Engine_OpenGL_GLUT_16_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
-  if (cb_data_p->spinning)
-  {
-    cb_data_p->xangle += 1.0;
+  //if (cb_data_p->spinning)
+  //{
+    //cb_data_p->xangle += 1.0;
     if (cb_data_p->xangle > 360.0)
     {
       cb_data_p->xangle -= 360.0;
     } // end IF
 
-    cb_data_p->yangle += 1.0;
+    //cb_data_p->yangle += 1.0;
     if (cb_data_p->yangle > 360.0)
     {
       cb_data_p->yangle -= 360.0;
     } // end IF
-    glutPostRedisplay ();
-  } // end IF
+    //glutPostRedisplay ();
+  //} // end IF
 
   glutTimerFunc (1000 / 30, engine_glut_16_timer, v);
 }
@@ -363,12 +363,10 @@ engine_glut_16_draw (void)
   rotation_matrix *= glm::rotate (glm::mat4 (1.0f),
                                   glm::radians (cb_data_p->camera.rotation.z),
                                   glm::vec3 (0.0f, 0.0f, 1.0f));
-  glm::vec3 rotation_center (0.0f, 0.0f, 0.0f);
   glm::vec4 pos_rot_h =
-    rotation_matrix * glm::vec4 (cb_data_p->camera.position - rotation_center,
+    rotation_matrix * glm::vec4 (cb_data_p->camera.position,
                                  1.0f);
-  glm::vec3 pos_rot = glm::vec3 (pos_rot_h) + rotation_center;
-  cb_data_p->camera.position = pos_rot;
+  cb_data_p->camera.position = glm::vec3 (pos_rot_h);
 
   // set the camera
   gluLookAt (cb_data_p->camera.position.x, cb_data_p->camera.position.y, cb_data_p->camera.position.z,
@@ -386,7 +384,7 @@ engine_glut_16_draw (void)
   for (int i = 0; i < cb_data_p->total + 1; ++i)
   {
     float lat = Common_GL_Tools::map (static_cast<float> (i),
-                                      0.0F, static_cast<float> (cb_data_p->total + 1),
+                                      0.0F, static_cast<float> (cb_data_p->total),
                                       static_cast<float> (-M_PI / 2.0), static_cast<float> (M_PI / 2.0));
     float r2 = super_shape (lat,
                             cb_data_p->a,
@@ -398,7 +396,7 @@ engine_glut_16_draw (void)
     for (int j = 0; j < cb_data_p->total + 1; ++j)
     {
       float lon = Common_GL_Tools::map (static_cast<float> (j),
-                                        0.0F, static_cast<float> (cb_data_p->total + 1),
+                                        0.0F, static_cast<float> (cb_data_p->total),
                                         static_cast<float> (-M_PI), static_cast<float> (M_PI));
       float r1 = super_shape (lat,
                               cb_data_p->a,
