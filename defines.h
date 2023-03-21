@@ -146,4 +146,9 @@
 #define ENGINE_UI_GTK_SCALE_N2_NAME             "scale_n2"
 #define ENGINE_UI_GTK_SCALE_N3_NAME             "scale_n3"
 
+// pge 17
+#define ENGINE_PGE_17_DEFAULT_HEIGHT            480
+#define ENGINE_PGE_17_DEFAULT_WIDTH             640
+#define ENGINE_PGE_17_DEFAULT_BOIDS             100
+
 #endif

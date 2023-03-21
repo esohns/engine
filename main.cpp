@@ -56,6 +56,7 @@
 #include "pge_14.h"
 #include "pge_15.h"
 #include "glut_16.h"
+#include "pge_17.h"
 
 enum Engine_ModeType
 {
@@ -75,6 +76,7 @@ enum Engine_ModeType
   ENGINE_MODE_14,
   ENGINE_MODE_15,
   ENGINE_MODE_16,
+  ENGINE_MODE_17,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -874,6 +876,21 @@ do_work (int argc_in,
                            false);
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_17:
+    {
+      PGE_17 example;
+      if (example.Construct (ENGINE_PGE_17_DEFAULT_WIDTH, ENGINE_PGE_17_DEFAULT_HEIGHT,
+                             2, 2,
+                             false,  // fullscreen ?
+                             true,   // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }
