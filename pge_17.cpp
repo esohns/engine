@@ -24,6 +24,10 @@ PGE_17::PGE_17 ()
 
 PGE_17::~PGE_17 ()
 {
+  for (std::vector<boid*>::iterator i = flock_.begin ();
+       i != flock_.end ();
+       i++)
+    delete *i;
 }
 
 bool
