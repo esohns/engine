@@ -11,6 +11,7 @@ class PGE_17
  : public olc::PixelGameEngine
 {
  private:
+  // *NOTE*: see also: https://www.red3d.com/cwr/boids/
   class boid
   {
    public:
