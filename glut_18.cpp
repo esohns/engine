@@ -145,10 +145,10 @@ engine_glut_18_draw (void)
       {
         glBegin (GL_LINES);
         glVertex3f (0.0f, 0.0f, 0.0f);
-        glVertex3f (0.0f, cb_data_p->length, 0.0f);
+        glVertex3f (0.0f, -cb_data_p->length, 0.0f);
         glEnd ();
 
-        glTranslatef (0.0f, cb_data_p->length, 0.0f);
+        glTranslatef (0.0f, -cb_data_p->length, 0.0f);
         break;
       }
       case '+':
