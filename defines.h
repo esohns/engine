@@ -151,4 +151,8 @@
 #define ENGINE_PGE_17_DEFAULT_WIDTH             640
 #define ENGINE_PGE_17_DEFAULT_BOIDS             100
 
+// glut 18
+#define ENGINE_GLUT_18_DEFAULT_HEIGHT           480
+#define ENGINE_GLUT_18_DEFAULT_WIDTH            640
+
 #endif

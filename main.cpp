@@ -57,6 +57,7 @@
 #include "pge_15.h"
 #include "glut_16.h"
 #include "pge_17.h"
+#include "glut_18.h"
 
 enum Engine_ModeType
 {
@@ -77,6 +78,7 @@ enum Engine_ModeType
   ENGINE_MODE_15,
   ENGINE_MODE_16,
   ENGINE_MODE_17,
+  ENGINE_MODE_18,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -891,6 +893,63 @@ do_work (int argc_in,
         example.Start ();
         result = true;
       } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_18:
+    {
+      struct Engine_OpenGL_GLUT_18_CBData cb_data_s;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = -ENGINE_GLUT_18_DEFAULT_HEIGHT / 2.0f;
+      cb_data_s.camera.position.z = -1500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 0.0f;
+      cb_data_s.camera.up.z = 1.0f;
+
+      cb_data_s.xangle = 0.0f;
+      cb_data_s.xDeltaAngle = 0.0f;
+      cb_data_s.xOrigin = -1;
+
+      cb_data_s.rules.push_back (std::make_pair ('F', ACE_TEXT_ALWAYS_CHAR ("FF+[+F-F-F]-[-F+F+F]")));
+      cb_data_s.sentence = ACE_TEXT_ALWAYS_CHAR ("F");
+      //cb_data_s.angle = static_cast<float> (25.0 * M_PI / 180.0);
+      cb_data_s.angle = 25.0f;
+      cb_data_s.length = 100.0f;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA);
+      glutInitWindowSize (ENGINE_GLUT_18_DEFAULT_WIDTH, ENGINE_GLUT_18_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 18");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0F, 0.0F, 0.0F, 0.0F); // Black Background
+      COMMON_GL_ASSERT;
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+      COMMON_GL_ASSERT;
+
+      glDisable (GL_CULL_FACE);
+
+      glutDisplayFunc (engine_glut_18_draw);
+      glutReshapeFunc (engine_glut_18_reshape);
+      glutVisibilityFunc (engine_glut_3_visible);
+
+      glutKeyboardFunc (engine_glut_3_key);
+      //glutSpecialFunc (engine_glut_3_key_special);
+      glutMouseFunc (engine_glut_18_mouse_button);
+      //glutMotionFunc (engine_glut_3_mouse_move);
+      //glutTimerFunc (100, engine_glut_3_timer, 0);
+
+      glutMainLoop ();
+
+      result = true;
 
       break;
     }
