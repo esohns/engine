@@ -1,7 +1,7 @@
 #ifndef GLUT_16_H
 #define GLUT_16_H
 
-#include "common_GL_common.h"
+#include "common_gl_common.h"
 
 #include "common_image_common.h"
 

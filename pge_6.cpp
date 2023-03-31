@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "PGE_6.h"
+#include "pge_6.h"
 
 #include "ace/Assert.h"
 #include "ace/Log_Msg.h"

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #define OLC_PGEX_FUI
-#include "PGE_14.h"
+#include "pge_14.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -230,7 +230,7 @@ Manifold::GetRefIncEdge()
   const auto& edge_a = GetBestEdge(0, 1.0f);
   const auto& edge_b = GetBestEdge(1, -1.0f);
 
-  if (std::fabsf(edge_a.edge.dot(normal)) <= std::fabsf(edge_b.edge.dot(normal)))
+  if (std::fabs(edge_a.edge.dot(normal)) <= std::fabs(edge_b.edge.dot(normal)))
   {
       // Reference edge is A
       ref = edge_a;
@@ -339,10 +339,10 @@ Manifold::ApplyForces(float dt)
     float jt = -t.dot(rv) / inv_mass_sum;
     jt /= points.size();
 
-    if (std::fabsf(jt - 0.0f) <= EPSILON) return;
+    if (std::fabs(jt - 0.0f) <= EPSILON) return;
 
     olc::vf2d friction_impulse;
-    if (std::fabsf(jt) <= j * sf) { friction_impulse = jt * t; }
+    if (std::fabs(jt) <= j * sf) { friction_impulse = jt * t; }
     else { friction_impulse = -j * df * t; }
 
     a->ApplyImpulse(-friction_impulse, ra);

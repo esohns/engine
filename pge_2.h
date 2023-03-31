@@ -61,7 +61,7 @@ class PGE_2
   void diffuse (int, float[], float[], float, float, int);
   void project (float[], float[], float[], float[], int);
   void advect (int, float[], float[], float[], float[], float);
-  inline int IX (int, int);
+  int IX (int, int);
 
   void reset ();
   void render_density ();

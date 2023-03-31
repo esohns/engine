@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "PGE_11.h"
+#include "pge_11.h"
 
 #include <algorithm>
 

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "PGE_12.h"
+#include "pge_12.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
