@@ -79,6 +79,11 @@ class PGE_19
       for (int i = 1; i < ENGINE_PGE_19_DEFAULT_SEGMENTS; ++i)
         segments_.push_back (new segment (*segments_[i - 1]));
     }
+    ~arm ()
+    {
+      for (int i = 0; i < segments_.size (); ++i)
+        delete segments_[i];
+    }
 
     void update (olc::vd2d position_in)
     {
@@ -102,7 +107,7 @@ class PGE_19
 
     void show (olc::PixelGameEngine* engine_in)
     {
-      for (int i = 1; i < segments_.size(); ++i)
+      for (int i = 0; i < segments_.size (); ++i)
       {
         segments_[i]->show (engine_in);
       } // end FOR

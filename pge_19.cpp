@@ -24,6 +24,8 @@ PGE_19::PGE_19 ()
 
 PGE_19::~PGE_19 ()
 {
+  for (int i = 0; i < arms_.size (); ++i)
+    delete arms_[i];
 }
 
 bool
