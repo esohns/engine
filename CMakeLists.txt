@@ -309,7 +309,7 @@ endif ()
 option (GUI_SUPPORT "enable graphical user interface support" ON)
 if (GUI_SUPPORT)
  add_definitions (-DGUI_SUPPORT)
- set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${Common_DIR}/../../../src/ui/scripts")
+ set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${Common_DIR}/../../src/ui/scripts")
  include (PreUIFramework)
  include (SetUIFramework)
  if (GTK_SUPPORT)
@@ -330,12 +330,12 @@ include_directories (${GTK_INCLUDE_DIRS})
 include_directories (${ACE_INCLUDE_DIR})
 
 include_directories (${Common_DIR}/..)
-include_directories (${Common_DIR}/../../../src)
-include_directories (${Common_DIR}/../../../src/gl)
-include_directories (${Common_DIR}/../../../src/log)
-include_directories (${Common_DIR}/../../../src/timer)
-include_directories (${Common_DIR}/../../../src/ui)
-include_directories (${Common_DIR}/../../../src/ui/gtk)
+include_directories (${Common_DIR}/../../src)
+include_directories (${Common_DIR}/../../src/gl)
+include_directories (${Common_DIR}/../../src/log)
+include_directories (${Common_DIR}/../../src/timer)
+include_directories (${Common_DIR}/../../src/ui)
+include_directories (${Common_DIR}/../../src/ui/gtk)
 
 include_directories (${CMAKE_CURRENT_BINARY_DIR})
 
@@ -385,6 +385,8 @@ set (engine_EXE_SRCS
      pge_17.h
      glut_18.cpp
      glut_18.h
+     pge_19.cpp
+     pge_19.h
      stdafx.h)
 
 #cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property

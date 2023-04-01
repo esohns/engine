@@ -58,6 +58,7 @@
 #include "glut_16.h"
 #include "pge_17.h"
 #include "glut_18.h"
+#include "pge_19.h"
 
 enum Engine_ModeType
 {
@@ -79,6 +80,7 @@ enum Engine_ModeType
   ENGINE_MODE_16,
   ENGINE_MODE_17,
   ENGINE_MODE_18,
+  ENGINE_MODE_19,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -950,6 +952,21 @@ do_work (int argc_in,
       glutMainLoop ();
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_19:
+    {
+      PGE_19 example;
+      if (example.Construct (ENGINE_PGE_19_DEFAULT_WIDTH, ENGINE_PGE_19_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             true,   // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }

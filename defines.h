@@ -155,4 +155,10 @@
 #define ENGINE_GLUT_18_DEFAULT_HEIGHT           480
 #define ENGINE_GLUT_18_DEFAULT_WIDTH            640
 
+// pge 19
+#define ENGINE_PGE_19_DEFAULT_HEIGHT            480
+#define ENGINE_PGE_19_DEFAULT_WIDTH             640
+#define ENGINE_PGE_19_DEFAULT_SEGMENT_LENGTH    20
+#define ENGINE_PGE_19_DEFAULT_SEGMENTS          5
+
 #endif

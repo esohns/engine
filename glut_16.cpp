@@ -97,7 +97,8 @@ scale_m_value_changed_cb (GtkRange* range_in,
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
-  ui_cb_data_p->GLUT_CBData->m = gtk_range_get_value (range_in);
+  ui_cb_data_p->GLUT_CBData->m =
+    static_cast<float> (gtk_range_get_value (range_in));
 }
 
 void
@@ -111,7 +112,8 @@ scale_n1_value_changed_cb (GtkRange* range_in,
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
-  ui_cb_data_p->GLUT_CBData->n1 = gtk_range_get_value (range_in);
+  ui_cb_data_p->GLUT_CBData->n1 =
+    static_cast<float> (gtk_range_get_value (range_in));
 }
 
 void
@@ -125,7 +127,8 @@ scale_n2_value_changed_cb (GtkRange* range_in,
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
-  ui_cb_data_p->GLUT_CBData->n2 = gtk_range_get_value (range_in);
+  ui_cb_data_p->GLUT_CBData->n2 =
+    static_cast<float> (gtk_range_get_value (range_in));
 }
 
 void
@@ -139,7 +142,8 @@ scale_n3_value_changed_cb (GtkRange* range_in,
   ACE_ASSERT (ui_cb_data_p);
   ACE_ASSERT (ui_cb_data_p->GLUT_CBData);
 
-  ui_cb_data_p->GLUT_CBData->n3 = gtk_range_get_value (range_in);
+  ui_cb_data_p->GLUT_CBData->n3 =
+    static_cast<float> (gtk_range_get_value (range_in));
 }
 
 void
