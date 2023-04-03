@@ -161,4 +161,8 @@
 #define ENGINE_PGE_19_DEFAULT_SEGMENT_LENGTH    20
 #define ENGINE_PGE_19_DEFAULT_SEGMENTS          5
 
+// pge 20
+#define ENGINE_PGE_20_DEFAULT_HEIGHT            480
+#define ENGINE_PGE_20_DEFAULT_WIDTH             640
+
 #endif

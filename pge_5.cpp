@@ -99,10 +99,10 @@ PGE_5::OnUserCreate ()
 bool
 PGE_5::OnUserUpdate (float fElapsedTime)
 {
-  if (olc::PixelGameEngine::GetMouse(0).bHeld)
+  if (olc::PixelGameEngine::GetMouse (0).bHeld)
     spawn (olc::PixelGameEngine::GetMouseX (), olc::PixelGameEngine::GetMouseY ());
 
-  if (olc::PixelGameEngine::GetMouse(1).bHeld)
+  if (olc::PixelGameEngine::GetMouse (1).bHeld)
     remove (olc::PixelGameEngine::GetMouseX (), olc::PixelGameEngine::GetMouseY ());
 
   if (olc::PixelGameEngine::GetKey (olc::Key::UP).bPressed)

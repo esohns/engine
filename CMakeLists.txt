@@ -387,6 +387,8 @@ set (engine_EXE_SRCS
      glut_18.h
      pge_19.cpp
      pge_19.h
+     pge_20.cpp
+     pge_20.h
      stdafx.h)
 
 #cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property
