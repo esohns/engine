@@ -1070,6 +1070,7 @@ ACE_TMAIN (int argc_in,
         ACE_TEXT_ALWAYS_CHAR(ENGINE_PGE_2_UI_DEFINITION_FILE);
     } // end IF
     case ENGINE_MODE_3:
+    case ENGINE_MODE_4:
     {
       ui_definition_file_path = Common_File_Tools::directory (ui_definition_file_path);
       ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;

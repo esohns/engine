@@ -93,13 +93,13 @@ class PGE_10
 
         float normalizedLifetime = current_lifetime / max_lifetime;
 
-        int alpha = int((4 * normalizedLifetime * (1 - normalizedLifetime)) * 256);
+        //int alpha = int((4 * normalizedLifetime * (1 - normalizedLifetime)) * 256);
         //int alpha = int((1 - (4 * normalizedLifetime * (1 - normalizedLifetime))) * 256);
-        alpha = (1 - normalizedLifetime) * 256;
+        int alpha = int((1 - normalizedLifetime) * 256);
         
         color.a = alpha;
-        color.r = alpha * (0.80);
-        color.g = alpha * (0.25);
+        color.r = int(alpha * (0.80));
+        color.g = int(alpha * (0.25));
         color.b = alpha;
 
         scale = (0.75f + (.25f * normalizedLifetime));
@@ -141,7 +141,9 @@ class PGE_10
       {
         GenerateParticles (pge);
 
-        for (int i = particles.size () - 1; i >= 0; i--)
+        for (int i = static_cast<int> (particles.size ()) - 1;
+             i >= 0;
+             i--)
         {
           if (particles[i].alive)
           {
