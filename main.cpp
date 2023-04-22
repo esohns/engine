@@ -1060,14 +1060,25 @@ ACE_TMAIN (int argc_in,
   } // end IF
 
   // *TODO*: clean this up ASAP
-  if (mode_type_e == ENGINE_MODE_2)
+  switch (mode_type_e)
   {
-    ui_definition_file_path = Common_File_Tools::directory (ui_definition_file_path);
-    ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
-    ui_definition_file_path +=
-      ACE_TEXT_ALWAYS_CHAR (ENGINE_PGE_2_UI_DEFINITION_FILE);
-  } // end IF
-
+    case ENGINE_MODE_2:
+    {
+      ui_definition_file_path = Common_File_Tools::directory (ui_definition_file_path);
+      ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
+      ui_definition_file_path +=
+        ACE_TEXT_ALWAYS_CHAR(ENGINE_PGE_2_UI_DEFINITION_FILE);
+    } // end IF
+    case ENGINE_MODE_3:
+    {
+      ui_definition_file_path = Common_File_Tools::directory (ui_definition_file_path);
+      ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
+      ui_definition_file_path +=
+        ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_3_UI_DEFINITION_FILE);
+    } // end IF
+    default:
+      break;
+  } // end SWITCH
   if (!Common_File_Tools::isReadable (ui_definition_file_path))
   {
     ACE_DEBUG ((LM_ERROR,
