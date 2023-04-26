@@ -31,7 +31,7 @@ PGE_19::~PGE_19 ()
 bool
 PGE_19::OnUserCreate ()
 {
-  float da = M_PI;
+  float da = static_cast<float> (M_PI);
   for (float a = 0.0F; a < 2.0F * M_PI; a += da)
   {
     float x = ENGINE_PGE_19_DEFAULT_WIDTH  / 2.0F + std::cos (a) * 300;
