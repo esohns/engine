@@ -61,7 +61,7 @@ class PGE_21
       half_i = ENGINE_PGE_21_DEFAULT_HEIGHT / 2;
       ACE_INT32 py =
         half_i + static_cast<ACE_INT32> (Common_GL_Tools::map (position_.y / (float)pz_, 0.0f, 1.0f, 0.0f, static_cast<float> (ENGINE_PGE_21_DEFAULT_HEIGHT - 1)));
-      engine_in->DrawLine (px, py, sx, sy, olc::WHITE, 0xFF);
+      engine_in->DrawLine (px, py, sx, sy, olc::WHITE, 0xFFFFFFFF);
 
       pz_ = z_;
     }
