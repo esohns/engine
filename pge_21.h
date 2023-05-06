@@ -51,9 +51,9 @@ class PGE_21
       half_i = ENGINE_PGE_21_DEFAULT_HEIGHT / 2;
       ACE_INT32 sy =
         half_i + static_cast<ACE_INT32> (Common_GL_Tools::map (position_.y / (float)z_, 0.0f, 1.0f, 0.0f, static_cast<float> (ENGINE_PGE_21_DEFAULT_HEIGHT - 1)));
-      ACE_INT32 r =
-        static_cast<ACE_INT32> (8.0f - Common_GL_Tools::map (static_cast<float> (z_), 0.0f, static_cast<float> (ENGINE_PGE_21_DEFAULT_WIDTH - 1), 0.0f, 8.0f));
-      engine_in->FillCircle (sx, sy, r, olc::WHITE);
+      //ACE_INT32 r =
+        //static_cast<ACE_INT32> (8.0f - Common_GL_Tools::map (static_cast<float> (z_), 0.0f, static_cast<float> (ENGINE_PGE_21_DEFAULT_WIDTH - 1), 0.0f, 8.0f));
+      //engine_in->FillCircle (sx, sy, r, olc::WHITE);
 
       half_i = ENGINE_PGE_21_DEFAULT_WIDTH / 2;
       ACE_INT32 px =

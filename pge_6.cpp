@@ -61,10 +61,10 @@ PGE_6::moveFire ()
       fire[n2] = fire[n2] + rand() % 7;
     else
       fire[n2] = fire[n2] - rand() % 7;
-    if (fire[n2] > ScreenWidth() - 11)
-      fire[n2] = (2 * ScreenWidth() / 3) - rand() % (ScreenWidth() / 3);
+    if (fire[n2] > static_cast<ACE_UINT32> (ScreenWidth () - 11))
+      fire[n2] = (2 * ScreenWidth () / 3) - rand () % (ScreenWidth () / 3);
     if (fire[n2] < 21)
-      fire[n2] = (2 * ScreenWidth() / 3) + rand() % (ScreenWidth() / 3);
+      fire[n2] = (2 * ScreenWidth () / 3) + rand () % (ScreenWidth () / 3);
 
     // Left column
     fireBuffer[yPos + fire[n2] - 1 - ScreenWidth()] = 255;
@@ -171,7 +171,7 @@ PGE_6::draw ()
 bool
 PGE_6::OnUserCreate ()
 {
-  srand (time (NULL));
+  srand (static_cast<unsigned int> (time (NULL)));
 
   fireBuffer = new ACE_UINT32[SCREEN_SIZE];
   ACE_OS::memset (fireBuffer, 0, sizeof (ACE_UINT32) * SCREEN_SIZE);

@@ -99,7 +99,7 @@ PGE_6_2::getColor (int offset_in)
 bool
 PGE_6_2::OnUserCreate ()
 {
-  srand (time (NULL));
+  srand (static_cast<unsigned int> (time (NULL)));
 
   buffer_1 = new ACE_UINT8[ScreenHeight () * ScreenWidth ()];
   ACE_OS::memset (buffer_1, 0, sizeof (ACE_UINT8) * ScreenHeight () * ScreenWidth ());

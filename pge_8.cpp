@@ -117,8 +117,8 @@ PGE_8::build ()
   buildPointsOnLine (line, 30, 50, 200, 220, 0, totalPoints);
   buildRectangleOutline (square, 10, 10, 100, 100, 0, totalPoints);
   buildPointsOnCircle (circle, 170, 70, 50, 0, totalPoints);
-  buildNShapePerimeter (poly, ScreenWidth () / 2, ScreenHeight () / 2, polyRadius, 0, totalPoints, polySides);
-  buildNShapePerimeter (triangle, ScreenWidth () / 2, ScreenHeight () / 2, 40, 0, totalPoints, 3);
+  buildNShapePerimeter (poly, ScreenWidth () / 2.0f, ScreenHeight () / 2.0f, polyRadius, 0, totalPoints, polySides);
+  buildNShapePerimeter (triangle, ScreenWidth () / 2.0f, ScreenHeight () / 2.0f, 40, 0, totalPoints, 3);
 }
 
 void
@@ -159,8 +159,8 @@ PGE_8::OnUserUpdate (float fElapsedTime)
 {
   for (int i = 0; i < totalPoints; i++)
   {
-    float colorShade = (250.0f * (float(i) / float(totalPoints))) + 5.0f;
-    Draw(points[i].x, points[i].y, olc::Pixel(colorShade, colorShade, colorShade));
+    uint8_t colorShade = static_cast<uint8_t> ((250.0f * (i / float (totalPoints))) + 5.0f);
+    Draw (static_cast<int32_t> (points[i].x), static_cast<int32_t> (points[i].y), olc::Pixel (colorShade, colorShade, colorShade));
     //Draw (points[i].x, points[i].y, olc::WHITE);
   }
 
