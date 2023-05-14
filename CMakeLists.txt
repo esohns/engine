@@ -37,6 +37,18 @@ configure_file (resource.rc.in
 
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts")
 #include (ffmpeg)
+#if (NOT FFMPEG_SUPPORT)
+# message (FATAL_ERROR "could not find ffmpeg, aborting")
+#else ()
+# message (STATUS "found ffmpeg")
+#endif (NOT FFMPEG_SUPPORT)
+include (ImageMagick)
+if (NOT IMAGEMAGICK_SUPPORT)
+ message (FATAL_ERROR "could not find ImageMagick, aborting")
+else ()
+ message (STATUS "found ImageMagick")
+endif (NOT IMAGEMAGICK_SUPPORT)
+
 include (ACE)
 if (NOT ACE_LIBRARY)
  message (FATAL_ERROR "could not find ${ACE_LIB_FILE} (was: \"${ACE_LIBRARY}\"), aborting")
@@ -397,6 +409,8 @@ set (engine_EXE_SRCS
      pge_20.h
      pge_21.cpp
      pge_21.h
+     pge_22.cpp
+     pge_22.h
      stdafx.h)
 
 #cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property
@@ -478,6 +492,7 @@ if (UNIX)
 elseif (WIN32)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE}.exe" COMMAND)
  string (REPLACE "\\" "\\\\" COMMAND ${COMMAND})
+ set (ENVIRONMENT_MAGICK "MAGICK_CODER_MODULE_PATH=${IMAGEMAGICK_PATH}\\\\modules\\\\coders")
 endif ()
 create_target_launcher (${EXECUTABLE}
                         COMMAND ${COMMAND}
@@ -485,7 +500,7 @@ create_target_launcher (${EXECUTABLE}
 #                        FORWARD_ARGS
                         RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
                         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                        ENVIRONMENT ${ENVIRONMENT})
+                        ENVIRONMENT ${ENVIRONMENT_MAGICK})
 
 set (CPACK_GENERATOR "NSIS")
 set (CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME})
