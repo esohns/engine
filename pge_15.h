@@ -117,4 +117,4 @@ class PGE_15
   noise::module::Perlin  module;
 };
 
-#endif // PGE_14_H
+#endif // PGE_15_H

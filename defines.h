@@ -174,4 +174,8 @@
 #define ENGINE_PGE_22_DEFAULT_WIDTH             900
 #define ENGINE_PGE_22_DEFAULT_SPOTS_FILE        "2017.png"
 
+// pge 23
+#define ENGINE_PGE_23_DEFAULT_HEIGHT            200
+#define ENGINE_PGE_23_DEFAULT_WIDTH             200
+
 #endif

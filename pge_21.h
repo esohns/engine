@@ -84,4 +84,4 @@ class PGE_21
   ACE_UINT32        speed_;
 };
 
-#endif // PGE_14_H
+#endif // PGE_21_H

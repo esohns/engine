@@ -61,4 +61,4 @@ class PGE_22
   bool makeCircle ();
 };
 
-#endif // PGE_14_H
+#endif // PGE_22_H

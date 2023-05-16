@@ -156,4 +156,4 @@ class PGE_20
   spring* spring_;
 };
 
-#endif // PGE_14_H
+#endif // PGE_20_H
