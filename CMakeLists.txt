@@ -413,6 +413,8 @@ set (engine_EXE_SRCS
      pge_22.h
      pge_23.cpp
      pge_23.h
+     pge_24.cpp
+     pge_24.h
      stdafx.h)
 
 #cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property
@@ -438,6 +440,10 @@ target_link_libraries (${EXECUTABLE} CommonOpenGL)
 target_link_libraries (${EXECUTABLE} CommonTimer)
 target_link_libraries (${EXECUTABLE} CommonUI)
 target_link_libraries (${EXECUTABLE} CommonUI_GTK)
+
+if (WIN32)
+ set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:20000000")
+endif (WIN32)
 
 # add PCH
 target_precompile_headers (${EXECUTABLE}

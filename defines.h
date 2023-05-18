@@ -178,4 +178,9 @@
 #define ENGINE_PGE_23_DEFAULT_HEIGHT            200
 #define ENGINE_PGE_23_DEFAULT_WIDTH             200
 
+// pge 24
+#define ENGINE_PGE_24_DEFAULT_HEIGHT            400
+#define ENGINE_PGE_24_DEFAULT_WIDTH             400
+#define ENGINE_PGE_24_DEFAULT_CELL_SIZE         10
+
 #endif

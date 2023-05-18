@@ -33,8 +33,8 @@ PGE_11::add (const olc::vf2d& pos, float r)
   struct ball b;
   b.pos = pos;
   olc::vf2d vel;
-  vel.x = 1 + rand () % 10;
-  vel.y = 1 + rand () % 10;
+  vel.x = static_cast<float> (1 + rand () % 10);
+  vel.y = static_cast<float> (1 + rand () % 10);
   vel.norm ();
   b.vel = vel * 10;
   b.radius = r;
@@ -50,13 +50,13 @@ PGE_11::add (const olc::vf2d& pos, float r)
 bool
 PGE_11::OnUserCreate ()
 {
-  srand (time (NULL));
+  srand (static_cast<unsigned int> (time (NULL)));
 
   for (int i = 0; i < 7; i++)
   {
     olc::vf2d position_s;
-    position_s.x = rand () % ScreenWidth ();
-    position_s.y = rand () % ScreenHeight ();
+    position_s.x = static_cast<float> (rand () % ScreenWidth ());
+    position_s.y = static_cast<float> (rand () % ScreenHeight ());
     add (position_s, (float)(rand () % 30 + 2));
   } // end FOR
  

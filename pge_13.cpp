@@ -39,8 +39,8 @@ PGE_13::add (const olc::vf2d& pos, const olc::vf2d& vel, const olc::Pixel& col, 
   p.bIsExplosion = isX;
   p.fLifespan = 0xFF;
 
-  p.id = fireworks.size();
-  fireworks.emplace_back(p);
+  p.id = static_cast<int> (fireworks.size ());
+  fireworks.emplace_back (p);
 }
 
 void
@@ -51,9 +51,9 @@ PGE_13::explode (const olc::vf2d& pos)
   {
     olc::vf2d RandVel;
 
-    RandVel.x = sin(angle);
-    RandVel.y = cos(angle);
-    RandVel *= (rand() % 40);
+    RandVel.x = std::sin (angle);
+    RandVel.y = std::cos (angle);
+    RandVel *= static_cast<float> (rand () % 40);
 
     add (pos, RandVel, colour, true);
   } // end FOR
@@ -62,16 +62,16 @@ PGE_13::explode (const olc::vf2d& pos)
 bool
 PGE_13::OnUserCreate ()
 {
-  srand (time (NULL));
+  srand (static_cast<unsigned int> (time (NULL)));
 
   olc::vf2d RandParticle, RandVel;
-  RandParticle.y = ScreenHeight();
+  RandParticle.y = static_cast<float> (ScreenHeight ());
   RandVel.x = 0.0f;
 
   for (int i = 0; i < 7; i++)
   {
-    RandParticle.x = rand() % ScreenWidth ();
-    RandVel.y = -(150 + (rand () % 30));
+    RandParticle.x = static_cast<float> (rand () % ScreenWidth ());
+    RandVel.y = static_cast<float> (-(150 + (rand () % 30)));
     add (RandParticle, RandVel);
   }
 
@@ -101,15 +101,16 @@ PGE_13::OnUserUpdate (float fElapsedTime)
     if (particle.bIsExplosion)
     {
       particle.fLifespan -= 0.1f;
-      particle.col = olc::Pixel(particle.col.r, particle.col.g, particle.col.b, particle.fLifespan);
+      particle.col =
+        olc::Pixel (particle.col.r, particle.col.g, particle.col.b, static_cast<uint8_t> (particle.fLifespan));
     }
     else if (particle.vel.y >= -20.0f)
     {
       explode (particle.pos);
 
-      particle.pos.x = rand() % ScreenWidth();
-      particle.pos.y = ScreenHeight();
-      particle.vel.y = -(150.0f + (rand() % 30));
+      particle.pos.x = static_cast<float> (rand () % ScreenWidth ());
+      particle.pos.y = static_cast<float> (ScreenHeight ());
+      particle.vel.y = static_cast<float> (-(150.0f + (rand () % 30)));
     }
 
     Draw (particle.pos, particle.col);
