@@ -51,7 +51,7 @@ engine_glut_25_generate (struct Engine_OpenGL_GLUT_25_CBData& CBData_in)
   for (int i = 0; i < CBData_in.dimension; i++)
     for (int j = 0; j < CBData_in.dimension; j++)
     {
-      boolean edge = false;
+      bool edge = false;
       for (int k = 0; k < CBData_in.dimension; k++)
       {
         float x = Common_GL_Tools::map (static_cast<float> (i), 0.0f, static_cast<float> (CBData_in.dimension), -1.0f, 1.0f);
@@ -65,9 +65,9 @@ engine_glut_25_generate (struct Engine_OpenGL_GLUT_25_CBData& CBData_in)
         while (true)
         {
           struct spherical c = spherical (zeta.x, zeta.y, zeta.z);
-          float newx = static_cast<float> (pow (c.r, n)) * sin (c.theta * n) * cos (c.phi * n);
-          float newy = static_cast<float> (pow (c.r, n) * sin (c.theta * n)) * sin (c.phi * n);
-          float newz = static_cast<float> (pow (c.r, n)) * cos (c.theta * n);
+          float newx = static_cast<float> (powf (c.r, static_cast<float> (n))) * sinf (c.theta * n) * cosf (c.phi * n);
+          float newy = static_cast<float> (powf (c.r, static_cast<float> (n)) * sinf (c.theta * n)) * sinf (c.phi * n);
+          float newz = static_cast<float> (powf (c.r, static_cast<float> (n))) * cosf (c.theta * n);
           zeta.x = newx + x;
           zeta.y = newy + y;
           zeta.z = newz + z;
@@ -118,9 +118,10 @@ engine_glut_25_reshape (int width_in, int height_in)
   COMMON_GL_ASSERT;
 
   // set the camera
-  gluLookAt (cb_data_p->camera.position.x, cb_data_p->camera.position.y, cb_data_p->camera.position.z,
-             cb_data_p->camera.looking_at.x, cb_data_p->camera.looking_at.y, cb_data_p->camera.looking_at.z,
-             cb_data_p->camera.up.x, cb_data_p->camera.up.y, cb_data_p->camera.up.z);
+  gluLookAt (cb_data_p->camera.getX (), cb_data_p->camera.getY (), cb_data_p->camera.getZ (),
+             cb_data_p->camera.getSightX (), cb_data_p->camera.getSightY (), cb_data_p->camera.getSightZ (),
+             //0, 0, 0,
+             0, 1, 0);
 
 
   glMatrixMode (GL_MODELVIEW);
@@ -136,60 +137,38 @@ engine_glut_25_key_special (int key_in,
     static_cast<struct Engine_OpenGL_GLUT_25_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
-  switch (key_in)
-  {
-    case GLUT_KEY_LEFT:
-      cb_data_p->camera.rotation.z -= 0.5f;
-      break;
-    case GLUT_KEY_RIGHT:
-      cb_data_p->camera.rotation.z += 0.5f;
-      break;
-    case GLUT_KEY_UP:
-      cb_data_p->camera.rotation.x -= 0.5f;
-      break;
-    case GLUT_KEY_DOWN:
-      cb_data_p->camera.rotation.x += 0.5f;
-      break;
-    case GLUT_KEY_HOME:
-      cb_data_p->camera.position.x = 0.0F;
-      cb_data_p->camera.position.y = -200.0f;
-      cb_data_p->camera.position.z = -600.0f;
-
-      cb_data_p->camera.rotation.x = 0.0f;
-      cb_data_p->camera.rotation.y = 0.0f;
-      cb_data_p->camera.rotation.z = 0.0f;
-      break;
-  } // end SWITCH
+  cb_data_p->camera.setKeyboard (key_in, true);
 }
 
 void
-engine_glut_25_mouse_button (int button, int state, int x, int y)
+engine_glut_25_key_down (unsigned char key_in,
+                         int x,
+                         int y)
 {
   struct Engine_OpenGL_GLUT_25_CBData* cb_data_p =
     static_cast<struct Engine_OpenGL_GLUT_25_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
-  if (button == GLUT_LEFT_BUTTON)
-  {
-    if (state == GLUT_UP)
-    {
-      //cb_data_p->spinning = false;
-      cb_data_p->xangle += cb_data_p->xDeltaAngle;
-      cb_data_p->xOrigin = -1;
-      cb_data_p->yangle += cb_data_p->yDeltaAngle;
-      cb_data_p->yOrigin = -1;
+  cb_data_p->camera.setKeyboard (key_in, true);
 
-      cb_data_p->camera.rotation.x = 0.0F;
-      cb_data_p->camera.rotation.y = 0.0F;
-      cb_data_p->camera.rotation.z = 0.0F;
-    } // end IF
-    else
-    {
-      //cb_data_p->spinning = true;
-      cb_data_p->xOrigin = x;
-      cb_data_p->yOrigin = y;
-    } // end ELSE
-  } // end IF
+  switch (key_in)
+  {
+    case 27:  /* Escape */
+      glutLeaveMainLoop ();
+      break;
+  } // end SWITCH
+}
+
+void
+engine_glut_25_key_up (unsigned char key_in,
+                       int x,
+                       int y)
+{
+  struct Engine_OpenGL_GLUT_25_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_25_CBData*> (glutGetWindowData ());
+  ACE_ASSERT (cb_data_p);
+
+  cb_data_p->camera.setKeyboard (key_in, false);
 }
 
 void
@@ -199,50 +178,7 @@ engine_glut_25_mouse_move (int x, int y)
     static_cast<struct Engine_OpenGL_GLUT_25_CBData*> (glutGetWindowData());
   ACE_ASSERT (cb_data_p);
 
-  // this will only be true when the left button is down
-  if (cb_data_p->xOrigin >= 0)
-  {
-    cb_data_p->xDeltaAngle = (x - cb_data_p->xOrigin) * 0.001f;
-
-    // update camera's direction
-    cb_data_p->camera.rotation.x = std::sin (cb_data_p->xangle + cb_data_p->xDeltaAngle);
-    cb_data_p->camera.rotation.z = -std::cos (cb_data_p->xangle + cb_data_p->xDeltaAngle);
-  } // end IF
-
-  if (cb_data_p->yOrigin >= 0)
-  {
-    cb_data_p->yDeltaAngle = (y - cb_data_p->yOrigin) * 0.001f;
-
-    // update camera's direction
-    cb_data_p->camera.rotation.y = std::sin (cb_data_p->yangle + cb_data_p->yDeltaAngle);
-    cb_data_p->camera.rotation.z = -std::cos (cb_data_p->yangle + cb_data_p->yDeltaAngle);
-  } // end IF
-}
-
-void
-engine_glut_25_timer (int v)
-{
-  struct Engine_OpenGL_GLUT_25_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_25_CBData*> (glutGetWindowData ());
-  ACE_ASSERT (cb_data_p);
-
-  //if (cb_data_p->spinning)
-  //{
-    //cb_data_p->xangle += 1.0;
-    if (cb_data_p->xangle > 360.0)
-    {
-      cb_data_p->xangle -= 360.0;
-    } // end IF
-
-    //cb_data_p->yangle += 1.0;
-    if (cb_data_p->yangle > 360.0)
-    {
-      cb_data_p->yangle -= 360.0;
-    } // end IF
-    //glutPostRedisplay ();
-  //} // end IF
-
-  glutTimerFunc (1000 / 30, engine_glut_25_timer, v);
+  cb_data_p->camera.rotation (x, y);
 }
 
 void
@@ -253,32 +189,21 @@ engine_glut_25_draw (void)
   ACE_ASSERT (cb_data_p);
 
   glClear (GL_COLOR_BUFFER_BIT);
-  //COMMON_GL_ASSERT;
+  COMMON_GL_ASSERT;
 
   // Reset transformations
   glMatrixMode (GL_MODELVIEW);
-  //COMMON_GL_ASSERT;
+  COMMON_GL_ASSERT;
   glLoadIdentity ();
-  //COMMON_GL_ASSERT;
+  COMMON_GL_ASSERT;
 
   // rotate the camera
-  //glm::mat4 rotation_matrix = glm::rotate (glm::mat4 (1.0f),
-  //                                         glm::radians (cb_data_p->camera.rotation.x),
-  //                                         glm::vec3 (1.0f, 0.0f, 0.0f));
-  //rotation_matrix *= glm::rotate (glm::mat4 (1.0f),
-  //                                glm::radians (cb_data_p->camera.rotation.y),
-  //                                glm::vec3 (0.0f, 1.0f, 0.0f));
-  //rotation_matrix *= glm::rotate (glm::mat4 (1.0f),
-  //                                glm::radians (cb_data_p->camera.rotation.z),
-  //                                glm::vec3 (0.0f, 0.0f, 1.0f));
-  //glm::vec4 pos_rot_h =
-  //  rotation_matrix * glm::vec4 (cb_data_p->camera.position,
-  //                               1.0f);
-  //cb_data_p->camera.position = glm::vec3 (pos_rot_h);
-  //// set the camera
-  //gluLookAt (cb_data_p->camera.position.x, cb_data_p->camera.position.y, cb_data_p->camera.position.z,
-  //           cb_data_p->camera.looking_at.x, cb_data_p->camera.looking_at.y, cb_data_p->camera.looking_at.z,
-  //           cb_data_p->camera.up.x, cb_data_p->camera.up.y, cb_data_p->camera.up.z);
+  cb_data_p->camera.translation ();
+  // set the camera
+  gluLookAt (cb_data_p->camera.getX (), cb_data_p->camera.getY (), cb_data_p->camera.getZ (),
+             cb_data_p->camera.getSightX (), cb_data_p->camera.getSightY (), cb_data_p->camera.getSightZ (),
+             //0, 0, 0,
+             0, 1, 0);
 
   // Draw a red x-axis, a green y-axis, and a blue z-axis.  Each of the
   // axes are hundred units long.
@@ -287,10 +212,10 @@ engine_glut_25_draw (void)
   glColor3f (0.0F, 1.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
   glColor3f (0.0F, 0.0F, 1.0F); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
-  //COMMON_GL_ASSERT;
+  COMMON_GL_ASSERT;
 
   glColor3ub (255, 255, 255);
-  //glTranslatef (ENGINE_GLUT_25_DEFAULT_WIDTH / 2.0f, ENGINE_GLUT_25_DEFAULT_HEIGHT / 2.0f, 0.0f);
+  COMMON_GL_ASSERT;
 
   glBegin (GL_POINTS);
   for (std::vector<glm::fvec3>::const_iterator i = cb_data_p->mandelbulb.begin ();
@@ -298,9 +223,10 @@ engine_glut_25_draw (void)
        ++i)
     glVertex3f ((*i).x * 200, (*i).y * 200, (*i).z * 200);
   glEnd ();
+  COMMON_GL_ASSERT;
 
   glFlush ();
-  //COMMON_GL_ASSERT;
+  COMMON_GL_ASSERT;
 
   glutSwapBuffers ();
 }

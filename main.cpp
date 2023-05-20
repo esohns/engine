@@ -1061,23 +1061,16 @@ do_work (int argc_in,
     {
       struct Engine_OpenGL_GLUT_25_CBData cb_data_s;
 
-      cb_data_s.camera.position.x = 0.0f;
-      cb_data_s.camera.position.y = -200.0f;
-      cb_data_s.camera.position.z = -600.0f;
-      cb_data_s.camera.looking_at.x = 0.0f;
-      cb_data_s.camera.looking_at.y = 0.0f;
-      cb_data_s.camera.looking_at.z = 0.0f;
-      cb_data_s.camera.up.x = 0.0f;
-      cb_data_s.camera.up.y = 0.0f;
-      cb_data_s.camera.up.z = 1.0f;
-
-      cb_data_s.xangle = 0.0f;
-      cb_data_s.xDeltaAngle = 0.0f;
-      cb_data_s.xOrigin = -1;
-      cb_data_s.yangle = 0.0f;
-      cb_data_s.yDeltaAngle = 0.0f;
-      cb_data_s.yOrigin = -1;
-
+      cb_data_s.camera.init (Camera::QWERTY,
+                             0.0f,
+                             0.0f,
+                             -500.0f,
+                             4.0f * static_cast<float> (M_PI) / 7.0f,
+                             static_cast<float> (M_PI) / 4.0f,
+                             0.01f,
+                             0.5f,
+                             ENGINE_GLUT_25_DEFAULT_WIDTH,
+                             ENGINE_GLUT_25_DEFAULT_HEIGHT);
       cb_data_s.dimension = ENGINE_GLUT_25_DEFAULT_DIMENSION;
 
       engine_glut_25_generate (cb_data_s);
@@ -1103,11 +1096,12 @@ do_work (int argc_in,
       glutReshapeFunc (engine_glut_25_reshape);
       glutVisibilityFunc (engine_glut_3_visible);
 
-      glutKeyboardFunc (engine_glut_3_key);
+      glutKeyboardFunc (engine_glut_25_key_down);
+      glutKeyboardUpFunc (engine_glut_25_key_up);
       glutSpecialFunc (engine_glut_25_key_special);
-      glutMouseFunc (engine_glut_25_mouse_button);
+      //glutMouseFunc (engine_glut_25_mouse_button);
       glutMotionFunc (engine_glut_25_mouse_move);
-      glutTimerFunc (100, engine_glut_25_timer, 0);
+      //glutTimerFunc (100, engine_glut_25_timer, 0);
 
       glutMainLoop ();
 

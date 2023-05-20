@@ -362,6 +362,8 @@ set (engine_EXE_SRCS
      ${CMAKE_CURRENT_BINARY_DIR}/config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
+     camera.cpp
+     camera.h
      engine_common.h
      defines.h
      main.cpp
