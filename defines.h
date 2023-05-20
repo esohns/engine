@@ -183,4 +183,9 @@
 #define ENGINE_PGE_24_DEFAULT_WIDTH             400
 #define ENGINE_PGE_24_DEFAULT_CELL_SIZE         10
 
+// glut 25
+#define ENGINE_GLUT_25_DEFAULT_HEIGHT           600
+#define ENGINE_GLUT_25_DEFAULT_WIDTH            800
+#define ENGINE_GLUT_25_DEFAULT_DIMENSION        128
+
 #endif

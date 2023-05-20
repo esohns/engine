@@ -64,6 +64,7 @@
 #include "pge_22.h"
 #include "pge_23.h"
 #include "pge_24.h"
+#include "glut_25.h"
 
 enum Engine_ModeType
 {
@@ -91,6 +92,7 @@ enum Engine_ModeType
   ENGINE_MODE_22,
   ENGINE_MODE_23,
   ENGINE_MODE_24,
+  ENGINE_MODE_25,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1052,6 +1054,64 @@ do_work (int argc_in,
         example.Start ();
         result = true;
       } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_25:
+    {
+      struct Engine_OpenGL_GLUT_25_CBData cb_data_s;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = -200.0f;
+      cb_data_s.camera.position.z = -600.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 0.0f;
+      cb_data_s.camera.up.z = 1.0f;
+
+      cb_data_s.xangle = 0.0f;
+      cb_data_s.xDeltaAngle = 0.0f;
+      cb_data_s.xOrigin = -1;
+      cb_data_s.yangle = 0.0f;
+      cb_data_s.yDeltaAngle = 0.0f;
+      cb_data_s.yOrigin = -1;
+
+      cb_data_s.dimension = ENGINE_GLUT_25_DEFAULT_DIMENSION;
+
+      engine_glut_25_generate (cb_data_s);
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA);
+      glutInitWindowSize (ENGINE_GLUT_25_DEFAULT_WIDTH, ENGINE_GLUT_25_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 25");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0F, 0.0F, 0.0F, 0.0F); // Black Background
+      COMMON_GL_ASSERT;
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+      COMMON_GL_ASSERT;
+
+      glDisable (GL_CULL_FACE);
+
+      glutDisplayFunc (engine_glut_25_draw);
+      glutReshapeFunc (engine_glut_25_reshape);
+      glutVisibilityFunc (engine_glut_3_visible);
+
+      glutKeyboardFunc (engine_glut_3_key);
+      glutSpecialFunc (engine_glut_25_key_special);
+      glutMouseFunc (engine_glut_25_mouse_button);
+      glutMotionFunc (engine_glut_25_mouse_move);
+      glutTimerFunc (100, engine_glut_25_timer, 0);
+
+      glutMainLoop ();
+
+      result = true;
 
       break;
     }
