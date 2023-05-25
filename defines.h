@@ -188,4 +188,8 @@
 #define ENGINE_GLUT_25_DEFAULT_WIDTH            800
 #define ENGINE_GLUT_25_DEFAULT_DIMENSION        128
 
+// pge 26
+#define ENGINE_PGE_26_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_26_DEFAULT_WIDTH             600
+
 #endif

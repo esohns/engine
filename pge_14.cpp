@@ -700,7 +700,7 @@ PGE_14::OnUserUpdate (float fElapsedTime)
     if (GetMouse(1).bPressed)
       rb_draw.OnMousePress();
     if (GetMouse(1).bHeld)
-      rb_draw.OnMouseInput(m_pos, Sign(GetMouseWheel()) * 5.0f * fElapsedTime, key);
+      rb_draw.OnMouseInput (m_pos, Sign (static_cast<float> (GetMouseWheel())) * 5.0f * fElapsedTime, key);
     if (GetMouse(1).bReleased)
       rb_draw.OnMouseRelease(scene);
   } // end IF

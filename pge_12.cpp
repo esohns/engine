@@ -63,7 +63,7 @@ PGE_12::computeDFT (const std::vector<std::complex<float> >& input_in)
     f.com = {0.0f, 0.0f};
     for (size_t n = 0; n < N; n++)
     {
-      phi = -2.0f * M_PI * n * k / N;
+      phi = -2.0f * static_cast<float>(M_PI) * n * k / N;
       f.com += input_in[n] * std::exp (std::complex<float> (0, -phi));
     } // end FOR
     f.com /= (float)N;
@@ -101,7 +101,7 @@ PGE_12::drawEpicycle (olc::vf2d origin_in, float rotation_in, const std::vector<
         {vF.fAmp * std::cos (vF.nFreq * fDelta + vF.fPhase + rotation_in),
          vF.fAmp * std::sin (vF.nFreq * fDelta + vF.fPhase + rotation_in)};
 
-      DrawCircle (pre_orig, std::fabs (vF.fAmp), olc::VERY_DARK_GREY);
+      DrawCircle (pre_orig, static_cast<int32_t> (std::fabs (vF.fAmp)), olc::VERY_DARK_GREY);
 
       DrawLine (pre_orig, origin_in);
     } // end IF
@@ -137,10 +137,10 @@ PGE_12::OnUserUpdate (float fElapsedTime)
   fTick += fElapsedTime;
   if (fTick > 0.05f)      //Slow down update
   {
-    Clear(olc::BLACK);
+    Clear (olc::BLACK);
 
     olc::vf2d vx1 = drawEpicycle (x_circle_orig, 0.0f, vFourierX);
-    olc::vf2d vy1 = drawEpicycle (y_circle_orig, (M_PI / 2), vFourierY);
+    olc::vf2d vy1 = drawEpicycle (y_circle_orig, static_cast<float> (M_PI / 2), vFourierY);
 
     //Add last X,Y value to path vector
     olc::vf2d v2 = { vx1.x, vy1.y };
@@ -173,7 +173,7 @@ PGE_12::OnUserUpdate (float fElapsedTime)
     DrawString(50, 50, "Epicycles used: " + std::to_string(vFourierX.size()));
 
     //Move delta by fraction of total size.
-    fDelta += (2 * M_PI) / vFourierX.size ();
+    fDelta += static_cast<float> (2 * M_PI) / vFourierX.size ();
     //Remove excess points on wave
     if (fDelta > (2 * M_PI))
     {
