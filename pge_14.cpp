@@ -24,7 +24,7 @@ RigidBody::RigidBody (const olc::vf2d& p, int _n, float _len, float _angle, floa
 {
   for (int i = 0; i < n; i++)
   {
-      model.push_back({ cosf(2.0f * M_PI / n * i), sinf(2.0f * M_PI / n * i) });
+      model.push_back({ cosf(2.0f * static_cast<float> (M_PI) / n * i), sinf(2.0f * static_cast<float> (M_PI) / n * i) });
   }
   vertices.resize(n);
   prev_vertices.resize(n);
@@ -440,7 +440,7 @@ Scene::Update(float dt, bool is_debug)
         shapeID.push_back(c.GetID());
     }
 
-    for (int i = shapes.size() - 1; i >= 0; i--)
+    for (int i = static_cast<int> (shapes.size () - 1); i >= 0; i--)
     {
       shapes[i].Logic(inv_FPS, is_debug);
 
@@ -467,7 +467,7 @@ Scene::Update(float dt, bool is_debug)
     for (RigidBody& r : shapes) r.ApplyForce({ 0.0f, g }, inv_FPS);
     for (auto& m : manifolds) { m.Logic(dt, 5, is_debug); }
 
-    for (int i = constraints.size() - 1; i >= 0; i--)
+    for (int i = static_cast<int> (constraints.size () - 1); i >= 0; i--)
       if (constraints[i].GetID() < 0)
         constraints.erase(constraints.begin() + i);
   } // end IF
@@ -490,9 +490,9 @@ Scene::Draw (olc::PixelGameEngine* pge, bool is_fill)
 void
 Scene::AddShape (const olc::vf2d& p, int n_vertices, float len, float angle, float angular_velocity, float mass, olc::Pixel color, float e, float sf, float df)
 {
-  RigidBody rb(p, n_vertices, len, angle, angular_velocity, mass, e, sf, df, shapes.size());
-  rb.SetColor(color);
-  shapes.push_back(rb);
+  RigidBody rb (p, n_vertices, len, angle, angular_velocity, mass, e, sf, df, static_cast<int> (shapes.size ()));
+  rb.SetColor (color);
+  shapes.push_back (rb);
 }
 
 void
@@ -542,7 +542,8 @@ RigidBodyDraw::OnMousePress()
   vertices.resize(n);
 
   for (int i = 0; i < n; i++)
-    model[i] = { cosf(2.0f * M_PI / n * i + 0.25f * M_PI), sinf(2.0f * M_PI / n * i + 0.25f * M_PI) };
+    model[i] = { cosf (2.0f * static_cast<float> (M_PI) / n * i + 0.25f * static_cast<float> (M_PI)),
+                 sinf (2.0f * static_cast<float> (M_PI) / n * i + 0.25f * static_cast<float> (M_PI)) };
 }
 
 void
@@ -650,7 +651,7 @@ PGE_14::OnUserCreate ()
 
   scene.Initialize({ ScreenWidth() * 1.0f, ScreenHeight() * 1.0f });
 
-  scene.AddShape({ ScreenWidth() * 0.5f, ScreenHeight() * 1.25f }, 4, ScreenWidth() * 0.5f, M_PI / 4.0f, 0.0f, 0.0f);
+  scene.AddShape({ ScreenWidth() * 0.5f, ScreenHeight() * 1.25f }, 4, ScreenWidth() * 0.5f, static_cast<float> (M_PI) / 4.0f, 0.0f, 0.0f);
   scene.AddShape({ 0.0f, 0.0f }, 6, 15.0f, 0.0f, 0.0f, 10.0f, olc::GREEN);
   scene.AddShape({ ScreenWidth() * 1.0f, 0.0f }, 3, 20.0f, 0.0f, 0.0f, 2.0f, olc::MAGENTA);
 

@@ -30,17 +30,17 @@ PGE_26::topple ()
 {
   next_ = sandpile_;
 
-  for (int j = 0; j < olc::PixelGameEngine::ScreenHeight (); ++j)
-    for (int i = 0; i < olc::PixelGameEngine::ScreenWidth (); ++i)
+  for (int j = 0; j < ENGINE_PGE_26_DEFAULT_HEIGHT; ++j)
+    for (int i = 0; i < ENGINE_PGE_26_DEFAULT_WIDTH; ++i)
     {
       if (sandpile_[i][j] >= 4)
       {
         next_[i][j] -= 4;
-        if (i + 1 < olc::PixelGameEngine::ScreenWidth ())
+        if (i + 1 < ENGINE_PGE_26_DEFAULT_WIDTH)
           next_[i + 1][j]++;
         if (i - 1 >= 0)
           next_[i - 1][j]++;
-        if (j + 1 < olc::PixelGameEngine::ScreenHeight ())
+        if (j + 1 < ENGINE_PGE_26_DEFAULT_HEIGHT)
           next_[i][j + 1]++;
         if (j - 1 >= 0)
           next_[i][j - 1]++;
@@ -55,8 +55,8 @@ PGE_26::topple ()
 void
 PGE_26::render ()
 {
-  for (int j = 0; j < olc::PixelGameEngine::ScreenHeight (); ++j)
-    for (int i = 0; i < olc::PixelGameEngine::ScreenWidth (); ++i)
+  for (int j = 0; j < ENGINE_PGE_26_DEFAULT_HEIGHT; ++j)
+    for (int i = 0; i < ENGINE_PGE_26_DEFAULT_WIDTH; ++i)
     {
       olc::Pixel col = defaultColor_;
       if (sandpile_[i][j] == 0)
