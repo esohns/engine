@@ -66,6 +66,7 @@
 #include "pge_24.h"
 #include "glut_25.h"
 #include "pge_26.h"
+#include "pge_27.h"
 
 enum Engine_ModeType
 {
@@ -95,6 +96,7 @@ enum Engine_ModeType
   ENGINE_MODE_24,
   ENGINE_MODE_25,
   ENGINE_MODE_26,
+  ENGINE_MODE_27,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1126,6 +1128,27 @@ do_work (int argc_in,
 
       break;
     }
+    case ENGINE_MODE_27:
+    {
+      PGE_27 example (UIDefinitionFilePath_in);
+      if (example.Construct (ENGINE_PGE_27_DEFAULT_WIDTH, ENGINE_PGE_27_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      Common_UI_GTK_Manager_t* gtk_manager_p =
+        COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
+      ACE_ASSERT (gtk_manager_p);
+      gtk_manager_p->stop (true,   // wait ?
+                           false);
+
+      break;
+    }
     default:
     {
       ACE_DEBUG ((LM_ERROR,
@@ -1206,7 +1229,7 @@ ACE_TMAIN (int argc_in,
       ui_definition_file_path = Common_File_Tools::directory (ui_definition_file_path);
       ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
       ui_definition_file_path +=
-        ACE_TEXT_ALWAYS_CHAR(ENGINE_PGE_2_UI_DEFINITION_FILE);
+        ACE_TEXT_ALWAYS_CHAR (ENGINE_PGE_2_UI_DEFINITION_FILE);
     } // end IF
     case ENGINE_MODE_3:
     case ENGINE_MODE_4:
@@ -1215,6 +1238,20 @@ ACE_TMAIN (int argc_in,
       ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
       ui_definition_file_path +=
         ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_3_UI_DEFINITION_FILE);
+    } // end IF
+    case ENGINE_MODE_16:
+    {
+      ui_definition_file_path = Common_File_Tools::directory (ui_definition_file_path);
+      ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
+      ui_definition_file_path +=
+        ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_16_UI_DEFINITION_FILE);
+    } // end IF
+    case ENGINE_MODE_27:
+    {
+      ui_definition_file_path = Common_File_Tools::directory (ui_definition_file_path);
+      ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
+      ui_definition_file_path +=
+        ACE_TEXT_ALWAYS_CHAR (ENGINE_PGE_27_UI_DEFINITION_FILE);
     } // end IF
     default:
       break;

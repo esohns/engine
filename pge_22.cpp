@@ -41,6 +41,7 @@ PGE_22::OnUserCreate ()
     return false;
   } // end IF
   ACE_ASSERT (data_p);
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
   for (int y = 0; y < resolution_s.cy; ++y)
     for (int x = 0; x < resolution_s.cx; ++x)
     {
@@ -50,6 +51,17 @@ PGE_22::OnUserCreate ()
       if (b)
         spots_.push_back ({x, y});
     } // end FOR
+#else
+  for (int y = 0; y < resolution_s.height; ++y)
+    for (int x = 0; x < resolution_s.width; ++x)
+    {
+        unsigned int b = data_p[(y * resolution_s.width + x) * 3];
+        b += data_p[((y * resolution_s.width + x) * 3) + 1];
+        b += data_p[((y * resolution_s.width + x) * 3) + 2];
+        if (b)
+            spots_.push_back ({x, y});
+    } // end FOR
+#endif // ACE_WIN32 || ACE_WIN64
   MagickRelinquishMemory (data_p); data_p = NULL;
   ACE_DEBUG ((LM_DEBUG,
               ACE_TEXT ("loaded image \"%s\": found %u bright spot(s)\n"),

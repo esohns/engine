@@ -192,4 +192,19 @@
 #define ENGINE_PGE_26_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_26_DEFAULT_WIDTH             600
 
+// pge 27
+#define ENGINE_PGE_27_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_27_DEFAULT_WIDTH             600
+#define ENGINE_PGE_27_DEFAULT_DELTA             0
+#define ENGINE_PGE_27_DEFAULT_ANGLE             75 // degrees
+
+#if defined (GTK2_USE)
+#define ENGINE_PGE_27_UI_DEFINITION_FILE        "pge_27.gtk2"
+#else
+#define ENGINE_PGE_27_UI_DEFINITION_FILE        "pge_27.gtk3"
+#endif // GTK2_USE
+
+#define ENGINE_UI_GTK_SCALE_DELTA_NAME          "scale_delta"
+#define ENGINE_UI_GTK_SCALE_ANGLE_NAME          "scale_angle"
+
 #endif

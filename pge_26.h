@@ -28,4 +28,4 @@ class PGE_26
   void render ();
 };
 
-#endif // PGE_24_H
+#endif // PGE_26_H
