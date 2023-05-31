@@ -185,7 +185,7 @@ PGE_27::OnUserCreate ()
   for (int x = 0; x < olc::PixelGameEngine::ScreenWidth (); x += inc)
     for (int y = 0; y < olc::PixelGameEngine::ScreenHeight (); y += inc)
     {
-      polygon* polygon_p = new polygon ();
+      polygon* polygon_p = new polygon (4);
       polygon_p->addVertex (x, y);
       polygon_p->addVertex (x + inc, y);
       polygon_p->addVertex (x + inc, y + inc);

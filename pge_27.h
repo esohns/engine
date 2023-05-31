@@ -44,73 +44,67 @@ class PGE_27
      : a_ (a)
      , v_ (v)
      , b_ ()
-     , end_ ()
-     , prevD_ (0.0f)
+     //, end_ ()
+     //, prevD_ (0.0f)
     {
       b_ = a_ + v_;
+      //end_ = a_ + v_;
     }
     inline ~hankin () {}
 
     void show (olc::PixelGameEngine* engine_in)
     {
-      if (end_.x && end_.y)
-        engine_in->DrawLine (a_, end_, olc::WHITE, 0xFFFFFFFF);
-      // fill(255);
-      // ellipse(this.a.x, this.a.y, 8);
-      // if (this.end) {
-      //   fill(255, 255, 0);
-      //   ellipse(this.end.x, this.end.y, 8);
-      // }
+      engine_in->DrawLine (a_, b_, olc::WHITE, 0xFFFFFFFF);
     }
 
-    void findEnd (const hankin& other_in)
-    {
-      // line line intersection???
-      // this.a, this.v  (P1, P2-P1)
-      // other.a, other.v (P3, P4-P3)
+    //void findEnd (const hankin& other_in)
+    //{
+    //  // line line intersection???
+    //  // this.a, this.v  (P1, P2-P1)
+    //  // other.a, other.v (P3, P4-P3)
 
-      // From: http://paulbourke.net/geometry/pointlineplane/
-      float den = (other_in.v_.y * v_.x) - (other_in.v_.x * v_.y);
-      if (!den)
-        return;
-      float numa =
-        (other_in.v_.x * (a_.y - other_in.a_.y)) - (other_in.v_.y * (a_.x - other_in.a_.x));
-      float numb =
-        (v_.x * (a_.y - other_in.a_.y)) - (v_.y * (a_.x - other_in.a_.x));
-      float ua = numa / den;
-      float ub = numb / den;
-      float x = a_.x + (ua * v_.x);
-      float y = a_.y + (ua * v_.y);
+    //  // From: http://paulbourke.net/geometry/pointlineplane/
+    //  float den = (other_in.v_.y * v_.x) - (other_in.v_.x * v_.y);
+    //  if (!den)
+    //    return;
+    //  float numa =
+    //    (other_in.v_.x * (a_.y - other_in.a_.y)) - (other_in.v_.y * (a_.x - other_in.a_.x));
+    //  float numb =
+    //    (v_.x * (a_.y - other_in.a_.y)) - (v_.y * (a_.x - other_in.a_.x));
+    //  float ua = numa / den;
+    //  float ub = numb / den;
+    //  float x = a_.x + (ua * v_.x);
+    //  float y = a_.y + (ua * v_.y);
 
-      if (ua > 0.0f && ub > 0.0f)
-      {
-        olc::vf2d candidate = { x, y };
-        float d1 = candidate.dist (a_);
-        float d2 = candidate.dist (other_in.a_);
-        float d = d1 + d2;
-        float diff = abs (d1 - d2);
-        if (diff < 0.001)
-        {
-          if (!end_.x && !end_.y)
-          {
-            end_ = candidate;
-            prevD_ = d;
-          } // end IF
-          else if (d < prevD_)
-          {
-            prevD_ = d;
-            end_ = candidate;
-          } // end ELSE IF
-        } // end IF
-      } // end IF
-    }
+    //  if (ua > 0.0f && ub > 0.0f)
+    //  {
+    //    olc::vf2d candidate = { x, y };
+    //    float d1 = candidate.dist (a_);
+    //    float d2 = candidate.dist (other_in.a_);
+    //    float d = d1 + d2;
+    //    float diff = abs (d1 - d2);
+    //    if (diff < 0.001)
+    //    {
+    //      if (!end_.x && !end_.y)
+    //      {
+    //        end_ = candidate;
+    //        prevD_ = d;
+    //      } // end IF
+    //      else if (d < prevD_)
+    //      {
+    //        prevD_ = d;
+    //        end_ = candidate;
+    //      } // end ELSE IF
+    //    } // end IF
+    //  } // end IF
+    //}
 
    private:
     olc::vf2d a_;
     olc::vf2d v_;
     olc::vf2d b_;
-    olc::vf2d end_;
-    float prevD_;
+    //olc::vf2d end_;
+    //float prevD_;
   };
 
   class edge
@@ -136,7 +130,8 @@ class PGE_27
     }
 
     void generate (int delta_in,
-                   int angle_in)
+                   int angle_in,
+                   int sides_in)
     {
       olc::vf2d mid = a_;
       mid += b_;
@@ -144,6 +139,10 @@ class PGE_27
 
       olc::vf2d v1 = a_ - mid;
       olc::vf2d v2 = b_ - mid;
+
+      // edge length
+      float elen = v1.mag () + delta_in;
+
       olc::vf2d offset1 = mid;
       olc::vf2d offset2 = mid;
       if (delta_in > 0)
@@ -158,6 +157,7 @@ class PGE_27
       v1 = v1.norm ();
       v2 = v2.norm ();
 
+      // rotate in 2D
       float angle_f = angle_in * static_cast<float> (M_PI / 180.0);
       olc::vf2d temp;
       temp.x = cosf (-angle_f) * v1.x - sinf (-angle_f) * v1.y;
@@ -167,17 +167,25 @@ class PGE_27
       temp.y = sinf (angle_f) * v2.x + cosf (angle_f) * v2.y;
       v2 = temp;
 
+      // Law of sines
+      float alpha = static_cast<float> ((sides_in - 2) * M_PI / sides_in) * 0.5f;
+      float beta = static_cast<float> (M_PI) - angle_f - alpha;
+      float hlen = elen * sinf (alpha) / sinf (beta);
+
+      v1 *= hlen;
+      v2 *= hlen;
+
       h1_ = new hankin (offset1, v1);
       h2_ = new hankin (offset2, v2);
     }
 
-    void findEnds (const edge& edge_in)
-    {
-      h1_->findEnd (*edge_in.h1_);
-      h1_->findEnd (*edge_in.h2_);
-      h2_->findEnd (*edge_in.h1_);
-      h2_->findEnd (*edge_in.h2_);
-    }
+    //void findEnds (const edge& edge_in)
+    //{
+    //  h1_->findEnd (*edge_in.h1_);
+    //  h1_->findEnd (*edge_in.h2_);
+    //  h2_->findEnd (*edge_in.h1_);
+    //  h2_->findEnd (*edge_in.h2_);
+    //}
 
    public:
     olc::vf2d a_;
@@ -189,9 +197,10 @@ class PGE_27
   class polygon
   {
    public:
-    polygon ()
+    polygon (int n)
      : edges_ ()
      , vertices_ ()
+     , sides_ (n)
     {}
     ~polygon ()
     {
@@ -228,12 +237,12 @@ class PGE_27
       for (std::vector<edge*>::iterator iterator = edges_.begin ();
            iterator != edges_.end ();
            ++iterator)
-        (*iterator)->generate (delta_in, angle_in);
+        (*iterator)->generate (delta_in, angle_in, sides_);
 
-      for (int i = 0; i < edges_.size (); i++)
-        for (int j = 0; j < edges_.size (); j++)
-          if (i != j)
-            edges_[i]->findEnds (*edges_[j]);
+      //for (int i = 0; i < edges_.size (); i++)
+      //  for (int j = 0; j < edges_.size (); j++)
+      //    if (i != j)
+      //      edges_[i]->findEnds (*edges_[j]);
     }
 
     void show (olc::PixelGameEngine* engine_in)
@@ -249,6 +258,7 @@ class PGE_27
     edges_t edges_;
     typedef std::vector<olc::vf2d> vertices_t;
     vertices_t vertices_;
+    int sides_;
   };
 
  public:
