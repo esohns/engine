@@ -459,6 +459,8 @@ set (engine_EXE_SRCS
      pge_26.h
      pge_27.cpp
      pge_27.h
+     pge_28.cpp
+     pge_28.h
      stdafx.h)
 
 #cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property

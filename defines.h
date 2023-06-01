@@ -207,4 +207,14 @@
 #define ENGINE_UI_GTK_SCALE_DELTA_NAME          "scale_delta"
 #define ENGINE_UI_GTK_SCALE_ANGLE_NAME          "scale_angle"
 
+// pge 28
+#define ENGINE_PGE_28_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_28_DEFAULT_WIDTH             800
+#define ENGINE_PGE_28_DEFAULT_VEL_LIMIT         5.0f
+#define ENGINE_PGE_28_DEFAULT_DIST_LIMIT_MIN    1.0f
+#define ENGINE_PGE_28_DEFAULT_DIST_LIMIT_MAX    25.0f
+#define ENGINE_PGE_28_DEFAULT_G                 50.0f
+#define ENGINE_PGE_28_DEFAULT_DIST_LIMIT        20.0f
+#define ENGINE_PGE_28_DEFAULT_REPEL_FORCE_MAG   -10.0f
+
 #endif
