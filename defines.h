@@ -217,4 +217,8 @@
 #define ENGINE_PGE_28_DEFAULT_DIST_LIMIT        20.0f
 #define ENGINE_PGE_28_DEFAULT_REPEL_FORCE_MAG   -10.0f
 
+// pge 29
+#define ENGINE_PGE_29_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_29_DEFAULT_WIDTH             800
+
 #endif
