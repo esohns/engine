@@ -221,4 +221,9 @@
 #define ENGINE_PGE_29_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_29_DEFAULT_WIDTH             800
 
+// pge 30
+#define ENGINE_PGE_30_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_30_DEFAULT_WIDTH             600
+#define ENGINE_PGE_30_DEFAULT_MAX_ITERATIONS    100
+
 #endif
