@@ -52,11 +52,12 @@ PGE_30::OnUserUpdate (float fElapsedTime)
 {
   olc::PixelGameEngine::Clear (olc::BLACK);
 
-  // let ca = map(mouseX, 0, width, -1, 1); //-0.70176;
-  // let cb = map(mouseY, 0, height, -1, 1); //-0.3842;
-
-  float ca = std::cosf (angle_ * 3.213f); //sin(angle);
-  float cb = std::sinf (angle_);
+  float ca =
+    Common_GL_Tools::map (static_cast<float> (olc::PixelGameEngine::GetMouseX ()), 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth () - 1), -1.0f, 1.0f); //-0.70176;
+  float cb =
+    Common_GL_Tools::map (static_cast<float> (olc::PixelGameEngine::GetMouseY ()), 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight () - 1), -1.0f, 1.0f); //-0.3842;
+  //float ca = std::cosf (angle_ * 3.213f); //sin(angle);
+  //float cb = std::sinf (angle_);
 
   angle_ += 0.02f;
 
