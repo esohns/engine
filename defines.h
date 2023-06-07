@@ -226,4 +226,12 @@
 #define ENGINE_PGE_30_DEFAULT_WIDTH             600
 #define ENGINE_PGE_30_DEFAULT_MAX_ITERATIONS    100
 
+// pge 31
+#define ENGINE_PGE_31_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_31_DEFAULT_WIDTH             600
+#define ENGINE_PGE_31_DEFAULT_NOISE_X           1.25 // coordinate
+#define ENGINE_PGE_31_DEFAULT_NOISE_Y           0.75 // coordinate
+#define ENGINE_PGE_31_DEFAULT_NOISE_Z           0.5  // coordinate
+#define ENGINE_PGE_31_DEFAULT_RADIUS            150
+
 #endif

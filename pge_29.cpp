@@ -36,10 +36,14 @@ PGE_29::OnUserCreate ()
   float x1, x2, y1, y2;
   for (int i = 0; i < 5; i++)
   {
-    x1 = Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenWidth () - 1);
-    x2 = Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenWidth () - 1);
-    y1 = Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenHeight () - 1);
-    y2 = Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenHeight () - 1);
+    x1 =
+      static_cast<float> (Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenWidth () - 1));
+    x2 =
+      static_cast<float> (Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenWidth () - 1));
+    y1 =
+      static_cast<float> (Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenHeight () - 1));
+    y2 =
+      static_cast<float> (Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenHeight () - 1));
     walls_.push_back (new wall ({x1, y1}, {x2, y2}));
   } // end FOR
 

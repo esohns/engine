@@ -94,7 +94,7 @@ class PGE_29
   {
    public:
     particle (int x, int y)
-     : position_ (x, y)
+     : position_ (static_cast<float> (x), static_cast<float> (y))
      , rays_ ()
     {
       for (int i = 0; i < 360; ++i)
