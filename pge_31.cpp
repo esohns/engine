@@ -41,8 +41,8 @@ PGE_31::OnUserUpdate (float fElapsedTime)
     float r = ENGINE_PGE_31_DEFAULT_RADIUS + offset;
     float x = r * std::cosf (a);
     float y = r * std::sinf (a);
-    points_a.push_back ({((olc::PixelGameEngine::ScreenWidth ()  - 1) / 2) + static_cast<int32_t> (x),
-                         ((olc::PixelGameEngine::ScreenHeight () - 1) / 2) + static_cast<int32_t> (y)});
+    points_a.push_back ({(olc::PixelGameEngine::ScreenWidth ()  / 2) + static_cast<int32_t> (x),
+                         (olc::PixelGameEngine::ScreenHeight () / 2) + static_cast<int32_t> (y)});
     x_ += 0.05;
   } // end FOR
   y_ += 0.01;
@@ -59,5 +59,58 @@ PGE_31::OnUserUpdate (float fElapsedTime)
   iterator = std::prev (points_a.end ());
   olc::PixelGameEngine::DrawLine (*iterator, points_a[0], olc::WHITE, 0xFFFFFFFF);
 
+  // flood-fill from the center
+  floodFill ({olc::PixelGameEngine::ScreenWidth ()  / 2,
+              olc::PixelGameEngine::ScreenHeight () / 2});
+
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
+}
+
+void
+PGE_31::floodFill (const olc::vi2d& seed_in)
+{
+  std::vector<olc::vi2d> queue;
+  queue.push_back (seed_in);
+
+  // Color the pixel with the new color
+  olc::PixelGameEngine::Draw (seed_in, olc::WHITE);
+
+  olc::Sprite* sprite_p = olc::PixelGameEngine::GetDrawTarget ();
+  while (queue.size () > 0)
+  {
+    olc::vi2d point_s = queue[queue.size () - 1];
+    queue.pop_back ();
+
+    olc::vi2d point_temp = point_s;
+    point_temp.x++;
+    if (sprite_p->GetPixel (point_temp) != olc::WHITE)
+    {
+      olc::PixelGameEngine::Draw (point_temp, olc::WHITE);
+      queue.push_back (point_temp);
+    } // end IF
+
+    point_temp = point_s;
+    point_temp.x--;
+    if (sprite_p->GetPixel (point_temp) != olc::WHITE)
+    {
+      olc::PixelGameEngine::Draw (point_temp, olc::WHITE);
+      queue.push_back (point_temp);
+    } // end IF
+
+    point_temp = point_s;
+    point_temp.y++;
+    if (sprite_p->GetPixel (point_temp) != olc::WHITE)
+    {
+      olc::PixelGameEngine::Draw (point_temp, olc::WHITE);
+      queue.push_back (point_temp);
+    } // end IF
+
+    point_temp = point_s;
+    point_temp.y--;
+    if (sprite_p->GetPixel (point_temp) != olc::WHITE)
+    {
+      olc::PixelGameEngine::Draw (point_temp, olc::WHITE);
+      queue.push_back (point_temp);
+    } // end IF
+  } // end WHILE
 }

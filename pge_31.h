@@ -23,6 +23,8 @@ class PGE_31
   double                y_;
   double                z_;
   noise::module::Perlin module_;
+
+  void floodFill (const olc::vi2d&);
 };
 
 #endif // PGE_31_H
