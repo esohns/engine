@@ -10,6 +10,7 @@
 
 #include "common_gl_tools.h"
 
+#include "defines.h"
 #include "engine_common.h"
 
 PGE_31::PGE_31 ()

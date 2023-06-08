@@ -5,8 +5,6 @@
 
 #include "olcPixelGameEngine.h"
 
-#include "defines.h"
-
 class PGE_31
  : public olc::PixelGameEngine
 {
