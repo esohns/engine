@@ -71,6 +71,7 @@
 #include "pge_29.h"
 #include "pge_30.h"
 #include "pge_31.h"
+#include "pge_32.h"
 
 enum Engine_ModeType
 {
@@ -105,6 +106,7 @@ enum Engine_ModeType
   ENGINE_MODE_29,
   ENGINE_MODE_30,
   ENGINE_MODE_31,
+  ENGINE_MODE_32, // uses liquidfun
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1206,6 +1208,21 @@ do_work (int argc_in,
     {
       PGE_31 example;
       if (example.Construct (ENGINE_PGE_31_DEFAULT_WIDTH, ENGINE_PGE_31_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_32:
+    {
+      PGE_32 example;
+      if (example.Construct (ENGINE_PGE_32_DEFAULT_WIDTH, ENGINE_PGE_32_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?

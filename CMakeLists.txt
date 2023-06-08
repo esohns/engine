@@ -359,6 +359,30 @@ elseif (WIN32)
  endif (NOT unofficial-graphicsmagick_FOUND)
 endif ()
 
+if (UNIX)
+ find_package (Box2D)
+ if (Box2D_FOUND)
+  message (STATUS "found Box2D")
+  set (BOX2D_FOUND TRUE)
+ endif (Box2D_FOUND)
+elseif (WIN32)
+ find_library (BOX2D_LIBRARY liquidfun.lib
+               PATHS $ENV{LIB_ROOT}/liquidfun/build/msvc/Box2D
+               PATH_SUFFIXES Debug
+               DOC "searching for liquidfun.lib"
+               NO_DEFAULT_PATH)
+ if (NOT BOX2D_LIBRARY)
+  message (WARNING "could not find liquidfun.lib, continuing")
+ endif (NOT BOX2D_LIBRARY)
+ if (BOX2D_LIBRARY)
+  message (STATUS "found Box2D")
+  set (BOX2D_FOUND TRUE)
+  set (BOX2D_INCLUDE_DIR "$ENV{LIB_ROOT}/liquidfun/liquidfun/Box2D")
+  set (BOX2D_LIBRARIES ${BOX2D_LIBRARY})
+#  set (BOX2D_LIB_DIR "$ENV{LIB_ROOT}/liquidfun/build/msvc/Box2D/Debug")
+ endif (BOX2D_LIBRARY)
+endif ()
+
 # user interface
 option (GUI_SUPPORT "enable graphical user interface support" ON)
 if (GUI_SUPPORT)
@@ -375,6 +399,7 @@ set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/src/gl/scripts")
 include (glm)
 
 ############## includes ###############
+include_directories (${BOX2D_INCLUDE_DIR})
 include_directories (${PGE_INCLUDE_DIR})
 include_directories (${PGE_INCLUDE_DIR}/extensions)
 include_directories (${LIBNOISE_INCLUDES})
@@ -467,6 +492,8 @@ set (engine_EXE_SRCS
      pge_30.h
      pge_31.cpp
      pge_31.h
+     pge_32.cpp
+     pge_32.h
      stdafx.h)
 
 #cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property
@@ -479,6 +506,7 @@ if (UNIX)
  target_link_libraries (${EXECUTABLE} GL)
  target_link_libraries (${EXECUTABLE} png)
 endif ()
+target_link_libraries (${EXECUTABLE} ${BOX2D_LIBRARIES})
 target_link_libraries (${EXECUTABLE} ${LIBNOISE_LIB})
 target_link_libraries (${EXECUTABLE} ${GLUT_LIBRARIES})
 target_link_libraries (${EXECUTABLE} ${GTK_LIBRARIES})
