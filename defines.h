@@ -240,5 +240,6 @@
 #define ENGINE_PGE_32_DEFAULT_HZ                60.0f
 #define ENGINE_PGE_32_DEFAULT_VEL_ITERATIONS    8
 #define ENGINE_PGE_32_DEFAULT_POS_ITERATIONS    3
+#define ENGINE_PGE_32_DEFAULT_DIM               4.0f
 
 #endif

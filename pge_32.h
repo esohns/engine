@@ -31,6 +31,9 @@ class PGE_32
   b2ParticleSystem* particleSystem_;
   b2RevoluteJoint*  joint_;
   float             time_;
+
+  static const b2ParticleColor k_ParticleColors[];
+  static const uint32          k_ParticleColorsCount;
 };
 
 #endif // PGE_32_H

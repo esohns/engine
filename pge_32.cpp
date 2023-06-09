@@ -13,6 +13,21 @@
 #include "defines.h"
 #include "engine_common.h"
 
+const b2ParticleColor PGE_32::k_ParticleColors[] = {
+  b2ParticleColor(0xff, 0x00, 0x00, 0xff), // red
+  b2ParticleColor(0x00, 0xff, 0x00, 0xff), // green
+  b2ParticleColor(0x00, 0x00, 0xff, 0xff), // blue
+  b2ParticleColor(0xff, 0x8c, 0x00, 0xff), // orange
+  b2ParticleColor(0x00, 0xce, 0xd1, 0xff), // turquoise
+  b2ParticleColor(0xff, 0x00, 0xff, 0xff), // magenta
+  b2ParticleColor(0xff, 0xd7, 0x00, 0xff), // gold
+  b2ParticleColor(0x00, 0xff, 0xff, 0xff), // cyan
+};
+const uint32 PGE_32::k_ParticleColorsCount =
+B2_ARRAY_SIZE(PGE_32::k_ParticleColors);
+
+//////////////////////////////////////////
+
 PGE_32::PGE_32 ()
  : b2Draw ()
  , olc::PixelGameEngine ()
@@ -39,19 +54,19 @@ PGE_32::DrawPolygon (const b2Vec2* vertices, int32 vertexCount, const b2Color& c
     if (i == vertexCount - 1)
       break;
 
-    x1 = Common_GL_Tools::map (vertices[i].x, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth () - 1));
-    y1 = Common_GL_Tools::map (vertices[i].y, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight () - 1));
-    x2 = Common_GL_Tools::map (vertices[i + 1].x, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth () - 1));
-    y2 = Common_GL_Tools::map (vertices[i + 1].y, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight () - 1));
+    x1 = Common_GL_Tools::map (vertices[i].x, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth () - 1));
+    y1 = Common_GL_Tools::map (vertices[i].y, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight () - 1));
+    x2 = Common_GL_Tools::map (vertices[i + 1].x, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth () - 1));
+    y2 = Common_GL_Tools::map (vertices[i + 1].y, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight () - 1));
     olc::PixelGameEngine::DrawLine (static_cast<int32_t> (x1), static_cast<int32_t> (y1),
                                     static_cast<int32_t> (x2), static_cast<int32_t> (y2),
                                     {static_cast<uint8_t> (color.r * 255.0f), static_cast<uint8_t> (color.g * 255.0f), static_cast<uint8_t> (color.b * 255.0f), 255},
                                     0xFFFFFFFF);
   } // end FOR
-  x1 = Common_GL_Tools::map (vertices[vertexCount - 1].x, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth () - 1));
-  y1 = Common_GL_Tools::map (vertices[vertexCount - 1].y, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight () - 1));
-  x2 = Common_GL_Tools::map (vertices[0].x, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth () - 1));
-  y2 = Common_GL_Tools::map (vertices[0].y, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight () - 1));
+  x1 = Common_GL_Tools::map (vertices[vertexCount - 1].x, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth () - 1));
+  y1 = Common_GL_Tools::map (vertices[vertexCount - 1].y, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight () - 1));
+  x2 = Common_GL_Tools::map (vertices[0].x, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth () - 1));
+  y2 = Common_GL_Tools::map (vertices[0].y, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight () - 1));
   olc::PixelGameEngine::DrawLine (static_cast<int32_t> (x1), static_cast<int32_t> (y1),
                                   static_cast<int32_t> (x2), static_cast<int32_t> (y2),
                                   {static_cast<uint8_t> (color.r * 255.0f), static_cast<uint8_t> (color.g * 255.0f), static_cast<uint8_t> (color.b * 255.0f), 255},
@@ -69,8 +84,8 @@ void
 PGE_32::DrawCircle (const b2Vec2& center, float32 radius, const b2Color& color)
 {
   float x, y;
-  x = Common_GL_Tools::map (center.x, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth() - 1));
-  y = Common_GL_Tools::map (center.y, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight() - 1));
+  x = Common_GL_Tools::map (center.x, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth() - 1));
+  y = Common_GL_Tools::map (center.y, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight() - 1));
   olc::PixelGameEngine::DrawCircle (static_cast<int32_t> (x), static_cast<int32_t> (y),
                                     static_cast<int32_t> (radius),
                                     {static_cast<uint8_t> (color.r * 255.0f), static_cast<uint8_t> (color.g * 255.0f), static_cast<uint8_t> (color.b * 255.0f), 255},
@@ -81,8 +96,8 @@ void
 PGE_32::DrawSolidCircle (const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
 {
   float x, y;
-  x = Common_GL_Tools::map (center.x, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth() - 1));
-  y = Common_GL_Tools::map (center.y, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight() - 1));
+  x = Common_GL_Tools::map (center.x, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth() - 1));
+  y = Common_GL_Tools::map (center.y, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight() - 1));
   olc::PixelGameEngine::FillCircle (static_cast<int32_t> (x), static_cast<int32_t> (y),
                                     static_cast<int32_t> (radius),
                                     {static_cast<uint8_t> (color.r * 255.0f), static_cast<uint8_t> (color.g * 255.0f), static_cast<uint8_t> (color.b * 255.0f), 255});
@@ -95,8 +110,8 @@ PGE_32::DrawParticles (const b2Vec2* centers, float32 radius, const b2ParticleCo
 
   for (int32 i = 0; i < count; ++i)
   {
-    x = Common_GL_Tools::map (centers[i].x, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth() - 1));
-    y = Common_GL_Tools::map (centers[i].y, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight() - 1));
+    x = Common_GL_Tools::map (centers[i].x, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth() - 1));
+    y = Common_GL_Tools::map (centers[i].y, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight() - 1));
     olc::PixelGameEngine::DrawCircle (static_cast<int32_t> (x), static_cast<int32_t> (y),
                                       static_cast<int32_t> (radius),
                                       colors ? olc::Pixel (static_cast<uint8_t> (colors[i].r * 255.0f), static_cast<uint8_t> (colors[i].g * 255.0f), static_cast<uint8_t> (colors[i].b * 255.0f), 255) : olc::WHITE,
@@ -108,10 +123,10 @@ void
 PGE_32::DrawSegment (const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
 {
   float x1, y1, x2, y2;
-  x1 = Common_GL_Tools::map (p1.x, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth() - 1));
-  y1 = Common_GL_Tools::map (p1.y, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight() - 1));
-  x2 = Common_GL_Tools::map (p2.x, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth() - 1));
-  y2 = Common_GL_Tools::map (p2.y, -4.0f, 4.0f, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight() - 1));
+  x1 = Common_GL_Tools::map (p1.x, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth() - 1));
+  y1 = Common_GL_Tools::map (p1.y, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight() - 1));
+  x2 = Common_GL_Tools::map (p2.x, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth() - 1));
+  y2 = Common_GL_Tools::map (p2.y, -ENGINE_PGE_32_DEFAULT_DIM, ENGINE_PGE_32_DEFAULT_DIM, 0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight() - 1));
   olc::PixelGameEngine::DrawLine (static_cast<int32_t> (x1), static_cast<int32_t> (y1),
                                   static_cast<int32_t> (x2), static_cast<int32_t> (y2),
                                   {static_cast<uint8_t> (color.r * 255.0f), static_cast<uint8_t> (color.g * 255.0f), static_cast<uint8_t> (color.b * 255.0f), 255},
@@ -221,18 +236,23 @@ PGE_32::OnUserCreate ()
 
   {
     b2ParticleGroupDef pd;
-    //const uint32 particleType = TestMain::GetParticleParameterValue();
-    //pd.flags = particleType;
+    pd.flags = b2_colorMixingParticle;
 
     b2PolygonShape shape;
     shape.SetAsBox (0.9f, 0.9f, b2Vec2 (0.0f, 1.0f), 0.0);
 
     pd.shape = &shape;
-    b2ParticleGroup * const group = particleSystem_->CreateParticleGroup (pd);
+    b2ParticleGroup* group = particleSystem_->CreateParticleGroup (pd);
     if (pd.flags & b2_colorMixingParticle)
     {
-	    //ColorParticleGroup(group, 0);
-    }
+      b2Assert (group);
+      b2ParticleColor* colorBuffer = particleSystem_->GetColorBuffer ();
+      uint32 particlesPerColor = group->GetParticleCount () / k_ParticleColorsCount;
+      if (!particlesPerColor)
+        particlesPerColor = 1;
+      for (int32 i = group->GetBufferIndex (); i < group->GetParticleCount () + group->GetBufferIndex (); i++)
+	      colorBuffer[i] = k_ParticleColors[i / particlesPerColor];
+    } // end IF
   }
 
   return true;
