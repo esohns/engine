@@ -41,6 +41,10 @@ PGE_32::PGE_32 ()
 
 PGE_32::~PGE_32 ()
 {
+  if (joint_)
+    world_->DestroyJoint (joint_);
+  if (particleSystem_)
+    world_->DestroyParticleSystem (particleSystem_);
   delete world_;
 }
 
@@ -236,23 +240,21 @@ PGE_32::OnUserCreate ()
 
   {
     b2ParticleGroupDef pd;
-    pd.flags = b2_colorMixingParticle;
+    //pd.flags = b2_colorMixingParticle;
 
     b2PolygonShape shape;
     shape.SetAsBox (0.9f, 0.9f, b2Vec2 (0.0f, 1.0f), 0.0);
 
     pd.shape = &shape;
     b2ParticleGroup* group = particleSystem_->CreateParticleGroup (pd);
-    if (pd.flags & b2_colorMixingParticle)
-    {
-      b2Assert (group);
-      b2ParticleColor* colorBuffer = particleSystem_->GetColorBuffer ();
-      uint32 particlesPerColor = group->GetParticleCount () / k_ParticleColorsCount;
-      if (!particlesPerColor)
-        particlesPerColor = 1;
-      for (int32 i = group->GetBufferIndex (); i < group->GetParticleCount () + group->GetBufferIndex (); i++)
-	      colorBuffer[i] = k_ParticleColors[i / particlesPerColor];
-    } // end IF
+
+    //b2Assert (group);
+    //b2ParticleColor* colorBuffer = particleSystem_->GetColorBuffer ();
+    //uint32 particlesPerColor = group->GetParticleCount () / k_ParticleColorsCount;
+    //if (!particlesPerColor)
+    //  particlesPerColor = 1;
+    //for (int32 i = group->GetBufferIndex (); i < group->GetParticleCount () + group->GetBufferIndex (); i++)
+	   // colorBuffer[i] = k_ParticleColors[i / particlesPerColor];
   }
 
   return true;
