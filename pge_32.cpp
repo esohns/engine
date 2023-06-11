@@ -267,6 +267,9 @@ PGE_32::OnUserUpdate (float fElapsedTime)
 {
   olc::PixelGameEngine::Clear (olc::BLACK);
 
+  static float32 time_step_f =
+    ENGINE_PGE_32_DEFAULT_HZ > 0.0f ? 1.0f / ENGINE_PGE_32_DEFAULT_HZ : float32(0.0f);
+
   // handle mouse interaction
   olc::HWButton left_button_s = olc::PixelGameEngine::GetMouse (0);
   if (left_button_s.bPressed)
@@ -323,10 +326,38 @@ PGE_32::OnUserUpdate (float fElapsedTime)
     } // end IF
   } // end ELSE IF
 
-continue_:
-  static float32 time_step_f =
-    ENGINE_PGE_32_DEFAULT_HZ > 0.0f ? 1.0f / ENGINE_PGE_32_DEFAULT_HZ : float32(0.0f);
+  if (mouseTracing_ && !mouseJoint_)
+  {
+    float32 delay = 0.1f;
+    b2Vec2 acceleration = 2 / delay * (1 / delay * (mouseWorld_ - mouseTracerPosition_) - mouseTracerVelocity_);
+    mouseTracerVelocity_ += time_step_f * acceleration;
+    mouseTracerPosition_ += time_step_f * mouseTracerVelocity_;
+    b2CircleShape shape;
+    shape.m_p = mouseTracerPosition_;
+    shape.m_radius = 2 * 1.0f;
+    QueryCallback2 callback (particleSystem_, &shape, mouseTracerVelocity_);
+    b2AABB aabb;
+    b2Transform xf;
+    xf.SetIdentity ();
+    shape.ComputeAABB (&aabb, xf, 0);
+    world_->QueryAABB (&callback, aabb);
+  } // end IF
 
+  if (mouseJoint_)
+  {
+    b2Vec2 p1 = mouseJoint_->GetAnchorB ();
+    b2Vec2 p2 = mouseJoint_->GetTarget ();
+
+    b2Color c;
+    c.Set (0.0f, 1.0f, 0.0f);
+    DrawCircle (p1, 4.0f, c);
+    DrawCircle (p2, 4.0f, c);
+
+    c.Set (0.8f, 0.8f, 0.8f);
+    DrawSegment (p1, p2, c);
+  } // end IF
+
+continue_:
   if (joint_)
   {
     if (ENGINE_PGE_32_DEFAULT_HZ > 0.0f)

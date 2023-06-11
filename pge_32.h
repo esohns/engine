@@ -61,6 +61,45 @@ class PGE_32
     b2Fixture* fixture_;
   };
 
+  class QueryCallback2 : public b2QueryCallback
+  {
+   public:
+    QueryCallback2 (b2ParticleSystem* particleSystem,
+                    const b2Shape* shape,
+                    const b2Vec2& velocity)
+    {
+      particleSystem_ = particleSystem;
+      shape_ = shape;
+      velocity_ = velocity;
+    }
+
+    bool ReportFixture (b2Fixture* fixture)
+    {
+      B2_NOT_USED (fixture);
+      return false;
+    }
+
+    bool ReportParticle (const b2ParticleSystem* particleSystem, int32 index)
+    {
+      if (particleSystem != particleSystem_)
+      return false;
+
+      b2Transform xf;
+      xf.SetIdentity ();
+      b2Vec2 p = particleSystem_->GetPositionBuffer ()[index];
+      if (shape_->TestPoint (xf, p))
+      {
+        b2Vec2& v = particleSystem_->GetVelocityBuffer ()[index];
+        v = velocity_;
+      }
+      return true;
+    }
+
+    b2ParticleSystem* particleSystem_;
+    const b2Shape* shape_;
+    b2Vec2 velocity_;
+};
+
   Mode              mode_;
 
   b2World*          world_;
