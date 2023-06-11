@@ -27,9 +27,9 @@
 #cmakedefine engine_PACKAGE_DESCRIPTION_SUMMARY "@PACKAGE_DESCRIPTION_SUMMARY@"
 
 /* Version numbers of package */
-//#cmakedefine Common_VERSION_MAJOR @VERSION_MAJOR@
-//#cmakedefine Common_VERSION_MINOR @VERSION_MINOR@
-//#cmakedefine Common_VERSION_MICRO @VERSION_MICRO@
+//#cmakedefine engine_VERSION_MAJOR @VERSION_MAJOR@
+//#cmakedefine engine_VERSION_MINOR @VERSION_MINOR@
+//#cmakedefine engine_VERSION_MICRO @VERSION_MICRO@
 #define engine_VERSION_MAJOR @VERSION_MAJOR@
 #define engine_VERSION_MINOR @VERSION_MINOR@
 #define engine_VERSION_MICRO @VERSION_MICRO@

@@ -40,8 +40,8 @@ PGE_31::OnUserUpdate (float fElapsedTime)
     float offset =
       Common_GL_Tools::map (static_cast<float> (module_.GetValue (x_, y_, z_)), -1.0f, 1.0f, -25.0f, 25.0f);
     float r = ENGINE_PGE_31_DEFAULT_RADIUS + offset;
-    float x = r * std::cosf (a);
-    float y = r * std::sinf (a);
+    float x = r * std::cos (a);
+    float y = r * std::sin (a);
     points_a.push_back ({(olc::PixelGameEngine::ScreenWidth ()  / 2) + static_cast<int32_t> (x),
                          (olc::PixelGameEngine::ScreenHeight () / 2) + static_cast<int32_t> (y)});
     x_ += 0.05;

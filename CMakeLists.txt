@@ -360,11 +360,21 @@ elseif (WIN32)
 endif ()
 
 if (UNIX)
- find_package (Box2D)
- if (Box2D_FOUND)
+ find_library (BOX2D_LIBRARY liquidfun
+               PATHS $ENV{LIB_ROOT}/liquidfun/build/gcc/Box2D
+               PATH_SUFFIXES Debug
+               DOC "searching for liquidfun"
+               NO_DEFAULT_PATH)
+ if (NOT BOX2D_LIBRARY)
+  message (WARNING "could not find libliquidfun.a, continuing")
+ endif (NOT BOX2D_LIBRARY)
+ if (BOX2D_LIBRARY)
   message (STATUS "found Box2D")
   set (BOX2D_FOUND TRUE)
- endif (Box2D_FOUND)
+  set (BOX2D_INCLUDE_DIR "$ENV{LIB_ROOT}/liquidfun/liquidfun/Box2D")
+  set (BOX2D_LIBRARIES ${BOX2D_LIBRARY})
+#  set (BOX2D_LIB_DIR "$ENV{LIB_ROOT}/liquidfun/build/msvc/Box2D/Debug")
+ endif (BOX2D_LIBRARY)
 elseif (WIN32)
  find_library (BOX2D_LIBRARY liquidfun.lib
                PATHS $ENV{LIB_ROOT}/liquidfun/build/msvc/Box2D
