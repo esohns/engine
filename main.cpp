@@ -1221,7 +1221,7 @@ do_work (int argc_in,
     }
     case ENGINE_MODE_32:
     {
-      PGE_32 example;
+      PGE_32 example (PGE_32::MODE_WEB);
       if (example.Construct (ENGINE_PGE_32_DEFAULT_WIDTH, ENGINE_PGE_32_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
