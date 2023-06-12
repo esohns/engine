@@ -243,4 +243,8 @@
 #define ENGINE_PGE_32_DEFAULT_DIM_WAVEMACHINE   4.0f
 #define ENGINE_PGE_32_DEFAULT_DIM_WEB           40.0f
 
+// pge 33
+#define ENGINE_PGE_33_DEFAULT_HEIGHT            400
+#define ENGINE_PGE_33_DEFAULT_WIDTH             600
+
 #endif
