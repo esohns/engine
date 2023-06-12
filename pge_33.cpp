@@ -47,7 +47,11 @@ PGE_33::OnUserUpdate (float fElapsedTime)
   olc::PixelGameEngine::Clear (olc::BLACK);
 
   delete quadTree_; quadTree_ = NULL;
-  rectangle boundary (300, 200, 600, 400);
+  int half_w = olc::PixelGameEngine::ScreenWidth () / 2;
+  int half_h = olc::PixelGameEngine::ScreenHeight () / 2;
+  rectangle boundary (half_w, half_h,
+                      olc::PixelGameEngine::ScreenWidth (),
+                      olc::PixelGameEngine::ScreenHeight ());
   quadTree_ = new quad_tree (boundary, 4);
 
   for (particles_t::iterator iterator = particles_.begin();
@@ -77,7 +81,8 @@ PGE_33::OnUserUpdate (float fElapsedTime)
          iterator_2 != points_a.end ();
          ++iterator_2)
     {
-      particle* other_p = reinterpret_cast<particle*> ((*iterator_2).userData_);
+      particle* other_p =
+        reinterpret_cast<particle*> ((*iterator_2).userData_);
       if ((*iterator) != other_p && (*iterator)->intersects (*other_p))
         (*iterator)->setHighlight (true);
     } // end FOR
