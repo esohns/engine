@@ -250,5 +250,7 @@
 // pge 34
 #define ENGINE_PGE_34_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_34_DEFAULT_WIDTH             800
+#define ENGINE_PGE_34_DEFAULT_FACTOR_INCREMENT  0.015f
+#define ENGINE_PGE_34_DEFAULT_TOTAL             200
 
 #endif

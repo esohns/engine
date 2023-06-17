@@ -32,19 +32,18 @@ PGE_34::OnUserUpdate (float fElapsedTime)
 {
   olc::PixelGameEngine::Clear (olc::BLACK);
 
-  const int total = 200;
-  factor_ += 0.015f;
+  factor_ += ENGINE_PGE_34_DEFAULT_FACTOR_INCREMENT;
 
   int half_w = olc::PixelGameEngine::ScreenWidth () / 2;
   int half_h = olc::PixelGameEngine::ScreenHeight () / 2;
 
   olc::PixelGameEngine::DrawCircle ({half_w, half_h}, static_cast<int32_t> (r_), olc::WHITE, 0xFF);
   olc::vd2d a, b;
-  for (int i = 0; i < total; i++)
+  for (int i = 0; i < ENGINE_PGE_34_DEFAULT_TOTAL; i++)
   {
-    a = getVector (i, total);
+    a = getVector (i, ENGINE_PGE_34_DEFAULT_TOTAL);
     a += {static_cast<float> (half_w), static_cast<float> (half_h)};
-    b = getVector (static_cast<int> (i * factor_), total);
+    b = getVector (static_cast<int> (i * factor_), ENGINE_PGE_34_DEFAULT_TOTAL);
     b += {static_cast<float> (half_w), static_cast<float> (half_h)};
     olc::PixelGameEngine::DrawLine (a, b, olc::WHITE, 0xFFFFFFFF);
   } // end FOR
