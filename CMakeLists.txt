@@ -498,6 +498,22 @@ set (engine_EXE_SRCS
      pge_28.h
      pge_29.cpp
      pge_29.h
+     stdafx.h)
+
+#cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property
+set (EXECUTABLE engine)
+add_executable (${EXECUTABLE}
+                ${engine_EXE_SRCS})
+
+set (engine_2_EXE_SRCS
+     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
+#     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
+     camera.cpp
+     camera.h
+     engine_common.h
+     defines.h
+     main_2.cpp
      pge_30.cpp
      pge_30.h
      pge_31.cpp
@@ -510,15 +526,18 @@ set (engine_EXE_SRCS
      pge_34.h
      stdafx.h)
 
-#cmake_policy (SET CMP0065 OLD) # do not add flags to export symbols from executables without the ENABLE_EXPORTS target property
-set (EXECUTABLE engine)
-add_executable (${EXECUTABLE}
-                ${engine_EXE_SRCS})
+set (EXECUTABLE_2 engine_2)
+add_executable (${EXECUTABLE_2}
+                ${engine_2_EXE_SRCS})
 
 if (UNIX)
  target_link_libraries (${EXECUTABLE} X11)
  target_link_libraries (${EXECUTABLE} GL)
  target_link_libraries (${EXECUTABLE} png)
+
+ target_link_libraries (${EXECUTABLE_2} X11)
+ target_link_libraries (${EXECUTABLE_2} GL)
+ target_link_libraries (${EXECUTABLE_2} png)
 endif ()
 target_link_libraries (${EXECUTABLE} ${BOX2D_LIBRARIES})
 target_link_libraries (${EXECUTABLE} ${LIBNOISE_LIB})
@@ -535,6 +554,21 @@ target_link_libraries (${EXECUTABLE} CommonTimer)
 target_link_libraries (${EXECUTABLE} CommonUI)
 target_link_libraries (${EXECUTABLE} CommonUI_GTK)
 
+target_link_libraries (${EXECUTABLE_2} ${BOX2D_LIBRARIES})
+target_link_libraries (${EXECUTABLE_2} ${LIBNOISE_LIB})
+target_link_libraries (${EXECUTABLE_2} ${GLUT_LIBRARIES})
+target_link_libraries (${EXECUTABLE_2} ${GTK_LIBRARIES})
+
+target_link_libraries (${EXECUTABLE_2} ${ACE_LIBRARY})
+
+target_link_libraries (${EXECUTABLE_2} Common)
+target_link_libraries (${EXECUTABLE_2} CommonError)
+target_link_libraries (${EXECUTABLE_2} CommonLog)
+target_link_libraries (${EXECUTABLE_2} CommonOpenGL)
+target_link_libraries (${EXECUTABLE_2} CommonTimer)
+target_link_libraries (${EXECUTABLE_2} CommonUI)
+target_link_libraries (${EXECUTABLE_2} CommonUI_GTK)
+
 if (WIN32)
  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:20000000")
 endif (WIN32)
@@ -542,6 +576,8 @@ endif (WIN32)
 # add PCH
 target_precompile_headers (${EXECUTABLE}
                            PRIVATE stdafx.h)
+target_precompile_headers (${EXECUTABLE_2}
+                           REUSE_FROM ${EXECUTABLE})
 
 install (TARGETS ${EXECUTABLE}
          RUNTIME
@@ -591,13 +627,23 @@ set (RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
                           ${GTK_PATH})
 if (UNIX)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE}" COMMAND)
+ file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_2}" COMMAND_2)
 elseif (WIN32)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE}.exe" COMMAND)
  string (REPLACE "\\" "\\\\" COMMAND ${COMMAND})
+ file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_2}.exe" COMMAND_2)
+ string (REPLACE "\\" "\\\\" COMMAND_2 ${COMMAND_2})
  set (ENVIRONMENT_MAGICK "MAGICK_CODER_MODULE_PATH=${IMAGEMAGICK_PATH}\\\\modules\\\\coders")
 endif ()
 create_target_launcher (${EXECUTABLE}
                         COMMAND ${COMMAND}
+                        ARGS ${ARGS}
+#                        FORWARD_ARGS
+                        RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                        ENVIRONMENT ${ENVIRONMENT_MAGICK})
+create_target_launcher (${EXECUTABLE_2}
+                        COMMAND ${COMMAND_2}
                         ARGS ${ARGS}
 #                        FORWARD_ARGS
                         RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}

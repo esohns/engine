@@ -69,11 +69,6 @@
 #include "pge_27.h"
 #include "pge_28.h"
 #include "pge_29.h"
-#include "pge_30.h"
-#include "pge_31.h"
-#include "pge_32.h"
-#include "pge_33.h"
-#include "pge_34.h"
 
 enum Engine_ModeType
 {
@@ -106,11 +101,6 @@ enum Engine_ModeType
   ENGINE_MODE_27,
   ENGINE_MODE_28,
   ENGINE_MODE_29,
-  ENGINE_MODE_30,
-  ENGINE_MODE_31,
-  ENGINE_MODE_32, // uses liquidfun
-  ENGINE_MODE_33,
-  ENGINE_MODE_34,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1182,81 +1172,6 @@ do_work (int argc_in,
     {
       PGE_29 example;
       if (example.Construct (ENGINE_PGE_29_DEFAULT_WIDTH, ENGINE_PGE_29_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_30:
-    {
-      PGE_30 example;
-      if (example.Construct (ENGINE_PGE_30_DEFAULT_WIDTH, ENGINE_PGE_30_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_31:
-    {
-      PGE_31 example;
-      if (example.Construct (ENGINE_PGE_31_DEFAULT_WIDTH, ENGINE_PGE_31_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_32:
-    {
-      PGE_32 example (PGE_32::MODE_WAVEMACHINE);
-      if (example.Construct (ENGINE_PGE_32_DEFAULT_WIDTH, ENGINE_PGE_32_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_33:
-    {
-      PGE_33 example;
-      if (example.Construct (ENGINE_PGE_33_DEFAULT_WIDTH, ENGINE_PGE_33_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_34:
-    {
-      PGE_34 example;
-      if (example.Construct (ENGINE_PGE_34_DEFAULT_WIDTH, ENGINE_PGE_34_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
