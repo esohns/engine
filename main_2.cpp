@@ -35,7 +35,7 @@
 #endif // HAVE_CONFIG_H
 //#include "resource.h"
 
-#include "defines.h"
+#include "defines_2.h"
 #include "engine_common.h"
 
 #define OLC_PGE_APPLICATION
@@ -44,6 +44,7 @@
 #include "pge_32.h"
 #include "pge_33.h"
 #include "pge_34.h"
+#include "pge_35.h"
 
 enum Engine_ModeType
 {
@@ -52,6 +53,7 @@ enum Engine_ModeType
   ENGINE_MODE_32, // uses liquidfun
   ENGINE_MODE_33,
   ENGINE_MODE_34,
+  ENGINE_MODE_35,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -75,8 +77,7 @@ do_print_usage (const std::string& programName_in)
             << std::endl;
   std::string ui_definition_file_path = path_root;
   ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
-  ui_definition_file_path +=
-    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_16_UI_DEFINITION_FILE);
+  ui_definition_file_path += ACE_TEXT_ALWAYS_CHAR ("");
   std::cout << ACE_TEXT_ALWAYS_CHAR ("-g[PATH]   : ui definition file [")
             << ui_definition_file_path
             << ACE_TEXT_ALWAYS_CHAR ("]")
@@ -114,8 +115,7 @@ do_process_arguments (int argc_in,
   // initialize results
   UIDefinitionFilePath_out = path_root;
   UIDefinitionFilePath_out += ACE_DIRECTORY_SEPARATOR_CHAR_A;
-  UIDefinitionFilePath_out +=
-    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_16_UI_DEFINITION_FILE);
+  UIDefinitionFilePath_out += ACE_TEXT_ALWAYS_CHAR ("");
   logToFile_out = false;
   mode_out = ENGINE_MODE_DEFAULT;
   traceInformation_out = false;
@@ -292,6 +292,21 @@ do_work (int argc_in,
 
       break;
     }
+    case ENGINE_MODE_35:
+    {
+      PGE_35 example;
+      if (example.Construct (ENGINE_PGE_35_DEFAULT_WIDTH, ENGINE_PGE_35_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
     default:
     {
       ACE_DEBUG ((LM_ERROR,
@@ -337,8 +352,7 @@ ACE_TMAIN (int argc_in,
   std::string path_root = Common_File_Tools::getWorkingDirectory ();
   std::string ui_definition_file_path = path_root;
   ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
-  ui_definition_file_path +=
-    ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_16_UI_DEFINITION_FILE);
+  ui_definition_file_path += ACE_TEXT_ALWAYS_CHAR ("");
   bool log_to_file = false;
   std::string log_file_name;
   enum Engine_ModeType mode_type_e = ENGINE_MODE_DEFAULT;

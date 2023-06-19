@@ -3,7 +3,7 @@
 
 #include "olcPixelGameEngine.h"
 
-#include "defines.h"
+#include "defines_2.h"
 
 class PGE_30
  : public olc::PixelGameEngine

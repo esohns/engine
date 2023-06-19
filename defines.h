@@ -221,36 +221,4 @@
 #define ENGINE_PGE_29_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_29_DEFAULT_WIDTH             800
 
-// pge 30
-#define ENGINE_PGE_30_DEFAULT_HEIGHT            600
-#define ENGINE_PGE_30_DEFAULT_WIDTH             600
-#define ENGINE_PGE_30_DEFAULT_MAX_ITERATIONS    100
-
-// pge 31
-#define ENGINE_PGE_31_DEFAULT_HEIGHT            400
-#define ENGINE_PGE_31_DEFAULT_WIDTH             400
-#define ENGINE_PGE_31_DEFAULT_NOISE_X           1.25 // coordinate
-#define ENGINE_PGE_31_DEFAULT_NOISE_Y           0.75 // coordinate
-#define ENGINE_PGE_31_DEFAULT_NOISE_Z           0.5  // coordinate
-#define ENGINE_PGE_31_DEFAULT_RADIUS            150
-
-// pge 32
-#define ENGINE_PGE_32_DEFAULT_HEIGHT            600
-#define ENGINE_PGE_32_DEFAULT_WIDTH             800
-#define ENGINE_PGE_32_DEFAULT_HZ                60.0f
-#define ENGINE_PGE_32_DEFAULT_VEL_ITERATIONS    8
-#define ENGINE_PGE_32_DEFAULT_POS_ITERATIONS    3
-#define ENGINE_PGE_32_DEFAULT_DIM_WAVEMACHINE   4.0f
-#define ENGINE_PGE_32_DEFAULT_DIM_WEB           40.0f
-
-// pge 33
-#define ENGINE_PGE_33_DEFAULT_HEIGHT            400
-#define ENGINE_PGE_33_DEFAULT_WIDTH             600
-
-// pge 34
-#define ENGINE_PGE_34_DEFAULT_HEIGHT            600
-#define ENGINE_PGE_34_DEFAULT_WIDTH             800
-#define ENGINE_PGE_34_DEFAULT_FACTOR_INCREMENT  0.015f
-#define ENGINE_PGE_34_DEFAULT_TOTAL             200
-
 #endif

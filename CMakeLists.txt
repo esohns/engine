@@ -98,7 +98,9 @@ string (SUBSTRING ${BUILD_PATH_SUFFIX} 1 -1 BUILD_PATH_SUFFIX)
 #string (FIND ${BUILD_PATH_SUFFIX} "/" SLASH_LOCATION REVERSE)
 #string (SUBSTRING ${BUILD_PATH_SUFFIX} 0 ${SLASH_LOCATION} BUILD_PATH_SUFFIX)
 #message (STATUS "BUILD_PATH_SUFFIX \"${BUILD_PATH_SUFFIX}\"")
-#set (Common_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Common/${BUILD_PATH_SUFFIX}/..")
+if (UNIX)
+ set (Common_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Common/${BUILD_PATH_SUFFIX}/${CMAKE_BUILD_TYPE}")
+endif (UNIX)
 find_package (Common 0.0.2
               REQUIRED COMPONENTS lib
               CONFIG
@@ -512,7 +514,7 @@ set (engine_2_EXE_SRCS
      camera.cpp
      camera.h
      engine_common.h
-     defines.h
+     defines_2.h
      main_2.cpp
      pge_30.cpp
      pge_30.h
@@ -524,6 +526,8 @@ set (engine_2_EXE_SRCS
      pge_33.h
      pge_34.cpp
      pge_34.h
+     pge_35.cpp
+     pge_35.h
      stdafx.h)
 
 set (EXECUTABLE_2 engine_2)
@@ -604,8 +608,10 @@ cmake_policy (SET CMP0053 OLD)
 include (CreateLaunchers)
 
 set (ARGS "-l -m1")
+set (ARGS_2 "-l -m35")
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS "${ARGS} -t")
+ set (ARGS "${ARGS_2} -t")
 endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 file (TO_CMAKE_PATH ${LIBNOISE_LIB_DIR} LIBNOISE_PATH)
 file (TO_CMAKE_PATH "${GLUT_LIB_DIR}" GLUT_PATH)
