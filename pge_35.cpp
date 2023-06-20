@@ -72,8 +72,15 @@ PGE_35::OnUserUpdate (float fElapsedTime)
   grid_ = next_;
   next_ = temp_p;
 
-
   if (olc::PixelGameEngine::GetMouse (0).bPressed)
+  {
+    int i =
+      static_cast<int32_t> (olc::PixelGameEngine::GetMouseX () / static_cast<float> (ENGINE_PGE_35_DEFAULT_RESOLUTION));
+    int j =
+      static_cast<int32_t> (olc::PixelGameEngine::GetMouseY () / static_cast<float> (ENGINE_PGE_35_DEFAULT_RESOLUTION));
+    grid_[j * columns_ + i] += 1;
+  } // end IF
+  if (olc::PixelGameEngine::GetMouse (1).bPressed)
     reset ();
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
