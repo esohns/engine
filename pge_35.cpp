@@ -97,7 +97,7 @@ PGE_35::countNeighbors (int x, int y)
       int col = (x + i + columns_) % columns_;
       int row = (y + j + rows_) % rows_;
       sum += grid_[row * columns_ + col];
-    }
+    } // end FOR
   sum -= grid_[y * columns_ + x];
 
   return sum;
