@@ -72,7 +72,7 @@ PGE_35::OnUserUpdate (float fElapsedTime)
   grid_ = next_;
   next_ = temp_p;
 
-  if (olc::PixelGameEngine::GetMouse (0).bPressed)
+  if (olc::PixelGameEngine::GetMouse (0).bHeld)
   {
     int i =
       static_cast<int32_t> (olc::PixelGameEngine::GetMouseX () / static_cast<float> (ENGINE_PGE_35_DEFAULT_RESOLUTION));
