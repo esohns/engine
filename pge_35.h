@@ -21,6 +21,7 @@ class PGE_35
   int* next_;
 
   int countNeighbors (int, int);
+  void reset ();
 };
 
 #endif // PGE_35_H

@@ -67,6 +67,6 @@
 // pge 35
 #define ENGINE_PGE_35_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_35_DEFAULT_WIDTH             800
-#define ENGINE_PGE_35_DEFAULT_RESOLUTION        10
+#define ENGINE_PGE_35_DEFAULT_RESOLUTION        2
 
 #endif

@@ -35,10 +35,7 @@ PGE_35::OnUserCreate ()
   grid_ = new int[columns_ * rows_];
   next_ = new int[columns_ * rows_];
 
-  for (int i = 0; i < columns_; i++)
-    for (int j = 0; j < rows_; j++)
-      grid_[j * columns_ + i] = static_cast<int> (std::floor (Common_Tools::getRandomNumber (0.0f, 2.0f)));
-  ACE_OS::memset (next_, 0, sizeof (int) * columns_ * rows_);
+  reset ();
 
   return true;
 }
@@ -75,6 +72,10 @@ PGE_35::OnUserUpdate (float fElapsedTime)
   grid_ = next_;
   next_ = temp_p;
 
+
+  if (olc::PixelGameEngine::GetMouse (0).bPressed)
+    reset ();
+
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
 }
 
@@ -93,4 +94,13 @@ PGE_35::countNeighbors (int x, int y)
   sum -= grid_[y * columns_ + x];
 
   return sum;
+}
+
+void
+PGE_35::reset ()
+{
+  for (int i = 0; i < columns_; i++)
+    for (int j = 0; j < rows_; j++)
+      grid_[j * columns_ + i] = static_cast<int> (std::floor (Common_Tools::getRandomNumber (0.0f, 2.0f)));
+  ACE_OS::memset (next_, 0, sizeof(int) * columns_ * rows_);
 }
