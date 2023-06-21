@@ -209,7 +209,7 @@ class PGE_36
     struct dna dna_;
   };
 
-  typedef std::vector<vehicle*> vehicles_t;
+  typedef std::list<vehicle*> vehicles_t;
   vehicles_t           vehicles_;
   vehicle::positions_t food_;
   vehicle::positions_t poison_;
