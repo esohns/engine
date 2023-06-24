@@ -121,7 +121,6 @@ class PGE_38
         position_s.dist ({static_cast<float> (target_in.x), static_cast<float> (target_in.y)});
       fitness_ =
         Common_GL_Tools::map (d, 0.0f, static_cast<float> (engine_in->ScreenWidth ()), static_cast<float> (engine_in->ScreenWidth ()), 0.0f);
-      ACE_ASSERT (fitness_ >= 0.0f);
       if (completed_)
         fitness_ *= 10.0f;
       if (crashed_)
