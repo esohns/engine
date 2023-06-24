@@ -35,7 +35,7 @@ class PGE_36
     vehicle (int x, int y, struct dna* dna_in)
      : position_ ({x, y})
      , acceleration_ ({0.0f, 0.0f})
-     , velocity_ ({0.0f, 0.0f})
+     , velocity_ ({0.0f, -2.0f})
      , radius_ (ENGINE_PGE_36_DEFAULT_RADIUS)
      , maxSpeed_ (ENGINE_PGE_36_DEFAULT_MAXSPEED)
      , maxForce_ (ENGINE_PGE_36_DEFAULT_MAXFORCE)
@@ -167,9 +167,23 @@ class PGE_36
       float value_f = (health_ < 0.0f ? 0.0f : health_);
       value_f = (value_f > 1.0f ? 1.0f : value_f);
       Common_GL_Color_t lerped = Common_GL_Tools::lerpRGB (red, green, value_f);
-      engine_in->FillCircle (position_, radius_, {lerped.r, lerped.g, lerped.b, 255});
-    }
 
+      olc::vf2d direction = velocity_;
+      direction = direction.norm ();
+      direction *= static_cast<float> (radius_);
+      olc::vf2d p1 = position_ + direction;
+      olc::vf2d x = position_ + -direction;
+      olc::vf2d dot_direction = direction.perp ();
+      dot_direction = dot_direction.norm ();
+      dot_direction *= static_cast<float> (radius_);
+      olc::vf2d p2 = x + dot_direction;
+      olc::vf2d p3 = x + -dot_direction;
+      //engine_in->DrawLine (p2, p1, { lerped.r, lerped.g, lerped.b, 255 }, 0xFFFFFFFF);
+      //engine_in->DrawLine (p3, p1, { lerped.r, lerped.g, lerped.b, 255 }, 0xFFFFFFFF);
+      //engine_in->DrawLine (p2, p3, { lerped.r, lerped.g, lerped.b, 255 }, 0xFFFFFFFF);
+      engine_in->FillTriangle (p1, p2, p3, {lerped.r, lerped.g, lerped.b, 255});
+      //engine_in->FillCircle(position_, radius_, { lerped.r, lerped.g, lerped.b, 255 });
+    }
 
     void boundaries (olc::PixelGameEngine* engine_in)
     {
