@@ -98,4 +98,14 @@
 #define ENGINE_PGE_37_DEFAULT_SPACING           2
 #define ENGINE_PGE_37_DEFAULT_RADIUS            200
 
+// pge 38
+#define ENGINE_PGE_38_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_38_DEFAULT_WIDTH             800
+#define ENGINE_PGE_38_DEFAULT_LIFESPAN          1000
+#define ENGINE_PGE_38_DEFAULT_MAXFORCE          0.2f
+#define ENGINE_PGE_38_DEFAULT_MUTATION_RATE     0.01f
+#define ENGINE_PGE_38_DEFAULT_RADIUS            5
+#define ENGINE_PGE_38_DEFAULT_MAXSPEED          4.0f
+#define ENGINE_PGE_38_DEFAULT_ROCKETS           50
+
 #endif

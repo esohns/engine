@@ -60,8 +60,8 @@ PGE_37::OnUserUpdate (float fElapsedTime)
   olc::PixelGameEngine::Clear (olc::BLACK);
 
   // *NOTE*: because of a missing translate-to-center function add necessary
-  //         offsets; however, the triangle is now displayed rotated clockwise
-  //         by M_PI/2
+  //         offsets - this works; however, the triangle is now displayed
+  //         rotated clockwise by PI/2
 
   float amount_f = (sin (angle_ - (static_cast<float> (M_PI) / 2.0f)) + 1.0f) / 2.0f;
   angle_ += 0.02f;
