@@ -55,11 +55,11 @@ class PGE_38
     genes_t crossover (const dna& partner_in)
     {
       genes_t genes_a;
-      int mid =
-        Common_Tools::getRandomNumber (0, static_cast<int> (genes_.size () - 1));
+      float mid_f =
+        Common_Tools::getRandomNumber (0.0f, static_cast<float> (genes_.size () - 1));
       for (int i = 0; i < genes_.size (); i++)
       {
-        if (i > mid)
+        if (static_cast<float> (i) > mid_f)
           genes_a.push_back (genes_[i]);
         else
           genes_a.push_back (partner_in.genes_[i]);
@@ -120,7 +120,8 @@ class PGE_38
       float d =
         position_s.dist ({static_cast<float> (target_in.x), static_cast<float> (target_in.y)});
       fitness_ =
-        Common_GL_Tools::map (d, 0.0f, static_cast<float> (engine_in->ScreenHeight ()), static_cast<float> (engine_in->ScreenHeight ()), 0.0f);
+        Common_GL_Tools::map (d, 0.0f, static_cast<float> (engine_in->ScreenWidth ()), static_cast<float> (engine_in->ScreenWidth ()), 0.0f);
+      ACE_ASSERT (fitness_ >= 0.0f);
       if (completed_)
         fitness_ *= 10.0f;
       if (crashed_)
@@ -135,7 +136,7 @@ class PGE_38
       olc::vf2d position_s = {static_cast<float> (position_.x), static_cast<float> (position_.y)};
       float d =
         position_s.dist ({static_cast<float> (target_in.x), static_cast<float> (target_in.y)});
-      if (d < 10.0f)
+      if (d < static_cast<float> (ENGINE_PGE_38_DEFAULT_TARGET_RADIUS * 2.0f))
         completed_ = true;
 
       if (position_.x > barrier_in.rx && position_.x < barrier_in.rx + barrier_in.rw &&
@@ -150,7 +151,6 @@ class PGE_38
       if (!completed_ && !crashed_)
       {
         applyForce (dna_->genes_[index_in]);
-
         velocity_ += acceleration_;
         if (velocity_.mag () > ENGINE_PGE_38_DEFAULT_MAXSPEED)
         {
@@ -172,12 +172,12 @@ class PGE_38
 
       olc::vf2d direction = velocity_;
       direction = direction.norm ();
-      direction *= static_cast<float> (ENGINE_PGE_38_DEFAULT_RADIUS);
+      direction *= static_cast<float> (ENGINE_PGE_38_DEFAULT_ROCKET_RADIUS);
       olc::vf2d p1 = position_ + direction;
       olc::vf2d x = position_ + -direction;
       olc::vf2d dot_direction = direction.perp ();
       dot_direction = dot_direction.norm ();
-      dot_direction *= static_cast<float> (ENGINE_PGE_38_DEFAULT_RADIUS);
+      dot_direction *= static_cast<float> (ENGINE_PGE_38_DEFAULT_ROCKET_RADIUS);
       olc::vf2d p2 = x + dot_direction;
       olc::vf2d p3 = x + -dot_direction;
       //engine_in->DrawLine (p2, p1, { lerped.r, lerped.g, lerped.b, 255 }, 0xFFFFFFFF);
@@ -218,17 +218,6 @@ class PGE_38
     void evaluate (olc::PixelGameEngine* engine_in,
                    const olc::vi2d& target_in)
     {
-      float maxfitness_f = 0.0f;
-      for (int i = 0; i < ENGINE_PGE_38_DEFAULT_ROCKETS; i++)
-      {
-        rockets_[i]->calculateFitness (engine_in,
-                                       target_in);
-        if (rockets_[i]->fitness_ > maxfitness_f)
-          maxfitness_f = rockets_[i]->fitness_;
-      } // end FOR
-      for (int i = 0; i < ENGINE_PGE_38_DEFAULT_ROCKETS; i++)
-        rockets_[i]->fitness_ /= maxfitness_f;
-
       matingpool_.clear ();
       for (int i = 0; i < ENGINE_PGE_38_DEFAULT_ROCKETS; i++)
       {
@@ -262,19 +251,31 @@ class PGE_38
       rockets_ = new_rockets_a;
     }
 
-    void run (const olc::vf2d& target_in,
-              const barrier& barrier_in,
-              olc::PixelGameEngine* engine_in,
-              int32_t index_in)
+    void update (const olc::vf2d& target_in,
+                 const barrier& barrier_in,
+                 olc::PixelGameEngine* engine_in,
+                 int32_t index_in)
     {
+      float maxfitness_f = 0.0f;
       for (int i = 0; i < ENGINE_PGE_38_DEFAULT_ROCKETS; i++)
       {
         rockets_[i]->update (target_in,
                              barrier_in,
                              engine_in,
                              index_in);
-        rockets_[i]->display (engine_in);
+        rockets_[i]->calculateFitness (engine_in,
+                                       target_in);
+        if (rockets_[i]->fitness_ > maxfitness_f)
+          maxfitness_f = rockets_[i]->fitness_;
       } // end FOR
+      for (int i = 0; i < ENGINE_PGE_38_DEFAULT_ROCKETS; i++)
+        rockets_[i]->fitness_ /= maxfitness_f;
+    }
+
+    void display (olc::PixelGameEngine* engine_in)
+    {
+      for (int i = 0; i < ENGINE_PGE_38_DEFAULT_ROCKETS; i++)
+        rockets_[i]->display (engine_in);
     }
 
    private:

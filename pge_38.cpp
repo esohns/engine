@@ -43,10 +43,10 @@ PGE_38::OnUserUpdate (float fElapsedTime)
 {
   olc::PixelGameEngine::Clear (olc::BLACK);
 
-  population_->run (target_,
-                    barrier_,
-                    this,
-                    frameCounter_);
+  population_->update (target_,
+                       barrier_,
+                       this,
+                       frameCounter_);
 
   ++frameCounter_;
   if (frameCounter_ == ENGINE_PGE_38_DEFAULT_LIFESPAN)
@@ -57,8 +57,10 @@ PGE_38::OnUserUpdate (float fElapsedTime)
     frameCounter_ = 0;
   } // end IF
 
+  population_->display (this);
+
   olc::PixelGameEngine::FillRect (barrier_.rx, barrier_.ry, barrier_.rw, barrier_.rh, olc::WHITE);
-  olc::PixelGameEngine::FillCircle (target_, ENGINE_PGE_38_DEFAULT_RADIUS, olc::WHITE);
+  olc::PixelGameEngine::FillCircle (target_, ENGINE_PGE_38_DEFAULT_TARGET_RADIUS, olc::GREEN);
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
 }
