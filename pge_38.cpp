@@ -51,13 +51,13 @@ PGE_38::OnUserUpdate (float fElapsedTime)
   ++frameCounter_;
   if (frameCounter_ == ENGINE_PGE_38_DEFAULT_LIFESPAN)
   {
+    frameCounter_ = 0;
     population_->evaluate (this,
                            target_);
     population_->selection (this);
-    frameCounter_ = 0;
   } // end IF
-
-  population_->display (this);
+  else
+    population_->display (this);
 
   olc::PixelGameEngine::FillRect (barrier_.rx, barrier_.ry, barrier_.rw, barrier_.rh, olc::WHITE);
   olc::PixelGameEngine::FillCircle (target_, ENGINE_PGE_38_DEFAULT_TARGET_RADIUS, olc::GREEN);
