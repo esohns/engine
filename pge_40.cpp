@@ -22,15 +22,16 @@ PGE_40::~PGE_40 ()
 bool
 PGE_40::OnUserCreate ()
 {
-  int clothWidth = ENGINE_PGE_40_DEFAULT_CLOTH_WIDTH;
-  clothWidth /= ENGINE_PGE_40_DEFAULT_CLOTH_SPACING;
-  int clothHeight = ENGINE_PGE_40_DEFAULT_CLOTH_HEIGHT;
-  clothHeight /= ENGINE_PGE_40_DEFAULT_CLOTH_SPACING;
+  int cloth_width =
+    ENGINE_PGE_40_DEFAULT_CLOTH_WIDTH / ENGINE_PGE_40_DEFAULT_CLOTH_SPACING;
+  int cloth_height =
+    ENGINE_PGE_40_DEFAULT_CLOTH_HEIGHT / ENGINE_PGE_40_DEFAULT_CLOTH_SPACING;
   int startX =
-    static_cast<int> (olc::PixelGameEngine::ScreenWidth () * 0.5f - clothWidth * ENGINE_PGE_40_DEFAULT_CLOTH_SPACING * 0.5f);
+    static_cast<int> (olc::PixelGameEngine::ScreenWidth () * 0.5f - cloth_width * ENGINE_PGE_40_DEFAULT_CLOTH_SPACING * 0.5f);
   int startY =
-    static_cast<int> (olc::PixelGameEngine::ScreenHeight () * 0.1f);
-  cloth_ = new cloth (clothWidth, clothHeight, ENGINE_PGE_40_DEFAULT_CLOTH_SPACING, startX, startY);
+    static_cast<int> (olc::PixelGameEngine::ScreenHeight () * 0.025f);
+  cloth_ =
+    new cloth (cloth_width, cloth_height, ENGINE_PGE_40_DEFAULT_CLOTH_SPACING, startX, startY);
 
   return true;
 }
@@ -44,7 +45,7 @@ PGE_40::OnUserUpdate (float fElapsedTime)
   float deltaTime = fElapsedTime - lastElapsedTime;
   lastElapsedTime = fElapsedTime;
 
-  cloth_->update (this, deltaTime * 100.0f);
+  cloth_->update (this, deltaTime * ENGINE_PGE_40_DEFAULT_DT_FACTOR);
   cloth_->draw (this);
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;

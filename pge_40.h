@@ -107,12 +107,13 @@ class PGE_40
 
       if (engine_in->GetMouse (0).bHeld && selected_)
       {
-        static olc::vi2d prev_mouse_position = mouse_position;
+        static olc::vi2d prev_mouse_position = {0, 0};
         olc::vf2d difference = mouse_position - prev_mouse_position;
         prev_mouse_position = mouse_position;
 
-        difference *= ENGINE_PGE_40_DEFAULT_ELASTICITY;
+        difference *= ENGINE_PGE_40_DEFAULT_MOUSE_FACTOR;
 
+        // constrain difference by elasticity
         if (difference.x > elasticity_in) difference.x = elasticity_in;
         if (difference.y > elasticity_in) difference.y = elasticity_in;
         if (difference.x < -elasticity_in) difference.x = -elasticity_in;
@@ -135,8 +136,10 @@ class PGE_40
         return;
       } // end IF
 
+      // verlet integration
       olc::vf2d newPos =
         position_ + (position_ - prevPosition_) * (1.0f - drag_in) + acceleration_in * (1.0f - drag_in) * deltaTime_in * deltaTime_in;
+//      2.0f * position_ - prevPosition_ + acceleration_in * deltaTime_in * deltaTime_in;
       prevPosition_ = position_;
       position_ = newPos;
       keepInsideView (engine_in->ScreenWidth (), engine_in->ScreenHeight ());
@@ -151,11 +154,11 @@ class PGE_40
     bool selected_;
     stick* sticks_[2];
 
-    void keepInsideView (int width_in, int height_in)
+    void keepInsideView (int windowWidth_in, int windowHeight_in)
     {
-      if (position_.x >= static_cast<float> (width_in))
+      if (position_.x >= static_cast<float> (windowWidth_in))
       {
-        position_.x = static_cast<float> (width_in - 1);
+        position_.x = static_cast<float> (windowWidth_in - 1);
         prevPosition_.x = position_.x;
       } // end IF
       else if (position_.x < 0.0f)
@@ -164,9 +167,9 @@ class PGE_40
         prevPosition_.x = position_.x;
       } // end ELSE IF
 
-      if (position_.y >= static_cast<float> (height_in))
+      if (position_.y >= static_cast<float> (windowHeight_in))
       {
-        position_.y = static_cast<float> (height_in - 1);
+        position_.y = static_cast<float> (windowHeight_in - 1);
         prevPosition_.y = position_.y;
       } // end IF
       else if (position_.y < 0)
@@ -209,7 +212,7 @@ class PGE_40
             sticks_.push_back (s);
           } // end IF
 
-          if (y == 0 && x % 2 == 0)
+          if (y == 0 && x % 5 == 0)
             point_p->pin ();
 
           points_.push_back (point_p);
