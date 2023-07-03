@@ -137,11 +137,11 @@ class PGE_40
       } // end IF
 
       // verlet integration
-      olc::vf2d newPos =
+      olc::vf2d new_position =
         position_ + (position_ - prevPosition_) * (1.0f - drag_in) + acceleration_in * (1.0f - drag_in) * deltaTime_in * deltaTime_in;
 //      2.0f * position_ - prevPosition_ + acceleration_in * deltaTime_in * deltaTime_in;
       prevPosition_ = position_;
-      position_ = newPos;
+      position_ = new_position;
       keepInsideView (engine_in->ScreenWidth (), engine_in->ScreenHeight ());
     }
 
