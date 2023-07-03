@@ -41,11 +41,7 @@ PGE_40::OnUserUpdate (float fElapsedTime)
 {
   olc::PixelGameEngine::Clear (olc::BLACK);
 
-  static float lastElapsedTime = 0.0f;
-  float deltaTime = fElapsedTime - lastElapsedTime;
-  lastElapsedTime = fElapsedTime;
-
-  cloth_->update (this, deltaTime * ENGINE_PGE_40_DEFAULT_DT_FACTOR);
+  cloth_->update (this, fElapsedTime * ENGINE_PGE_40_DEFAULT_DT_FACTOR);
   cloth_->draw (this);
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;

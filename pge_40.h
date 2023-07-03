@@ -138,7 +138,7 @@ class PGE_40
 
       // verlet integration
       olc::vf2d new_position =
-        position_ + (position_ - prevPosition_) * (1.0f - drag_in) + acceleration_in * (1.0f - drag_in) * deltaTime_in * deltaTime_in;
+        position_ + ((position_ - prevPosition_) * (1.0f - drag_in)) + (acceleration_in * (1.0f - drag_in) * deltaTime_in * deltaTime_in);
 //      2.0f * position_ - prevPosition_ + acceleration_in * deltaTime_in * deltaTime_in;
       prevPosition_ = position_;
       position_ = new_position;
