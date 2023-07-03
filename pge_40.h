@@ -38,7 +38,7 @@ class PGE_40
         return;
 
       olc::vf2d diff = p0->position_ - p1->position_;
-      float dist = std::sqrtf (diff.x * diff.x + diff.y * diff.y);
+      float dist = std::sqrt (diff.x * diff.x + diff.y * diff.y);
       float diffFactor = (length_ - dist) / dist;
       olc::vf2d offset = diff * diffFactor * 0.5f;
 
@@ -212,7 +212,7 @@ class PGE_40
             sticks_.push_back (s);
           } // end IF
 
-          if (y == 0 && x % 5 == 0)
+          if (y == 0 && (x % ENGINE_PGE_40_DEFAULT_Y0_X_MOD_PIN == 0))
             point_p->pin ();
 
           points_.push_back (point_p);

@@ -669,49 +669,47 @@ PGE_14::OnUserCreate ()
 bool
 PGE_14::OnUserUpdate (float fElapsedTime)
 {
-  const olc::vf2d& m_pos = GetMousePos() * 1.0f;
+  const olc::vf2d m_pos = olc::PixelGameEngine::GetMousePos () * 1.0f;
 
   // Input
-  if (GetKey(olc::Z).bPressed)
+  if (olc::PixelGameEngine::GetKey (olc::Z).bPressed)
   {
-    scene.AddShape(
-      m_pos,                                                  // Position
-      3 + rand() % 3,                                         // Vertices
-      10.0f + rand() % 10,                                    // Edge length
-      0.0f,                                                   // Initial angle
-      0.0f,                                                   // Angular velocity
-      Random(2.0f, 10.0f),                                    // Mass
-      olc::Pixel(rand() % 256, rand() % 256, rand() % 256),   // Color
-      Random(0.2f, 0.6f),                                     // Coefficient of restitution
-      0.4f,                                                   // Coefficient of static friction
-      0.2f                                                    // Coefficient of dynamic friction
+    scene.AddShape (
+      m_pos,                                                    // Position
+      3 + rand () % 3,                                          // Vertices
+      10.0f + rand () % 10,                                     // Edge length
+      0.0f,                                                     // Initial angle
+      0.0f,                                                     // Angular velocity
+      Random (2.0f, 10.0f),                                     // Mass
+      olc::Pixel (rand () % 256, rand () % 256, rand () % 256), // Color
+      Random (0.2f, 0.6f),                                      // Coefficient of restitution
+      0.4f,                                                     // Coefficient of static friction
+      0.2f                                                      // Coefficient of dynamic friction
     );
   } // end IF
 
-  bool is_shift = GetKey(olc::SHIFT).bHeld;
-
   int key = 0;
-  if (GetKey(olc::A).bHeld) key = 0;
-  else if (GetKey(olc::W).bHeld) key = 1;
-  else if (GetKey(olc::D).bHeld) key = 2;
-  else if (GetKey(olc::S).bHeld) key = 3;
+  if (olc::PixelGameEngine::GetKey (olc::A).bHeld) key = 0;
+  else if (olc::PixelGameEngine::GetKey (olc::W).bHeld) key = 1;
+  else if (olc::PixelGameEngine::GetKey (olc::D).bHeld) key = 2;
+  else if (olc::PixelGameEngine::GetKey (olc::S).bHeld) key = 3;
 
-  if (!is_shift)
+  if (!olc::PixelGameEngine::GetKey (olc::SHIFT).bHeld)
   {
-    if (GetMouse(1).bPressed)
-      rb_draw.OnMousePress();
-    if (GetMouse(1).bHeld)
-      rb_draw.OnMouseInput (m_pos, Sign (static_cast<float> (GetMouseWheel())) * 5.0f * fElapsedTime, key);
-    if (GetMouse(1).bReleased)
-      rb_draw.OnMouseRelease(scene);
+    if (olc::PixelGameEngine::GetMouse (1).bPressed)
+      rb_draw.OnMousePress ();
+    if (olc::PixelGameEngine::GetMouse (1).bHeld)
+      rb_draw.OnMouseInput (m_pos, Sign (static_cast<float> (olc::PixelGameEngine::GetMouseWheel ())) * 5.0f * fElapsedTime, key);
+    if (olc::PixelGameEngine::GetMouse (1).bReleased)
+      rb_draw.OnMouseRelease (scene);
   } // end IF
 
-  if (GetMouse(0).bPressed)
+  if (olc::PixelGameEngine::GetMouse (0).bPressed)
   {
-    for (auto& c : scene.GetConstraints())
+    for (auto& c : scene.GetConstraints ())
     {
-      RigidBody& shape = scene.GetShape(c.GetID());
-      if (shape.IsContainPoint(m_pos))
+      RigidBody& shape = scene.GetShape (c.GetID ());
+      if (shape.IsContainPoint (m_pos))
       {
         selected_shape = &shape;
         selected_constraint = &c;
@@ -720,28 +718,28 @@ PGE_14::OnUserUpdate (float fElapsedTime)
     } // end FOR
   } // end IF
 
-  if (selected_constraint != nullptr)
+  if (selected_constraint != NULL)
   {
-    if (GetMouse(0).bHeld)
-      selected_shape->SetPosition(m_pos);
-    else if (GetMouse(0).bReleased)
+    if (olc::PixelGameEngine::GetMouse (0).bHeld)
+      selected_shape->SetPosition (m_pos);
+    else if (olc::PixelGameEngine::GetMouse (0).bReleased)
     {
       selected_shape->is_input = false;
-      selected_constraint->ApplyForces(*selected_shape, 1.0f, true);
-      selected_shape = nullptr;
-      selected_constraint = nullptr;
+      selected_constraint->ApplyForces (*selected_shape, 1.0f, true);
+      selected_shape = NULL;
+      selected_constraint = NULL;
     } // end ELSE IF
   } // end IF
 
   // Logic
-  rb_draw.Logic();
+  rb_draw.Logic ();
   for (int i = 0; i < n_iter; i++)
-    scene.Update(fElapsedTime, false);
+    scene.Update (fElapsedTime, false);
 
   // Draw
-  Clear(olc::BLACK);
-  scene.Draw(this, true);
-  rb_draw.PreviewRender(this);
+  olc::PixelGameEngine::Clear (olc::BLACK);
+  scene.Draw (this, true);
+  rb_draw.PreviewRender (this);
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
 }
