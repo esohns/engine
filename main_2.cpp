@@ -50,6 +50,7 @@
 #include "pge_38.h"
 #include "pge_39.h"
 #include "pge_40.h"
+#include "pge_41.h"
 
 enum Engine_ModeType
 {
@@ -64,6 +65,7 @@ enum Engine_ModeType
   ENGINE_MODE_38,
   ENGINE_MODE_39,
   ENGINE_MODE_40,
+  ENGINE_MODE_41,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -381,6 +383,21 @@ do_work (int argc_in,
     {
       PGE_40 example;
       if (example.Construct (ENGINE_PGE_40_DEFAULT_WIDTH, ENGINE_PGE_40_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_41:
+    {
+      PGE_41 example;
+      if (example.Construct (ENGINE_PGE_41_DEFAULT_WIDTH, ENGINE_PGE_41_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
