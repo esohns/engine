@@ -161,4 +161,8 @@
 #define ENGINE_PGE_45_DEFAULT_WIDTH             1024
 #define ENGINE_PGE_45_DEFAULT_ORDER             8
 
+// pge 46
+#define ENGINE_PGE_46_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_46_DEFAULT_WIDTH             800
+
 #endif
