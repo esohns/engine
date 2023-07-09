@@ -35,12 +35,12 @@ class PGE_44
      , radius_(ENGINE_PGE_44_DEFAULT_RADIUS)
      , maxSpeed_ (ENGINE_PGE_44_DEFAULT_MAXSPEED)
      , maxForce_ (ENGINE_PGE_44_DEFAULT_MAXFORCE)
-     //, wanderTheta_ (static_cast<float> (M_PI) / 2.0f)
      , xOffset_ (Common_Tools::getRandomNumber (0.0, 1.0))
      , yOffset_ (Common_Tools::getRandomNumber (0.0, 1.0))
      , path_ ()
      //, paths_ ()
-    {}
+    {
+    }
 
     void wander (noise::module::Perlin* noise_in)
     {
@@ -123,9 +123,23 @@ class PGE_44
 
       path_.push_back (position_);
 
-      size_t total = path_.size ();
-      if (total > 200 || (total > 10 && fElapsedTime > 0.3f))
+      size_t total = 0;
+      //for (std::vector<path_t*>::iterator iterator = paths_.begin ();
+      //     iterator != paths_.end ();
+      //     ++iterator)
+      //  total += (*iterator)->size ();
+      total = path_.size ();
+      static float elapsed_time = 0.0f;
+      elapsed_time += fElapsedTime;
+      if (total > 200 || (total > 10 && elapsed_time > 3.0f))
+      {
+        if (elapsed_time > 3.0f)
+          elapsed_time = 0.0f;
+        //paths_[0]->erase (paths_[0]->begin ());
+        //if (paths_[0]->empty ())
+        //  paths_.erase (paths_.begin ());
         path_.erase (path_.begin ());
+      } // end IF
     }
 
     void show (olc::PixelGameEngine* engine_in)
@@ -146,21 +160,31 @@ class PGE_44
       engine_in->FillTriangle (p1, p2, p3, olc::WHITE);
       //engine_in->FillCircle(position_, radius_, olc::WHITE);
 
-      std::vector<olc::vf2d>::iterator iterator_2 = path_.begin ();
-      if (path_.size () > 1)
-        std::advance (iterator_2, 1);
-      for (std::vector<olc::vf2d>::iterator iterator = path_.begin ();
-           iterator != path_.end ();
-           ++iterator)
-      { 
-        if (iterator_2 == path_.end ())
-          engine_in->Draw (*iterator, olc::WHITE);
-        else
-        {
-          engine_in->DrawLine (*iterator, *iterator_2, olc::WHITE, 0xFFFFFFFF);
+      //for (std::vector<path_t*>::iterator iterator = paths_.begin ();
+      //     iterator != paths_.end ();
+      //     ++iterator)
+      //{
+        //std::vector<olc::vf2d>::iterator iterator_2 = (*iterator)->begin ();
+        std::vector<olc::vf2d>::iterator iterator_2 = path_.begin ();
+        //if ((*iterator)->size () > 1)
+        if (path_.size () > 1)
           std::advance (iterator_2, 1);
-      } // end ELSE
-      } // end FOR
+        //for (std::vector<olc::vf2d>::iterator iterator_3 = (*iterator)->begin ();
+        //     iterator_3 != (*iterator)->end ();
+        for (std::vector<olc::vf2d>::iterator iterator_3 = path_.begin ();
+             iterator_3 != path_.end ();
+             ++iterator_3)
+        {
+          //if (iterator_2 == (*iterator)->end ())
+          if (iterator_2 == path_.end ())
+            engine_in->Draw (*iterator_3, olc::WHITE);
+          else
+          {
+            engine_in->DrawLine (*iterator_3, *iterator_2, olc::WHITE, 0xFFFFFFFF);
+            std::advance (iterator_2, 1);
+          } // end ELSE
+        } // end FOR
+      //} // end FOR
     }
 
     void edges (olc::PixelGameEngine* engine_in)
@@ -191,6 +215,7 @@ class PGE_44
       if (hitEdge)
       {
         path_.clear ();
+        //paths_.push_back (path_);
       } // end IF
     }
 
@@ -202,11 +227,11 @@ class PGE_44
     olc::vf2d              acceleration_;
     float                  maxSpeed_;
     float                  maxForce_;
-    //float                  wanderTheta_;
     double                 xOffset_;
     double                 yOffset_;
-    std::vector<olc::vf2d> path_;
-    //, paths_ ()
+    typedef std::vector<olc::vf2d> path_t;
+    path_t                 path_;
+    std::vector<path_t>    paths_;
   };
 
   //class target

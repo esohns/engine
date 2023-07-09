@@ -156,4 +156,9 @@
 #define ENGINE_PGE_44_DEFAULT_MAXFORCE          0.2f
 #define ENGINE_PGE_44_DEFAULT_NUMBER_OF_VEHICLES 8
 
+// pge 45
+#define ENGINE_PGE_45_DEFAULT_HEIGHT            1024
+#define ENGINE_PGE_45_DEFAULT_WIDTH             1024
+#define ENGINE_PGE_45_DEFAULT_ORDER             8
+
 #endif
