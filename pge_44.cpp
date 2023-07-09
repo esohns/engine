@@ -44,7 +44,7 @@ PGE_44::OnUserUpdate (float fElapsedTime)
   {
     (*iterator)->wander (&noise_);
 
-    (*iterator)->update ();
+    (*iterator)->update (fElapsedTime);
     (*iterator)->show (this);
     (*iterator)->edges (this);
   } // end FOR

@@ -110,7 +110,7 @@ class PGE_44
       acceleration_ += force_in;
     }
 
-    void update ()
+    void update (float fElapsedTime)
     {
       velocity_ += acceleration_;
       if (velocity_.mag () > maxSpeed_)
@@ -123,18 +123,9 @@ class PGE_44
 
       path_.push_back (position_);
 
-      //// Count positions
-      //int total = 0;
-      //for (let path of this.paths) {
-      //  total += path.length;
-      //}
-
-      //if (total > 200 || (total > 10 && millis() > 3000)) {
-      //  this.paths[0].shift();
-      //  if (this.paths[0].length == = 0) {
-      //    this.paths.shift();
-      //  }
-      //}
+      size_t total = path_.size ();
+      if (total > 200 || (total > 10 && fElapsedTime > 0.3f))
+        path_.erase (path_.begin ());
     }
 
     void show (olc::PixelGameEngine* engine_in)
