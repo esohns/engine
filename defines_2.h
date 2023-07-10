@@ -164,5 +164,10 @@
 // pge 46
 #define ENGINE_PGE_46_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_46_DEFAULT_WIDTH             800
+#define ENGINE_PGE_46_DEFAULT_RADIUS            150.0f
+
+// pge 47
+#define ENGINE_PGE_47_DEFAULT_HEIGHT            800
+#define ENGINE_PGE_47_DEFAULT_WIDTH             600
 
 #endif
