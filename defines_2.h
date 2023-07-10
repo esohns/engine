@@ -21,17 +21,6 @@
 #ifndef DEFINES_2_H
 #define DEFINES_2_H
 
-#define MAKE_VERSION_STRING_VARIABLE(program,version,variable) std::string variable; do {                                \
-  variable = program; variable += ACE_TEXT_ALWAYS_CHAR (" ");                                                            \
-  variable += version; variable += ACE_TEXT_ALWAYS_CHAR (" compiled on ");                                               \
-  variable += ACE_TEXT_ALWAYS_CHAR (COMPILATION_DATE_TIME);                                                              \
-  variable += ACE_TEXT_ALWAYS_CHAR (" host platform "); variable += Common_Tools::compilerPlatformName ();               \
-  variable += ACE_TEXT_ALWAYS_CHAR (" with "); variable += Common_Tools::compilerName ();                                \
-  variable += ACE_TEXT_ALWAYS_CHAR (" "); variable += Common_Tools::compilerVersion ();                                  \
-  variable += ACE_TEXT_ALWAYS_CHAR (" against ACE "); variable += Common_Tools::compiledVersion_ACE ();                  \
-  variable += ACE_TEXT_ALWAYS_CHAR (" , Common "); variable += ACE_TEXT_ALWAYS_CHAR (Common_PACKAGE_VERSION_FULL);       \
-} while (0)
-
 // pge 30
 #define ENGINE_PGE_30_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_30_DEFAULT_WIDTH             600
@@ -169,5 +158,12 @@
 // pge 47
 #define ENGINE_PGE_47_DEFAULT_HEIGHT            800
 #define ENGINE_PGE_47_DEFAULT_WIDTH             600
+
+// pge 48
+#define ENGINE_PGE_48_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_48_DEFAULT_WIDTH             800
+#define ENGINE_PGE_48_DEFAULT_K                 -4.0f
+#define ENGINE_PGE_48_DEFAULT_RESOLUTION        50
+#define ENGINE_PGE_48_DEFAULT_NUMBER_OF_ORBITS  7
 
 #endif
