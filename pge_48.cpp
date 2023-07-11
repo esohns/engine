@@ -30,9 +30,9 @@ PGE_48::~PGE_48 ()
 bool
 PGE_48::OnUserCreate ()
 {
-  sun_ = new orbit (olc::PixelGameEngine::ScreenWidth () / 2,
-                    olc::PixelGameEngine::ScreenHeight () / 2 + 30,
-                    olc::PixelGameEngine::ScreenWidth () / 5,
+  sun_ = new orbit (olc::PixelGameEngine::ScreenWidth () / 2.0,
+                    olc::PixelGameEngine::ScreenHeight () / 2.0 + 30.0,
+                    olc::PixelGameEngine::ScreenWidth () / 5.0,
                     0,
                     NULL);
   orbit* next = sun_;
@@ -49,7 +49,7 @@ PGE_48::OnUserUpdate (float fElapsedTime)
 {
   //olc::PixelGameEngine::Clear (olc::BLACK);
 
-  std::vector<olc::vi2d> path_a;
+  std::vector<olc::vd2d> path_a;
   orbit* next;
   for (int i = 0; i < ENGINE_PGE_48_DEFAULT_RESOLUTION; i++)
   {
@@ -69,9 +69,9 @@ PGE_48::OnUserUpdate (float fElapsedTime)
   //  next = next->child_;
   //} // end WHILE
 
-  //static int32_t prev_x = 0;
-  //static int32_t prev_y = 0;
-  for (std::vector<olc::vi2d>::iterator iterator = path_a.begin ();
+  //static float prev_x = 0;
+  //static float prev_y = 0;
+  for (std::vector<olc::vd2d>::iterator iterator = path_a.begin ();
        iterator != path_a.end ();
        ++iterator)
   {

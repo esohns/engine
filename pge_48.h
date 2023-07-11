@@ -22,21 +22,21 @@ class PGE_48
   class orbit
   {
    public:
-    orbit (int32_t x_in, int32_t y_in, int32_t radius_in, int32_t level_in, orbit* parent_in)
+    orbit (double x_in, double y_in, double radius_in, int32_t level_in, orbit* parent_in)
      : position_ ({x_in, y_in})
      , radius_ (radius_in)
      , child_(NULL)
      , parent_ (parent_in)
      , level_ (level_in)
-     , speed_ (static_cast<float> (std::pow (ENGINE_PGE_48_DEFAULT_K, level_in - 1) * (M_PI / 180.0)) / static_cast<float> (ENGINE_PGE_48_DEFAULT_RESOLUTION))
-     , angle_ (static_cast<float> (-M_PI / 2.0))
+     , speed_ (std::pow (ENGINE_PGE_48_DEFAULT_K, level_in - 1) * (M_PI / 180.0) / static_cast<double> (ENGINE_PGE_48_DEFAULT_RESOLUTION))
+     , angle_ (-M_PI / 2.0)
     {}
 
     orbit* addChild ()
     { ACE_ASSERT (!child_);
-      int32_t newr = static_cast<int32_t> (radius_ / 3.0f);
-      int32_t newx = position_.x + radius_ + newr;
-      int32_t newy = position_.y;
+      double newr = radius_ / 3.0f;
+      double newx = position_.x + radius_ + newr;
+      double newy = position_.y;
       child_ = new orbit (newx, newy, newr, level_ + 1, this);
       return child_;
     }
@@ -46,25 +46,25 @@ class PGE_48
       if (!parent_) return;
 
       angle_ += speed_;
-      int32_t rsum = radius_ + parent_->radius_;
-      position_.x = static_cast<int32_t> (parent_->position_.x + rsum * std::cos (angle_));
-      position_.y = static_cast<int32_t> (parent_->position_.y + rsum * std::sin (angle_));
+      double rsum = radius_ + parent_->radius_;
+      position_.x = static_cast<double> (parent_->position_.x + rsum * std::cos (angle_));
+      position_.y = static_cast<double> (parent_->position_.y + rsum * std::sin (angle_));
     }
 
     void show (olc::PixelGameEngine* engine_in)
     {
-      engine_in->DrawCircle (position_, radius_, olc::WHITE, 0xFF);
+      engine_in->DrawCircle (position_, static_cast<int32_t> (radius_), olc::WHITE, 0xFF);
     }
 
-    olc::vi2d position_;
-    int32_t   radius_;
+    olc::vd2d position_;
+    double    radius_;
     orbit*    child_;
     orbit*    parent_;
 
    private:
     int32_t   level_;
-    float     speed_;
-    float     angle_;
+    double    speed_;
+    double    angle_;
   };
 
   orbit* sun_;

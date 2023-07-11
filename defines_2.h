@@ -162,8 +162,8 @@
 // pge 48
 #define ENGINE_PGE_48_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_48_DEFAULT_WIDTH             800
-#define ENGINE_PGE_48_DEFAULT_K                 -4.0f
+#define ENGINE_PGE_48_DEFAULT_K                 -4.0
 #define ENGINE_PGE_48_DEFAULT_RESOLUTION        50
-#define ENGINE_PGE_48_DEFAULT_NUMBER_OF_ORBITS  7
+#define ENGINE_PGE_48_DEFAULT_NUMBER_OF_ORBITS  10
 
 #endif
