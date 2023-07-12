@@ -47,8 +47,8 @@ class PGE_48
 
       angle_ += speed_;
       double rsum = radius_ + parent_->radius_;
-      position_.x = static_cast<double> (parent_->position_.x + rsum * std::cos (angle_));
-      position_.y = static_cast<double> (parent_->position_.y + rsum * std::sin (angle_));
+      position_.x = parent_->position_.x + rsum * std::cos (angle_);
+      position_.y = parent_->position_.y + rsum * std::sin (angle_);
     }
 
     void show (olc::PixelGameEngine* engine_in)

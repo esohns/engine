@@ -35,11 +35,11 @@ PGE_48::OnUserCreate ()
                     olc::PixelGameEngine::ScreenWidth () / 5.0,
                     0,
                     NULL);
+
   orbit* next = sun_;
   for (int i = 0; i < ENGINE_PGE_48_DEFAULT_NUMBER_OF_ORBITS; i++)
     next = next->addChild ();
   end_ = next;
-  ACE_ASSERT (end_);
 
   return true;
 }
@@ -69,18 +69,16 @@ PGE_48::OnUserUpdate (float fElapsedTime)
   //  next = next->child_;
   //} // end WHILE
 
-  //static float prev_x = 0;
-  //static float prev_y = 0;
+  //static olc::vd2d prev = {0.0, 0.0};
   for (std::vector<olc::vd2d>::iterator iterator = path_a.begin ();
        iterator != path_a.end ();
        ++iterator)
   {
     olc::PixelGameEngine::Draw (*iterator, olc::MAGENTA);
-    //prev_x = (iterator == path_a.begin ()) ? (*iterator).x : prev_x;
-    //prev_y = (iterator == path_a.begin ()) ? (*iterator).y : prev_y;
-    //olc::PixelGameEngine::DrawLine ({prev_x, prev_y}, *iterator, olc::MAGENTA, 0xFFFFFFFF);
-    //prev_x = (*iterator).x;
-    //prev_y = (*iterator).y;
+    //prev.x = (iterator == path_a.begin ()) ? (*iterator).x : prev.x;
+    //prev.y = (iterator == path_a.begin ()) ? (*iterator).y : prev.y;
+    //olc::PixelGameEngine::DrawLine (prev, *iterator, olc::MAGENTA, 0xFFFFFFFF);
+    //prev = *iterator;
   } // end FOR
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
