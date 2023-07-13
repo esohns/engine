@@ -172,4 +172,8 @@
 #define ENGINE_PGE_49_DEFAULT_DX                0.05
 #define ENGINE_PGE_49_DEFAULT_DY                0.01
 
+// pge 50
+#define ENGINE_PGE_50_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_50_DEFAULT_WIDTH             800
+
 #endif
