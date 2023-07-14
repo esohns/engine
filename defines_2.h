@@ -175,5 +175,12 @@
 // pge 50
 #define ENGINE_PGE_50_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_50_DEFAULT_WIDTH             800
+#define ENGINE_PGE_50_DEFAULT_MAGNITUDE         250.0f
+#define ENGINE_PGE_50_DEFAULT_RADIUS            3
+#define ENGINE_PGE_50_DEFAULT_ITERATIONS_PER_FRAME 361
+
+// pge 51
+#define ENGINE_PGE_51_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_51_DEFAULT_WIDTH             800
 
 #endif

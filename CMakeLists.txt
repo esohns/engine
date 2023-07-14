@@ -558,6 +558,8 @@ set (engine_2_EXE_SRCS
      pge_49.h
      pge_50.cpp
      pge_50.h
+     pge_51.cpp
+     pge_51.h
      stdafx.h)
 
 set (EXECUTABLE_2 engine_2)
