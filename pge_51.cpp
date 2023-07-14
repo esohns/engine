@@ -45,18 +45,20 @@ PGE_51::circlePoints ()
 {
   std::vector<olc::vf2d> result;
 
-  float r = olc::PixelGameEngine::ScreenWidth () / 3.2f;
-  //float theta1 = Common_Tools::getRandomNumber (0.0f, static_cast<float> (2.0 * M_PI));
+  static float r = olc::PixelGameEngine::ScreenWidth () / 3.2f;
 
+  //float theta1 = Common_Tools::getRandomNumber (0.0f, static_cast<float> (2.0 * M_PI));
   std::normal_distribution<float> distribution (0.0f, static_cast<float> (M_PI / 4.0));
   float theta1 = Common_Tools::getRandomNumber (distribution);
   std::normal_distribution<float> distribution_2 (0.0f, static_cast<float> (M_PI / 3.0));
   float theta2 = theta1 + Common_Tools::getRandomNumber (distribution_2);
 
-  olc::vf2d v1 = {olc::PixelGameEngine::ScreenWidth () / 2.0f + r * std::cos (theta1),
-                  olc::PixelGameEngine::ScreenHeight () / 2.0f + r * std::sin (theta1)};
-  olc::vf2d v2 = {olc::PixelGameEngine::ScreenWidth () / 2.0f + r * std::cos (theta2),
-                  olc::PixelGameEngine::ScreenHeight () / 2.0f + r * std::sin (theta2)};
+  static float half_width_f = olc::PixelGameEngine::ScreenWidth () / 2.0f;
+  static float half_height_f = olc::PixelGameEngine::ScreenHeight () / 2.0f;
+  olc::vf2d v1 = {half_width_f  + r * std::cos (theta1),
+                  half_height_f + r * std::sin (theta1)};
+  olc::vf2d v2 = {half_width_f  + r * std::cos (theta2),
+                  half_height_f + r * std::sin (theta2)};
   result.push_back (v1);
   result.push_back (v2);
 

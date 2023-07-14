@@ -183,4 +183,9 @@
 #define ENGINE_PGE_51_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_51_DEFAULT_WIDTH             800
 
+// pge 52
+#define ENGINE_PGE_52_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_52_DEFAULT_WIDTH             800
+#define ENGINE_PGE_52_DEFAULT_NUMBER_OF_PARTICLES 5000
+
 #endif
