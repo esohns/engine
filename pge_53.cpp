@@ -38,7 +38,20 @@ PGE_53::OnUserCreate ()
 bool
 PGE_53::OnUserUpdate (float fElapsedTime)
 {
-  //olc::PixelGameEngine::Clear (olc::BLACK);
+  if (olc::PixelGameEngine::GetMouse (0).bPressed)
+  {
+    for (std::vector<agent*>::iterator iterator = agents_.begin ();
+         iterator != agents_.end ();
+         ++iterator)
+      delete *iterator;
+    agents_.clear ();
+
+    for (int i = 0; i < ENGINE_PGE_53_DEFAULT_NUMBER_OF_AGENTS; i++)
+      agents_.push_back (new agent (this, {255, 255, 255, 255}));
+
+    olc::PixelGameEngine::Clear (olc::BLACK);
+  } // end IF
+
   int pixels = GetDrawTargetWidth () * GetDrawTargetHeight ();
   olc::Pixel* m = GetDrawTarget ()->GetData ();
   for (int i = 0; i < pixels; i++)
@@ -49,7 +62,7 @@ PGE_53::OnUserUpdate (float fElapsedTime)
          iterator != agents_.end ();
          ++iterator)
     {
-      (*iterator)->updateDirection (M_PI / 5.0,
+      (*iterator)->updateDirection ((2.0 * M_PI) / 11.0, // ~30°
                                     this);
       (*iterator)->updatePosition (this);
     } // end FOR

@@ -34,20 +34,14 @@ class PGE_53
                    olc::PixelGameEngine* engine_in)
     {
       double angle = direction_ + directionOffset_in;
-      double x =
+      double x_d =
         position_.x + ENGINE_PGE_53_DEFAULT_SENSOR_OFFSET * std::cos (angle);
-      double y =
+      double y_d =
         position_.y + ENGINE_PGE_53_DEFAULT_SENSOR_OFFSET * std::sin (angle);
-      if (x > static_cast<double> (engine_in->ScreenWidth () - 1))
-        x -= static_cast<double> (engine_in->ScreenWidth () - 1);
-      if (x < 0)
-        x += static_cast<double> (engine_in->ScreenWidth () - 1);
-      if (y > static_cast<double> (engine_in->ScreenHeight () - 1))
-        y -= static_cast<double> (engine_in->ScreenHeight () - 1);
-      if (y < 0)
-        y += static_cast<double> (engine_in->ScreenHeight () - 1);
+      int32_t x = static_cast<int32_t> (x_d + engine_in->ScreenWidth ()) % engine_in->ScreenWidth ();
+      int32_t y = static_cast<int32_t> (y_d + engine_in->ScreenHeight ()) % engine_in->ScreenHeight ();
 
-      int32_t index = (static_cast<int32_t> (x) + static_cast<int32_t> (y) * engine_in->ScreenWidth ());
+      int32_t index = (x + y * engine_in->ScreenWidth ());
       olc::Pixel* m = engine_in->GetDrawTarget ()->GetData ();
       return m[index].r;
     }
@@ -59,7 +53,6 @@ class PGE_53
                              engine_in);
       uint8_t center = sense (0.0f,
                               engine_in);
-      center = center > 0 ? center - 1 : 0;
       uint8_t left = sense (-turnAngle_in,
                             engine_in);
 
@@ -72,15 +65,8 @@ class PGE_53
     {
       position_.x += std::cos (direction_) * step_;
       position_.y += std::sin (direction_) * step_;
-      if (position_.x > static_cast<double> (engine_in->ScreenWidth () - 1))
-        position_.x -= static_cast<double> (engine_in->ScreenWidth () - 1);
-      if (position_.x < 0)
-        position_.x += static_cast<double> (engine_in->ScreenWidth () - 1);
-
-      if (position_.y > static_cast<double> (engine_in->ScreenHeight () - 1))
-        position_.y -= static_cast<double> (engine_in->ScreenHeight () - 1);
-      if (position_.y < 0)
-        position_.y += static_cast<double> (engine_in->ScreenHeight () - 1);
+      position_.x = static_cast<int32_t> (position_.x + engine_in->ScreenWidth ()) % engine_in->ScreenWidth ();
+      position_.y = static_cast<int32_t> (position_.y + engine_in->ScreenHeight ()) % engine_in->ScreenHeight ();
 
       int32_t index =
         static_cast<int32_t> (position_.x) + static_cast<int32_t> (position_.y) * engine_in->ScreenWidth ();
@@ -88,8 +74,8 @@ class PGE_53
       m[index].r = color_.r;
       m[index].g = color_.g;
       m[index].b = color_.b;
-      //m[index].a = 255;
-      m[index].a += m[index].a < 155 ? 100 : 255 - m[index].a;
+      m[index].a = 255;
+      //m[index].a += m[index].a < 155 ? 100 : 255 - m[index].a;
     }
 
     olc::vd2d  position_;
