@@ -43,7 +43,7 @@ class PGE_53
 
       int32_t index = (x + y * engine_in->ScreenWidth ());
       olc::Pixel* m = engine_in->GetDrawTarget ()->GetData ();
-      return m[index].r;
+      return m[index].r/* + m[index].g + m[index].b + m[index].a / 4.0*/;
     }
 
     void updateDirection (double turnAngle_in,
@@ -59,6 +59,7 @@ class PGE_53
       if (center > left && center > right);
       else if (left < right) direction_ += turnAngle_in;
       else if (left > right) direction_ += -turnAngle_in;
+      //else direction_ += Common_Tools::getRandomNumber (-turnAngle_in / 7.0, turnAngle_in / 7.0);
     }
 
     void updatePosition (olc::PixelGameEngine* engine_in)
