@@ -8,6 +8,7 @@
 
 PGE_55::PGE_55 ()
  : olc::PixelGameEngine ()
+ , noise_ ()
  , objects_ ()
 {
   sAppName = "Example 55";
