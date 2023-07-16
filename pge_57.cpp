@@ -13,6 +13,7 @@ PGE_57::PGE_57 ()
  : olc::PixelGameEngine ()
  , color_ ()
  , particles_ ()
+ , viscosity_ (ENGINE_PGE_57_DEFAULT_VISCOSITY)
 {
   sAppName = "Example 57";
 }
@@ -52,6 +53,12 @@ PGE_57::OnUserUpdate (float fElapsedTime)
     std::shuffle (particles_.begin (), particles_.end (), g);
     delete *particles_.begin ();
     particles_.erase (particles_.begin ());
+  } // end IF
+  if (olc::PixelGameEngine::GetKey (olc::Key::V).bPressed)
+  {
+    if (viscosity_ >= 0.9f) viscosity_ = Common_Tools::getRandomNumber (0.3f, 0.6f);
+    else if (viscosity_ <= 0.6f) viscosity_ = Common_Tools::getRandomNumber (0.7f, 0.8f);
+    else viscosity_ = Common_Tools::getRandomNumber (0.9f, 1.0f);
   } // end IF
 
   handleInteractions ();
@@ -100,7 +107,7 @@ PGE_57::handleInteractions ()
       acceleration.y += force * y;
     } // end FOR
 
-    particles_[i]->velocity_.x = particles_[i]->velocity_.x * ENGINE_PGE_57_DEFAULT_VISCOSITY + acceleration.x * particles_[i]->mass_;
-    particles_[i]->velocity_.y = particles_[i]->velocity_.y * ENGINE_PGE_57_DEFAULT_VISCOSITY + acceleration.y * particles_[i]->mass_;
+    particles_[i]->velocity_.x = particles_[i]->velocity_.x * viscosity_ + acceleration.x * particles_[i]->mass_;
+    particles_[i]->velocity_.y = particles_[i]->velocity_.y * viscosity_ + acceleration.y * particles_[i]->mass_;
   } // end FOR
 }

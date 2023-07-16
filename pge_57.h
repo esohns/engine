@@ -49,6 +49,7 @@ class PGE_57
 
   std::vector<particle*> particles_;
   olc::Pixel             color_;
+  float                  viscosity_;
 };
 
 #endif // PGE_57_H
