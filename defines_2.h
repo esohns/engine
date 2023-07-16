@@ -211,4 +211,9 @@
 #define ENGINE_PGE_56_DEFAULT_HEIGHT            500
 #define ENGINE_PGE_56_DEFAULT_WIDTH             300
 
+// pge 57
+#define ENGINE_PGE_57_DEFAULT_HEIGHT            768
+#define ENGINE_PGE_57_DEFAULT_WIDTH             1024
+#define ENGINE_PGE_57_DEFAULT_VISCOSITY         0.95f
+
 #endif
