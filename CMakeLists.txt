@@ -424,6 +424,7 @@ include_directories (${COMMON_ROOT_DIR})
 include_directories (${COMMON_ROOT_DIR}/src)
 include_directories (${COMMON_ROOT_DIR}/src/gl)
 include_directories (${COMMON_ROOT_DIR}/src/log)
+include_directories (${COMMON_ROOT_DIR}/src/math)
 include_directories (${COMMON_ROOT_DIR}/src/timer)
 include_directories (${COMMON_ROOT_DIR}/src/ui)
 include_directories (${COMMON_ROOT_DIR}/src/ui/gtk)
@@ -566,6 +567,8 @@ set (engine_2_EXE_SRCS
      pge_53.h
      pge_54.cpp
      pge_54.h
+     pge_55.cpp
+     pge_55.h
      stdafx.h)
 
 set (EXECUTABLE_2 engine_2)
