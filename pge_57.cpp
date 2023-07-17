@@ -42,8 +42,7 @@ PGE_57::OnUserUpdate (float fElapsedTime)
             static_cast<uint8_t> (Common_Tools::getRandomNumber (0, 255)),
             255};
 
-  if (olc::PixelGameEngine::GetMouse (0).bPressed ||
-      olc::PixelGameEngine::GetMouse (0).bHeld)
+  if (olc::PixelGameEngine::GetMouse (0).bPressed || olc::PixelGameEngine::GetMouse (0).bHeld)
     particles_.push_back (new particle (olc::PixelGameEngine::GetMouseX (), olc::PixelGameEngine::GetMouseY (), color_));
   if ((olc::PixelGameEngine::GetMouse (1).bPressed || olc::PixelGameEngine::GetMouse (1).bHeld) &&
       !particles_.empty ())
@@ -81,30 +80,32 @@ PGE_57::handleInteractions ()
 
     for (int j = 0; j < particles_.size (); j++)
     {
+      float x, y, distance_f, force_f;
+
       if (i != j)
       {
-        float x = particles_[j]->position_.x - particles_[i]->position_.x;
-        float y = particles_[j]->position_.y - particles_[i]->position_.y;
-        float distance_f = std::sqrt (x * x + y * y);
+        x = particles_[j]->position_.x - particles_[i]->position_.x;
+        y = particles_[j]->position_.y - particles_[i]->position_.y;
+        distance_f = std::sqrt (x * x + y * y);
         if (distance_f < 1.0f) distance_f = 1.0f;
 
-        float force = (distance_f - 320.0f) * particles_[j]->mass_ / distance_f;
-        acceleration.x += force * x;
-        acceleration.y += force * y;
+        force_f = (distance_f - 320.0f) * particles_[j]->mass_ / distance_f;
+        acceleration.x += force_f * x;
+        acceleration.y += force_f * y;
       } // end IF
 
       // mouse interaction
-      float x = olc::PixelGameEngine::GetMouseX () - particles_[i]->position_.x;
-      float y = olc::PixelGameEngine::GetMouseY () - particles_[i]->position_.y;
-      float distance_f = std::sqrt (x * x + y * y);
+      x = olc::PixelGameEngine::GetMouseX () - particles_[i]->position_.x;
+      y = olc::PixelGameEngine::GetMouseY () - particles_[i]->position_.y;
+      distance_f = std::sqrt (x * x + y * y);
 
       // adds a dampening effect
       if (distance_f < 40.0f) distance_f = 40.0f;
       if (distance_f > 50.0f) distance_f = 50.0f;
 
-      float force = (distance_f - 50.0f) / (5.0f * distance_f);
-      acceleration.x += force * x;
-      acceleration.y += force * y;
+      force_f = (distance_f - 50.0f) / (5.0f * distance_f);
+      acceleration.x += force_f * x;
+      acceleration.y += force_f * y;
     } // end FOR
 
     particles_[i]->velocity_.x = particles_[i]->velocity_.x * viscosity_ + acceleration.x * particles_[i]->mass_;
