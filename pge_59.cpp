@@ -41,7 +41,7 @@ PGE_59::OnUserUpdate (float fElapsedTime)
     float dx = olc::PixelGameEngine::GetMouseX () - x[i];
     float dy = olc::PixelGameEngine::GetMouseY () - y[i];
     float d = std::sqrt (dx*dx + dy*dy);
-    if (d < 1) d = 1;
+    if (d < 1.0f) d = 1.0f;
 
     float f = std::cos (d * 0.06f) * m[i] / d*2.0f;
 
@@ -98,9 +98,9 @@ PGE_59::reset ()
     m[i] = Common_Tools::getRandomNumber (distribution) * 8.0f;
     x[i] = static_cast<float> (Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenWidth () - 1));
     y[i] = static_cast<float> (Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenHeight () - 1));
-    blue[i] = Common_Tools::getRandomNumber (0, 255);
-    red[i] = Common_Tools::getRandomNumber (0, 255);;
-    green[i] = Common_Tools::getRandomNumber (0, 255);
+    blue[i] = static_cast<uint8_t> (Common_Tools::getRandomNumber (0, 255));
+    red[i] = static_cast<uint8_t> (Common_Tools::getRandomNumber (0, 255));
+    green[i] = static_cast<uint8_t> (Common_Tools::getRandomNumber (0, 255));
     shape[i] = Common_Tools::getRandomNumber (0, 3);
   } // end FOR
 }
