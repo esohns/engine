@@ -53,5 +53,6 @@
 #define ENGINE_PGE_62_DEFAULT_N                 7
 #define ENGINE_PGE_62_DEFAULT_M                 3
 #define ENGINE_PGE_62_DEFAULT_MAX_HARMONICS     15
+#define ENGINE_PGE_62_DEFAULT_INTERVAL          7.0f // seconds
 
 #endif

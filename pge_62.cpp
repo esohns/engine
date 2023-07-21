@@ -58,7 +58,7 @@ PGE_62::OnUserUpdate (float fElapsedTime)
 
   static float seconds_f = 0.0f;
   seconds_f += fElapsedTime;
-  if (seconds_f > lastChange_ + 12.0f) // change pattern every 12 seconds
+  if (seconds_f > lastChange_ + ENGINE_PGE_62_DEFAULT_INTERVAL) // change pattern every few seconds
   {
     lastChange_ = seconds_f;
 
@@ -79,7 +79,7 @@ PGE_62::OnUserUpdate (float fElapsedTime)
   } // end IF
 
   float amount_f =
-    Common_GL_Tools::map (seconds_f - lastChange_, 0.0f, 12.0f, 0.0f, 1.0f);
+    Common_GL_Tools::map (seconds_f - lastChange_, 0.0f, ENGINE_PGE_62_DEFAULT_INTERVAL, 0.0f, 1.0f);
   Common_GL_Color_t color1, color2;
   color1.r = lastColor_.r;
   color1.g = lastColor_.g;
