@@ -43,4 +43,15 @@
 #define ENGINE_PGE_61_DEFAULT_FORCE_MIN         2.0f
 #define ENGINE_PGE_61_DEFAULT_FORCE_MAX         8.0f
 
+// pge 62
+#define ENGINE_PGE_62_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_62_DEFAULT_WIDTH             800
+#define ENGINE_PGE_62_DEFAULT_MAX_NUMBER_OF_POINTS 20000
+#define ENGINE_PGE_62_DEFAULT_SPEED             0.035f
+#define ENGINE_PGE_62_DEFAULT_MAX_JIGGLE        0.003f
+#define ENGINE_PGE_62_DEFAULT_L                 2.0f
+#define ENGINE_PGE_62_DEFAULT_N                 7
+#define ENGINE_PGE_62_DEFAULT_M                 3
+#define ENGINE_PGE_62_DEFAULT_MAX_HARMONICS     15
+
 #endif
