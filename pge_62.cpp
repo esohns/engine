@@ -78,13 +78,27 @@ PGE_62::OnUserUpdate (float fElapsedTime)
     color_.b = static_cast<uint8_t> (b * 255.0);
   } // end IF
 
+  float amount_f =
+    Common_GL_Tools::map (seconds_f - lastChange_, 0.0f, 12.0f, 0.0f, 1.0f);
+  Common_GL_Color_t color1, color2;
+  color1.r = lastColor_.r;
+  color1.g = lastColor_.g;
+  color1.b = lastColor_.b;
+  color2.r = color_.r;
+  color2.g = color_.g;
+  color2.b = color_.b;
+  Common_GL_Color_t lerped_color = Common_GL_Tools::lerpRGB (color1, color2, amount_f);
+  olc::Pixel color;
+  color.r = lerped_color.r;
+  color.g = lerped_color.g;
+  color.b = lerped_color.b;
   for (std::vector<particle*>::iterator iterator = particles_.begin ();
        iterator != particles_.end ();
        ++iterator)
   {
     (*iterator)->update (n_, m_);
     (*iterator)->show (this,
-                       color_);
+                       color);
   } // end FOR
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
