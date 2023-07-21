@@ -30,10 +30,12 @@ PGE_62::~PGE_62 ()
 bool
 PGE_62::OnUserCreate ()
 {
+  olc::PixelGameEngine::SetPixelMode (olc::Pixel::ALPHA);
+
   float r, g, b;
   Common_Image_Tools::HSVToRGB (n_ * 360.0f / static_cast<float> (ENGINE_PGE_62_DEFAULT_MAX_HARMONICS),
-                                50.0f + m_ * 50.0f / static_cast<float> (ENGINE_PGE_62_DEFAULT_MAX_HARMONICS),
-                                100.0f,
+                                Common_GL_Tools::map (50.0f + m_ * 50.0f / static_cast<float> (ENGINE_PGE_62_DEFAULT_MAX_HARMONICS), 50.0f, 100.0f, 0.0f, 1.0f),
+                                1.0f,
                                 r, g, b);
   color_.r = static_cast<uint8_t> (r * 255.0);
   color_.g = static_cast<uint8_t> (g * 255.0);
@@ -54,7 +56,11 @@ PGE_62::OnUserCreate ()
 bool
 PGE_62::OnUserUpdate (float fElapsedTime)
 {
-  olc::PixelGameEngine::Clear (olc::BLACK);
+  //olc::PixelGameEngine::Clear ({0,0,0, ENGINE_PGE_62_DEFAULT_ALPHA_DECAY});
+  int pixels = GetDrawTargetWidth () * GetDrawTargetHeight ();
+  olc::Pixel* p = GetDrawTarget ()->GetData ();
+  for (int i = 0; i < pixels; i++)
+    p[i].a = (p[i].a > ENGINE_PGE_62_DEFAULT_ALPHA_DECAY ? p[i].a - ENGINE_PGE_62_DEFAULT_ALPHA_DECAY : 0);
 
   static float seconds_f = 0.0f;
   seconds_f += fElapsedTime;
@@ -70,16 +76,14 @@ PGE_62::OnUserUpdate (float fElapsedTime)
     lastColor_ = color_;
     float r, g, b;
     Common_Image_Tools::HSVToRGB (n_ * 360.0f / static_cast<float> (ENGINE_PGE_62_DEFAULT_MAX_HARMONICS),
-                                  50.0f + m_ * 50.0f / static_cast<float> (ENGINE_PGE_62_DEFAULT_MAX_HARMONICS),
-                                  100.0f,
+                                  Common_GL_Tools::map (50.0f + m_ * 50.0f / static_cast<float> (ENGINE_PGE_62_DEFAULT_MAX_HARMONICS), 50.0f, 100.0f, 0.0f, 1.0f),
+                                  1.0f,
                                   r, g, b);
     color_.r = static_cast<uint8_t> (r * 255.0);
     color_.g = static_cast<uint8_t> (g * 255.0);
     color_.b = static_cast<uint8_t> (b * 255.0);
   } // end IF
 
-  float amount_f =
-    Common_GL_Tools::map (seconds_f - lastChange_, 0.0f, ENGINE_PGE_62_DEFAULT_INTERVAL, 0.0f, 1.0f);
   Common_GL_Color_t color1, color2;
   color1.r = lastColor_.r;
   color1.g = lastColor_.g;
@@ -87,6 +91,8 @@ PGE_62::OnUserUpdate (float fElapsedTime)
   color2.r = color_.r;
   color2.g = color_.g;
   color2.b = color_.b;
+  float amount_f =
+    Common_GL_Tools::map (seconds_f - lastChange_, 0.0f, ENGINE_PGE_62_DEFAULT_INTERVAL, 0.0f, 1.0f);
   Common_GL_Color_t lerped_color = Common_GL_Tools::lerpRGB (color1, color2, amount_f);
   olc::Pixel color;
   color.r = lerped_color.r;
