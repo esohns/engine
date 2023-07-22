@@ -56,4 +56,9 @@
 #define ENGINE_PGE_62_DEFAULT_INTERVAL          7.0f // seconds
 #define ENGINE_PGE_62_DEFAULT_ALPHA_DECAY       20
 
+// pge 63
+#define ENGINE_PGE_63_DEFAULT_HEIGHT            800
+#define ENGINE_PGE_63_DEFAULT_WIDTH             800
+#define ENGINE_PGE_63_DEFAULT_ALPHA_DECAY       10
+
 #endif

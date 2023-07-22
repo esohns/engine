@@ -43,12 +43,14 @@
 #include "pge_60.h"
 #include "pge_61.h"
 #include "pge_62.h"
+#include "pge_63.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 60,
   ENGINE_MODE_61,
   ENGINE_MODE_62,
+  ENGINE_MODE_63,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -246,6 +248,21 @@ do_work (int argc_in,
     {
       PGE_62 example;
       if (example.Construct (ENGINE_PGE_62_DEFAULT_WIDTH, ENGINE_PGE_62_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_63:
+    {
+      PGE_63 example;
+      if (example.Construct (ENGINE_PGE_63_DEFAULT_WIDTH, ENGINE_PGE_63_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
