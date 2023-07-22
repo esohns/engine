@@ -50,7 +50,7 @@ PGE_63::OnUserUpdate (float fElapsedTime)
     position.y = (~~(i / 15) - 7.0f) * s_;
     float d = position.mag ();
     float a = std::atan2 (position.y, position.x) - static_cast<float> (M_PI / 2.0f) + t_;
-    float r = (std::sin (t_) / 2.0f + 0.5f) * std::pow ((d / olc::PixelGameEngine::ScreenWidth ()), 2.0f) * olc::PixelGameEngine::ScreenWidth () * 9.0f;
+    float r = (std::sin (t_) / 2.0f + 0.5f) * std::pow ((d / static_cast<float> (olc::PixelGameEngine::ScreenWidth ())), 2.0f) * olc::PixelGameEngine::ScreenWidth () * 9.0f;
     olc::vf2d position_2;
     position_2.x = position.x + std::cos (a) * r;
     position_2.y = position.y + std::sin (a) * r;
