@@ -66,4 +66,10 @@
 #define ENGINE_PGE_64_DEFAULT_WIDTH             800
 #define ENGINE_PGE_64_DEFAULT_ALPHA_DECAY       10
 
+// pge 65
+#define ENGINE_PGE_65_DEFAULT_HEIGHT            800
+#define ENGINE_PGE_65_DEFAULT_WIDTH             800
+#define ENGINE_PGE_65_DEFAULT_N                 800
+#define ENGINE_PGE_65_DEFAULT_BRUSH_THICKNESS   96
+
 #endif
