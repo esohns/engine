@@ -61,4 +61,9 @@
 #define ENGINE_PGE_63_DEFAULT_WIDTH             800
 #define ENGINE_PGE_63_DEFAULT_ALPHA_DECAY       10
 
+// pge 64
+#define ENGINE_PGE_64_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_64_DEFAULT_WIDTH             800
+#define ENGINE_PGE_64_DEFAULT_ALPHA_DECAY       10
+
 #endif
