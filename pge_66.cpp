@@ -52,7 +52,7 @@ PGE_66::OnUserUpdate (float fElapsedTime)
       p[index].r =
         static_cast<uint8_t> (Common_GL_Tools::map (distances_a[0], 0.0f, 150.0f, 0.0f, 255.0f));
       p[index].g =
-        static_cast<uint8_t> (Common_GL_Tools::map (distances_a[1], 0.0f, 50.0f, 255.0f, 0.0f));
+        static_cast<uint8_t> (Common_GL_Tools::map (distances_a[1], 0.0f, 100.0f, 255.0f, 0.0f));
       p[index].b =
         static_cast<uint8_t> (Common_GL_Tools::map (distances_a[2], 0.0f, 200.0f, 255.0f, 0.0f));
       p[index].a = 255;
