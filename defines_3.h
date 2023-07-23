@@ -72,4 +72,9 @@
 #define ENGINE_PGE_65_DEFAULT_N                 800
 #define ENGINE_PGE_65_DEFAULT_BRUSH_THICKNESS   96
 
+// pge 66
+#define ENGINE_PGE_66_DEFAULT_HEIGHT            120
+#define ENGINE_PGE_66_DEFAULT_WIDTH             160
+#define ENGINE_PGE_66_DEFAULT_NUMBER_OF_POINTS  20
+
 #endif

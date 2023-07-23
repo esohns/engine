@@ -39,7 +39,6 @@ PGE_65::OnUserCreate ()
 bool
 PGE_65::OnUserUpdate (float fElapsedTime)
 {
-  int pixels = GetDrawTargetWidth () * GetDrawTargetHeight ();
   olc::Pixel* p = GetDrawTarget ()->GetData ();
 
   // mouse (brush)
