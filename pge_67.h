@@ -26,7 +26,7 @@ class PGE_67
    public:
     sand_painter ()
      : p_ (Common_Tools::getRandomNumber (0.0f, 1.0f))
-     , color_ (olc::BLACK)
+     , color_ (Common_Tools::testRandomProbability (0.5f) ? olc::BLACK : olc::WHITE)
      , g_ (Common_Tools::getRandomNumber (0.01f, 0.1f))
     {}
 
