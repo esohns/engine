@@ -87,4 +87,9 @@
 #define ENGINE_PGE_66_DEFAULT_FRICTION          0.92f
 #define ENGINE_PGE_66_DEFAULT_MIN_LENGTH        10.0f
 
+// pge 68
+#define ENGINE_PGE_68_DEFAULT_HEIGHT            900
+#define ENGINE_PGE_68_DEFAULT_WIDTH             900
+#define ENGINE_PGE_68_DEFAULT_C                 21
+
 #endif
