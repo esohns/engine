@@ -92,4 +92,9 @@
 #define ENGINE_PGE_68_DEFAULT_WIDTH             900
 #define ENGINE_PGE_68_DEFAULT_C                 21
 
+// pge 69
+#define ENGINE_PGE_69_DEFAULT_HEIGHT            720
+#define ENGINE_PGE_69_DEFAULT_WIDTH             720
+#define ENGINE_PGE_69_DEFAULT_ALPHA_DECAY       20
+
 #endif
