@@ -42,12 +42,10 @@ PGE_70::OnUserCreate ()
 bool
 PGE_70::OnUserUpdate (float fElapsedTime)
 {
-  static int frame_count_i = 1;
-
-  int pixels = GetDrawTargetWidth () * GetDrawTargetHeight ();
-  olc::Pixel* p = GetDrawTarget ()->GetData ();
-  for (int i = 0; i < pixels; i++)
-    p[i].a = (p[i].a > ENGINE_PGE_70_DEFAULT_ALPHA_DECAY ? p[i].a - ENGINE_PGE_70_DEFAULT_ALPHA_DECAY : 0);
+  //int pixels = GetDrawTargetWidth () * GetDrawTargetHeight ();
+  //olc::Pixel* p = GetDrawTarget ()->GetData ();
+  //for (int i = 0; i < pixels; i++)
+  //  p[i].a = (p[i].a > ENGINE_PGE_70_DEFAULT_ALPHA_DECAY ? p[i].a - ENGINE_PGE_70_DEFAULT_ALPHA_DECAY : 0);
 
   if (olc::PixelGameEngine::GetMouse (0).bPressed)
     reset ();
@@ -56,8 +54,6 @@ PGE_70::OnUserUpdate (float fElapsedTime)
        iterator != mobiles_.end ();
        ++iterator)
     (*iterator)->run (this, &noise_, a2_, a3_, a4_, a5_);
-
-  frame_count_i++;
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
 }
@@ -70,7 +66,8 @@ PGE_70::reset ()
   a2_ = Common_Tools::getRandomNumber (1.0f, amax_);
   a3_ = Common_Tools::getRandomNumber (1.0f, amax_);
   a4_ = Common_Tools::getRandomNumber (1.0f, amax_);
-  a5_ = Common_Tools::getRandomNumber (amax_, 10.0f);
+  //a5_ = Common_Tools::getRandomNumber (amax_, 10.0f);
+  a5_ = 10.0f;
 
   for (std::vector<mobile*>::iterator iterator = mobiles_.begin ();
        iterator != mobiles_.end ();
