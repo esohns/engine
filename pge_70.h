@@ -66,8 +66,8 @@ class PGE_70
       velocity_ *= a5_in;
       float angle_f =
         static_cast<float> (std::sin (100.0) * Common_GL_Tools::map (noise_in->GetValue (a4_in + a3_in * std::sin (static_cast<float> (M_PI) * 2.0f * position_.x / static_cast<float> (engine_in->ScreenWidth ())),
-                                                                                                                                   Common_Tools::getRandomNumber (0.0, 2.0), Common_Tools::getRandomNumber (0.0, 2.0)),
-                                                                                                               -1.0, 1.0, 0.0, 1.0));
+                                                                                         0.0, 0.0),
+                                                                     -1.0, 1.0, 0.0, 1.0));
       olc::vf2d rotated;
       rotated.x = std::cos (angle_f) * velocity_.x - std::sin (angle_f) * velocity_.y;
       rotated.y = std::sin (angle_f) * velocity_.x + std::cos (angle_f) * velocity_.y;
