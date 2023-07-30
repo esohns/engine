@@ -36,16 +36,15 @@ class PGE_70
       position_ = prev_;
 
       color_.r =
-        static_cast<uint8_t> (std::fmod (Common_GL_Tools::map (noise_in->GetValue (a1_in * std::cos (M_PI * position_.x * engine_in->ScreenWidth ()),
-                                                                                   a1_in * std::sin (M_PI * position_.y / static_cast<double> (engine_in->ScreenHeight ())),
-                                                                                   0.0), -1.0, 1.0, 0.0, 1.0) * 510.0,
-                                         Common_Tools::getRandomNumber (0.0, 255.0)));
+        static_cast<uint8_t> (Common_GL_Tools::map (noise_in->GetValue (a1_in * std::cos (M_PI * position_.x * engine_in->ScreenWidth ()),
+                                                                        a1_in * std::sin (M_PI * position_.y / static_cast<double> (engine_in->ScreenHeight ())),
+                                                                        0.0), -1.0, 1.0, 0.0, 1.0) * 255.0);
       color_.g =
         static_cast<uint8_t> (Common_GL_Tools::map (noise_in->GetValue (a2_in * std::sin (M_PI * position_.x * engine_in->ScreenWidth ()),
                                                                         a2_in * std::sin (M_PI * position_.y / static_cast<double> (engine_in->ScreenHeight ())),
                                                                         0.0), -1.0, 1.0, 0.0, 1.0) * 255.0);
       color_.b =
-        static_cast<uint8_t> (Common_GL_Tools::map (noise_in->GetValue (a3_in * std::cos (M_PI * position_.x * engine_in->ScreenWidth ()),
+        static_cast<uint8_t> (Common_GL_Tools::map (noise_in->GetValue (a3_in * std::cos (M_PI * position_.x / engine_in->ScreenWidth ()),
                                                                         a3_in * std::cos (M_PI * position_.y / static_cast<double> (engine_in->ScreenHeight ())),
                                                                         0.0), -1.0, 1.0, 0.0, 1.0) * 255.0);
       color_.a = static_cast<uint8_t> (Common_Tools::getRandomNumber (50, 100));
@@ -55,15 +54,16 @@ class PGE_70
                  noise::module::Perlin* noise_in,
                  float a2_in, float a3_in, float a4_in, float a5_in)
     {
-      velocity_ = {1.0f - 2.0f * static_cast<float> (Common_GL_Tools::map (noise_in->GetValue (a4_in + a2_in * std::sin (static_cast<float> (M_PI) * 2.0f * position_.x / static_cast<float> (engine_in->ScreenWidth ())),
+      velocity_ = {1.0f - 2.0f * Common_GL_Tools::map (static_cast<float> (noise_in->GetValue (a4_in + a2_in * std::sin (static_cast<float> (M_PI) * 2.0f * position_.x / static_cast<float> (engine_in->ScreenWidth ())),
                                                                                                a4_in + a2_in * std::sin (static_cast<float> (M_PI) * 2.0f * position_.y / static_cast<float> (engine_in->ScreenHeight ())),
-                                                                                               0.0),
-                                                                           -1.0, 1.0, 0.0, 1.0)),
-                   1.0f - 2.0f * static_cast<float> (Common_GL_Tools::map (noise_in->GetValue (a2_in + a3_in * std::cos (static_cast<float> (M_PI) * 2.0f * position_.x / static_cast<float> (engine_in->ScreenWidth ())),
+                                                                                               0.0)),
+                                                       -1.0f, 1.0f, 0.0f, 1.0f),
+                   1.0f - 2.0f * Common_GL_Tools::map (static_cast<float> (noise_in->GetValue (a2_in + a3_in * std::cos (static_cast<float> (M_PI) * 2.0f * position_.x / static_cast<float> (engine_in->ScreenWidth ())),
                                                                                                a4_in + a3_in * std::cos (static_cast<float> (M_PI) * 2.0f * position_.y / static_cast<float> (engine_in->ScreenHeight ())),
-                                                                                               0.0),
-                                                                           -1.0, 1.0, 0.0, 1.0))};
+                                                                                               0.0)),
+                                                       -1.0f, 1.0f, 0.0f, 1.0f)};
       velocity_ *= a5_in;
+
       float angle_f =
         static_cast<float> (std::sin (100.0) * Common_GL_Tools::map (noise_in->GetValue (a4_in + a3_in * std::sin (static_cast<float> (M_PI) * 2.0f * position_.x / static_cast<float> (engine_in->ScreenWidth ())),
                                                                                          0.0, 0.0),
@@ -72,9 +72,24 @@ class PGE_70
       rotated.x = std::cos (angle_f) * velocity_.x - std::sin (angle_f) * velocity_.y;
       rotated.y = std::sin (angle_f) * velocity_.x + std::cos (angle_f) * velocity_.y;
       velocity_ = rotated;
+
       prev_ = position_;
       position_ += velocity_;
-    
+    }
+
+    void show (olc::PixelGameEngine* engine_in,
+               bool blackAndWhite_in)
+    {
+      olc::Pixel color_s = color_;
+      if (blackAndWhite_in)
+      {
+        color_s.r = 255; color_s.g = 255; color_s.b = 255;
+      } // end IF
+
+      engine_in->DrawLine (static_cast<int32_t> (prev_.x), static_cast<int32_t> (prev_.y),
+                           static_cast<int32_t> (position_.x), static_cast<int32_t> (position_.y),
+                           color_s, 0xFFFFFFFF);
+
       if (position_.x > static_cast<float> (engine_in->ScreenWidth () - 1)  || position_.x < 0.0f ||
           position_.y > static_cast<float> (engine_in->ScreenHeight () - 1) || position_.y < 0.0f)
       {
@@ -84,19 +99,13 @@ class PGE_70
       } // end IF
     }
 
-    void show (olc::PixelGameEngine* engine_in)
-    {
-      engine_in->DrawLine (static_cast<int32_t> (prev_.x), static_cast<int32_t> (prev_.y),
-                           static_cast<int32_t> (position_.x), static_cast<int32_t> (position_.y),
-                           color_, 0xFFFFFFFF);
-    }
-
     void run (olc::PixelGameEngine* engine_in,
               noise::module::Perlin* noise_in,
-              float a2_in, float a3_in, float a4_in, float a5_in)
+              float a2_in, float a3_in, float a4_in, float a5_in,
+              bool blackAndWhite_in)
     {
       update (engine_in, noise_in, a2_in, a3_in, a4_in, a5_in);
-      show (engine_in);
+      show (engine_in, blackAndWhite_in);
     }
 
     olc::vf2d  position_;
@@ -113,6 +122,7 @@ class PGE_70
   float                 a5_;
   float                 amax_;
   std::vector<mobile*>  mobiles_;
+  bool                  blackAndWhite_;
 
   void reset ();
 };

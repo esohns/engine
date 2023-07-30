@@ -17,6 +17,7 @@ PGE_70::PGE_70 ()
  , a5_ (0.0f)
  , amax_ (0.0f)
  , mobiles_ ()
+ , blackAndWhite_ (true)
 {
   sAppName = "Example 70";
 }
@@ -49,11 +50,13 @@ PGE_70::OnUserUpdate (float fElapsedTime)
 
   if (olc::PixelGameEngine::GetMouse (0).bPressed)
     reset ();
+  if (olc::PixelGameEngine::GetKey (olc::Key::B).bPressed)
+    blackAndWhite_ = !blackAndWhite_;
 
   for (std::vector<mobile*>::iterator iterator = mobiles_.begin ();
        iterator != mobiles_.end ();
        ++iterator)
-    (*iterator)->run (this, &noise_, a2_, a3_, a4_, a5_);
+    (*iterator)->run (this, &noise_, a2_, a3_, a4_, a5_, blackAndWhite_);
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
 }
@@ -66,7 +69,6 @@ PGE_70::reset ()
   a2_ = Common_Tools::getRandomNumber (1.0f, amax_);
   a3_ = Common_Tools::getRandomNumber (1.0f, amax_);
   a4_ = Common_Tools::getRandomNumber (1.0f, amax_);
-  //a5_ = Common_Tools::getRandomNumber (amax_, 10.0f);
   a5_ = 10.0f;
 
   for (std::vector<mobile*>::iterator iterator = mobiles_.begin ();
