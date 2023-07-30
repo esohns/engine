@@ -108,6 +108,11 @@
 #define ENGINE_PGE_71_DEFAULT_WIDTH             400
 #define ENGINE_PGE_71_DEFAULT_ALPHA_DECAY       20
 #define ENGINE_PGE_71_DEFAULT_TINT_GREY         247.0f
-#define ENGINE_PGE_71_DEFAULT_RADIUS            8
+#define ENGINE_PGE_71_DEFAULT_RADIUS            4
+
+// pge 72
+#define ENGINE_PGE_72_DEFAULT_HEIGHT            480
+#define ENGINE_PGE_72_DEFAULT_WIDTH             640
+#define ENGINE_PGE_72_DEFAULT_ALPHA_DECAY       20
 
 #endif
