@@ -160,7 +160,7 @@ class PGE_73
   std::vector<Common_UI_Rectangle> array_1_;
   std::vector<Common_UI_Rectangle> array_2_;
 
-  void recRect (int32_t, int32_t, int32_t, int32_t, int32_t, std::vector<Common_UI_Rectangle>&);
+  void recRect (float, float, float, float, int32_t, std::vector<Common_UI_Rectangle>&);
 };
 
 #endif // PGE_73_H

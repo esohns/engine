@@ -37,19 +37,19 @@ bool
 PGE_73::OnUserCreate ()
 {
   int32_t number_of_objects_i = ENGINE_PGE_73_DEFAULT_NUMBER_OF_OBJECTS;
-  recRect (olc::PixelGameEngine::ScreenWidth () / 2, olc::PixelGameEngine::ScreenHeight () / 2,
-           static_cast<int32_t> (olc::PixelGameEngine::ScreenWidth () * 0.9f), static_cast<int32_t> (olc::PixelGameEngine::ScreenHeight () * 0.9f),
+  recRect (olc::PixelGameEngine::ScreenWidth () / 2.0f, olc::PixelGameEngine::ScreenHeight () / 2.0f,
+           olc::PixelGameEngine::ScreenWidth () * 0.9f, olc::PixelGameEngine::ScreenHeight () * 0.9f,
            number_of_objects_i, array_1_);
   number_of_objects_i = ENGINE_PGE_73_DEFAULT_NUMBER_OF_OBJECTS;
-  recRect (olc::PixelGameEngine::ScreenWidth () / 2, olc::PixelGameEngine::ScreenHeight () / 2,
-           static_cast<int32_t> (olc::PixelGameEngine::ScreenWidth () * 0.6f), static_cast<int32_t> (olc::PixelGameEngine::ScreenHeight () * 0.6f),
+  recRect (olc::PixelGameEngine::ScreenWidth () / 2.0f, olc::PixelGameEngine::ScreenHeight () / 2.0f,
+           olc::PixelGameEngine::ScreenWidth () * 0.6f, olc::PixelGameEngine::ScreenHeight () * 0.6f,
            number_of_objects_i, array_2_);
   for (size_t i = 0; i < array_1_.size (); i++)
   {
     olc::vf2d pos1 = {static_cast<float> (array_1_[i].x), static_cast<float> (array_1_[i].y)};
     olc::vf2d pos2 = {static_cast<float> (array_2_[i].x), static_cast<float> (array_2_[i].y)};
     float dst = pos1.dist ({olc::PixelGameEngine::ScreenWidth () / 2.0f, olc::PixelGameEngine::ScreenHeight () / 2.0f});
-    objects_.push_back (new object (pos1, array_1_[i].width, array_1_[i].height, pos2, array_2_[i].width, array_2_[i].height, int(dst / 10.0f)));
+    objects_.push_back (new object (pos1, array_1_[i].width, array_1_[i].height, pos2, array_2_[i].width, array_2_[i].height, static_cast<int> (dst / 10.0f)));
   } // end FOR
 
   return true;
@@ -58,12 +58,12 @@ PGE_73::OnUserCreate ()
 bool
 PGE_73::OnUserUpdate (float fElapsedTime)
 {
-  int pixels =
-    olc::PixelGameEngine::GetDrawTargetWidth () * olc::PixelGameEngine::GetDrawTargetHeight ();
-  olc::Pixel* p = olc::PixelGameEngine::GetDrawTarget ()->GetData ();
-  for (int i = 0; i < pixels; i++)
-    p[i].a = (p[i].a > ENGINE_PGE_73_DEFAULT_ALPHA_DECAY ? p[i].a - ENGINE_PGE_73_DEFAULT_ALPHA_DECAY : 0);
-  //olc::PixelGameEngine::Clear (olc::WHITE);
+  //int pixels =
+  //  olc::PixelGameEngine::GetDrawTargetWidth () * olc::PixelGameEngine::GetDrawTargetHeight ();
+  //olc::Pixel* p = olc::PixelGameEngine::GetDrawTarget ()->GetData ();
+  //for (int i = 0; i < pixels; i++)
+  //  p[i].a = (p[i].a > ENGINE_PGE_73_DEFAULT_ALPHA_DECAY ? p[i].a - ENGINE_PGE_73_DEFAULT_ALPHA_DECAY : 0);
+  olc::PixelGameEngine::Clear (olc::WHITE);
 
   for (std::vector<object*>::iterator iterator = objects_.begin ();
        iterator != objects_.end ();
@@ -77,25 +77,23 @@ PGE_73::OnUserUpdate (float fElapsedTime)
 }
 
 void
-PGE_73::recRect (int32_t x_in, int32_t y_in, int32_t width_in, int32_t height_in, int32_t num_in, std::vector<Common_UI_Rectangle>& array_in)
+PGE_73::recRect (float x_in, float y_in, float width_in, float height_in, int32_t num_in, std::vector<Common_UI_Rectangle>& array_in)
 {
-  int32_t ww =
-    static_cast<int32_t> (Common_Tools::getRandomNumber (0.1f, 0.9f) * width_in);
-  int32_t hh =
-    static_cast<int32_t> (Common_Tools::getRandomNumber (0.1f, 0.9f) * height_in);
+  float ww = Common_Tools::getRandomNumber (0.1f, 0.9f) * width_in;
+  float hh = Common_Tools::getRandomNumber (0.1f, 0.9f) * height_in;
   num_in--;
 
   if (num_in >= 0)
   {
     if (width_in < height_in)
     {
-      recRect (x_in, y_in - (height_in / 2) + (hh / 2), width_in, hh, num_in, array_in);
-      recRect (x_in, y_in + (height_in / 2) - (height_in - hh) / 2, width_in, (height_in - hh), num_in, array_in);
+      recRect (x_in, y_in - (height_in / 2.0f) + (hh / 2.0f), width_in, hh, num_in, array_in);
+      recRect (x_in, y_in + (height_in / 2.0f) - (height_in - hh) / 2.0f, width_in, (height_in - hh), num_in, array_in);
     } // end IF
     else
     {
-      recRect (x_in - (width_in / 2) + (ww / 2), y_in, ww, height_in, num_in, array_in);
-      recRect (x_in + (width_in / 2) - (width_in - ww) / 2, y_in, (width_in - ww), height_in, num_in, array_in);
+      recRect (x_in - (width_in / 2.0f) + (ww / 2.0f), y_in, ww, height_in, num_in, array_in);
+      recRect (x_in + (width_in / 2.0f) - (width_in - ww) / 2.0f, y_in, (width_in - ww), height_in, num_in, array_in);
     } // end ELSE
   } // end IF
   else
