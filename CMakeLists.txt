@@ -624,6 +624,8 @@ set (engine_3_EXE_SRCS
      pge_74.h
      pge_75.cpp
      pge_75.h
+     pge_76.cpp
+     pge_76.h
      stdafx.h)
 
 set (EXECUTABLE_3 engine_3)
