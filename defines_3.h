@@ -124,6 +124,10 @@
 // pge 74
 #define ENGINE_PGE_74_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_74_DEFAULT_WIDTH             800
-#define ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES   40
+#define ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES   80
+
+// pge 75
+#define ENGINE_PGE_75_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_75_DEFAULT_WIDTH             800
 
 #endif

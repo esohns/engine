@@ -42,10 +42,10 @@ PGE_74::OnUserUpdate (float fElapsedTime)
   olc::Pixel color_s = {static_cast<uint8_t> (t_ % 256), static_cast<uint8_t> (200), static_cast<uint8_t> (255 - (t_ % 256)), static_cast<uint8_t> (255)};
   for (int i = 0; i < ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES; i++)
   {
-    olc::PixelGameEngine::DrawLine (x (t_ + i), y (t_ + i), olc::PixelGameEngine::ScreenWidth () / ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES * (i + 1), 0, color_s, 0xFFFFFFFF);
-    olc::PixelGameEngine::DrawLine (x (t_ + i), y (t_ + i), olc::PixelGameEngine::ScreenWidth () / ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES * i, olc::PixelGameEngine::ScreenHeight (), color_s, 0xFFFFFFFF);
-    olc::PixelGameEngine::DrawLine (x (t_ + i), y (t_ + i), 0, olc::PixelGameEngine::ScreenHeight () / ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES * i, color_s, 0xFFFFFFFF);
-    olc::PixelGameEngine::DrawLine (x (t_ + i), y (t_ + i), olc::PixelGameEngine::ScreenWidth (), olc::PixelGameEngine::ScreenHeight () / ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES * (i + 1), color_s, 0xFFFFFFFF);
+    olc::PixelGameEngine::DrawLine (x (t_ + i), y (t_ + i), static_cast<int32_t> (olc::PixelGameEngine::ScreenWidth () / static_cast<float> (ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES) * (i + 1)), 0, color_s, 0xFFFFFFFF);
+    olc::PixelGameEngine::DrawLine (x (t_ + i), y (t_ + i), static_cast<int32_t> (olc::PixelGameEngine::ScreenWidth () / static_cast<float> (ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES) * i),       olc::PixelGameEngine::ScreenHeight () - 1, color_s, 0xFFFFFFFF);
+    olc::PixelGameEngine::DrawLine (x (t_ + i), y (t_ + i), 0,                                                                                                                                  static_cast<int32_t> (olc::PixelGameEngine::ScreenHeight () / static_cast<float> (ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES) * i), color_s, 0xFFFFFFFF);
+    olc::PixelGameEngine::DrawLine (x (t_ + i), y (t_ + i), olc::PixelGameEngine::ScreenWidth () - 1,                                                                                           static_cast<int32_t> (olc::PixelGameEngine::ScreenHeight () / static_cast<float> (ENGINE_PGE_74_DEFAULT_NUMBER_OF_LINES) * (i + 1)), color_s, 0xFFFFFFFF);
   } // end FOR
   t_++;
 
@@ -55,13 +55,13 @@ PGE_74::OnUserUpdate (float fElapsedTime)
 int32_t
 PGE_74::x (int32_t t_in)
 {
-  return static_cast<int32_t> (std::cos (t_in / a_) * 200.0f + olc::PixelGameEngine::ScreenWidth () / 2.0f);
+  return static_cast<int32_t> ((std::cos (t_in / a_) * 200.0f) + (olc::PixelGameEngine::ScreenWidth () / 2.0f));
 }
 
 int32_t
 PGE_74::y (int32_t t_in)
 {
-  return static_cast<int32_t> (std::sin (t_in / b_) * 200.0f + olc::PixelGameEngine::ScreenHeight () / 2.0f);
+  return static_cast<int32_t> ((std::sin (t_in / b_) * 200.0f) + (olc::PixelGameEngine::ScreenHeight () / 2.0f));
 }
 
 //int32_t
