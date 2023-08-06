@@ -57,6 +57,8 @@
 #include "pge_74.h"
 #include "pge_75.h"
 #include "pge_76.h"
+#include "pge_77.h"
+#include "pge_78.h"
 
 enum Engine_ModeType
 {
@@ -77,6 +79,8 @@ enum Engine_ModeType
   ENGINE_MODE_74,
   ENGINE_MODE_75,
   ENGINE_MODE_76,
+  ENGINE_MODE_77,
+  ENGINE_MODE_78,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -484,6 +488,36 @@ do_work (int argc_in,
     {
       PGE_76 example;
       if (example.Construct (ENGINE_PGE_76_DEFAULT_WIDTH, ENGINE_PGE_76_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_77:
+    {
+      PGE_77 example;
+      if (example.Construct (ENGINE_PGE_77_DEFAULT_WIDTH, ENGINE_PGE_77_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_78:
+    {
+      PGE_78 example;
+      if (example.Construct (ENGINE_PGE_78_DEFAULT_WIDTH, ENGINE_PGE_78_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
