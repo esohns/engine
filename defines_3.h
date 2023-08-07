@@ -170,4 +170,8 @@
 #define ENGINE_PGE_80_DEFAULT_SCALE             25.0f
 #define ENGINE_PGE_80_DEFAULT_DX                1e-4f
 
+// pge 81
+#define ENGINE_PGE_81_DEFAULT_HEIGHT            800
+#define ENGINE_PGE_81_DEFAULT_WIDTH             800
+
 #endif
