@@ -15,6 +15,7 @@ class PGE_78
   virtual bool OnUserUpdate (float); // elapsed time
 
  private:
+  float angle_;
   float t_;
   float v1_;
 
