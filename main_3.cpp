@@ -62,6 +62,13 @@
 #include "pge_79.h"
 #include "pge_80.h"
 #include "pge_81.h"
+#include "pge_82.h"
+#include "pge_83.h"
+#include "pge_84.h"
+#include "pge_85.h"
+#include "pge_86.h"
+#include "pge_87.h"
+#include "pge_88.h"
 
 enum Engine_ModeType
 {
@@ -87,6 +94,13 @@ enum Engine_ModeType
   ENGINE_MODE_79,
   ENGINE_MODE_80,
   ENGINE_MODE_81,
+  ENGINE_MODE_82,
+  ENGINE_MODE_83,
+  ENGINE_MODE_84,
+  ENGINE_MODE_85,
+  ENGINE_MODE_86,
+  ENGINE_MODE_87,
+  ENGINE_MODE_88,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -569,6 +583,111 @@ do_work (int argc_in,
     {
       PGE_81 example;
       if (example.Construct (ENGINE_PGE_81_DEFAULT_WIDTH, ENGINE_PGE_81_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_82:
+    {
+      PGE_82 example;
+      if (example.Construct (ENGINE_PGE_82_DEFAULT_WIDTH, ENGINE_PGE_82_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_83:
+    {
+      PGE_83 example;
+      if (example.Construct (ENGINE_PGE_83_DEFAULT_WIDTH, ENGINE_PGE_83_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_84:
+    {
+      PGE_84 example;
+      if (example.Construct (ENGINE_PGE_84_DEFAULT_WIDTH, ENGINE_PGE_84_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_85:
+    {
+      PGE_85 example;
+      if (example.Construct (ENGINE_PGE_85_DEFAULT_WIDTH, ENGINE_PGE_85_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_86:
+    {
+      PGE_86 example;
+      if (example.Construct (ENGINE_PGE_86_DEFAULT_WIDTH, ENGINE_PGE_86_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_87:
+    {
+      PGE_87 example;
+      if (example.Construct (ENGINE_PGE_87_DEFAULT_WIDTH, ENGINE_PGE_87_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_88:
+    {
+      PGE_88 example;
+      if (example.Construct (ENGINE_PGE_88_DEFAULT_WIDTH, ENGINE_PGE_88_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?

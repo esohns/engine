@@ -636,6 +636,20 @@ set (engine_3_EXE_SRCS
      pge_80.h
      pge_81.cpp
      pge_81.h
+     pge_82.cpp
+     pge_82.h
+     pge_83.cpp
+     pge_83.h
+     pge_84.cpp
+     pge_84.h
+     pge_85.cpp
+     pge_85.h
+     pge_86.cpp
+     pge_86.h
+     pge_87.cpp
+     pge_87.h
+     pge_88.cpp
+     pge_88.h
      stdafx.h)
 
 set (EXECUTABLE_3 engine_3)

@@ -174,4 +174,45 @@
 #define ENGINE_PGE_81_DEFAULT_HEIGHT            800
 #define ENGINE_PGE_81_DEFAULT_WIDTH             800
 
+// pge 82
+#define ENGINE_PGE_82_DEFAULT_HEIGHT            834
+#define ENGINE_PGE_82_DEFAULT_WIDTH             1112
+#define ENGINE_PGE_82_DEFAULT_NNX               400
+#define ENGINE_PGE_82_DEFAULT_NNY               8
+
+// pge 83
+#define ENGINE_PGE_83_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_83_DEFAULT_WIDTH             800
+#define ENGINE_PGE_83_DEFAULT_COUNT             140
+#define ENGINE_PGE_83_DEFAULT_SIZE              5
+#define ENGINE_PGE_83_DEFAULT_ALPHA_DECAY       20
+
+// pge 84
+#define ENGINE_PGE_84_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_84_DEFAULT_WIDTH             800
+#define ENGINE_PGE_84_DEFAULT_ALPHA_DECAY       20
+
+// pge 85
+#define ENGINE_PGE_85_DEFAULT_HEIGHT            800
+#define ENGINE_PGE_85_DEFAULT_WIDTH             800
+#define ENGINE_PGE_85_DEFAULT_NUMBER_OF_POINTS  1000
+
+// pge 86
+#define ENGINE_PGE_86_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_86_DEFAULT_WIDTH             600
+#define ENGINE_PGE_86_DEFAULT_R                 18
+#define ENGINE_PGE_86_DEFAULT_ALPHA_DECAY       20
+
+// pge 87
+#define ENGINE_PGE_87_DEFAULT_HEIGHT            800
+#define ENGINE_PGE_87_DEFAULT_WIDTH             800
+#define ENGINE_PGE_87_DEFAULT_FRICTION          0.9999f
+#define ENGINE_PGE_87_DEFAULT_GRAVITY           0.5f
+#define ENGINE_PGE_87_DEFAULT_BOUNCE            0.9f
+
+// pge 88
+#define ENGINE_PGE_88_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_88_DEFAULT_WIDTH             800
+#define ENGINE_PGE_88_DEFAULT_ALPHA_DECAY       10
+
 #endif
