@@ -94,15 +94,15 @@ PGE_89::drawRow (int32_t numRow_in, int frameCount_in)
       drawVertical (colNum * 20, numRow_in, palette_[colNum]);
     else
     {
-      bool which = Common_Tools::getRandomNumber (0.0f, 1.0f) < 0.5f;
       if (colNum != 30)
       {
+        bool which = Common_Tools::getRandomNumber (0.0f, 1.0f) < 0.5f;
         drawCrossing (colNum * 20, numRow_in, which, palette_[colNum], palette_[colNum + 1]);
         olc::Pixel hold_s = palette_[colNum];
         palette_[colNum] = palette_[colNum + 1];
         palette_[colNum + 1] = hold_s;
       } // end IF
-      if (colNum == 30)
+      else
         drawVertical (colNum * 20, numRow_in, palette_[colNum]);
       colNum++;
     } // end ELSE
