@@ -34,6 +34,8 @@ PGE_89::OnUserCreate ()
 bool
 PGE_89::OnUserUpdate (float fElapsedTime)
 {
+  //olc::PixelGameEngine::Clear (olc::BLACK);
+
   static int frame_count_i = 1;
 
   if (isFirst_)
@@ -52,11 +54,17 @@ PGE_89::OnUserUpdate (float fElapsedTime)
 
   if (yPos1_ <= -ENGINE_PGE_89_DEFAULT_HEIGHT)
   {
+    olc::PixelGameEngine::SetDrawTarget (&b1_);
+    olc::PixelGameEngine::Clear (olc::BLACK);
+
     drawRows (28, b1_, frame_count_i);
     yPos1_ = ENGINE_PGE_89_DEFAULT_HEIGHT;
   } // end IF
   if (yPos2_ <= -ENGINE_PGE_89_DEFAULT_HEIGHT)
   {
+    olc::PixelGameEngine::SetDrawTarget (&b2_);
+    olc::PixelGameEngine::Clear (olc::BLACK);
+
     drawRows (28, b2_, frame_count_i);
     yPos2_ = ENGINE_PGE_89_DEFAULT_HEIGHT;
   } // end IF
