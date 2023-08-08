@@ -22,10 +22,10 @@ class PGE_89
   bool        isFirst_;
   olc::Pixel  palette_[31];
 
-  void drawRows (int32_t, olc::Sprite&, int);
-  void drawRow (int32_t, olc::Sprite&, int);
-  void drawVertical (int32_t, int32_t, olc::Pixel&, olc::Sprite&);
-  void drawCrossing (int32_t, int32_t, bool, olc::Pixel&, olc::Pixel&, olc::Sprite&);
+  void drawRows (int32_t, int);
+  void drawRow (int32_t, int);
+  void drawVertical (int32_t, int32_t, olc::Pixel&);
+  void drawCrossing (int32_t, int32_t, bool, olc::Pixel&, olc::Pixel&);
 };
 
 #endif // PGE_89_H

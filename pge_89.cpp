@@ -40,8 +40,10 @@ PGE_89::OnUserUpdate (float fElapsedTime)
 
   if (isFirst_)
   {
-    drawRows (28, b1_, 0);
-    drawRows (28, b2_, 1);
+    olc::PixelGameEngine::SetDrawTarget (&b1_);
+    drawRows (28, 0);
+    olc::PixelGameEngine::SetDrawTarget (&b2_);
+    drawRows (28, 1);
     isFirst_ = false;
   } // end IF
 
@@ -57,7 +59,7 @@ PGE_89::OnUserUpdate (float fElapsedTime)
     olc::PixelGameEngine::SetDrawTarget (&b1_);
     olc::PixelGameEngine::Clear (olc::BLACK);
 
-    drawRows (28, b1_, frame_count_i);
+    drawRows (28, frame_count_i);
     yPos1_ = ENGINE_PGE_89_DEFAULT_HEIGHT;
   } // end IF
   if (yPos2_ <= -ENGINE_PGE_89_DEFAULT_HEIGHT)
@@ -65,7 +67,7 @@ PGE_89::OnUserUpdate (float fElapsedTime)
     olc::PixelGameEngine::SetDrawTarget (&b2_);
     olc::PixelGameEngine::Clear (olc::BLACK);
 
-    drawRows (28, b2_, frame_count_i);
+    drawRows (28, frame_count_i);
     yPos2_ = ENGINE_PGE_89_DEFAULT_HEIGHT;
   } // end IF
 
@@ -75,33 +77,33 @@ PGE_89::OnUserUpdate (float fElapsedTime)
 }
 
 void
-PGE_89::drawRows (int32_t numRows_in, olc::Sprite& sprite_in, int frameCount_in)
+PGE_89::drawRows (int32_t numRows_in, int frameCount_in)
 {
   for (int i = 0; i < numRows_in; i++)
-    drawRow (i, sprite_in, frameCount_in);
+    drawRow (i, frameCount_in);
 }
 
 void
-PGE_89::drawRow (int32_t numRow_in, olc::Sprite& sprite_in, int frameCount_in)
+PGE_89::drawRow (int32_t numRow_in, int frameCount_in)
 {
   numRow_in *= 20;
   int colNum = 1;
   while (colNum <= 30)
   {
     if ((Common_Tools::getRandomNumber (0.0f, 1.0f) < 0.5f) || (frameCount_in == 0))
-      drawVertical (colNum * 20, numRow_in, palette_[colNum], sprite_in);
+      drawVertical (colNum * 20, numRow_in, palette_[colNum]);
     else
     {
       bool which = Common_Tools::getRandomNumber (0.0f, 1.0f) < 0.5f;
       if (colNum != 30)
       {
-        drawCrossing (colNum * 20, numRow_in, which, palette_[colNum], palette_[colNum + 1], sprite_in);
+        drawCrossing (colNum * 20, numRow_in, which, palette_[colNum], palette_[colNum + 1]);
         olc::Pixel hold_s = palette_[colNum];
         palette_[colNum] = palette_[colNum + 1];
         palette_[colNum + 1] = hold_s;
       } // end IF
       if (colNum == 30)
-        drawVertical (colNum * 20, numRow_in, palette_[colNum], sprite_in);
+        drawVertical (colNum * 20, numRow_in, palette_[colNum]);
       colNum++;
     } // end ELSE
     colNum++;
@@ -109,16 +111,14 @@ PGE_89::drawRow (int32_t numRow_in, olc::Sprite& sprite_in, int frameCount_in)
 }
 
 void
-PGE_89::drawVertical (int32_t x, int32_t y, olc::Pixel& c, olc::Sprite& b)
+PGE_89::drawVertical (int32_t x, int32_t y, olc::Pixel& c)
 {
-  olc::PixelGameEngine::SetDrawTarget (&b);
   olc::PixelGameEngine::DrawLine (x, y, x, y + 20, c, 0xFFFFFFFF);
 }
 
 void
-PGE_89::drawCrossing (int32_t x, int32_t y, bool positive, olc::Pixel& c1, olc::Pixel& c2, olc::Sprite& b)
+PGE_89::drawCrossing (int32_t x, int32_t y, bool positive, olc::Pixel& c1, olc::Pixel& c2)
 {
-  olc::PixelGameEngine::SetDrawTarget (&b);
   if (positive)
   {
     olc::PixelGameEngine::DrawLine (x, y, x + 20, y + 20, c1, 0xFFFFFFFF);
