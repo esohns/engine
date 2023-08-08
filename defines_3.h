@@ -215,4 +215,8 @@
 #define ENGINE_PGE_88_DEFAULT_WIDTH             800
 #define ENGINE_PGE_88_DEFAULT_ALPHA_DECAY       10
 
+// pge 89
+#define ENGINE_PGE_89_DEFAULT_HEIGHT            560
+#define ENGINE_PGE_89_DEFAULT_WIDTH             620
+
 #endif
