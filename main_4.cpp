@@ -41,10 +41,14 @@
 
 #define OLC_PGE_APPLICATION
 #include "pge_90.h"
+#include "pge_91.h"
+#include "pge_92.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 90,
+  ENGINE_MODE_91,
+  ENGINE_MODE_92,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -212,6 +216,36 @@ do_work (int argc_in,
     {
       PGE_90 example;
       if (example.Construct (ENGINE_PGE_90_DEFAULT_WIDTH, ENGINE_PGE_90_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_91:
+    {
+      PGE_91 example;
+      if (example.Construct (ENGINE_PGE_91_DEFAULT_WIDTH, ENGINE_PGE_91_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_92:
+    {
+      PGE_92 example;
+      if (example.Construct (ENGINE_PGE_92_DEFAULT_WIDTH, ENGINE_PGE_92_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?

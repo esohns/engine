@@ -30,4 +30,14 @@
 #define ENGINE_PGE_90_DEFAULT_FRAME             true
 #define ENGINE_PGE_90_DEFAULT_ALPHA             0.4f
 
+// pge 91
+#define ENGINE_PGE_91_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_91_DEFAULT_WIDTH             800
+
+// pge 92
+#define ENGINE_PGE_92_DEFAULT_HEIGHT            768
+#define ENGINE_PGE_92_DEFAULT_WIDTH             1024
+#define ENGINE_PGE_92_DEFAULT_NUMBER_OF_LINES   100
+#define ENGINE_PGE_92_DEFAULT_NOISE_SCALE       5.0f
+
 #endif
