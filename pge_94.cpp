@@ -31,7 +31,7 @@ PGE_94::OnUserCreate ()
   findPaths (point_s, visited_a);
 
   rsfc (0.0f, 0.0f, 1.0f, true, true, 0);
-  float delta = 1 - points_[points_.size () - 1].x;
+  float delta = 1.0f - points_[points_.size () - 1].x;
   points_.push_back ({1.0f - delta, 1.0f + delta});
 
   return true;
@@ -41,6 +41,21 @@ bool
 PGE_94::OnUserUpdate (float fElapsedTime)
 {
   static bool done_b = false;
+
+  if (olc::PixelGameEngine::GetMouse (0).bPressed)
+  { // reset, choose another (random) path
+    done_b = false;
+    points_.clear ();
+    pointIdx_ = 0;
+    pointsPerFrame_ = 1.0f;
+
+    rsfc (0.0f, 0.0f, 1.0f, true, true, 0);
+    float delta = 1.0f - points_[points_.size () - 1].x;
+    points_.push_back ({1.0f - delta, 1.0f + delta});
+
+    olc::PixelGameEngine::Clear (olc::BLACK);
+  } // end IF
+
   if (done_b) goto end;
 
   float r0 = 50.0f, rDelta = 200.0f;
@@ -76,7 +91,7 @@ PGE_94::OnUserUpdate (float fElapsedTime)
       //arc (olc::PixelGameEngine::ScreenWidth () / 2, olc::PixelGameEngine::ScreenHeight () / 2, 2 * r1, 2 * r2, theta1, theta2);
     } // end ELSE
 
-    r1 = (1 - p1.x) * rDelta + r0, r2 = (1 - p2.x) * rDelta + r0;
+    r1 = (1.0f - p1.x) * rDelta + r0, r2 = (1.0f - p2.x) * rDelta + r0;
     theta1 = p1.y * static_cast<float> (M_PI) + static_cast<float> (M_PI), theta2 = p2.y * static_cast<float> (M_PI) + static_cast<float> (M_PI);
     x1 =
       static_cast<int32_t> (olc::PixelGameEngine::ScreenWidth () / 2.0f + r1 * std::cos (theta1));
@@ -174,10 +189,9 @@ PGE_94::rsfc (float x0, float y0, float s, bool topToBottom, bool leftToRight, i
   int32_t idx2 = leftToRight ? 0 : 1;
   ACE_ASSERT (!paths_.empty ());
   int32_t i = Common_Tools::getRandomNumber (0, static_cast<int32_t> (paths_.size () - 1));
-  std::vector<olc::vi2d> path_a = paths_[i];
 
-  for (std::vector<olc::vi2d>::iterator iterator = path_a.begin ();
-       iterator != path_a.end ();
+  for (std::vector<olc::vi2d>::iterator iterator = paths_[i].begin ();
+       iterator != paths_[i].end ();
        ++iterator)
   {
     float x = leftToRight ? (*iterator).x * newS : (ENGINE_PGE_94_DEFAULT_N - (*iterator).x - 1) * newS;
