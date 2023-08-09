@@ -37,7 +37,19 @@
 // pge 92
 #define ENGINE_PGE_92_DEFAULT_HEIGHT            768
 #define ENGINE_PGE_92_DEFAULT_WIDTH             1024
-#define ENGINE_PGE_92_DEFAULT_NUMBER_OF_LINES   100
+#define ENGINE_PGE_92_DEFAULT_NUMBER_OF_LINES   150
 #define ENGINE_PGE_92_DEFAULT_NOISE_SCALE       5.0f
+
+// pge 93
+#define ENGINE_PGE_93_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_93_DEFAULT_WIDTH             800
+#define ENGINE_PGE_93_DEFAULT_RAD               200.0f
+#define ENGINE_PGE_93_DEFAULT_ALPHA_DECAY       20
+
+// pge 94
+#define ENGINE_PGE_94_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_94_DEFAULT_WIDTH             600
+#define ENGINE_PGE_94_DEFAULT_N                 5
+#define ENGINE_PGE_94_DEFAULT_MAX_DEPTH         2
 
 #endif
