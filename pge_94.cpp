@@ -72,7 +72,7 @@ PGE_94::OnUserUpdate (float fElapsedTime)
         theta1 = theta2;
         theta2 = temp;
       } // end IF
-      draw_circle_arc (center, (r1 + r2) / 2.0f, theta1 * 180.0f / static_cast<float> (M_PI), theta2 * 180.0f / static_cast<float> (M_PI), color);
+      draw_circle_arc (center, (r1 + r2) / 2.0f, theta1, theta2, color);
       //arc (olc::PixelGameEngine::ScreenWidth () / 2, olc::PixelGameEngine::ScreenHeight () / 2, 2 * r1, 2 * r2, theta1, theta2);
     } // end ELSE
 
@@ -98,7 +98,7 @@ PGE_94::OnUserUpdate (float fElapsedTime)
         theta1 = theta2;
         theta2 = temp;
       } // end IF
-      draw_circle_arc (center, (r1 + r2) / 2.0f, theta1 * 180.0f / static_cast<float> (M_PI), theta2 * 180.0f / static_cast<float> (M_PI), color);
+      draw_circle_arc (center, (r1 + r2) / 2.0f, theta1, theta2, color);
       //arc (olc::PixelGameEngine::ScreenWidth () / 2, olc::PixelGameEngine::ScreenHeight () / 2, 2 * r1, 2 * r2, theta1, theta2);
     } // end ELSE
 
@@ -201,19 +201,18 @@ PGE_94::rainbow (float t)
 void
 PGE_94::draw_circle_arc (olc::vf2d& center, float radius, float angle_from, float angle_to, olc::Pixel& color)
 {
-  int32_t nb_points = 64;
   std::vector<olc::vf2d> points_arc;
 
-  for (int i = 0; i <= nb_points + 1; ++i)
+  for (int i = 0; i <= ENGINE_PGE_94_DEFAULT_ARC_RESOLUTION + 1; ++i)
   {
     float angle_point =
-      static_cast<float> (M_PI) / 180.0f * (angle_from + i * (angle_to - angle_from) / static_cast<float> (nb_points));
+      (angle_from + i * (angle_to - angle_from) / static_cast<float> (ENGINE_PGE_94_DEFAULT_ARC_RESOLUTION));
     olc::vf2d point_s (static_cast<float> (std::cos (angle_point)), static_cast<float> (std::sin (angle_point)));
     point_s *= radius;
     point_s += center;
     points_arc.push_back (point_s);
   } // end FOR
 
-  for (int i = 0; i <= nb_points; i++)
+  for (int i = 0; i <= ENGINE_PGE_94_DEFAULT_ARC_RESOLUTION; i++)
     olc::PixelGameEngine::DrawLine (points_arc[i], points_arc[i + 1], color, 0xFFFFFFFF);
 }

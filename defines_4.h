@@ -51,5 +51,6 @@
 #define ENGINE_PGE_94_DEFAULT_WIDTH             600
 #define ENGINE_PGE_94_DEFAULT_N                 5
 #define ENGINE_PGE_94_DEFAULT_MAX_DEPTH         2
+#define ENGINE_PGE_94_DEFAULT_ARC_RESOLUTION    64
 
 #endif
