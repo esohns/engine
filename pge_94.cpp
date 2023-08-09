@@ -172,6 +172,7 @@ PGE_94::rsfc (float x0, float y0, float s, bool topToBottom, bool leftToRight, i
   float newS = s / static_cast<float> (ENGINE_PGE_94_DEFAULT_N);
   int32_t idx1 = topToBottom ? 0 : 1;
   int32_t idx2 = leftToRight ? 0 : 1;
+  ACE_ASSERT (!paths_.empty ());
   int32_t i = Common_Tools::getRandomNumber (0, static_cast<int32_t> (paths_.size () - 1));
   std::vector<olc::vi2d> path_a = paths_[i];
 
@@ -188,12 +189,13 @@ PGE_94::rsfc (float x0, float y0, float s, bool topToBottom, bool leftToRight, i
 olc::Pixel
 PGE_94::rainbow (float t)
 {
-  static Common_GL_Color_t palette[5] =
+  static Common_GL_Color_t palette[ENGINE_PGE_94_DEFAULT_NUMBER_OF_COLORS] =
     {{0xef, 0x56, 0x2f}, {0xf9, 0xd5, 0x31}, {0xa7, 0xcc, 0x51}, {0x4b, 0xaf, 0xdd}, {0xbd, 0x4e, 0xe5}};
-  int32_t i = static_cast<int32_t> (floor (5 * t));
+  int32_t i = static_cast<int32_t> (std::floor (ENGINE_PGE_94_DEFAULT_NUMBER_OF_COLORS * t));
   float int_f;
-  float amt = std::modf (5 * t, &int_f);
-  Common_GL_Color_t lerped_color = Common_GL_Tools::lerpRGB (palette[i % 5], palette[(i + 1) % 5], amt);
+  float amt = std::modf (ENGINE_PGE_94_DEFAULT_NUMBER_OF_COLORS * t, &int_f);
+  Common_GL_Color_t lerped_color =
+    Common_GL_Tools::lerpRGB (palette[i % ENGINE_PGE_94_DEFAULT_NUMBER_OF_COLORS], palette[(i + 1) % ENGINE_PGE_94_DEFAULT_NUMBER_OF_COLORS], amt);
   olc::Pixel result = {lerped_color.r, lerped_color.g, lerped_color.b, 255};
   return result;
 }
