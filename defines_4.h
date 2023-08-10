@@ -62,8 +62,8 @@
 // pge 96
 #define ENGINE_PGE_96_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_96_DEFAULT_WIDTH             600
-#define ENGINE_PGE_96_DEFAULT_N                 7
-#define ENGINE_PGE_96_DEFAULT_MAX_DEPTH         2
+#define ENGINE_PGE_96_DEFAULT_N                 5
+#define ENGINE_PGE_96_DEFAULT_MAX_DEPTH         3
 #define ENGINE_PGE_96_DEFAULT_NUMBER_OF_COLORS  5
 #define ENGINE_PGE_96_DEFAULT_MARGIN            30.0f
 
