@@ -681,6 +681,14 @@ set (engine_4_EXE_SRCS
      pge_95.h
      pge_96.cpp
      pge_96.h
+     pge_97.cpp
+     pge_97.h
+     pge_98.cpp
+     pge_98.h
+     pge_99.cpp
+     pge_99.h
+     pge_100.cpp
+     pge_100.h
      stdafx.h)
 
 set (EXECUTABLE_4 engine_4)

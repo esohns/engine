@@ -67,4 +67,22 @@
 #define ENGINE_PGE_96_DEFAULT_NUMBER_OF_COLORS  5
 #define ENGINE_PGE_96_DEFAULT_MARGIN            30.0f
 
+// pge 97
+#define ENGINE_PGE_97_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_97_DEFAULT_WIDTH             800
+#define ENGINE_PGE_97_DEFAULT_K                 0.25f
+
+// pge 98
+#define ENGINE_PGE_98_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_98_DEFAULT_WIDTH             800
+#define ENGINE_PGE_98_DEFAULT_ALPHA_DECAY       5
+
+// pge 99
+#define ENGINE_PGE_99_DEFAULT_HEIGHT            720
+#define ENGINE_PGE_99_DEFAULT_WIDTH             1280
+
+// pge 100
+#define ENGINE_PGE_100_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_100_DEFAULT_WIDTH            800
+
 #endif

@@ -196,8 +196,6 @@ class PGE_95
   float              moveRate_;
   olc::vf2d          origin_;
   std::vector<cell*> cells_;
-
-  void draw_circle_arc (olc::vf2d&, float, float, float, olc::Pixel&);
 };
 
 #endif // PGE_95_H
