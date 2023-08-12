@@ -44,7 +44,6 @@ class PGE_100
     {
       velocity_ += acceleration_;
       position_ += velocity_;
-      velocity_ *= 0.95f; // damping
       acceleration_ *= 0.0f;
     }
 
@@ -73,27 +72,33 @@ class PGE_100
 
     void checkEdges ()
     {
+      bool apply_damping_b = false;
       if (position_.x < size_ / 2)
       {
         position_.x = size_ / 2;
         velocity_.x *= -1.0f;
+        apply_damping_b = true;
       } // end IF
       else if (position_.x > ENGINE_PGE_100_DEFAULT_WIDTH - size_ / 2.0f)
       {
         position_.x = ENGINE_PGE_100_DEFAULT_WIDTH - size_ / 2.0f;
         velocity_.x *= -1.0f;
+        apply_damping_b = true;
       } // end ELSE IF
 
       if (position_.y < size_ / 2.0f)
       {
         position_.y = size_ / 2.0f;
         velocity_.y *= -1.0f;
+        apply_damping_b = true;
       } // end IF
       else if (position_.y > ENGINE_PGE_100_DEFAULT_HEIGHT - size_ / 2.0f)
       {
         position_.y = ENGINE_PGE_100_DEFAULT_HEIGHT - size_ / 2.0f;
         velocity_.y *= -1.0f;
+        apply_damping_b = true;
       } // end ELSE IF
+      if (apply_damping_b) velocity_ *= ENGINE_PGE_100_DEFAULT_DAMPING;
     }
 
     olc::vf2d position_;

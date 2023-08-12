@@ -27,7 +27,7 @@
 #endif // _MSC_VER
 
 // C++ RunTime Header Files
-#include <string>
+#include <vector>
 
 // System Library Header Files
 #include "ace/config-lite.h"

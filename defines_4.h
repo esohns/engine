@@ -75,7 +75,7 @@
 // pge 98
 #define ENGINE_PGE_98_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_98_DEFAULT_WIDTH             800
-#define ENGINE_PGE_98_DEFAULT_ALPHA_DECAY       5
+#define ENGINE_PGE_98_DEFAULT_ALPHA_DECAY       1
 
 // pge 99
 #define ENGINE_PGE_99_DEFAULT_HEIGHT            720
@@ -84,5 +84,6 @@
 // pge 100
 #define ENGINE_PGE_100_DEFAULT_HEIGHT           600
 #define ENGINE_PGE_100_DEFAULT_WIDTH            800
+#define ENGINE_PGE_100_DEFAULT_DAMPING          0.6f
 
 #endif

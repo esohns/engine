@@ -56,9 +56,9 @@ PGE_94::OnUserUpdate (float fElapsedTime)
     olc::PixelGameEngine::Clear (olc::BLACK);
   } // end IF
 
-  if (done_b) goto end;
-
   float r0 = 50.0f, rDelta = 200.0f;
+
+  if (done_b) goto end;
 
   for (int k = 0; k < static_cast<int32_t> (pointsPerFrame_); k++)
   {

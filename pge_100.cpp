@@ -33,7 +33,7 @@ bool
 PGE_100::OnUserUpdate (float fElapsedTime)
 {
   olc::HWButton button_s = olc::PixelGameEngine::GetMouse (0);
-  if (button_s.bPressed)// || button_s.bHeld)
+  if (button_s.bPressed || button_s.bHeld)
     stars_.push_back (new star (this));
 
   olc::PixelGameEngine::Clear (olc::BLACK);
@@ -43,7 +43,8 @@ PGE_100::OnUserUpdate (float fElapsedTime)
     for (size_t k = 0; k < stars_.size (); ++k)
       if (i != k)
       {
-        stars_[i]->applyForce (stars_[k]->attract (*stars_[i]));
+        olc::vf2d f = stars_[k]->attract (*stars_[i]);
+        stars_[i]->applyForce (f);
         stars_[i]->link (*stars_[k], this);
       } // end IF
     stars_[i]->update ();
