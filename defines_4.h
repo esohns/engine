@@ -98,4 +98,8 @@
 #define ENGINE_PGE_102_DEFAULT_N                800
 #define ENGINE_PGE_102_DEFAULT_BRUSH_THICKNESS  5
 
+// pge 103
+#define ENGINE_PGE_103_DEFAULT_HEIGHT           800
+#define ENGINE_PGE_103_DEFAULT_WIDTH            800
+
 #endif
