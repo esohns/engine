@@ -41,53 +41,50 @@ PGE_104::OnUserUpdate (float fElapsedTime)
   {
     m_ = Common_Tools::getRandomNumber (2, 6);
     n_ = Common_Tools::getRandomNumber (2, 6);
-    //do
-    //{
-      //m_ = ~~Common_Tools::getRandomNumber (1, 6);
-      //n_ = ~~Common_Tools::getRandomNumber (1, 6);
-    //} while (m_ == 1 && n_ == 1);
   } // end IF
 
   int32_t w = olc::PixelGameEngine::ScreenWidth () / m_;
   int32_t h = olc::PixelGameEngine::ScreenHeight () / n_;
-  int32_t s = ENGINE_PGE_104_DEFAULT_S, density = ENGINE_PGE_104_DEFAULT_DENSITY;
 
-  for (int32_t x = 0; x < olc::PixelGameEngine::ScreenWidth (); x += s)
-    for (int32_t y = 0; y < olc::PixelGameEngine::ScreenHeight (); y += s)
+  olc::Pixel fillCol, backCol;
+  Common_GL_Color_t color1, color2, lerped_color;
+  float theta, no, z;
+  for (int32_t x = 0; x < olc::PixelGameEngine::ScreenWidth (); x += ENGINE_PGE_104_DEFAULT_S)
+    for (int32_t y = 0; y < olc::PixelGameEngine::ScreenHeight (); y += ENGINE_PGE_104_DEFAULT_S)
     {
-      float theta = 2.0f * static_cast<float> (M_PI) * t;
+      theta = 2.0f * static_cast<float> (M_PI) * t;
       if (y % (2 * h) < h) theta *= -1.0f;
       if (x % (2 * w) < w) theta *= -1.0f;
-      float no = loopNoise (x, y, theta, &noise_);
-      olc::Pixel fillCol, backCol;
-      Common_GL_Color_t color1, color2, lerped_color;
+      no = loopNoise (x, y, theta, &noise_);
       if (theta < 0)
       {
         fillCol = {0x05, 0x05, 0x05, 255};
         color1.r = 0xFF; color1.g = 0xFB; color1.b = 0xE6;
         color2.r = 0xF9; color2.g = 0xD5; color2.b = 0x31;
-        lerped_color = Common_GL_Tools::lerpRGB (color1, color2, 1.0f - static_cast<float> (std::pow (2.0f * t - 1.0f, 4)));
+        lerped_color =
+          Common_GL_Tools::lerpRGB (color1, color2, 1.0f - static_cast<float> (std::pow (2.0f * t - 1.0f, 4)));
         backCol.r = lerped_color.r; backCol.g = lerped_color.g; backCol.b = lerped_color.b;
       } // end IF
       else
       {
         color1.r = 0x05; color1.g = 0x05; color1.b = 0x05;
         color2.r = 0x2B; color2.g = 0x67; color2.b = 0xAF;
-        lerped_color = Common_GL_Tools::lerpRGB (color1, color2, 1.0f - static_cast<float> (std::pow (2.0f * t - 1.0f, 4)));
+        lerped_color =
+          Common_GL_Tools::lerpRGB (color1, color2, 1.0f - static_cast<float> (std::pow (2.0f * t - 1.0f, 4)));
         fillCol.r = lerped_color.r; fillCol.g = lerped_color.g; fillCol.b = lerped_color.b;
         backCol = {0xff, 0xfb, 0xe6, 255};
       } // end ELSE
-      if (static_cast<int32_t> (std::floor (no * density)) % 2 == 0)
+      if (static_cast<int32_t> (std::floor (no * ENGINE_PGE_104_DEFAULT_DENSITY)) % 2 == 0)
       {
         olc::Pixel temp = fillCol;
         fillCol = backCol;
         backCol = temp;
       } // end IF
-      olc::PixelGameEngine::FillRect (static_cast<int32_t> (x), static_cast<int32_t> (y), s, s, backCol);
-      float z =
-        static_cast<float> (std::pow (2.0f * (static_cast<int32_t> (no * density) % 1) - 1.0f, 2));
-      //olc::PixelGameEngine::FillCircle (static_cast<int32_t> (x), static_cast<int32_t> (y), static_cast<int32_t> (s * z), fillCol);
-      olc::PixelGameEngine::FillRect (static_cast<int32_t> (x), static_cast<int32_t> (y), s, static_cast<int32_t> (s * z), fillCol);
+      olc::PixelGameEngine::FillRect (static_cast<int32_t> (x), static_cast<int32_t> (y), ENGINE_PGE_104_DEFAULT_S, ENGINE_PGE_104_DEFAULT_S, backCol);
+      z =
+        static_cast<float> (std::pow (2.0f * (static_cast<int32_t> (no * ENGINE_PGE_104_DEFAULT_DENSITY) % 1) - 1.0f, 2));
+      //olc::PixelGameEngine::FillCircle (static_cast<int32_t> (x), static_cast<int32_t> (y), static_cast<int32_t> (ENGINE_PGE_104_DEFAULT_S * z), fillCol);
+      olc::PixelGameEngine::FillRect (static_cast<int32_t> (x), static_cast<int32_t> (y), ENGINE_PGE_104_DEFAULT_S, static_cast<int32_t> (ENGINE_PGE_104_DEFAULT_S * z), fillCol);
     } // end FOR
 
   ++frame_count_i;

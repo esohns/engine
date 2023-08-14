@@ -109,4 +109,15 @@
 #define ENGINE_PGE_104_DEFAULT_S                2
 #define ENGINE_PGE_104_DEFAULT_DENSITY          32
 
+// pge 105
+#define ENGINE_PGE_105_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_105_DEFAULT_WIDTH            800
+#define ENGINE_PGE_105_DEFAULT_ALPHA_DECAY      10
+#define ENGINE_PGE_105_DEFAULT_NUMBER_OF_SHAPES 100
+
+// pge 106
+#define ENGINE_PGE_106_DEFAULT_HEIGHT           900
+#define ENGINE_PGE_106_DEFAULT_WIDTH            900
+#define ENGINE_PGE_106_DEFAULT_C                20
+
 #endif
