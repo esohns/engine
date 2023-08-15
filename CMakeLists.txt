@@ -701,6 +701,14 @@ set (engine_4_EXE_SRCS
      pge_105.h
      pge_106.cpp
      pge_106.h
+     pge_107.cpp
+     pge_107.h
+     pge_108.cpp
+     pge_108.h
+     pge_109.cpp
+     pge_109.h
+     pge_110.cpp
+     pge_110.h
      stdafx.h)
 
 set (EXECUTABLE_4 engine_4)

@@ -11,7 +11,7 @@ PGE_106::PGE_106 ()
  : olc::PixelGameEngine ()
  , objects_ ()
 {
-  sAppName = "Example 105";
+  sAppName = "Example 106";
 }
 
 PGE_106::~PGE_106 ()
