@@ -15,7 +15,7 @@ PGE_110::PGE_110 ()
  , noiseOn_ (true)
  , mode_ (1)
 {
-  sAppName = "Example 109";
+  sAppName = "Example 110";
 }
 
 PGE_110::~PGE_110 ()

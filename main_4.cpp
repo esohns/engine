@@ -61,6 +61,9 @@
 #include "pge_108.h"
 #include "pge_109.h"
 #include "pge_110.h"
+#include "pge_111.h"
+#include "pge_112.h"
+#include "pge_113.h"
 
 enum Engine_ModeType
 {
@@ -85,6 +88,9 @@ enum Engine_ModeType
   ENGINE_MODE_108,
   ENGINE_MODE_109,
   ENGINE_MODE_110,
+  ENGINE_MODE_111,
+  ENGINE_MODE_112,
+  ENGINE_MODE_113,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -552,6 +558,51 @@ do_work (int argc_in,
     {
       PGE_110 example;
       if (example.Construct (ENGINE_PGE_110_DEFAULT_WIDTH, ENGINE_PGE_110_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_111:
+    {
+      PGE_111 example;
+      if (example.Construct (ENGINE_PGE_111_DEFAULT_WIDTH, ENGINE_PGE_111_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_112:
+    {
+      PGE_112 example;
+      if (example.Construct (ENGINE_PGE_112_DEFAULT_WIDTH, ENGINE_PGE_112_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_113:
+    {
+      PGE_113 example;
+      if (example.Construct (ENGINE_PGE_113_DEFAULT_WIDTH, ENGINE_PGE_113_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
