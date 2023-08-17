@@ -35,7 +35,7 @@ class PGE_113
     void update (size_t id, std::vector<ball*>& balls)
     {
       for (size_t i = id + 1; i < balls.size () - 1; i++)
-        if (position_.dist(balls[i]->position_) < 12.0f)
+        if (position_.dist (balls[i]->position_) < 12.0f)
           position_ += direction_;
     }
 

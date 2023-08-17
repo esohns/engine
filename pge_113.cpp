@@ -25,6 +25,9 @@ PGE_113::~PGE_113 ()
 bool
 PGE_113::OnUserCreate ()
 {
+  olc::PixelGameEngine::SetPixelMode (olc::Pixel::ALPHA);
+  olc::PixelGameEngine::Clear ({22, 8, 0, 255});
+
   balls_.push_back (new ball (5.0f, 0.0f, this));
 
   return true;
@@ -35,7 +38,11 @@ PGE_113::OnUserUpdate (float fElapsedTime)
 {
   static int32_t frame_count_i = 1;
 
-  olc::PixelGameEngine::Clear ({22, 8, 0, 255});
+  int pixels =
+    olc::PixelGameEngine::GetDrawTargetWidth () * olc::PixelGameEngine::GetDrawTargetHeight ();
+  olc::Pixel* p = olc::PixelGameEngine::GetDrawTarget ()->GetData ();
+  for (int i = 0; i < pixels; i++)
+    p[i].a = (p[i].a > ENGINE_PGE_113_DEFAULT_ALPHA_DECAY ? p[i].a - ENGINE_PGE_113_DEFAULT_ALPHA_DECAY : 0);
 
   for (int i = static_cast<int> (balls_.size () - 1); i >= 0; i--)
   {
@@ -50,7 +57,7 @@ PGE_113::OnUserUpdate (float fElapsedTime)
   } // end FOR
 
   static float PHI = (1.0f + std::sqrt (5.0f)) / 2.0f;
-  balls_.push_back (new ball (5.0f - (frame_count_i % 500) / 50.0f, frame_count_i * PHI * 2.0f * static_cast<float> (M_PI), this));
+  balls_.push_back (new ball (5.0f - (frame_count_i % 350) / 50.0f, frame_count_i * PHI * 2.0f * static_cast<float> (M_PI), this));
 
   ++frame_count_i;
 
