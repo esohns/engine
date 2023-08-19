@@ -744,6 +744,20 @@ set (engine_5_EXE_SRCS
      main_5.cpp
      pge_120.cpp
      pge_120.h
+     pge_121.cpp
+     pge_121.h
+     pge_122.cpp
+     pge_122.h
+     pge_123.cpp
+     pge_123.h
+     pge_124.cpp
+     pge_124.h
+     pge_125.cpp
+     pge_125.h
+     pge_126.cpp
+     pge_126.h
+     pge_127.cpp
+     pge_127.h
      stdafx.h)
 
 set (EXECUTABLE_5 engine_5)
