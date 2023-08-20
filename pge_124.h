@@ -126,6 +126,16 @@ class PGE_124
     //  return line_intersector::simpleIntersect (p1.x, p1.y, (p2.x + p3.x) * 0.5f, (p2.y + p3.y) * 0.5f, p2.x, p2.y, (p3.x + p1.x) * 0.5f, (p3.y + p1.y) * 0.5f);
     //}
 
+    bool almost_equal (triangle& other)
+    {
+      return (Common_Math_Tools::almost_equal (p1->x, other.p1->x, 2) &&
+              Common_Math_Tools::almost_equal (p1->y, other.p1->y, 2) &&
+              Common_Math_Tools::almost_equal (p2->x, other.p2->x, 2) &&
+              Common_Math_Tools::almost_equal (p2->y, other.p2->y, 2) &&
+              Common_Math_Tools::almost_equal (p3->x, other.p3->x, 2) &&
+              Common_Math_Tools::almost_equal (p3->y, other.p3->y, 2));
+    }
+
     bool containsVertex (olc::vf2d& v)
     {
       return (v == *p1) || (v == *p2) || (v == *p3);
@@ -266,14 +276,19 @@ class PGE_124
       }
       bool operator== (edge& other)
       {
-        return (*p1 == *other.p1 && *p2 == *other.p2);
+        return ((*p1 == *other.p1 && *p2 == *other.p2) ||
+                (*p1 == *other.p2 && *p2 == *other.p1));
       }
       bool almost_equal (edge& other)
       {
-        return (Common_Math_Tools::almost_equal (p1->x, other.p1->x, 2) &&
-                Common_Math_Tools::almost_equal (p2->x, other.p2->x, 2) &&
-                Common_Math_Tools::almost_equal (p1->y, other.p1->y, 2) &&
-                Common_Math_Tools::almost_equal (p2->y, other.p2->y, 2));
+        return ((Common_Math_Tools::almost_equal (p1->x, other.p1->x, 2) &&
+                 Common_Math_Tools::almost_equal (p2->x, other.p2->x, 2) &&
+                 Common_Math_Tools::almost_equal (p1->y, other.p1->y, 2) &&
+                 Common_Math_Tools::almost_equal (p2->y, other.p2->y, 2)) ||
+                (Common_Math_Tools::almost_equal (p1->x, other.p2->x, 2) &&
+                 Common_Math_Tools::almost_equal (p2->x, other.p1->x, 2) &&
+                 Common_Math_Tools::almost_equal (p1->y, other.p2->y, 2) &&
+                 Common_Math_Tools::almost_equal (p2->y, other.p1->y, 2)));
       }
     };
 
@@ -332,16 +347,13 @@ class PGE_124
       float dx = xmax - xmin,
             dy = ymax - ymin,
             dmax = dx > dy ? dx : dy,
-            twenty_dmax = dmax * 20.0f,
+            two_dmax = dmax * 2.0f,
             xmid = (xmax + xmin) * 0.5f,
             ymid = (ymax + ymin) * 0.5f;
       olc::vf2d p1, p2, p3;
-      p1 = {xmid - twenty_dmax, ymid - dmax};
-      p2 = {xmid, ymid + twenty_dmax};
-      p3 = {xmid + twenty_dmax, ymid - dmax};
-      //pxyz.push_back (&p1);
-      //pxyz.push_back (&p2);
-      //pxyz.push_back (&p3);
+      p1 = {xmid - two_dmax, ymid - dmax};
+      p2 = {xmid, ymid + two_dmax};
+      p3 = {xmid + two_dmax, ymid - dmax};
 
       triangle super_triangle;
       super_triangle.p1 = &p1;
@@ -353,20 +365,20 @@ class PGE_124
       olc::vf2d circle;
       float z;
       bool inside;
-      std::vector<edge> edges;
       std::vector<triangle> complete;
       for (std::vector<olc::vf2d*>::iterator iterator = pxyz.begin ();
            iterator != pxyz.end ();
            ++iterator)
       {
-        edges.clear ();
+        std::vector<edge> edges;
+
         for (int j = static_cast<int> (triangles.size () -1); j >= 0; j--)
         {
           bool complete_b = false;
           for (std::vector<triangle>::iterator iterator_2 = complete.begin ();
               iterator_2 != complete.end ();
               ++iterator_2)
-            if ((*triangles[j].p1 == *(*iterator_2).p1) && (*triangles[j].p2 == *(*iterator_2).p2) && (*triangles[j].p3 == *(*iterator_2).p3))
+            if (triangles[j].almost_equal (*iterator_2))
             {
               complete_b = true;
               break;

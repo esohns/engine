@@ -45,10 +45,10 @@ PGE_124::OnUserUpdate (float fElapsedTime)
   if (olc::PixelGameEngine::GetMouse (0).bHeld)
     reset ();
 
-  //for (int i = 0; i < ENGINE_PGE_124_DEFAULT_NUMBER_OF_POINTS; i++)
-  //  points_[i].process (this, points_);
-  //for (int i = 0; i < ENGINE_PGE_124_DEFAULT_NUMBER_OF_POINTS; i++)
-  //  points_[i].update (this);
+  for (int i = 0; i < ENGINE_PGE_124_DEFAULT_NUMBER_OF_POINTS; i++)
+    points_[i].process (this, points_);
+  for (int i = 0; i < ENGINE_PGE_124_DEFAULT_NUMBER_OF_POINTS; i++)
+    points_[i].update (this);
 
   olc::PixelGameEngine::Clear (olc::BLACK);
 
@@ -65,8 +65,8 @@ PGE_124::OnUserUpdate (float fElapsedTime)
       static_cast<uint8_t> (Common_GL_Tools::map (static_cast<int32_t> ((*iterator).p1->x), 0, olc::PixelGameEngine::ScreenWidth () - 1, 0, 255));
     color.g =
       static_cast<uint8_t> (Common_GL_Tools::map (static_cast<int32_t> ((*iterator).p1->y), 0, olc::PixelGameEngine::ScreenHeight () - 1, 0, 255));
-    //olc::PixelGameEngine::DrawTriangle (*(*iterator).p1, *(*iterator).p2, *(*iterator).p3, color);
     olc::PixelGameEngine::FillTriangle (*(*iterator).p1, *(*iterator).p2, *(*iterator).p3, color);
+    olc::PixelGameEngine::DrawTriangle (*(*iterator).p1, *(*iterator).p2, *(*iterator).p3, olc::BLACK);
   } // end FOR
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
