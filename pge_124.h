@@ -136,32 +136,32 @@ class PGE_124
               Common_Math_Tools::almost_equal (p3->y, other.p3->y, 2));
     }
 
-    bool containsVertex (olc::vf2d& v)
-    {
-      return (v == *p1) || (v == *p2) || (v == *p3);
-    }
+    //bool containsVertex (olc::vf2d& v)
+    //{
+    //  return (v == *p1) || (v == *p2) || (v == *p3);
+    //}
 
-    bool circumCircleContains (olc::vf2d& v)
-    {
-      float ab = p1->mag2 ();
-      float cd = p2->mag2 ();
-      float ef = p3->mag2 ();
+    //bool circumCircleContains (olc::vf2d& v)
+    //{
+    //  float ab = p1->mag2 ();
+    //  float cd = p2->mag2 ();
+    //  float ef = p3->mag2 ();
 
-      float ax = p1->x;
-      float ay = p1->y;
-      float bx = p2->x;
-      float by = p2->y;
-      float cx = p3->x;
-      float cy = p3->y;
+    //  float ax = p1->x;
+    //  float ay = p1->y;
+    //  float bx = p2->x;
+    //  float by = p2->y;
+    //  float cx = p3->x;
+    //  float cy = p3->y;
 
-      float circum_x = (ab * (cy - by) + cd * (ay - cy) + ef * (by - ay)) / (ax * (cy - by) + bx * (ay - cy) + cx * (by - ay));
-      float circum_y = (ab * (cx - bx) + cd * (ax - cx) + ef * (bx - ax)) / (ay * (cx - bx) + by * (ax - cx) + cy * (bx - ax));
+    //  float circum_x = (ab * (cy - by) + cd * (ay - cy) + ef * (by - ay)) / (ax * (cy - by) + bx * (ay - cy) + cx * (by - ay));
+    //  float circum_y = (ab * (cx - bx) + cd * (ax - cx) + ef * (bx - ax)) / (ay * (cx - bx) + by * (ax - cx) + cy * (bx - ax));
 
-      olc::vf2d circum (circum_x / 2.0f, circum_y / 2.0f);
-      float circum_radius = p1->dist (circum) * p1->dist (circum);
-      float dist = v.dist (circum) * v.dist (circum);
-      return dist <= circum_radius;
-    }
+    //  olc::vf2d circum (circum_x / 2.0f, circum_y / 2.0f);
+    //  float circum_radius = p1->dist (circum) * p1->dist (circum);
+    //  float dist = v.dist (circum) * v.dist (circum);
+    //  return dist <= circum_radius;
+    //}
   };
 
   class circum_circle

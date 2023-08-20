@@ -48,6 +48,11 @@
 #include "pge_125.h"
 #include "pge_126.h"
 #include "pge_127.h"
+#include "pge_128.h"
+#include "pge_129.h"
+#include "pge_130.h"
+#include "pge_131.h"
+#include "glut_132.h"
 
 enum Engine_ModeType
 {
@@ -59,6 +64,11 @@ enum Engine_ModeType
   ENGINE_MODE_125,
   ENGINE_MODE_126,
   ENGINE_MODE_127,
+  ENGINE_MODE_128,
+  ENGINE_MODE_129,
+  ENGINE_MODE_130,
+  ENGINE_MODE_131,
+  ENGINE_MODE_132,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -339,6 +349,129 @@ do_work (int argc_in,
         example.Start ();
         result = true;
       } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_128:
+    {
+      PGE_128 example;
+      if (example.Construct (ENGINE_PGE_128_DEFAULT_WIDTH, ENGINE_PGE_128_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_129:
+    {
+      PGE_129 example;
+      if (example.Construct (ENGINE_PGE_129_DEFAULT_WIDTH, ENGINE_PGE_129_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_130:
+    {
+      PGE_130 example;
+      if (example.Construct (ENGINE_PGE_130_DEFAULT_WIDTH, ENGINE_PGE_130_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_131:
+    {
+      PGE_131 example;
+      if (example.Construct (ENGINE_PGE_131_DEFAULT_WIDTH, ENGINE_PGE_131_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_132:
+    {
+      struct Engine_OpenGL_GLUT_132_CBData cb_data_s;
+      cb_data_s.a = 0.0f;
+      cb_data_s.f = 0.0f;
+
+      cb_data_s.wireframe = true;
+
+      cb_data_s.angle = 0.0F;
+      cb_data_s.camera.position.x = ENGINE_GLUT_132_DEFAULT_WIDTH / 2.0F;
+      cb_data_s.camera.position.y = 0.0F;
+      cb_data_s.camera.position.z = 1000.0F;
+      cb_data_s.camera.looking_at.x = ENGINE_GLUT_132_DEFAULT_WIDTH / 2.0F;
+      cb_data_s.camera.looking_at.y = ENGINE_GLUT_132_DEFAULT_HEIGHT / 2.0F;
+      cb_data_s.camera.looking_at.z = 0.0F;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 0.0F;
+      cb_data_s.camera.up.z = 1.0F;
+
+      cb_data_s.deltaAngle = 0.0F;
+      cb_data_s.xOrigin = -1;
+
+      cb_data_s.x = ENGINE_GLUT_3_DEFAULT_NOISE_X;
+      cb_data_s.y = ENGINE_GLUT_3_DEFAULT_NOISE_Y;
+      cb_data_s.z = ENGINE_GLUT_3_DEFAULT_NOISE_Z;
+      //cb_data_s.noise.SetSeed (static_cast<int> (Common_Tools::randomSeed));
+      //cb_data_s.noise.SetNoiseQuality (noise::QUALITY_BEST);
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_132_DEFAULT_WIDTH, ENGINE_GLUT_132_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 132");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (255.0f, 255.0f, 255.0f, 255.0f);
+      COMMON_GL_ASSERT;
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+      COMMON_GL_ASSERT;
+
+      glutDisplayFunc (engine_glut_132_draw);
+      glutReshapeFunc (engine_glut_132_reshape);
+      glutVisibilityFunc (engine_glut_132_visible);
+
+      glutKeyboardFunc (engine_glut_132_key);
+      glutSpecialFunc (engine_glut_132_key_special);
+      glutMouseFunc (engine_glut_132_mouse_button);
+      glutMotionFunc (engine_glut_132_mouse_move);
+      glutTimerFunc (100, engine_glut_132_timer, 0);
+
+      glutCreateMenu (engine_glut_132_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      result = true;
 
       break;
     }

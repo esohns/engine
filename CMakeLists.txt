@@ -742,6 +742,7 @@ set (engine_5_EXE_SRCS
      engine_common.h
      defines_5.h
      main_5.cpp
+     opensimplexnoise.h
      pge_120.cpp
      pge_120.h
      pge_121.cpp
@@ -758,6 +759,16 @@ set (engine_5_EXE_SRCS
      pge_126.h
      pge_127.cpp
      pge_127.h
+     pge_128.cpp
+     pge_128.h
+     pge_129.cpp
+     pge_129.h
+     pge_130.cpp
+     pge_130.h
+     pge_131.cpp
+     pge_131.h
+     glut_132.cpp
+     glut_132.h
      stdafx.h)
 
 set (EXECUTABLE_5 engine_5)
@@ -862,6 +873,7 @@ target_link_libraries (${EXECUTABLE_5} CommonUI_GTK)
 
 if (WIN32)
  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:20000000")
+ target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
 endif (WIN32)
 
 # add PCH
