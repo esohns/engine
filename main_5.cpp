@@ -53,6 +53,8 @@
 #include "pge_130.h"
 #include "pge_131.h"
 #include "glut_132.h"
+#include "pge_133.h"
+#include "pge_134.h"
 
 enum Engine_ModeType
 {
@@ -69,6 +71,8 @@ enum Engine_ModeType
   ENGINE_MODE_130,
   ENGINE_MODE_131,
   ENGINE_MODE_132,
+  ENGINE_MODE_133,
+  ENGINE_MODE_134,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -422,7 +426,7 @@ do_work (int argc_in,
 
       cb_data_s.angle = 0.0F;
       cb_data_s.camera.position.x = ENGINE_GLUT_132_DEFAULT_WIDTH / 2.0F;
-      cb_data_s.camera.position.y = 0.0F;
+      cb_data_s.camera.position.y = ENGINE_GLUT_132_DEFAULT_HEIGHT;
       cb_data_s.camera.position.z = 1000.0F;
       cb_data_s.camera.looking_at.x = ENGINE_GLUT_132_DEFAULT_WIDTH / 2.0F;
       cb_data_s.camera.looking_at.y = ENGINE_GLUT_132_DEFAULT_HEIGHT / 2.0F;
@@ -472,6 +476,36 @@ do_work (int argc_in,
       glutMainLoop ();
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_133:
+    {
+      PGE_133 example;
+      if (example.Construct (ENGINE_PGE_133_DEFAULT_WIDTH, ENGINE_PGE_133_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_134:
+    {
+      PGE_134 example;
+      if (example.Construct (ENGINE_PGE_134_DEFAULT_WIDTH, ENGINE_PGE_134_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }

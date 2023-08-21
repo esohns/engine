@@ -79,7 +79,7 @@ engine_glut_132_key_special (int key_in,
       break;
     case GLUT_KEY_UP:
       cb_data_p->camera.position.x = ENGINE_GLUT_132_DEFAULT_WIDTH / 2.0f;
-      cb_data_p->camera.position.y = 0.0f;
+      cb_data_p->camera.position.y = ENGINE_GLUT_132_DEFAULT_HEIGHT;
       cb_data_p->camera.position.z = 1000.0f;
       cb_data_p->camera.rotation.z = 0.0f;
       break;
