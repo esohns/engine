@@ -773,6 +773,16 @@ set (engine_5_EXE_SRCS
      pge_133.h
      pge_134.cpp
      pge_134.h
+     pge_135.cpp
+     pge_135.h
+     pge_136.cpp
+     pge_136.h
+     pge_137.cpp
+     pge_137.h
+     pge_138.cpp
+     pge_138.h
+     pge_139.cpp
+     pge_139.h
      stdafx.h)
 
 set (EXECUTABLE_5 engine_5)
