@@ -32,4 +32,39 @@
 #define ENGINE_PGE_141_DEFAULT_WIDTH            800
 #define ENGINE_PGE_141_DEFAULT_ZOOM             200.0f
 
+// pge 142
+#define ENGINE_PGE_142_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_142_DEFAULT_WIDTH            600
+#define ENGINE_PGE_142_DEFAULT_W                600
+
+// pge 143
+#define ENGINE_PGE_143_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_143_DEFAULT_WIDTH            600
+#define ENGINE_PGE_143_DEFAULT_W                600
+
+// pge 144
+#define ENGINE_PGE_144_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_144_DEFAULT_WIDTH            800
+#define ENGINE_PGE_144_DEFAULT_ALPHA_DECAY       20
+#define ENGINE_PGE_144_DEFAULT_NUMBER_OF_CIRCLES 18
+
+// pge 145
+#define ENGINE_PGE_145_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_145_DEFAULT_WIDTH            600
+#define ENGINE_PGE_145_DEFAULT_W                600
+
+// pge 146
+#define ENGINE_PGE_146_DEFAULT_HEIGHT           1024
+#define ENGINE_PGE_146_DEFAULT_WIDTH            1024
+#define ENGINE_PGE_146_DEFAULT_W                1024
+
+// pge 147
+#define ENGINE_PGE_147_DEFAULT_HEIGHT           640
+#define ENGINE_PGE_147_DEFAULT_WIDTH            640
+
+// pge 148
+#define ENGINE_PGE_148_DEFAULT_HEIGHT           720
+#define ENGINE_PGE_148_DEFAULT_WIDTH            720
+#define ENGINE_PGE_148_DEFAULT_W                720
+
 #endif

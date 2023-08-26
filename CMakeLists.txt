@@ -802,6 +802,20 @@ set (engine_6_EXE_SRCS
      pge_140.h
      pge_141.cpp
      pge_141.h
+     pge_142.cpp
+     pge_142.h
+     pge_143.cpp
+     pge_143.h
+     pge_144.cpp
+     pge_144.h
+     pge_145.cpp
+     pge_145.h
+     pge_146.cpp
+     pge_146.h
+     pge_147.cpp
+     pge_147.h
+     pge_148.cpp
+     pge_148.h
      stdafx.h)
 
 set (EXECUTABLE_6 engine_6)
