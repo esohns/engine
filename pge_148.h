@@ -2,6 +2,7 @@
 #define PGE_148_H
 
 #include "noise/noise.h"
+//#include "opensimplexnoise.h"
 
 #include "olcPixelGameEngine.h"
 
@@ -23,6 +24,7 @@ class PGE_148
   int32_t               z_;
   float                 r_;
   noise::module::Perlin noise_;
+  //OpenSimplexNoise      noise_;
 };
 
 #endif // PGE_148_H

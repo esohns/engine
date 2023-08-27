@@ -49,6 +49,11 @@
 #include "pge_146.h"
 #include "pge_147.h"
 #include "pge_148.h"
+#include "pge_149.h"
+#include "pge_150.h"
+#include "pge_151.h"
+#include "pge_152.h"
+#include "pge_153.h"
 
 enum Engine_ModeType
 {
@@ -61,6 +66,11 @@ enum Engine_ModeType
   ENGINE_MODE_146,
   ENGINE_MODE_147,
   ENGINE_MODE_148,
+  ENGINE_MODE_149,
+  ENGINE_MODE_150,
+  ENGINE_MODE_151,
+  ENGINE_MODE_152,
+  ENGINE_MODE_153,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -348,6 +358,81 @@ do_work (int argc_in,
     {
       PGE_148 example;
       if (example.Construct (ENGINE_PGE_148_DEFAULT_WIDTH, ENGINE_PGE_148_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_149:
+    {
+      PGE_149 example;
+      if (example.Construct (ENGINE_PGE_149_DEFAULT_WIDTH, ENGINE_PGE_149_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_150:
+    {
+      PGE_150 example;
+      if (example.Construct (ENGINE_PGE_150_DEFAULT_WIDTH, ENGINE_PGE_150_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_151:
+    {
+      PGE_151 example;
+      if (example.Construct (ENGINE_PGE_151_DEFAULT_WIDTH, ENGINE_PGE_151_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_152:
+    {
+      PGE_152 example;
+      if (example.Construct (ENGINE_PGE_152_DEFAULT_WIDTH, ENGINE_PGE_152_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_153:
+    {
+      PGE_153 example;
+      if (example.Construct (ENGINE_PGE_153_DEFAULT_WIDTH, ENGINE_PGE_153_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?

@@ -816,6 +816,16 @@ set (engine_6_EXE_SRCS
      pge_147.h
      pge_148.cpp
      pge_148.h
+     pge_149.cpp
+     pge_149.h
+     pge_150.cpp
+     pge_150.h
+     pge_151.cpp
+     pge_151.h
+     pge_152.cpp
+     pge_152.h
+     pge_153.cpp
+     pge_153.h
      stdafx.h)
 
 set (EXECUTABLE_6 engine_6)
@@ -940,6 +950,7 @@ target_link_libraries (${EXECUTABLE_6} CommonUI_GTK)
 if (WIN32)
  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:20000000")
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
+ target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
 endif (WIN32)
 
 # add PCH
