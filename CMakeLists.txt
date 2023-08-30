@@ -836,6 +836,8 @@ set (engine_6_EXE_SRCS
      pge_157.h
      pge_158.cpp
      pge_158.h
+     pge_159.cpp
+     pge_159.h
      stdafx.h)
 
 set (EXECUTABLE_6 engine_6)
