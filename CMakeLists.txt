@@ -857,6 +857,10 @@ set (engine_7_EXE_SRCS
      pge_160.h
      pge_161.cpp
      pge_161.h
+     pge_162.cpp
+     pge_162.h
+     pge_163.cpp
+     pge_163.h
      stdafx.h)
 
 set (EXECUTABLE_7 engine_7)

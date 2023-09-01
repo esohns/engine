@@ -30,4 +30,13 @@
 #define ENGINE_PGE_161_DEFAULT_WIDTH            640
 #define ENGINE_PGE_161_DEFAULT_NUMBER_OF_PARTICLES 3000
 
+// pge 162
+#define ENGINE_PGE_162_DEFAULT_HEIGHT           640
+#define ENGINE_PGE_162_DEFAULT_WIDTH            640
+#define ENGINE_PGE_162_DEFAULT_W                640
+
+// pge 163
+#define ENGINE_PGE_163_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_163_DEFAULT_WIDTH            800
+
 #endif
