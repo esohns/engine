@@ -39,4 +39,33 @@
 #define ENGINE_PGE_163_DEFAULT_HEIGHT           600
 #define ENGINE_PGE_163_DEFAULT_WIDTH            800
 
+// pge 164
+#define ENGINE_PGE_164_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_164_DEFAULT_WIDTH            800
+
+// pge 165
+#define ENGINE_PGE_165_DEFAULT_HEIGHT           720
+#define ENGINE_PGE_165_DEFAULT_WIDTH            720
+#define ENGINE_PGE_165_DEFAULT_W                720
+
+// pge 166
+#define ENGINE_PGE_166_DEFAULT_HEIGHT           720
+#define ENGINE_PGE_166_DEFAULT_WIDTH            720
+#define ENGINE_PGE_166_DEFAULT_W                720
+#define ENGINE_PGE_166_DEFAULT_L                70
+
+// pge 167
+#define ENGINE_PGE_167_DEFAULT_HEIGHT           720
+#define ENGINE_PGE_167_DEFAULT_WIDTH            720
+#define ENGINE_PGE_167_DEFAULT_W                720
+#define ENGINE_PGE_167_DEFAULT_SPEED            10.0f
+#define ENGINE_PGE_167_DEFAULT_NUMBER_OF_PARTICLES 99
+#define ENGINE_PGE_167_DEFAULT_RANGE            200
+#define ENGINE_PGE_167_DEFAULT_SIZE             8
+
+// pge 168
+#define ENGINE_PGE_168_DEFAULT_HEIGHT           720
+#define ENGINE_PGE_168_DEFAULT_WIDTH            720
+#define ENGINE_PGE_168_DEFAULT_W                720
+
 #endif

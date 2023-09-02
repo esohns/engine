@@ -861,6 +861,16 @@ set (engine_7_EXE_SRCS
      pge_162.h
      pge_163.cpp
      pge_163.h
+     pge_164.cpp
+     pge_164.h
+     pge_165.cpp
+     pge_165.h
+     pge_166.cpp
+     pge_166.h
+     pge_167.cpp
+     pge_167.h
+     pge_168.cpp
+     pge_168.h
      stdafx.h)
 
 set (EXECUTABLE_7 engine_7)
@@ -1005,6 +1015,7 @@ if (WIN32)
  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:20000000")
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
  target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
+ target_link_options (${EXECUTABLE_7} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
 endif (WIN32)
 
 # add PCH

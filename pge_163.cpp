@@ -33,7 +33,8 @@ PGE_163::OnUserUpdate (float fElapsedTime)
 
   float r1 = 0.0f;
   float r2 = 0.0f;
-  float t1 = Common_GL_Tools::map (std::cos ((static_cast<float> (M_PI) / 180.0f) * (frame_count_i)), -1.0f, 1.0f, 0.03f, 0.2f);
+  float t1 =
+    Common_GL_Tools::map (std::cos ((static_cast<float> (M_PI) / 180.0f) * frame_count_i), -1.0f, 1.0f, 0.03f, 0.2f);
   float t2 = 1.0f;
   while (r1 < 360.0f)
   {
