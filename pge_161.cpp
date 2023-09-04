@@ -14,7 +14,7 @@
 PGE_161::PGE_161 ()
  : olc::PixelGameEngine ()
  , particles_ ()
- , referencePoints_ (4, struct reference_point ())
+ , referencePoints_ (4, reference_point ())
 {
   sAppName = "Example 161";
 }

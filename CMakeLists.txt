@@ -322,44 +322,44 @@ elseif (WIN32)
  endif (NOT FFMPEG_FOUND)
 endif ()
 
-if (UNIX)
- find_package (ImageMagick COMPONENTS MagickCore MagickWand)
- if (ImageMagick_FOUND)
-  message (STATUS "found ImageMagick")
-  set (IMAGEMAGICK_FOUND TRUE)
- endif (ImageMagick_FOUND)
-elseif (WIN32)
- if (NOT unofficial-graphicsmagick_FOUND)
-  find_library (ImageMagick_MagickCore_LIBRARY CORE_RL_MagickCore_.lib
-                PATHS $ENV{LIB_ROOT}/ImageMagick
-                PATH_SUFFIXES lib
-                DOC "searching for CORE_RL_MagickCore_.lib"
-                NO_DEFAULT_PATH)
-#  find_library (ImageMagick_LIBRARY CORE_RL_Magick++_.lib
+#if (UNIX)
+# find_package (ImageMagick COMPONENTS MagickCore MagickWand)
+# if (ImageMagick_FOUND)
+#  message (STATUS "found ImageMagick")
+#  set (IMAGEMAGICK_FOUND TRUE)
+# endif (ImageMagick_FOUND)
+#elseif (WIN32)
+# if (NOT unofficial-graphicsmagick_FOUND)
+#  find_library (ImageMagick_MagickCore_LIBRARY CORE_RL_MagickCore_.lib
 #                PATHS $ENV{LIB_ROOT}/ImageMagick
 #                PATH_SUFFIXES lib
-#                DOC "searching for CORE_RL_Magick++_.lib"
+#                DOC "searching for CORE_RL_MagickCore_.lib"
 #                NO_DEFAULT_PATH)
-  find_library (ImageMagick_MagickWand_LIBRARY CORE_RL_MagickWand_.lib
-                PATHS $ENV{LIB_ROOT}/ImageMagick
-                PATH_SUFFIXES lib
-                DOC "searching for CORE_RL_MagickWand_.lib"
-                NO_DEFAULT_PATH)
-  if (NOT ImageMagick_MagickCore_LIBRARY)
-   message (WARNING "could not find CORE_RL_MagickCore_.lib, continuing")
-  endif (NOT ImageMagick_MagickCore_LIBRARY)
-  if (NOT ImageMagick_MagickWand_LIBRARY)
-   message (WARNING "could not find CORE_RL_MagickWand_.lib, continuing")
-  endif (NOT ImageMagick_MagickWand_LIBRARY)
-  if (ImageMagick_MagickCore_LIBRARY AND ImageMagick_MagickWand_LIBRARY)
-   message (STATUS "found ImageMagick")
-   set (IMAGEMAGICK_FOUND TRUE)
-   set (ImageMagick_INCLUDE_DIRS "$ENV{LIB_ROOT}/ImageMagick/include")
-   set (ImageMagick_LIBRARIES "${ImageMagick_MagickCore_LIBRARY};${ImageMagick_MagickWand_LIBRARY}")
-   set (ImageMagick_LIB_DIR "$ENV{LIB_ROOT}/ImageMagick")
-  endif (ImageMagick_MagickCore_LIBRARY AND ImageMagick_MagickWand_LIBRARY)
- endif (NOT unofficial-graphicsmagick_FOUND)
-endif ()
+##  find_library (ImageMagick_LIBRARY CORE_RL_Magick++_.lib
+##                PATHS $ENV{LIB_ROOT}/ImageMagick
+##                PATH_SUFFIXES lib
+##                DOC "searching for CORE_RL_Magick++_.lib"
+##                NO_DEFAULT_PATH)
+#  find_library (ImageMagick_MagickWand_LIBRARY CORE_RL_MagickWand_.lib
+#                PATHS $ENV{LIB_ROOT}/ImageMagick
+#                PATH_SUFFIXES lib
+#                DOC "searching for CORE_RL_MagickWand_.lib"
+#                NO_DEFAULT_PATH)
+#  if (NOT ImageMagick_MagickCore_LIBRARY)
+#   message (WARNING "could not find CORE_RL_MagickCore_.lib, continuing")
+#  endif (NOT ImageMagick_MagickCore_LIBRARY)
+#  if (NOT ImageMagick_MagickWand_LIBRARY)
+#   message (WARNING "could not find CORE_RL_MagickWand_.lib, continuing")
+#  endif (NOT ImageMagick_MagickWand_LIBRARY)
+#  if (ImageMagick_MagickCore_LIBRARY AND ImageMagick_MagickWand_LIBRARY)
+#   message (STATUS "found ImageMagick")
+#   set (IMAGEMAGICK_FOUND TRUE)
+#   set (ImageMagick_INCLUDE_DIRS "$ENV{LIB_ROOT}/ImageMagick/include")
+#   set (ImageMagick_LIBRARIES "${ImageMagick_MagickCore_LIBRARY};${ImageMagick_MagickWand_LIBRARY}")
+#   set (ImageMagick_LIB_DIR "$ENV{LIB_ROOT}/ImageMagick")
+#  endif (ImageMagick_MagickCore_LIBRARY AND ImageMagick_MagickWand_LIBRARY)
+# endif (NOT unofficial-graphicsmagick_FOUND)
+#endif ()
 
 if (UNIX)
  find_library (BOX2D_LIBRARY liquidfun
@@ -1011,7 +1011,11 @@ target_link_libraries (${EXECUTABLE_7} CommonTimer)
 target_link_libraries (${EXECUTABLE_7} CommonUI)
 target_link_libraries (${EXECUTABLE_7} CommonUI_GTK)
 
-if (WIN32)
+if (UNIX)
+ target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
+ target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
+ target_link_options (${EXECUTABLE_7} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
+elseif (WIN32)
  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:20000000")
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
  target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")

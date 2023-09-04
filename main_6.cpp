@@ -40,6 +40,7 @@
 #include "engine_common.h"
 
 #define OLC_PGE_APPLICATION
+#define OPENSIMPLEXNOISE_STATIC_CONSTANTS
 #include "pge_140.h"
 #include "pge_141.h"
 #include "pge_142.h"
