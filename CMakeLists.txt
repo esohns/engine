@@ -71,7 +71,8 @@ add_definitions (-DHAVE_CONFIG_H)
 configure_file (resource.rc.in
                 resource.rc)
 
-set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts")
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts;${CMAKE_CURRENT_SOURCE_DIR}/../Common/src/gl/scripts")
+include (glew)
 #include (ffmpeg)
 #if (NOT FFMPEG_SUPPORT)
 # message (FATAL_ERROR "could not find ffmpeg, aborting")
@@ -322,45 +323,6 @@ elseif (WIN32)
  endif (NOT FFMPEG_FOUND)
 endif ()
 
-#if (UNIX)
-# find_package (ImageMagick COMPONENTS MagickCore MagickWand)
-# if (ImageMagick_FOUND)
-#  message (STATUS "found ImageMagick")
-#  set (IMAGEMAGICK_FOUND TRUE)
-# endif (ImageMagick_FOUND)
-#elseif (WIN32)
-# if (NOT unofficial-graphicsmagick_FOUND)
-#  find_library (ImageMagick_MagickCore_LIBRARY CORE_RL_MagickCore_.lib
-#                PATHS $ENV{LIB_ROOT}/ImageMagick
-#                PATH_SUFFIXES lib
-#                DOC "searching for CORE_RL_MagickCore_.lib"
-#                NO_DEFAULT_PATH)
-##  find_library (ImageMagick_LIBRARY CORE_RL_Magick++_.lib
-##                PATHS $ENV{LIB_ROOT}/ImageMagick
-##                PATH_SUFFIXES lib
-##                DOC "searching for CORE_RL_Magick++_.lib"
-##                NO_DEFAULT_PATH)
-#  find_library (ImageMagick_MagickWand_LIBRARY CORE_RL_MagickWand_.lib
-#                PATHS $ENV{LIB_ROOT}/ImageMagick
-#                PATH_SUFFIXES lib
-#                DOC "searching for CORE_RL_MagickWand_.lib"
-#                NO_DEFAULT_PATH)
-#  if (NOT ImageMagick_MagickCore_LIBRARY)
-#   message (WARNING "could not find CORE_RL_MagickCore_.lib, continuing")
-#  endif (NOT ImageMagick_MagickCore_LIBRARY)
-#  if (NOT ImageMagick_MagickWand_LIBRARY)
-#   message (WARNING "could not find CORE_RL_MagickWand_.lib, continuing")
-#  endif (NOT ImageMagick_MagickWand_LIBRARY)
-#  if (ImageMagick_MagickCore_LIBRARY AND ImageMagick_MagickWand_LIBRARY)
-#   message (STATUS "found ImageMagick")
-#   set (IMAGEMAGICK_FOUND TRUE)
-#   set (ImageMagick_INCLUDE_DIRS "$ENV{LIB_ROOT}/ImageMagick/include")
-#   set (ImageMagick_LIBRARIES "${ImageMagick_MagickCore_LIBRARY};${ImageMagick_MagickWand_LIBRARY}")
-#   set (ImageMagick_LIB_DIR "$ENV{LIB_ROOT}/ImageMagick")
-#  endif (ImageMagick_MagickCore_LIBRARY AND ImageMagick_MagickWand_LIBRARY)
-# endif (NOT unofficial-graphicsmagick_FOUND)
-#endif ()
-
 if (UNIX)
  find_library (BOX2D_LIBRARY liquidfun
                PATHS $ENV{LIB_ROOT}/liquidfun/build/gcc/Box2D
@@ -407,7 +369,7 @@ if (GUI_SUPPORT)
  endif (GTK_SUPPORT)
 endif (GUI_SUPPORT)
 
-set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/src/gl/scripts")
+#set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/src/gl/scripts")
 include (glm)
 
 ############## includes ###############
@@ -416,6 +378,7 @@ include_directories (${PGE_INCLUDE_DIR})
 include_directories (${PGE_INCLUDE_DIR}/extensions)
 include_directories (${LIBNOISE_INCLUDES})
 include_directories (${GLUT_INCLUDE_DIRS})
+include_directories (${GLEW_INCLUDE_DIRS})
 include_directories (${GTK_INCLUDE_DIRS})
 
 include_directories (${ACE_INCLUDE_DIR})
@@ -871,6 +834,8 @@ set (engine_7_EXE_SRCS
      pge_167.h
      pge_168.cpp
      pge_168.h
+     glut_169.cpp
+     glut_169.h
      stdafx.h)
 
 set (EXECUTABLE_7 engine_7)
@@ -999,6 +964,7 @@ target_link_libraries (${EXECUTABLE_6} CommonUI_GTK)
 target_link_libraries (${EXECUTABLE_7} ${BOX2D_LIBRARIES})
 target_link_libraries (${EXECUTABLE_7} ${LIBNOISE_LIB})
 target_link_libraries (${EXECUTABLE_7} ${GLUT_LIBRARIES})
+target_link_libraries (${EXECUTABLE_7} ${GLEW_LIBRARIES})
 target_link_libraries (${EXECUTABLE_7} ${GTK_LIBRARIES})
 
 target_link_libraries (${EXECUTABLE_7} ${ACE_LIBRARY})
@@ -1020,7 +986,7 @@ elseif (WIN32)
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
  target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
  target_link_options (${EXECUTABLE_7} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
-endif (WIN32)
+endif ()
 
 # add PCH
 target_precompile_headers (${EXECUTABLE}
@@ -1080,6 +1046,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
 endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 file (TO_CMAKE_PATH ${LIBNOISE_LIB_DIR} LIBNOISE_PATH)
 file (TO_CMAKE_PATH "${GLUT_LIB_DIR}" GLUT_PATH)
+file (TO_CMAKE_PATH "${GLEW_LIB_DIR}" GLEW_PATH)
 file (TO_CMAKE_PATH ${ACE_LIB_DIR} ACE_PATH)
 file (TO_CMAKE_PATH "${ASSIMP_LIB_DIR}" ASSIMP_PATH)
 file (TO_CMAKE_PATH "${PNG_LIB_DIR}" PNG_PATH)
@@ -1091,6 +1058,7 @@ set (RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
                           ${ACE_PATH}
                           ${LIBNOISE_PATH}
                           ${GLUT_PATH}
+                          ${GLEW_PATH}
                           ${ASSIMP_PATH}
                           ${PNG_PATH}
                           ${FFMPEG_PATH}

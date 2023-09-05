@@ -68,4 +68,9 @@
 #define ENGINE_PGE_168_DEFAULT_WIDTH            720
 #define ENGINE_PGE_168_DEFAULT_W                720
 
+// glut 169
+#define ENGINE_GLUT_169_DEFAULT_HEIGHT          600
+#define ENGINE_GLUT_169_DEFAULT_WIDTH           800
+#define ENGINE_GLUT_169_DEFAULT_SCALE_FACTOR    30
+
 #endif
