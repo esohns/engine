@@ -836,6 +836,14 @@ set (engine_7_EXE_SRCS
      pge_168.h
      glut_169.cpp
      glut_169.h
+     pge_170.cpp
+     pge_170.h
+     pge_171.cpp
+     pge_171.h
+     pge_172.cpp
+     pge_172.h
+     pge_173.cpp
+     pge_173.h
      stdafx.h)
 
 set (EXECUTABLE_7 engine_7)

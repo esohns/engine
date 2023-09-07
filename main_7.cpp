@@ -52,6 +52,10 @@
 #include "pge_167.h"
 #include "pge_168.h"
 #include "glut_169.h"
+#include "pge_170.h"
+#include "pge_171.h"
+#include "pge_172.h"
+#include "pge_173.h"
 
 enum Engine_ModeType
 {
@@ -65,6 +69,10 @@ enum Engine_ModeType
   ENGINE_MODE_167,
   ENGINE_MODE_168,
   ENGINE_MODE_169,
+  ENGINE_MODE_170,
+  ENGINE_MODE_171,
+  ENGINE_MODE_172,
+  ENGINE_MODE_173,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -533,6 +541,66 @@ do_work (int argc_in,
       glutMainLoop ();
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_170:
+    {
+      PGE_170 example;
+      if (example.Construct (ENGINE_PGE_170_DEFAULT_WIDTH, ENGINE_PGE_170_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_171:
+    {
+      PGE_171 example;
+      if (example.Construct (ENGINE_PGE_171_DEFAULT_WIDTH, ENGINE_PGE_171_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_172:
+    {
+      PGE_172 example;
+      if (example.Construct (ENGINE_PGE_172_DEFAULT_WIDTH, ENGINE_PGE_172_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_173:
+    {
+      PGE_173 example;
+      if (example.Construct (ENGINE_PGE_173_DEFAULT_WIDTH, ENGINE_PGE_173_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }

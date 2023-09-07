@@ -73,4 +73,23 @@
 #define ENGINE_GLUT_169_DEFAULT_WIDTH           800
 #define ENGINE_GLUT_169_DEFAULT_SCALE_FACTOR    30
 
+// pge 170
+#define ENGINE_PGE_170_DEFAULT_HEIGHT           800
+#define ENGINE_PGE_170_DEFAULT_WIDTH            800
+#define ENGINE_PGE_170_DEFAULT_NUMBER_OF_PARTICLES 2000
+
+// pge 171
+#define ENGINE_PGE_171_DEFAULT_HEIGHT           720
+#define ENGINE_PGE_171_DEFAULT_WIDTH            720
+#define ENGINE_PGE_171_DEFAULT_H                100
+
+// pge 172
+#define ENGINE_PGE_172_DEFAULT_HEIGHT           640
+#define ENGINE_PGE_172_DEFAULT_WIDTH            640
+#define ENGINE_PGE_172_DEFAULT_W                640
+
+// pge 173
+#define ENGINE_PGE_173_DEFAULT_HEIGHT           480
+#define ENGINE_PGE_173_DEFAULT_WIDTH            640
+
 #endif
