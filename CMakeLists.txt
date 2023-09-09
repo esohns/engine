@@ -844,6 +844,12 @@ set (engine_7_EXE_SRCS
      pge_172.h
      pge_173.cpp
      pge_173.h
+     pge_174.cpp
+     pge_174.h
+     pge_175.cpp
+     pge_175.h
+     pge_176.cpp
+     pge_176.h
      stdafx.h)
 
 set (EXECUTABLE_7 engine_7)
