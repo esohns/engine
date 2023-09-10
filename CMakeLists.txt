@@ -850,11 +850,34 @@ set (engine_7_EXE_SRCS
      pge_175.h
      pge_176.cpp
      pge_176.h
+     pge_177.cpp
+     pge_177.h
+     pge_178.cpp
+     pge_178.h
+     pge_179.cpp
+     pge_179.h
      stdafx.h)
 
 set (EXECUTABLE_7 engine_7)
 add_executable (${EXECUTABLE_7}
                 ${engine_7_EXE_SRCS})
+
+set (engine_8_EXE_SRCS
+     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
+#     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
+     camera.cpp
+     camera.h
+     engine_common.h
+     defines_8.h
+     main_8.cpp
+     pge_180.cpp
+     pge_180.h
+     stdafx.h)
+
+set (EXECUTABLE_8 engine_8)
+add_executable (${EXECUTABLE_8}
+                ${engine_8_EXE_SRCS})
 
 if (UNIX)
  target_link_libraries (${EXECUTABLE} X11)
@@ -884,6 +907,10 @@ if (UNIX)
  target_link_libraries (${EXECUTABLE_7} X11)
  target_link_libraries (${EXECUTABLE_7} GL)
  target_link_libraries (${EXECUTABLE_7} png)
+
+ target_link_libraries (${EXECUTABLE_8} X11)
+ target_link_libraries (${EXECUTABLE_8} GL)
+ target_link_libraries (${EXECUTABLE_8} png)
 endif ()
 target_link_libraries (${EXECUTABLE} ${BOX2D_LIBRARIES})
 target_link_libraries (${EXECUTABLE} ${LIBNOISE_LIB})
@@ -991,6 +1018,22 @@ target_link_libraries (${EXECUTABLE_7} CommonTimer)
 target_link_libraries (${EXECUTABLE_7} CommonUI)
 target_link_libraries (${EXECUTABLE_7} CommonUI_GTK)
 
+target_link_libraries (${EXECUTABLE_8} ${BOX2D_LIBRARIES})
+target_link_libraries (${EXECUTABLE_8} ${LIBNOISE_LIB})
+target_link_libraries (${EXECUTABLE_8} ${GLUT_LIBRARIES})
+target_link_libraries (${EXECUTABLE_8} ${GLEW_LIBRARIES})
+target_link_libraries (${EXECUTABLE_8} ${GTK_LIBRARIES})
+
+target_link_libraries (${EXECUTABLE_8} ${ACE_LIBRARY})
+
+target_link_libraries (${EXECUTABLE_8} Common)
+target_link_libraries (${EXECUTABLE_8} CommonError)
+target_link_libraries (${EXECUTABLE_8} CommonLog)
+target_link_libraries (${EXECUTABLE_8} CommonOpenGL)
+target_link_libraries (${EXECUTABLE_8} CommonTimer)
+target_link_libraries (${EXECUTABLE_8} CommonUI)
+target_link_libraries (${EXECUTABLE_8} CommonUI_GTK)
+
 if (UNIX)
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
  target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
@@ -1017,8 +1060,10 @@ target_precompile_headers (${EXECUTABLE_6}
                            REUSE_FROM ${EXECUTABLE})
 target_precompile_headers (${EXECUTABLE_7}
                            REUSE_FROM ${EXECUTABLE})
+target_precompile_headers (${EXECUTABLE_8}
+                           REUSE_FROM ${EXECUTABLE})
 
-install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} ${EXECUTABLE_5} ${EXECUTABLE_6} ${EXECUTABLE_7}
+install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} ${EXECUTABLE_5} ${EXECUTABLE_6} ${EXECUTABLE_7} ${EXECUTABLE_8}
          RUNTIME
          DESTINATION bin
          COMPONENT applications)
@@ -1049,6 +1094,7 @@ set (ARGS_4 "-l -m90")
 set (ARGS_5 "-l -m120")
 set (ARGS_6 "-l -m140")
 set (ARGS_7 "-l -m160")
+set (ARGS_8 "-l -m180")
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS "${ARGS} -t")
  set (ARGS "${ARGS_2} -t")
@@ -1057,6 +1103,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS "${ARGS_5} -t")
  set (ARGS "${ARGS_6} -t")
  set (ARGS "${ARGS_7} -t")
+ set (ARGS "${ARGS_8} -t")
 endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 file (TO_CMAKE_PATH ${LIBNOISE_LIB_DIR} LIBNOISE_PATH)
 file (TO_CMAKE_PATH "${GLUT_LIB_DIR}" GLUT_PATH)
@@ -1086,6 +1133,7 @@ if (UNIX)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_5}" COMMAND_5)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_6}" COMMAND_6)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_7}" COMMAND_7)
+ file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_8}" COMMAND_8)
 elseif (WIN32)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE}.exe" COMMAND)
  string (REPLACE "\\" "\\\\" COMMAND ${COMMAND})
@@ -1101,6 +1149,8 @@ elseif (WIN32)
  string (REPLACE "\\" "\\\\" COMMAND_6 ${COMMAND_6})
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_7}.exe" COMMAND_7)
  string (REPLACE "\\" "\\\\" COMMAND_7 ${COMMAND_7})
+ file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_8}.exe" COMMAND_8)
+ string (REPLACE "\\" "\\\\" COMMAND_8 ${COMMAND_8})
  set (ENVIRONMENT_MAGICK "MAGICK_CODER_MODULE_PATH=${IMAGEMAGICK_PATH}\\\\modules\\\\coders")
 endif ()
 create_target_launcher (${EXECUTABLE}
@@ -1148,6 +1198,13 @@ create_target_launcher (${EXECUTABLE_6}
 create_target_launcher (${EXECUTABLE_7}
                         COMMAND ${COMMAND_7}
                         ARGS ${ARGS_7}
+#                        FORWARD_ARGS
+                        RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                        ENVIRONMENT ${ENVIRONMENT_MAGICK})
+create_target_launcher (${EXECUTABLE_8}
+                        COMMAND ${COMMAND_8}
+                        ARGS ${ARGS_8}
 #                        FORWARD_ARGS
                         RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
                         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}

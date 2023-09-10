@@ -107,4 +107,20 @@
 #define ENGINE_PGE_176_DEFAULT_WIDTH            640
 #define ENGINE_PGE_176_DEFAULT_MARGIN           50
 
+// pge 177
+#define ENGINE_PGE_177_DEFAULT_HEIGHT           360
+#define ENGINE_PGE_177_DEFAULT_WIDTH            640
+#define ENGINE_PGE_177_DEFAULT_ALPHA_DECAY      10
+
+// pge 178
+#define ENGINE_PGE_178_DEFAULT_HEIGHT           720
+#define ENGINE_PGE_178_DEFAULT_WIDTH            720
+#define ENGINE_PGE_178_DEFAULT_U                10
+
+// pge 179
+#define ENGINE_PGE_179_DEFAULT_HEIGHT           1000
+#define ENGINE_PGE_179_DEFAULT_WIDTH            1000
+#define ENGINE_PGE_179_DEFAULT_W                1000
+#define ENGINE_PGE_179_DEFAULT_U                12
+
 #endif
