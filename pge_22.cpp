@@ -102,8 +102,7 @@ PGE_22::OnUserUpdate (float fElapsedTime)
         for (int j = 0; j < circles_.size (); j++)
           if (circles_[i].position_ != circles_[j].position_)
           {
-            ACE_INT32 d =
-              static_cast<ACE_INT32> (circles_[i].position_.dist (circles_[j].position_));
+            int32_t d = circles_[i].position_.dist (circles_[j].position_);
             ACE_INT32 distance = circles_[i].radius_ + circles_[j].radius_;
             if (d - 4 < distance)
             {

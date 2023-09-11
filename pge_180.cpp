@@ -33,10 +33,10 @@ PGE_180::OnUserUpdate (float fElapsedTime)
     for (float tt = 0.0f; tt < 1.0f; tt += 1.0f / 500.0f)
     {
       float a = t_ - tt * ENGINE_PGE_180_DEFAULT_D;
-      float x = Common_Math_Tools::lerp (h + 99 * std::cos (a / 4), std::cos (r) * h + h, tt);
-      float y = Common_Math_Tools::lerp (h / 4.0f + 49 * std::sin (a / 3.0f), std::sin (r) * h + h, tt);
+      float x = Common_Math_Tools::lerp (h + 99.0f * std::cos (a / 4.0f),        std::cos (r) * h + h, tt);
+      float y = Common_Math_Tools::lerp (h / 4.0f + 49.0f * std::sin (a / 3.0f), std::sin (r) * h + h, tt);
       olc::PixelGameEngine::DrawLine (static_cast<int32_t> (x), static_cast<int32_t> (y),
-                                      static_cast<int32_t> (x + std::cos (a * a / 19) * 20.0f), static_cast<int32_t> (y + std::sin (a * a / 19.0f) * 20.0f),
+                                      static_cast<int32_t> (x + std::cos (a * a / 19.0f) * 20.0f), static_cast<int32_t> (y + std::sin (a * a / 19.0f) * 20.0f),
                                       olc::BLACK, 0xFFFFFFFF);
     } // end FOR
 
