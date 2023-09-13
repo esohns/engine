@@ -51,4 +51,15 @@
 #define ENGINE_PGE_184_DEFAULT_WIDTH            360
 #define ENGINE_PGE_184_DEFAULT_W                360
 
+// pge 185
+#define ENGINE_PGE_185_DEFAULT_HEIGHT           640
+#define ENGINE_PGE_185_DEFAULT_WIDTH            640
+#define ENGINE_PGE_185_DEFAULT_W                640
+
+// pge 186
+#define ENGINE_PGE_186_DEFAULT_HEIGHT           720
+#define ENGINE_PGE_186_DEFAULT_WIDTH            720
+#define ENGINE_PGE_186_DEFAULT_W                720
+#define ENGINE_PGE_186_DEFAULT_ALPHA_DECAY      10
+
 #endif
