@@ -44,9 +44,11 @@ PGE_186::OnUserUpdate (float fElapsedTime)
                                                                  (x - ENGINE_PGE_186_DEFAULT_W / 2) / static_cast<double> (ENGINE_PGE_186_DEFAULT_W),
                                                                  0.0)),
                             -1.0f, 1.0f, 0.0f, 1.0f) * 5.0f + 3.0f;
-    //strokeWeight(n / 2)
-    olc::PixelGameEngine::Draw (x, static_cast<int32_t> (x + frame_count_i * n) % ENGINE_PGE_186_DEFAULT_W,
-                                olc::WHITE);
+    //olc::PixelGameEngine::Draw (x, static_cast<int32_t> (x + frame_count_i * n) % ENGINE_PGE_186_DEFAULT_W,
+    //                            olc::WHITE);
+    olc::PixelGameEngine::FillCircle (x, static_cast<int32_t> (x + frame_count_i * n) % ENGINE_PGE_186_DEFAULT_W,
+                                      static_cast<int32_t> (n / 3.0f),
+                                      olc::WHITE);
   } // end FOR
 
   ++frame_count_i;
