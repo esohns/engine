@@ -1085,11 +1085,81 @@ install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} $
          RUNTIME
          DESTINATION bin
          COMPONENT applications)
-if (WIN32)
- install(FILES
-         ${ACE_LIB_DIR}/ACE${LIB_FILE_SUFFIX}.dll
+install (FILES
+         "peace.dat"
+         "800x500.png"
+         "2017.png"
+         "background_pattern_tenth.png"
+         "bluedark.png"
+         "circle.png"
+         "glut_3.gtk2"
+         "glut_3.gtk3"
+         "glut_16.gtk2"
+         "glut_16.gtk3"
+         "glut_169.vert"
+         "glut_169.frag"
+         "pge_2.gtk2"
+         "pge_2.gtk3"
+         "pge_27.gtk2"
+         "pge_27.gtk3"
          DESTINATION bin
-         COMPONENT binaries)
+         COMPONENT config)
+if (WIN32)
+ file (TO_NATIVE_PATH $ENV{LIB_ROOT} LIB_ROOT)
+ string (REPLACE "\\" "\\\\" LIB_ROOT ${LIB_ROOT})
+ install (FILES
+          ${ACE_LIB_DIR}/ACE.dll
+          ${ACE_LIB_DIR}/ACE${LIB_FILE_SUFFIX}.dll
+          ${LIB_ROOT}/libepoxy/bin/epoxy-0.dll
+          ${LIB_ROOT}/libnoise/build/msvc/Release/noise.dll
+          ${LIB_ROOT}/freeglut/bin/x64/freeglut.dll
+          ${LIB_ROOT}/assimp/cmake/bin/Debug/assimp-vc143-mtd.dll
+          ${LIB_ROOT}/zlib/build/Debug/zlibd.dll
+          ${LIB_ROOT}/libpng/build/Debug/libpng16d.dll
+          ${LIB_ROOT}/ffmpeg/build/Debug/avcodec-59.dll
+          ${LIB_ROOT}/ffmpeg/build/Debug/avformat-59.dll
+          ${LIB_ROOT}/ffmpeg/build/Debug/swresample-4.dll
+          ${LIB_ROOT}/ffmpeg/build/Debug/swscale-6.dll
+          ${LIB_ROOT}/ffmpeg/build/Debug/avutil-57.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_bzlib_.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_freetype_.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_fribidi_.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_glib_.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_harfbuzz_.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_lcms_.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_libxml_.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_lqr_.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_zlib_.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_MagickCore_.dll
+          ${LIB_ROOT}/ImageMagick/CORE_RL_MagickWand_.dll
+          ${LIB_ROOT}/gtk3/bin/libatk-1.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libfreetype-6.dll
+          ${LIB_ROOT}/gtk3/bin/libintl-8.dll
+          ${LIB_ROOT}/gtk3/bin/libcairo-2.dll
+          ${LIB_ROOT}/gtk3/bin/libcairo-gobject-2.dll
+          ${LIB_ROOT}/gtk3/bin/libfontconfig-1.dll
+          ${LIB_ROOT}/gtk3/bin/libgio-2.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libglib-2.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libgmodule-2.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libgobject-2.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libgthread-2.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libgdk_pixbuf-2.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libgdk-3-0.dll
+          ${LIB_ROOT}/gtk3/bin/libgtk-3-0.dll
+          ${LIB_ROOT}/gtk3/bin/libpango-1.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libpangocairo-1.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libpangoft2-1.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libpangowin32-1.0-0.dll
+          ${LIB_ROOT}/gtk3/bin/libiconv-2.dll
+          ${LIB_ROOT}/gtk3/bin/libpng15-15.dll
+          ${LIB_ROOT}/gtk3/bin/liblzma-5.dll
+          ${LIB_ROOT}/gtk3/bin/zlib1.dll
+          ${LIB_ROOT}/gtk3/bin/libxml2-2.dll
+          ${LIB_ROOT}/gtk3/bin/libffi-6.dll
+          ${LIB_ROOT}/gtk3/bin/libpixman-1-0.dll
+          ${LIB_ROOT}/gtk3/bin/libwinpthread-1.dll
+          DESTINATION bin
+          COMPONENT binaries)
  if (CMAKE_BUILD_TYPE STREQUAL Debug)
  install(FILES
          "C:/Windows/System32/msvcp140d.dll"
@@ -1099,7 +1169,8 @@ if (WIN32)
  endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 endif (WIN32)
 
-list (APPEND CMAKE_MODULE_PATH "$ENV{LIB_ROOT}/cmake-modules")
+file (TO_CMAKE_PATH "$ENV{LIB_ROOT}/cmake-modules" CMAKE_MODUDULES_PATH)
+list (APPEND CMAKE_MODULE_PATH ${CMAKE_MODUDULES_PATH})
 #include(UseBackportedModules)
 cmake_policy (SET CMP0026 OLD)
 cmake_policy (SET CMP0053 OLD)
@@ -1249,7 +1320,7 @@ set (CPACK_NSIS_CONTACT ${PACKAGE_BUGREPORT})
 set (CPACK_NSIS_DEFINES "RequestExecutionLevel user")
 
 #set (CPACK_NSIS_EXTRA_PREINSTALL_COMMANDS "
-#  InstallDir 'C:\\\\importToLibreOffice'
+#  InstallDir 'C:\\\\engine'
 #")
 
 include (CPack)
