@@ -66,6 +66,12 @@
 #define ENGINE_PGE_187_DEFAULT_HEIGHT           720
 #define ENGINE_PGE_187_DEFAULT_WIDTH            720
 #define ENGINE_PGE_187_DEFAULT_W                720
-#define ENGINE_PGE_187_DEFAULT_R                128
+#define ENGINE_PGE_187_DEFAULT_R                99
+
+// pge 188
+#define ENGINE_PGE_188_DEFAULT_HEIGHT           720
+#define ENGINE_PGE_188_DEFAULT_WIDTH            720
+#define ENGINE_PGE_188_DEFAULT_W                720
+#define ENGINE_PGE_188_DEFAULT_R                25
 
 #endif

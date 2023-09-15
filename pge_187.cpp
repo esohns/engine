@@ -33,17 +33,17 @@ PGE_187::OnUserUpdate (float fElapsedTime)
 {
   olc::PixelGameEngine::Clear (olc::WHITE);
 
-  static int32_t prev_x, prev_y, first_x, first_y;
+  static int32_t prev_x, prev_y/*, first_x, first_y*/;
   int32_t x, y;
   bool is_first_b = true;
   float k, n;
-  for (float i = 0.0f; i < 2.0f * static_cast<float> (M_PI) * static_cast<float> (ENGINE_PGE_187_DEFAULT_R); i += 2.0f * static_cast<float> (M_PI) / 24.0f)
+  for (float i = 0.0f; i < 2.0f * static_cast<float> (M_PI) * static_cast<float> (ENGINE_PGE_187_DEFAULT_R); i += 2.0f * static_cast<float> (M_PI) / 36.0f)
   {
     k =
       Common_GL_Tools::map (i, 0.0f, 2.0f * static_cast<float> (M_PI) * static_cast<float> (ENGINE_PGE_187_DEFAULT_R), 30.0f / static_cast<float> (h_), 1.0f);
     n =
-      Common_GL_Tools::map (static_cast<float> (noise_.GetValue (std::cos (i * 3.0f),
-      //Common_GL_Tools::map (static_cast<float> (noise_.Evaluate (std::cos (i * 3.0f),
+      //Common_GL_Tools::map (static_cast<float> (noise_.GetValue (std::cos (i * 3.0f),
+      Common_GL_Tools::map (static_cast<float> (noise_.Evaluate (std::cos (i * 3.0f),
                                                                  std::sin (i * 3.0f) * k + t_,
                                                                  0.0)),
                             -1.0f, 1.0f, 0.0f, 1.0f) * 0.7f;
@@ -52,8 +52,8 @@ PGE_187::OnUserUpdate (float fElapsedTime)
     if (is_first_b)
     {
       is_first_b = false;
-      first_x = x;
-      first_y = y;
+      //first_x = x;
+      //first_y = y;
       prev_x = x;
       prev_y = y;
     } // end IF
