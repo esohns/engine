@@ -1110,10 +1110,11 @@ if (WIN32)
  install (FILES
           ${ACE_LIB_DIR}/ACE.dll
           ${ACE_LIB_DIR}/ACE${LIB_FILE_SUFFIX}.dll
+          ${LIB_ROOT}/assimp/cmake/bin/Debug/assimp-vc143-mtd.dll
+          ${LIB_ROOT}/freeglut/bin/x64/freeglut.dll
+          ${LIB_ROOT}/glew/bin/Release/x64/glew32.dll
           ${LIB_ROOT}/libepoxy/bin/epoxy-0.dll
           ${LIB_ROOT}/libnoise/build/msvc/Release/noise.dll
-          ${LIB_ROOT}/freeglut/bin/x64/freeglut.dll
-          ${LIB_ROOT}/assimp/cmake/bin/Debug/assimp-vc143-mtd.dll
           ${LIB_ROOT}/zlib/build/Debug/zlibd.dll
           ${LIB_ROOT}/libpng/build/Debug/libpng16d.dll
           ${LIB_ROOT}/ffmpeg/build/Debug/avcodec-59.dll
