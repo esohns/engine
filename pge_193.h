@@ -66,8 +66,7 @@ class PGE_193
       parts_[1].position.y = parts_[0].position.y + (compactness_ * std::sin (orientation_));
       for (int i = 2; i < nbParts_; i++)
       {
-        olc::vf2d currentPos = parts_[i].position;
-        olc::vf2d dist = currentPos - parts_[i - 2].position;
+        olc::vf2d dist = parts_[i].position - parts_[i - 2].position;
         float distmag = dist.mag ();
         olc::vf2d pos = parts_[i - 1].position;
         olc::vf2d move = dist * compactness_;
@@ -124,9 +123,9 @@ class PGE_193
        for (int i = 0; i < nbTentacles_; i++)
        {
          float tx =
-           position_.x + (std::cos (i * 2.0f * static_cast<float> (M_PI) / nbTentacles_) * radX_ / 2.0f);
+           position_.x + std::cos (i * 2.0f * static_cast<float> (M_PI) / static_cast<float> (nbTentacles_)) * (radX_ / 2.0f);
          float ty =
-           position_.y + (std::sin (i * 2.0f * static_cast<float> (M_PI) / nbTentacles_) * radY_ / 2.0f);
+           position_.y + std::sin (i * 2.0f * static_cast<float> (M_PI) / static_cast<float> (nbTentacles_)) * (radY_ / 2.0f);
          olc::vf2d pos (tx, ty);
          float tr = std::atan2 (ty - position_.y, tx - position_.x);
          tentacles_.push_back (tentacle (pos, l, ts, ts, tr, td));
@@ -138,9 +137,9 @@ class PGE_193
        for (int i = 0; i < nbTentacles_; i++)
        {
          tentacles_[i].position_.x =
-           position_.x + (std::cos (i * 2.0f * static_cast<float> (M_PI) / nbTentacles_) * radX_ / 2.0f);
+           position_.x + std::cos (i * 2.0f * static_cast<float> (M_PI) / static_cast<float> (nbTentacles_) + orientation_) * (radX_ / 2.0f);
          tentacles_[i].position_.y =
-           position_.y + (std::sin (i * 2.0f * static_cast<float> (M_PI) / nbTentacles_) * radY_ / 2.0f);
+           position_.y + std::sin (i * 2.0f * static_cast<float> (M_PI) / static_cast<float> (nbTentacles_) + orientation_) * (radY_ / 2.0f);
          tentacles_[i].orientation_ =
            std::atan2 ((tentacles_[i].position_.y - position_.y), (tentacles_[i].position_.x - position_.x));
          tentacles_[i].update ();

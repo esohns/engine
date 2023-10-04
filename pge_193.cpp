@@ -21,7 +21,7 @@ PGE_193::OnUserCreate ()
   {
     olc::vf2d position (static_cast<float> (Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenWidth() - 1)),
                         static_cast<float> (Common_Tools::getRandomNumber (0, olc::PixelGameEngine::ScreenHeight() - 1)));
-    creatures_.push_back (creature (position, 15.0f, 15.0f, 12, 30, 10.0f, 5.0f));
+    creatures_.push_back (creature (position, 15.0f, 15.0f, 12, 30, 10.0f, Common_Tools::getRandomNumber (1.0f, 5.0f)));
   } // end FOR
 
   return true;
@@ -43,6 +43,9 @@ PGE_193::easeInOutExpo (float t, float b, float c, float d)
 {
   if (t == 0.0f) return b;
   if (t == d) return b + c;
-  if ((t /= d / 2.0f) < 1.0f) return c / 2.0f * static_cast<float> (std::pow (2, 10 * (t - 1.0f))) + b;
-  return c / 2.0f * static_cast<float> (-std::pow (2, -10 * (t - 1.0f)) + 2.0f) + b;
+  t /= d / 2.0f;
+  if (t < 1.0f)
+    return (c / 2.0f) * static_cast<float> (std::pow (2, 10.0f * (t - 1.0f))) + b;
+  t -= 1.0f;
+  return (c / 2.0f) * (static_cast<float> (-std::pow (2, -10.0f * t)) + 2.0f) + b;
 }
