@@ -103,4 +103,20 @@
 #define ENGINE_PGE_193_DEFAULT_WIDTH            800
 #define ENGINE_PGE_193_DEFAULT_NUMBER_OF_CREATURES 5
 
+// pge 194
+#define ENGINE_PGE_194_DEFAULT_HEIGHT           512
+#define ENGINE_PGE_194_DEFAULT_WIDTH            512
+#define ENGINE_PGE_194_DEFAULT_W                512
+#define ENGINE_PGE_194_SENSOR_DISTANCE          3.0f
+#define ENGINE_PGE_194_SENSOR_ANGLE             40 / 180.0f * static_cast<float> (M_PI)
+#define ENGINE_PGE_194_TURNING_SPEED            0.2f
+#define ENGINE_PGE_194_SPEED                    2.0f
+#define ENGINE_PGE_194_DECAY_FACTOR             0.9f
+#define ENGINE_PGE_194_DEPOSIT_AMOUNT           0.2f
+#define ENGINE_PGE_194_NUMBER_OF_AGENTS         1000
+#define ENGINE_PGE_194_START_IN_CIRCLE          true
+#define ENGINE_PGE_194_HIGHLIGHT_AGENTS         false
+#define ENGINE_PGE_194_RAMDOM_TURNING           false
+#define ENGINE_PGE_194_WRAP_AROUND              true
+
 #endif
