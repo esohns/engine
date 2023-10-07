@@ -119,4 +119,25 @@
 #define ENGINE_PGE_194_RAMDOM_TURNING           false
 #define ENGINE_PGE_194_WRAP_AROUND              true
 
+// pge 195
+#define ENGINE_PGE_195_DEFAULT_HEIGHT           1024
+#define ENGINE_PGE_195_DEFAULT_WIDTH            1024
+#define ENGINE_PGE_195_DEFAULT_CO               92 * 2
+#define ENGINE_PGE_195_DEFAULT_MW               1.0f
+
+// pge 196
+#define ENGINE_PGE_196_DEFAULT_HEIGHT           256
+#define ENGINE_PGE_196_DEFAULT_WIDTH            256
+#define ENGINE_PGE_196_DEFAULT_SIZE             256
+
+// pge 197
+#define ENGINE_PGE_197_DEFAULT_HEIGHT           512
+#define ENGINE_PGE_197_DEFAULT_WIDTH            512
+
+// pge 198
+#define ENGINE_PGE_198_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_198_DEFAULT_WIDTH            800
+#define ENGINE_PGE_198_DEFAULT_SPACING          16
+#define ENGINE_PGE_198_DEFAULT_MEAN_DIAMETER    8
+
 #endif

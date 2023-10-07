@@ -901,6 +901,14 @@ set (engine_8_EXE_SRCS
      pge_193.h
      pge_194.cpp
      pge_194.h
+     pge_195.cpp
+     pge_195.h
+     pge_196.cpp
+     pge_196.h
+     pge_197.cpp
+     pge_197.h
+     pge_198.cpp
+     pge_198.h
      stdafx.h)
 
 set (EXECUTABLE_8 engine_8)
