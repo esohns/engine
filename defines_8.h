@@ -152,4 +152,9 @@
 #define ENGINE_PGE_200_DEFAULT_WIDTH            800
 #define ENGINE_PGE_200_DEFAULT_D                5
 
+// pge 201
+#define ENGINE_PGE_201_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_201_DEFAULT_WIDTH            800
+#define ENGINE_PGE_201_DEFAULT_ARC_RESOLUTION   128
+
 #endif
