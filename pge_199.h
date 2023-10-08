@@ -92,12 +92,12 @@ class PGE_199
     }
 
     void resampleFB ()
-    { //resample forward and backward
+    { // resample forward and backward
       float accLen = 0.0f; // accumulated length
       float placedLen = 0.0f;
-      //calculate new node
+      // calculate new node
       std::vector<node> Nnodes;
-      node& lastNode = nodes_[0];
+      node lastNode = nodes_[0];
       Nnodes.push_back (nodes_[nodes_.size () - 1]);
       for (size_t i = nodes_.size () - 1; i >= 1; i--)
       {
