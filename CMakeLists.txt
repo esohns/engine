@@ -911,15 +911,32 @@ set (engine_8_EXE_SRCS
      pge_198.h
      pge_199.cpp
      pge_199.h
-     pge_200.cpp
-     pge_200.h
-     pge_201.cpp
-     pge_201.h
      stdafx.h)
 
 set (EXECUTABLE_8 engine_8)
 add_executable (${EXECUTABLE_8}
                 ${engine_8_EXE_SRCS})
+
+set (engine_9_EXE_SRCS
+     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
+#     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
+     camera.cpp
+     camera.h
+     engine_common.h
+     defines_9.h
+     main_9.cpp
+     pge_200.cpp
+     pge_200.h
+     pge_201.cpp
+     pge_201.h
+     pge_202.cpp
+     pge_202.h
+     stdafx.h)
+
+set (EXECUTABLE_9 engine_9)
+add_executable (${EXECUTABLE_9}
+                ${engine_9_EXE_SRCS})
 
 if (UNIX)
  target_link_libraries (${EXECUTABLE} X11)
@@ -953,6 +970,10 @@ if (UNIX)
  target_link_libraries (${EXECUTABLE_8} X11)
  target_link_libraries (${EXECUTABLE_8} GL)
  target_link_libraries (${EXECUTABLE_8} png)
+
+ target_link_libraries (${EXECUTABLE_9} X11)
+ target_link_libraries (${EXECUTABLE_9} GL)
+ target_link_libraries (${EXECUTABLE_9} png)
 endif ()
 target_link_libraries (${EXECUTABLE} ${BOX2D_LIBRARIES})
 target_link_libraries (${EXECUTABLE} ${LIBNOISE_LIB})
@@ -1076,17 +1097,35 @@ target_link_libraries (${EXECUTABLE_8} CommonTimer)
 target_link_libraries (${EXECUTABLE_8} CommonUI)
 target_link_libraries (${EXECUTABLE_8} CommonUI_GTK)
 
+target_link_libraries (${EXECUTABLE_9} ${BOX2D_LIBRARIES})
+target_link_libraries (${EXECUTABLE_9} ${LIBNOISE_LIB})
+target_link_libraries (${EXECUTABLE_9} ${GLUT_LIBRARIES})
+target_link_libraries (${EXECUTABLE_9} ${GLEW_LIBRARIES})
+target_link_libraries (${EXECUTABLE_9} ${GTK_LIBRARIES})
+
+target_link_libraries (${EXECUTABLE_9} ${ACE_LIBRARY})
+
+target_link_libraries (${EXECUTABLE_9} Common)
+target_link_libraries (${EXECUTABLE_9} CommonError)
+target_link_libraries (${EXECUTABLE_9} CommonLog)
+target_link_libraries (${EXECUTABLE_9} CommonOpenGL)
+target_link_libraries (${EXECUTABLE_9} CommonTimer)
+target_link_libraries (${EXECUTABLE_9} CommonUI)
+target_link_libraries (${EXECUTABLE_9} CommonUI_GTK)
+
 if (UNIX)
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
  target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
  target_link_options (${EXECUTABLE_7} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
  target_link_options (${EXECUTABLE_8} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
+ target_link_options (${EXECUTABLE_9} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
 elseif (WIN32)
  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:20000000")
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
  target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
  target_link_options (${EXECUTABLE_7} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
  target_link_options (${EXECUTABLE_8} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
+ target_link_options (${EXECUTABLE_9} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
 endif ()
 
 # add PCH
@@ -1106,8 +1145,10 @@ target_precompile_headers (${EXECUTABLE_7}
                            REUSE_FROM ${EXECUTABLE})
 target_precompile_headers (${EXECUTABLE_8}
                            REUSE_FROM ${EXECUTABLE})
+target_precompile_headers (${EXECUTABLE_9}
+                           REUSE_FROM ${EXECUTABLE})
 
-install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} ${EXECUTABLE_5} ${EXECUTABLE_6} ${EXECUTABLE_7} ${EXECUTABLE_8}
+install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} ${EXECUTABLE_5} ${EXECUTABLE_6} ${EXECUTABLE_7} ${EXECUTABLE_8} ${EXECUTABLE_9}
          RUNTIME
          DESTINATION bin
          COMPONENT applications)
@@ -1211,6 +1252,7 @@ set (ARGS_5 "-l -m120")
 set (ARGS_6 "-l -m140")
 set (ARGS_7 "-l -m160")
 set (ARGS_8 "-l -m180")
+set (ARGS_9 "-l -m200")
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS "${ARGS} -t")
  set (ARGS "${ARGS_2} -t")
@@ -1220,6 +1262,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS "${ARGS_6} -t")
  set (ARGS "${ARGS_7} -t")
  set (ARGS "${ARGS_8} -t")
+ set (ARGS "${ARGS_9} -t")
 endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 file (TO_CMAKE_PATH ${LIBNOISE_LIB_DIR} LIBNOISE_PATH)
 file (TO_CMAKE_PATH "${GLUT_LIB_DIR}" GLUT_PATH)
@@ -1250,6 +1293,7 @@ if (UNIX)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_6}" COMMAND_6)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_7}" COMMAND_7)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_8}" COMMAND_8)
+ file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_9}" COMMAND_9)
 elseif (WIN32)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE}.exe" COMMAND)
  string (REPLACE "\\" "\\\\" COMMAND ${COMMAND})
@@ -1267,6 +1311,8 @@ elseif (WIN32)
  string (REPLACE "\\" "\\\\" COMMAND_7 ${COMMAND_7})
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_8}.exe" COMMAND_8)
  string (REPLACE "\\" "\\\\" COMMAND_8 ${COMMAND_8})
+ file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_9}.exe" COMMAND_9)
+ string (REPLACE "\\" "\\\\" COMMAND_9 ${COMMAND_9})
  set (ENVIRONMENT_MAGICK "MAGICK_CODER_MODULE_PATH=${IMAGEMAGICK_PATH}\\\\modules\\\\coders")
 endif ()
 create_target_launcher (${EXECUTABLE}
@@ -1321,6 +1367,13 @@ create_target_launcher (${EXECUTABLE_7}
 create_target_launcher (${EXECUTABLE_8}
                         COMMAND ${COMMAND_8}
                         ARGS ${ARGS_8}
+#                        FORWARD_ARGS
+                        RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                        ENVIRONMENT ${ENVIRONMENT_MAGICK})
+create_target_launcher (${EXECUTABLE_9}
+                        COMMAND ${COMMAND_9}
+                        ARGS ${ARGS_9}
 #                        FORWARD_ARGS
                         RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
                         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}

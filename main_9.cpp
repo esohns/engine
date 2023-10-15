@@ -37,54 +37,20 @@
 //#include "resource.h"
 
 #include "defines.h"
-#include "defines_8.h"
+#include "defines_9.h"
 #include "engine_common.h"
 
 #define OLC_PGE_APPLICATION
 #define OPENSIMPLEXNOISE_STATIC_CONSTANTS
-#include "pge_180.h"
-#include "pge_181.h"
-#include "pge_182.h"
-#include "pge_183.h"
-#include "pge_184.h"
-#include "pge_185.h"
-#include "pge_186.h"
-#include "pge_187.h"
-#include "pge_188.h"
-#include "pge_189.h"
-#include "pge_190.h"
-#include "pge_191.h"
-#include "pge_192.h"
-#include "pge_193.h"
-#include "pge_194.h"
-#include "pge_195.h"
-#include "pge_196.h"
-#include "pge_197.h"
-#include "pge_198.h"
-#include "pge_199.h"
+#include "pge_200.h"
+#include "pge_201.h"
+#include "pge_202.h"
 
 enum Engine_ModeType
 {
-  ENGINE_MODE_DEFAULT = 180,
-  ENGINE_MODE_181,
-  ENGINE_MODE_182,
-  ENGINE_MODE_183,
-  ENGINE_MODE_184,
-  ENGINE_MODE_185,
-  ENGINE_MODE_186,
-  ENGINE_MODE_187,
-  ENGINE_MODE_188,
-  ENGINE_MODE_189,
-  ENGINE_MODE_190,
-  ENGINE_MODE_191,
-  ENGINE_MODE_192,
-  ENGINE_MODE_193,
-  ENGINE_MODE_194,
-  ENGINE_MODE_195,
-  ENGINE_MODE_196,
-  ENGINE_MODE_197,
-  ENGINE_MODE_198,
-  ENGINE_MODE_199,
+  ENGINE_MODE_DEFAULT = 200,
+  ENGINE_MODE_201,
+  ENGINE_MODE_202,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -250,8 +216,8 @@ do_work (int argc_in,
   {
     case ENGINE_MODE_DEFAULT:
     {
-      PGE_180 example;
-      if (example.Construct (ENGINE_PGE_180_DEFAULT_WIDTH, ENGINE_PGE_180_DEFAULT_HEIGHT,
+      PGE_200 example;
+      if (example.Construct (ENGINE_PGE_200_DEFAULT_WIDTH, ENGINE_PGE_200_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
@@ -263,10 +229,10 @@ do_work (int argc_in,
 
       break;
     }
-    case ENGINE_MODE_181:
+    case ENGINE_MODE_201:
     {
-      PGE_181 example;
-      if (example.Construct (ENGINE_PGE_181_DEFAULT_WIDTH, ENGINE_PGE_181_DEFAULT_HEIGHT,
+      PGE_201 example;
+      if (example.Construct (ENGINE_PGE_201_DEFAULT_WIDTH, ENGINE_PGE_201_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
@@ -278,265 +244,10 @@ do_work (int argc_in,
 
       break;
     }
-    case ENGINE_MODE_182:
+    case ENGINE_MODE_202:
     {
-      PGE_182 example;
-      if (example.Construct (ENGINE_PGE_182_DEFAULT_WIDTH, ENGINE_PGE_182_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_183:
-    {
-      PGE_183 example;
-      if (example.Construct (ENGINE_PGE_183_DEFAULT_WIDTH, ENGINE_PGE_183_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_184:
-    {
-      PGE_184 example;
-      if (example.Construct (ENGINE_PGE_184_DEFAULT_WIDTH, ENGINE_PGE_184_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_185:
-    {
-      PGE_185 example;
-      if (example.Construct (ENGINE_PGE_185_DEFAULT_WIDTH, ENGINE_PGE_185_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_186:
-    {
-      PGE_186 example;
-      if (example.Construct (ENGINE_PGE_186_DEFAULT_WIDTH, ENGINE_PGE_186_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_187:
-    {
-      PGE_187 example;
-      if (example.Construct (ENGINE_PGE_187_DEFAULT_WIDTH, ENGINE_PGE_187_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_188:
-    {
-      PGE_188 example;
-      if (example.Construct (ENGINE_PGE_188_DEFAULT_WIDTH, ENGINE_PGE_188_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_189:
-    {
-      PGE_189 example;
-      if (example.Construct (ENGINE_PGE_189_DEFAULT_WIDTH, ENGINE_PGE_189_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_190:
-    {
-      PGE_190 example;
-      if (example.Construct (ENGINE_PGE_190_DEFAULT_WIDTH, ENGINE_PGE_190_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_191:
-    {
-      PGE_191 example;
-      if (example.Construct (ENGINE_PGE_191_DEFAULT_WIDTH, ENGINE_PGE_191_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_192:
-    {
-      PGE_192 example;
-      if (example.Construct (ENGINE_PGE_192_DEFAULT_WIDTH, ENGINE_PGE_192_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_193:
-    {
-      PGE_193 example;
-      if (example.Construct (ENGINE_PGE_193_DEFAULT_WIDTH, ENGINE_PGE_193_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_194:
-    {
-      PGE_194 example;
-      if (example.Construct (ENGINE_PGE_194_DEFAULT_WIDTH, ENGINE_PGE_194_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_195:
-    {
-      PGE_195 example;
-      if (example.Construct (ENGINE_PGE_195_DEFAULT_WIDTH, ENGINE_PGE_195_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_196:
-    {
-      PGE_196 example;
-      if (example.Construct (ENGINE_PGE_196_DEFAULT_WIDTH, ENGINE_PGE_196_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_197:
-    {
-      PGE_197 example;
-      if (example.Construct (ENGINE_PGE_197_DEFAULT_WIDTH, ENGINE_PGE_197_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_198:
-    {
-      PGE_198 example;
-      if (example.Construct (ENGINE_PGE_198_DEFAULT_WIDTH, ENGINE_PGE_198_DEFAULT_HEIGHT,
-                             1, 1,
-                             false,  // fullscreen ?
-                             false,  // vsync ?
-                             false)) // cohesion ?
-      {
-        example.Start ();
-        result = true;
-      } // end IF
-
-      break;
-    }
-    case ENGINE_MODE_199:
-    {
-      PGE_199 example;
-      if (example.Construct (ENGINE_PGE_199_DEFAULT_WIDTH, ENGINE_PGE_199_DEFAULT_HEIGHT,
+      PGE_202 example;
+      if (example.Construct (ENGINE_PGE_202_DEFAULT_WIDTH, ENGINE_PGE_202_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
