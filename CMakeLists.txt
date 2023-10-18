@@ -932,6 +932,10 @@ set (engine_9_EXE_SRCS
      pge_201.h
      pge_202.cpp
      pge_202.h
+     pge_203.cpp
+     pge_203.h
+     pge_204.cpp
+     pge_204.h
      stdafx.h)
 
 set (EXECUTABLE_9 engine_9)

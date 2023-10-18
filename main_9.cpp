@@ -45,12 +45,16 @@
 #include "pge_200.h"
 #include "pge_201.h"
 #include "pge_202.h"
+#include "pge_203.h"
+#include "pge_204.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 200,
   ENGINE_MODE_201,
   ENGINE_MODE_202,
+  ENGINE_MODE_203,
+  ENGINE_MODE_204,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -248,6 +252,36 @@ do_work (int argc_in,
     {
       PGE_202 example;
       if (example.Construct (ENGINE_PGE_202_DEFAULT_WIDTH, ENGINE_PGE_202_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_203:
+    {
+      PGE_203 example;
+      if (example.Construct (ENGINE_PGE_203_DEFAULT_WIDTH, ENGINE_PGE_203_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_204:
+    {
+      PGE_204 example;
+      if (example.Construct (ENGINE_PGE_204_DEFAULT_WIDTH, ENGINE_PGE_204_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
