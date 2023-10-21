@@ -57,4 +57,10 @@
 #define ENGINE_PGE_205_DEFAULT_REPU_STRENGTH    36.0f
 #define ENGINE_PGE_205_DEFAULT_MIN_VELOCITY     36.0f
 
+// pge 206
+#define ENGINE_PGE_206_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_206_DEFAULT_WIDTH            600
+#define ENGINE_PGE_206_DEFAULT_NMAX             900
+#define ENGINE_PGE_206_DEFAULT_DA               0.2f
+
 #endif
