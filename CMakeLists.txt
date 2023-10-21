@@ -73,12 +73,13 @@ configure_file (resource.rc.in
 
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts;${CMAKE_CURRENT_SOURCE_DIR}/../Common/src/gl/scripts")
 include (glew)
-#include (ffmpeg)
-#if (NOT FFMPEG_SUPPORT)
-# message (FATAL_ERROR "could not find ffmpeg, aborting")
-#else ()
-# message (STATUS "found ffmpeg")
-#endif (NOT FFMPEG_SUPPORT)
+
+include (ffmpeg)
+if (NOT FFMPEG_SUPPORT)
+ message (FATAL_ERROR "could not find ffmpeg, aborting")
+else ()
+ message (STATUS "found ffmpeg")
+endif (NOT FFMPEG_SUPPORT)
 include (ImageMagick)
 if (NOT IMAGEMAGICK_SUPPORT)
  message (FATAL_ERROR "could not find ImageMagick, aborting")
@@ -254,73 +255,6 @@ elseif (WIN32)
   set (PNG_LIBRARIES "$ENV{LIB_ROOT}/libpng/build/${CMAKE_BUILD_TYPE}/libpng16${LIB_FILE_SUFFIX}.lib")
   set (PNG_LIB_DIR "$ENV{LIB_ROOT}/zlib/build/${CMAKE_BUILD_TYPE};$ENV{LIB_ROOT}/libpng/build/${CMAKE_BUILD_TYPE}")
  endif (NOT PNG_FOUND)
-endif ()
-
-if (UNIX)
- pkg_check_modules (PKG_FFMPEG libavcodec libavformat libswscale libavutil)
- if (PKG_FFMPEG_FOUND)
-  set (ffmpeg_INCLUDE_DIRS "${PKG_FFMPEG_INCLUDE_DIRS}")
-  set (ffmpeg_LIBRARIES "${PKG_FFMPEG_LIBRARIES}")
- endif (PKG_FFMPEG_FOUND)
-elseif (WIN32)
- if (NOT FFMPEG_FOUND)
-  if (EXISTS $ENV{FFMPEG_ROOT})
-   set (FFMPEG_ROOT $ENV{FFMPEG_ROOT})
-  else ()
-   set (FFMPEG_ROOT $ENV{LIB_ROOT}/ffmpeg)
-  endif (EXISTS $ENV{FFMPEG_ROOT})
-  find_library (FFMPEG_LIBRARY_AVCODEC avcodec.lib
-                PATHS ${FFMPEG_ROOT}
-                PATH_SUFFIXES libavcodec lib
-                DOC "searching for avcodec.lib"
-                NO_DEFAULT_PATH)
-  find_library (FFMPEG_LIBRARY_AVFORMAT avformat.lib
-                PATHS ${FFMPEG_ROOT}
-                PATH_SUFFIXES libavformat lib
-                DOC "searching for avformat.lib"
-                NO_DEFAULT_PATH)
-  find_library (FFMPEG_LIBRARY_SWSCALE swscale.lib
-                PATHS ${FFMPEG_ROOT}
-                PATH_SUFFIXES libswscale lib
-                DOC "searching for swscale.lib"
-                NO_DEFAULT_PATH)
-  find_library (FFMPEG_LIBRARY_AVUTIL avutil.lib
-                PATHS ${FFMPEG_ROOT}
-                PATH_SUFFIXES libavutil lib
-                DOC "searching for avutil.lib"
-                NO_DEFAULT_PATH)
-  if (NOT FFMPEG_LIBRARY_AVCODEC)
-   message (WARNING "could not find avcodec.lib, continuing")
-  else ()
-   message (STATUS "Found avcodec.lib library \"${FFMPEG_LIBRARY_AVCODEC}\"")
-  endif (NOT FFMPEG_LIBRARY_AVCODEC)
-  if (NOT FFMPEG_LIBRARY_AVFORMAT)
-   message (WARNING "could not find avformat.lib, continuing")
-  else ()
-   message (STATUS "Found avformat.lib library \"${FFMPEG_LIBRARY_AVFORMAT}\"")
-  endif (NOT FFMPEG_LIBRARY_AVFORMAT)
-  if (NOT FFMPEG_LIBRARY_SWSCALE)
-   message (WARNING "could not find swscale.lib, continuing")
-  else ()
-   message (STATUS "Found swscale.lib library \"${FFMPEG_LIBRARY_SWSCALE}\"")
-  endif (NOT FFMPEG_LIBRARY_SWSCALE)
-  if (NOT FFMPEG_LIBRARY_AVUTIL)
-   message (WARNING "could not find avutil.lib, continuing")
-  else ()
-   message (STATUS "Found avutil.lib library \"${FFMPEG_LIBRARY_AVUTIL}\"")
-  endif (NOT FFMPEG_LIBRARY_AVUTIL)
-  if (FFMPEG_LIBRARY_AVCODEC AND FFMPEG_LIBRARY_AVFORMAT AND FFMPEG_LIBRARY_SWSCALE AND FFMPEG_LIBRARY_AVUTIL)
-   set (ffmpeg_LIBRARIES "${FFMPEG_LIBRARY_AVCODEC};${FFMPEG_LIBRARY_AVFORMAT};${FFMPEG_LIBRARY_SWSCALE};${FFMPEG_LIBRARY_AVUTIL}")
-   if (EXISTS $ENV{FFMPEG_ROOT})
-    set (ffmpeg_INCLUDE_DIRS "${FFMPEG_ROOT}")
-    set (ffmpeg_LIB_DIR "${FFMPEG_ROOT}/libavcodec;${FFMPEG_ROOT}/libavformat;${FFMPEG_ROOT}/libswscale;${FFMPEG_ROOT}/libswresample;${FFMPEG_ROOT}/libavutil" CACHE INTERNAL "")
-#    message (STATUS "ffmpeg_LIB_DIR: ${ffmpeg_LIB_DIR}")
-   else ()
-    set (ffmpeg_INCLUDE_DIRS "${FFMPEG_ROOT}/include")
-    set (ffmpeg_LIB_DIR "${FFMPEG_ROOT}")
-   endif (EXISTS $ENV{FFMPEG_ROOT})
-  endif (FFMPEG_LIBRARY_AVCODEC AND FFMPEG_LIBRARY_AVFORMAT AND FFMPEG_LIBRARY_SWSCALE AND FFMPEG_LIBRARY_AVUTIL)
- endif (NOT FFMPEG_FOUND)
 endif ()
 
 if (UNIX)
@@ -940,6 +874,8 @@ set (engine_9_EXE_SRCS
      pge_205.h
      pge_206.cpp
      pge_206.h
+     pge_207.cpp
+     pge_207.h
      stdafx.h)
 
 set (EXECUTABLE_9 engine_9)

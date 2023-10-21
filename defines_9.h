@@ -60,7 +60,14 @@
 // pge 206
 #define ENGINE_PGE_206_DEFAULT_HEIGHT           600
 #define ENGINE_PGE_206_DEFAULT_WIDTH            600
-#define ENGINE_PGE_206_DEFAULT_NMAX             900
-#define ENGINE_PGE_206_DEFAULT_DA               0.2f
+#define ENGINE_PGE_206_DEFAULT_W_2              300
+#define ENGINE_PGE_206_DEFAULT_NMAX             1200
+#define ENGINE_PGE_206_DEFAULT_DA               0.5f
+
+// pge 207
+#define ENGINE_PGE_207_DEFAULT_HEIGHT           650
+#define ENGINE_PGE_207_DEFAULT_WIDTH            800
+#define ENGINE_PGE_207_DEFAULT_IMAGE_FILE       "gameboy.png"
+#define ENGINE_PGE_207_DEFAULT_H_DIVISIONS      80
 
 #endif

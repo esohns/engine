@@ -68,7 +68,7 @@ PGE_206::OnUserUpdate (float fElapsedTime)
 
   static olc::vf2d center_s (static_cast<float> (olc::PixelGameEngine::ScreenWidth () / 2),
                              static_cast<float> (olc::PixelGameEngine::ScreenHeight () / 2));
-  olc::PixelGameEngine::FillCircle (center_s, 300, {0, 100, 0, 255});
+  olc::PixelGameEngine::FillCircle (center_s, ENGINE_PGE_206_DEFAULT_W_2, {0, 100, 0, 255});
 
   for (I_ = 0; I_ < NN_; I_++)
   {
@@ -85,7 +85,8 @@ PGE_206::OnUserUpdate (float fElapsedTime)
         L_ = std::sqrt (static_cast<float> (std::pow (KX_, 2) + std::pow (KY_, 2)));
         KX_ = center_s.x * std::sin (L_ / center_s.x) * KX_ / L_;
         KY_ = center_s.y * std::sin (L_ / center_s.y) * KY_ / L_;
-        if (L_ / 300.0f > -static_cast<float> (M_PI_2) && L_ / 300.0f < static_cast<float> (M_PI_2))
+        if (L_ / static_cast<float> (ENGINE_PGE_206_DEFAULT_W_2) > -static_cast<float> (M_PI_2) &&
+            L_ / static_cast<float> (ENGINE_PGE_206_DEFAULT_W_2) <  static_cast<float> (M_PI_2))
         {
           olc::vf2d point_s (KX_ + center_s.x, KY_ + center_s.y);
           if (is_first_b)
@@ -110,7 +111,8 @@ PGE_206::OnUserUpdate (float fElapsedTime)
         L_ = std::sqrt (static_cast<float> (std::pow (KX_, 2) + std::pow (KY_, 2)));
         KX_ = center_s.x * std::sin (L_ / center_s.x) * KX_ / L_;
         KY_ = center_s.y * std::sin (L_ / center_s.y) * KY_ / L_;
-        if (L_ / 300.0f > -static_cast<float> (M_PI_2) && L_ / 300.0f < static_cast<float> (M_PI_2))
+        if (L_ / static_cast<float> (ENGINE_PGE_206_DEFAULT_W_2) > -static_cast<float> (M_PI_2) &&
+            L_ / static_cast<float> (ENGINE_PGE_206_DEFAULT_W_2) <  static_cast<float> (M_PI_2))
         {
           olc::vf2d point_s (KX_ + center_s.x, KY_ + center_s.y);
           if (is_first_b)
@@ -153,8 +155,8 @@ PGE_206::OnUserUpdate (float fElapsedTime)
 
   DX_ = DX_ + (static_cast<float> (center_s.x - olc::PixelGameEngine::GetMouseX ()) / 30.0f);
   DY_ = DY_ + (static_cast<float> (center_s.y - olc::PixelGameEngine::GetMouseY ()) / 30.0f);
-  if (std::abs (DX_) > 800.0f) DX_ = DX_ * 800.0f / std::abs (DX_);
-  if (std::abs (DY_) > 800.0f) DY_ = DY_ * 800.0f / std::abs (DY_);
+  if (std::abs (DX_) > static_cast<float> (ENGINE_PGE_206_DEFAULT_WIDTH))  DX_ = DX_ * static_cast<float> (ENGINE_PGE_206_DEFAULT_WIDTH)  / std::abs (DX_);
+  if (std::abs (DY_) > static_cast<float> (ENGINE_PGE_206_DEFAULT_HEIGHT)) DY_ = DY_ * static_cast<float> (ENGINE_PGE_206_DEFAULT_HEIGHT) / std::abs (DY_);
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
 }
