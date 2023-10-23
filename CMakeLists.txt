@@ -71,6 +71,8 @@ add_definitions (-DHAVE_CONFIG_H)
 configure_file (resource.rc.in
                 resource.rc)
 
+
+include (FindPkgConfig)
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts;${CMAKE_CURRENT_SOURCE_DIR}/../Common/src/gl/scripts")
 include (glew)
 

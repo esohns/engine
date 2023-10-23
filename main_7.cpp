@@ -3,7 +3,9 @@
 #include <iostream>
 #include <string>
 
+#if defined (GLEW_SUPPORT)
 #include "GL/glew.h"
+#endif // GLEW_SUPPORT
 #include "GL/freeglut.h"
 
 #include "ace/config-lite.h"

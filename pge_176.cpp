@@ -35,12 +35,17 @@ PGE_176::OnUserUpdate (float fElapsedTime)
   for (int i = 0; i < NUM - 1; i++)
     for (int j = 0; j < NUM; j++)
     {
-      olc::vf2d p = pos (olc::vf2d (static_cast<float> (i), static_cast<float> (j)), frame_count_i, NUM);
-      olc::vf2d pLeft = pos (olc::vf2d (static_cast<float> (i + 1), static_cast<float> (j)), frame_count_i, NUM);
+      olc::vf2d index_s (static_cast<float> (i), static_cast<float> (j));
+      olc::vf2d p = pos (index_s, frame_count_i, NUM);
+      index_s.x = static_cast<float> (i + 1);
+      index_s.y = static_cast<float> (j);
+      olc::vf2d pLeft = pos (index_s, frame_count_i, NUM);
       joint (p, pLeft);
       if (j < NUM - 1)
       {
-        olc::vf2d pDown = pos (olc::vf2d (static_cast<float> (i), static_cast<float> (j + 1)), frame_count_i, NUM);
+        index_s.x = static_cast<float> (i);
+        index_s.y = static_cast<float> (j + 1);
+        olc::vf2d pDown = pos (index_s, frame_count_i, NUM);
         joint (p, pDown);
       } // end IF
     } // end FOR
