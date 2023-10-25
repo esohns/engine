@@ -70,4 +70,34 @@
 #define ENGINE_PGE_207_DEFAULT_IMAGE_FILE       "gameboy.png"
 #define ENGINE_PGE_207_DEFAULT_H_DIVISIONS      80
 
+// pge 208
+#define ENGINE_PGE_208_DEFAULT_HEIGHT           800
+#define ENGINE_PGE_208_DEFAULT_WIDTH            800
+#define ENGINE_PGE_208_DEFAULT_SIZE             800
+
+// pge 209
+#define ENGINE_PGE_209_DEFAULT_HEIGHT           768
+#define ENGINE_PGE_209_DEFAULT_WIDTH            1024
+#define ENGINE_PGE_209_DEFAULT_NUMBER_OF_ACTORS 400
+#define ENGINE_PGE_209_DEFAULT_MAX_ID           14
+
+// pge 210
+#define ENGINE_PGE_210_DEFAULT_HEIGHT           400
+#define ENGINE_PGE_210_DEFAULT_WIDTH            600
+
+// pge 211
+#define ENGINE_PGE_211_DEFAULT_HEIGHT           640
+#define ENGINE_PGE_211_DEFAULT_WIDTH            640
+
+// pge 212
+#define ENGINE_PGE_212_DEFAULT_HEIGHT           800
+#define ENGINE_PGE_212_DEFAULT_WIDTH            800
+#define ENGINE_PGE_212_DEFAULT_D                5
+#define ENGINE_PGE_212_DEFAULT_FRAME            0 // px
+
+// pge 213
+#define ENGINE_PGE_213_DEFAULT_HEIGHT           800
+#define ENGINE_PGE_213_DEFAULT_WIDTH            800
+#define ENGINE_PGE_213_DEFAULT_SIZE             800
+
 #endif

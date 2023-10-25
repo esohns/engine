@@ -71,7 +71,6 @@ add_definitions (-DHAVE_CONFIG_H)
 configure_file (resource.rc.in
                 resource.rc)
 
-
 include (FindPkgConfig)
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts;${CMAKE_CURRENT_SOURCE_DIR}/../Common/src/gl/scripts")
 include (glew)
@@ -878,6 +877,18 @@ set (engine_9_EXE_SRCS
      pge_206.h
      pge_207.cpp
      pge_207.h
+     pge_208.cpp
+     pge_208.h
+     pge_209.cpp
+     pge_209.h
+     pge_210.cpp
+     pge_210.h
+     pge_211.cpp
+     pge_211.h
+     pge_212.cpp
+     pge_212.h
+     pge_213.cpp
+     pge_213.h
      stdafx.h)
 
 set (EXECUTABLE_9 engine_9)
