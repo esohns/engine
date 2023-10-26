@@ -20,9 +20,6 @@ class PGE_213
   class complex
   {
    public:
-    complex ()
-    {}
-     
     complex (float x, float y)
      : x_ (x)
      , y_ (y)
@@ -81,8 +78,9 @@ class PGE_213
      : k_ (k)
      , r_ (1.0f / std::abs (k))
      , z_ (z)
-     , center_ ()
+     , center_ (0.0f, 0.0f)
      , tangentCircles_ ()
+     , gray_ (255)
     {
       center_ = z.scale (1.0f / k);
     }
@@ -103,6 +101,9 @@ class PGE_213
       engine_in->DrawCircle (static_cast<int32_t> (center_.x_), static_cast<int32_t> (center_.y_),
                              static_cast<int32_t> (r_),
                              olc::BLACK, 0xFF);
+      //engine_in->FillCircle (static_cast<int32_t> (center_.x_), static_cast<int32_t> (center_.y_),
+      //                       static_cast<int32_t> (r_),
+      //                       gray_ ? olc::WHITE : olc::BLACK);
     }
 
     float               k_;
@@ -110,6 +111,7 @@ class PGE_213
     complex             z_;
     complex             center_;
     std::vector<circle> tangentCircles_;
+    uint8_t             gray_;
   };
 
   std::vector<circle> circles_;

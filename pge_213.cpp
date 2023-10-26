@@ -12,11 +12,12 @@ PGE_213::PGE_213 ()
  , circles_ ()
  , r1_ (0.0f)
  , r2_ (0.0f)
- , z1_ ()
- , z2_ ()
- , touchPoint_ ()
+ , z1_ (0.0f, 0.0f)
+ , z2_ (0.0f, 0.0f)
+ , center_ (0.0f, 0.0f)
+ , touchPoint_ (0.0f, 0.0f)
  , theta_ (0.0f)
- , mouse_ ()
+ , mouse_ (0.0f, 0.0f)
 {
   sAppName = ACE_TEXT_ALWAYS_CHAR ("Example 213");
 }
@@ -25,7 +26,8 @@ bool
 PGE_213::OnUserCreate ()
 {
   r1_ = ENGINE_PGE_213_DEFAULT_SIZE / 2.2f;
-  center_ = complex (ENGINE_PGE_213_DEFAULT_SIZE / 2.0f, ENGINE_PGE_213_DEFAULT_SIZE / 2.0f);
+  center_ = complex (ENGINE_PGE_213_DEFAULT_SIZE / 2.0f,
+                     ENGINE_PGE_213_DEFAULT_SIZE / 2.0f);
   z1_ = center_;
   touchPoint_ = center_.minus (complex (r1_, 0.0f));
   r2_ = (2.0f / 3.0f) * r1_;
@@ -61,8 +63,8 @@ PGE_213::OnUserUpdate (float fElapsedTime)
     float k2 = 1.0f / r2_;
 
     //initial circles
-    circle circle_1 = circle (z1_.scale (k1), k1);
-    circle circle_2 = circle (z2_.scale (k2), k2);
+    circle circle_1 (z1_.scale (k1), k1);
+    circle circle_2 (z2_.scale (k2), k2);
     circle circle_3 = thirdCircle (circle_1, circle_2, theta_);
 
     //we've set them up to be touching tangent to the other two
@@ -73,6 +75,8 @@ PGE_213::OnUserUpdate (float fElapsedTime)
     circle_3.tangentCircles_.push_back (circle_2);
     circle_3.tangentCircles_.push_back (circle_1);
     
+    circle_1.gray_ = 0;
+
     circles_.clear ();
     circles_.push_back (circle_1);
     circles_.push_back (circle_2);
@@ -81,7 +85,7 @@ PGE_213::OnUserUpdate (float fElapsedTime)
     int n = 0;
     while (circles_.size () < 1000 && n < 5)
     {
-      float r_min = 1.0f;
+      const float r_min = 1.0f;
       n++;
       std::vector<circle> incompleteCircles_a;
       for (std::vector<circle>::iterator iterator = circles_.begin ();
@@ -109,11 +113,11 @@ PGE_213::OnUserUpdate (float fElapsedTime)
   } // end IF
   else if (circles_.size () < 10000)
   {
-    float r_min = 0.5f;
+    const float r_min = 0.5f;
     std::vector<circle> incompleteCircles_a;
     for (std::vector<circle>::iterator iterator = circles_.begin ();
-          iterator != circles_.end ();
-          ++iterator)
+         iterator != circles_.end ();
+         ++iterator)
       if (!(*iterator).tangentCircles_.empty () && (*iterator).tangentCircles_.size () < 5)
         incompleteCircles_a.push_back (*iterator);
     std::vector<circle> completion_a;
@@ -124,11 +128,13 @@ PGE_213::OnUserUpdate (float fElapsedTime)
       std::vector<circle> result_a = apollonian (*iterator, r_min);
       completion_a.insert (completion_a.end (), result_a.begin (), result_a.end ());
     } // end FOR
+
     //draw just the new circles
     for (std::vector<circle>::iterator iterator = completion_a.begin ();
          iterator != completion_a.end ();
          ++iterator)
       (*iterator).draw (this);
+
     circles_.insert (circles_.end (), completion_a.begin (), completion_a.end ());
   } // end ELSE IF
 
