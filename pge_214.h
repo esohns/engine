@@ -1,16 +1,16 @@
-﻿#ifndef PGE_213_H
-#define PGE_213_H
+﻿#ifndef PGE_214_H
+#define PGE_214_H
 
 #include <vector>
 
 #include "olcPixelGameEngine.h"
 
-class PGE_213
+class PGE_214
  : public olc::PixelGameEngine
 {
  public:
-  PGE_213 ();
-  inline virtual ~PGE_213 () {}
+  PGE_214 ();
+  inline virtual ~PGE_214 () {}
 
   // implement olc::PixelGameEngine
   virtual bool OnUserCreate ();
@@ -79,6 +79,15 @@ class PGE_213
   class circle
   {
    public:
+    circle ()
+     : k_ (0.0f)
+     , r_ (0.0f)
+     , z_ (0.0f, 0.0f)
+     , center_ (0.0f, 0.0f)
+     , tangentCircles_ ()
+     , gray_ (255)
+    {}
+
     circle (const circle& c)
      : k_ (c.k_)
      , r_ (c.r_)
@@ -97,9 +106,9 @@ class PGE_213
      , gray_ (255)
     {}
 
-    bool isEqual (const circle& c)
+    bool isEqual (const circle& c) const
     {
-      static float tolerance_f = 2.0f;
+      const float tolerance_f = 1.0f;
 
       bool equalR_b = std::abs (r_ - c.r_) < tolerance_f;
       bool equalX_b = std::abs (center_.x_ - c.center_.x_) < tolerance_f;
@@ -108,11 +117,19 @@ class PGE_213
       return equalR_b && equalX_b && equalY_b;
     }
 
+    bool isLessThan (const circle& c) const
+    {
+      bool lessX_b = center_.x_ < c.center_.x_;
+      bool lessY_b = center_.y_ < c.center_.y_;
+
+      return lessX_b && lessY_b;
+    }
+
     void draw (olc::PixelGameEngine* engine_in)
     {
       engine_in->DrawCircle (static_cast<int32_t> (center_.x_), static_cast<int32_t> (center_.y_),
                              static_cast<int32_t> (r_),
-                             olc::BLACK, 0xFF);
+                             olc::WHITE, 0xFF);
       //engine_in->FillCircle (static_cast<int32_t> (center_.x_), static_cast<int32_t> (center_.y_),
       //                       static_cast<int32_t> (r_),
       //                       gray_ ? olc::WHITE : olc::BLACK);
@@ -129,18 +146,13 @@ class PGE_213
   std::vector<circle> circles_;
   float               r1_;
   float               r2_;
+  float               r3_;
   complex             z1_;
   complex             z2_;
-  complex             center_;
-  complex             touchPoint_;
-  float               theta_;
-  complex             mouse_;
+  complex             z3_;
 
-  float find_r3 (complex&, complex&, float);
-  complex find_z3 (complex&, float, float, float);
-  circle thirdCircle (circle&, circle&, float);
   std::vector<circle> decartes (circle&, circle&, circle&);
-  std::vector<circle> apollonian (circle&, float);
+  std::vector<circle> apollonian (circle&);
 };
 
-#endif // PGE_213_H
+#endif // PGE_214_H

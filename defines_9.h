@@ -100,4 +100,15 @@
 #define ENGINE_PGE_213_DEFAULT_WIDTH            800
 #define ENGINE_PGE_213_DEFAULT_SIZE             800
 
+// pge 214
+#define ENGINE_PGE_214_DEFAULT_HEIGHT           800
+#define ENGINE_PGE_214_DEFAULT_WIDTH            800
+#define ENGINE_PGE_214_DEFAULT_SIZE             800
+
+// pge 215
+#define ENGINE_PGE_215_DEFAULT_HEIGHT           800
+#define ENGINE_PGE_215_DEFAULT_WIDTH            800
+#define ENGINE_PGE_215_DEFAULT_DELTA            0.18f
+#define ENGINE_PGE_215_DEFAULT_NUMBER_OF_POINTS 120
+
 #endif

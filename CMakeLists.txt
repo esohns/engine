@@ -889,11 +889,18 @@ set (engine_9_EXE_SRCS
      pge_212.h
      pge_213.cpp
      pge_213.h
+     pge_214.cpp
+     pge_214.h
+     pge_215.cpp
+     pge_215.h
      stdafx.h)
 
 set (EXECUTABLE_9 engine_9)
 add_executable (${EXECUTABLE_9}
                 ${engine_9_EXE_SRCS})
+
+set_target_properties (${EXECUTABLE_9} PROPERTIES
+                       CXX_STANDARD 17)
 
 if (UNIX)
  target_link_libraries (${EXECUTABLE} X11)
@@ -1103,7 +1110,7 @@ target_precompile_headers (${EXECUTABLE_7}
 target_precompile_headers (${EXECUTABLE_8}
                            REUSE_FROM ${EXECUTABLE})
 target_precompile_headers (${EXECUTABLE_9}
-                           REUSE_FROM ${EXECUTABLE})
+                           PRIVATE stdafx.h)
 
 install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} ${EXECUTABLE_5} ${EXECUTABLE_6} ${EXECUTABLE_7} ${EXECUTABLE_8} ${EXECUTABLE_9}
          RUNTIME
