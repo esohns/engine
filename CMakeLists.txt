@@ -1,5 +1,9 @@
 include (${CMAKE_CURRENT_SOURCE_DIR}/VersionConfig.cmake)
 
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts")
+include (CPU)
+include (OS)
+
 cmake_minimum_required (VERSION 2.8)
 
 # build type
@@ -203,11 +207,9 @@ endif ()
 add_definitions (-DGLUT_SUPPORT)
 
 if (UNIX)
- include (FindPkgConfig)
  pkg_check_modules (PKG_ASSIMP assimp)
  if (PKG_ASSIMP_FOUND)
   if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-   include (OS)
    if (${LSB_RELEASE_ID_SHORT} MATCHES "Fedora")
 # *WORKAROUND*: 'prefix' variable must be prepended to 'includedir'
     pkg_get_variable (PKG_ASSIMP_PREFIX assimp prefix)
@@ -240,8 +242,6 @@ elseif (WIN32)
 endif ()
 
 if (UNIX)
-# include (FindPkgConfig)
-# pkg_check_modules (PKG_LIBPNG libpng)
  find_library (PNG_LIBRARY libpng16.so.16
                DOC "searching for libpng")
  if (NOT PNG_LIBRARY)
@@ -252,6 +252,12 @@ if (UNIX)
  endif (NOT PNG_LIBRARY)
 elseif (WIN32)
  if (NOT PNG_FOUND)
+  unset (LIB_FILE_SUFFIX)
+  if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
+      CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+   set (LIB_FILE_SUFFIX "d")
+  endif (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
+         CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set (PNG_INCLUDE_DIRS "$ENV{LIB_ROOT}/libpng/build;$ENV{LIB_ROOT}/libpng")
   set (PNG_LIBRARIES "$ENV{LIB_ROOT}/libpng/build/${CMAKE_BUILD_TYPE}/libpng16${LIB_FILE_SUFFIX}.lib")
   set (PNG_LIB_DIR "$ENV{LIB_ROOT}/zlib/build/${CMAKE_BUILD_TYPE};$ENV{LIB_ROOT}/libpng/build/${CMAKE_BUILD_TYPE}")
@@ -897,14 +903,19 @@ set (engine_9_EXE_SRCS
      pge_216.h
      pge_217.cpp
      pge_217.h
+     pge_218.cpp
+     pge_218.h
      stdafx.h)
 
 set (EXECUTABLE_9 engine_9)
 add_executable (${EXECUTABLE_9}
                 ${engine_9_EXE_SRCS})
 
-set_target_properties (${EXECUTABLE_9} PROPERTIES
-                       CXX_STANDARD 17)
+set_target_properties (${EXECUTABLE_9} PROPERTIES CXX_STANDARD 17)
+if (WIN32 AND HOST_CPU_HAS_AVX2)
+# target_compile_options (${EXECUTABLE_9} PRIVATE $<$CXX_COMPILER_ID:MSVC>:/arch:AVX2>)
+ target_compile_options (${EXECUTABLE_9} PRIVATE $<$<BOOL:${MSVC}>:/arch:AVX2>)
+endif (WIN32 AND HOST_CPU_HAS_AVX2)
 
 if (UNIX)
  target_link_libraries (${EXECUTABLE} X11)
