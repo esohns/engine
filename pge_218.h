@@ -65,6 +65,7 @@ class PGE_218
         std::unique_lock<std::mutex> lm (mux);
         cvStart.wait (lm);
 
+#if defined (HOST_CPU_HAS_AVX2)
 #if defined (__AVX2__)
         double x_scale = (frac_br.x - frac_tl.x) / (double(pix_br.x) - double(pix_tl.x));
         double y_scale = (frac_br.y - frac_tl.y) / (double(pix_br.y) - double(pix_tl.y));
@@ -135,8 +136,9 @@ repeat:
           y_offset += row_size;
         } // end FOR
 #else
-//#error AVX2 not supported, aborting
+#error AVX2 support not enabled, aborting
 #endif // __AVX2__
+#endif // HOST_CPU_HAS_AVX2
         workerComplete_ai++;
       } // end WHILE
     }

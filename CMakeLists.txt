@@ -134,14 +134,14 @@ find_path (PGE_INCLUDE_DIR
 if (WIN32)
 # set (CMAKE_BUILD_TYPE $<CONFIG> CACHE STRING "build type" FORCE)
 endif (WIN32)
-if ($<CONFIG> STREQUAL "Debug" OR
-    $<CONFIG> STREQUAL "RelWithDebInfo" OR
-    ${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR
-    ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
- set (LIB_FILE_SUFFIX "d" CACHE STRING "lib file suffix" FORCE)
-else ()
- set (LIB_FILE_SUFFIX "" CACHE STRING "lib file suffix" FORCE)
-endif ()
+#if ($<CONFIG> STREQUAL "Debug" OR
+#    $<CONFIG> STREQUAL "RelWithDebInfo" OR
+#    ${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR
+#    ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+# set (LIB_FILE_SUFFIX "d" CACHE STRING "lib file suffix" FORCE)
+#else ()
+# set (LIB_FILE_SUFFIX "" CACHE STRING "lib file suffix" FORCE)
+#endif ()
 
 if (DEFINED ENV{LIB_ROOT})
  set (LIBNOISE_DIR "$ENV{LIB_ROOT}/libnoise" )
@@ -253,11 +253,11 @@ if (UNIX)
 elseif (WIN32)
  if (NOT PNG_FOUND)
   unset (LIB_FILE_SUFFIX)
-  if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
-      CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
    set (LIB_FILE_SUFFIX "d")
-  endif (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
-         CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  else ()
+   set (LIB_FILE_SUFFIX "")
+  endif (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set (PNG_INCLUDE_DIRS "$ENV{LIB_ROOT}/libpng/build;$ENV{LIB_ROOT}/libpng")
   set (PNG_LIBRARIES "$ENV{LIB_ROOT}/libpng/build/${CMAKE_BUILD_TYPE}/libpng16${LIB_FILE_SUFFIX}.lib")
   set (PNG_LIB_DIR "$ENV{LIB_ROOT}/zlib/build/${CMAKE_BUILD_TYPE};$ENV{LIB_ROOT}/libpng/build/${CMAKE_BUILD_TYPE}")
@@ -905,6 +905,8 @@ set (engine_9_EXE_SRCS
      pge_217.h
      pge_218.cpp
      pge_218.h
+     pge_219.cpp
+     pge_219.h
      stdafx.h)
 
 set (EXECUTABLE_9 engine_9)
