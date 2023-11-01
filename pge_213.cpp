@@ -63,8 +63,10 @@ PGE_213::OnUserUpdate (float fElapsedTime)
     float k2 = 1.0f / r2_;
 
     //initial circles
-    circle circle_1 (z1_.scale (k1), k1);
-    circle circle_2 (z2_.scale (k2), k2);
+    complex z1_scaled = z1_.scale (k1);
+    circle circle_1 (z1_scaled, k1);
+    complex z2_scaled = z1_.scale (k2);
+    circle circle_2 (z2_scaled, k2);
     circle circle_3 = thirdCircle (circle_1, circle_2, theta_);
 
     //we've set them up to be touching tangent to the other two
@@ -179,7 +181,8 @@ PGE_213::thirdCircle (circle& c1, circle& c2, float angle)
   //curvature
   float k3 = 1.0f / r3;
 
-  return circle (z3.scale (k3), k3);
+  complex z3_scaled = z3.scale (k3);
+  return circle (z3_scaled, k3);
 }
 
 std::vector<PGE_213::circle>

@@ -143,6 +143,52 @@ class PGE_214
     uint8_t             gray_;
   };
 
+  class reduce_vector_circle
+  {
+   public:
+    reduce_vector_circle (PGE_214* instance,
+                          std::vector<circle>& initial)
+     : instance_ (instance)
+     , initial_ (initial)
+    {}
+
+    std::vector<circle>& operator() (circle& lhs, circle& rhs)
+    {
+      std::vector<circle> result_a = instance_->apollonian (lhs);
+      initial_.insert (initial_.end (), result_a.begin (), result_a.end ());
+      result_a = instance_->apollonian (rhs);
+      initial_.insert (initial_.end (), result_a.begin (), result_a.end ());
+
+      return initial_;
+    }
+
+    std::vector<circle>& operator() (std::vector<circle>& lhs, circle& rhs)
+    {
+      std::vector<circle> result_a = instance_->apollonian (rhs);
+      lhs.insert (lhs.end (), result_a.begin (), result_a.end ());
+
+      return lhs;
+    }
+    std::vector<circle>& operator() (circle& lhs, std::vector<circle>& rhs)
+    {
+      std::vector<circle> result_a = instance_->apollonian (lhs);
+      rhs.insert (rhs.end (), result_a.begin (), result_a.end ());
+
+      return rhs;
+    }
+
+    std::vector<circle>& operator() (std::vector<circle>& lhs, std::vector<circle>& rhs)
+    {
+      lhs.insert (lhs.end (), rhs.begin (), rhs.end ());
+
+      return lhs;
+    }
+
+   private:
+    PGE_214* instance_;
+    std::vector<circle>& initial_;
+  };
+
   std::vector<circle> circles_;
   float               r1_;
   float               r2_;

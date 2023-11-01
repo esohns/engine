@@ -2,6 +2,7 @@
 
 #include "pge_218.h"
 
+#include <chrono>
 #include <complex>
 
 #include "ace/Log_Msg.h"
@@ -33,7 +34,13 @@ PGE_218::OnUserCreate ()
   // Using Vector extensions, align memory (not as necessary as it used to be)
   // MS Specific - see std::aligned_alloc for others
   fractal_ =
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
     (int*)_aligned_malloc (size_t(olc::PixelGameEngine::ScreenWidth () * olc::PixelGameEngine::ScreenHeight ()) * sizeof (int), 64);
+#elif defined (ACE_LINUX)
+      (int*)aligned_alloc (64, size_t(olc::PixelGameEngine::ScreenWidth () * olc::PixelGameEngine::ScreenHeight ()) * sizeof (int));
+#else
+#error missing implementation, aborting
+#endif // ACE_WIN32) || ACE_WIN64 || ACE_LINUX
 
   // center fractal
   vOffset_.x = -3.0;
@@ -60,7 +67,13 @@ PGE_218::OnUserDestroy ()
     workers[i].thread.join ();
 
   // Clean up memory
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
   _aligned_free (fractal_);
+#elif defined (ACE_LINUX)
+  free (fractal_);
+#else
+#error missing implementation, aborting
+#endif // ACE_WIN32) || ACE_WIN64 || ACE_LINUX
 
   return true;
 }
@@ -111,7 +124,15 @@ PGE_218::OnUserUpdate (float fElapsedTime)
   if (iterations_ < 64) iterations_ = 64;
 
   // START TIMING
-  std::chrono::steady_clock::time_point tp1 = std::chrono::high_resolution_clock::now ();
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+  std::chrono::steady_clock::time_point tp1 =
+    std::chrono::high_resolution_clock::now ();
+#elif defined (ACE_LINUX)
+  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> tp1 =
+      std::chrono::high_resolution_clock::now ();
+#else
+#error missing implementation, aborting
+#endif // ACE_WIN32 || ACE_WIN64 || ACE_LINUX
 
   // Do the computation
   switch (mode_)
@@ -125,7 +146,15 @@ PGE_218::OnUserUpdate (float fElapsedTime)
   } // end SWITCH
 
   // STOP TIMING
-  std::chrono::steady_clock::time_point tp2 = std::chrono::high_resolution_clock::now ();
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+  std::chrono::steady_clock::time_point tp2 =
+    std::chrono::high_resolution_clock::now ();
+#elif defined (ACE_LINUX)
+  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> tp2 =
+      std::chrono::high_resolution_clock::now ();
+#else
+#error missing implementation, aborting
+#endif // ACE_WIN32 || ACE_WIN64 || ACE_LINUX
   std::chrono::duration<double> elapsedTime = tp2 - tp1;
 
   // Render result to screen
@@ -334,10 +363,19 @@ repeat:
       if (_mm256_movemask_pd (_mm256_castsi256_pd (_mask2)) > 0)
         goto repeat;
 
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
       fractal_[y_offset + x + 0] = int(_n.m256i_i64[3]);
       fractal_[y_offset + x + 1] = int(_n.m256i_i64[2]);
       fractal_[y_offset + x + 2] = int(_n.m256i_i64[1]);
       fractal_[y_offset + x + 3] = int(_n.m256i_i64[0]);
+#elif defined (ACE_LINUX)
+      fractal_[y_offset + x + 0] = int(_n[3]);
+      fractal_[y_offset + x + 1] = int(_n[2]);
+      fractal_[y_offset + x + 2] = int(_n[1]);
+      fractal_[y_offset + x + 3] = int(_n[0]);
+#else
+#error missing implementation, aborting
+#endif // ACE_WIN32 || ACE_WIN64 || ACE_LINUX
       _x_pos = _mm256_add_pd (_x_pos, _x_jump);
     } // end FOR
 

@@ -42,9 +42,12 @@ PGE_214::OnUserCreate ()
   float k3 = 1.0f / r3_;
 
   //initial circles
-  circle c1 (z1_.scale (k1), k1);
-  circle c2 (z2_.scale (k2), k2);
-  circle c3 (z3_.scale (k3), k3);
+  complex z1_scaled = z1_.scale (k1);
+  complex z2_scaled = z2_.scale (k2);
+  complex z3_scaled = z3_.scale (k3);
+  circle c1 (z1_scaled, k1);
+  circle c2 (z2_scaled, k2);
+  circle c3 (z3_scaled, k3);
 
   //we've set them up to be touching tangent to the other two
   c1.tangentCircles_.push_back (c2);
@@ -69,6 +72,7 @@ PGE_214::OnUserUpdate (float fElapsedTime)
   std::vector<circle> incompleteCircles_a;
   std::vector<circle> completion_a;
   std::vector<circle>::iterator ip;
+  reduce_vector_circle reduce_vector_circle_c (this, completion_a);
 
   //if (circles_.size () > 15000)
   //  goto continue_;
@@ -79,12 +83,14 @@ PGE_214::OnUserUpdate (float fElapsedTime)
     if (!(*iterator).tangentCircles_.empty () && (*iterator).tangentCircles_.size () < 5)
       incompleteCircles_a.push_back (*iterator);
   completion_a =
-    std::reduce (incompleteCircles_a.begin (), incompleteCircles_a.end (), completion_a,
-                 [this] (std::vector<circle> first, circle& second)
-                 { std::vector<circle> result_a = this->apollonian (second);
-                   first.insert (first.end (), result_a.begin (), result_a.end ());
-                   return first;
-                 });
+      std::reduce (incompleteCircles_a.begin (), incompleteCircles_a.end (), completion_a, reduce_vector_circle_c);
+//  completion_a =
+//    std::reduce (incompleteCircles_a.begin (), incompleteCircles_a.end (), completion_a,
+//                 [this] (std::vector<circle> first, circle& second)
+//                 { std::vector<circle> result_a = this->apollonian (second);
+//                   first.insert (first.end (), result_a.begin (), result_a.end ());
+//                   return first;
+//                 });
   circles_.insert (circles_.end (), completion_a.begin (), completion_a.end ());
   std::sort (circles_.begin (), circles_.end (), [] (const circle& rhs, const circle& lhs) { return rhs.isLessThan (lhs); });
   ip =

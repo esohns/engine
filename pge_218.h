@@ -7,6 +7,8 @@
 
 #include "olcPixelGameEngine.h"
 
+#include "ace/config-lite.h"
+
 #include "defines_9.h"
 
 class PGE_218
@@ -125,10 +127,19 @@ repeat:
             if (_mm256_movemask_pd (_mm256_castsi256_pd (_mask2)) > 0)
               goto repeat;
 
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
             fractal[y_offset + x + 0] = int(_n.m256i_i64[3]);
             fractal[y_offset + x + 1] = int(_n.m256i_i64[2]);
             fractal[y_offset + x + 2] = int(_n.m256i_i64[1]);
             fractal[y_offset + x + 3] = int(_n.m256i_i64[0]);
+#elif defined (ACE_LINUX)
+            fractal[y_offset + x + 0] = int(_n[3]);
+            fractal[y_offset + x + 1] = int(_n[2]);
+            fractal[y_offset + x + 2] = int(_n[1]);
+            fractal[y_offset + x + 3] = int(_n[0]);
+#else
+#error missing implementation, aborting
+#endif // ACE_WIN32 || ACE_WIN64 || ACE_LINUX
             _x_pos = _mm256_add_pd (_x_pos, _x_jump);
           } // end FOR
 

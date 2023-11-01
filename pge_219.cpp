@@ -89,7 +89,7 @@ PGE_219::OnUserUpdate (float fElapsedTime)
 
   angle_ -= 0.01f;
 
-  if (angle_ < 2.0f * static_cast<float> (-M_PI))
+  if (angle_ < -2.0f * static_cast<float> (M_PI))
   {
     for (int j = 0; j < rows_; j++)
       for (int i = 0; i < columns_; i++)
