@@ -168,7 +168,8 @@ PGE_218::OnUserUpdate (float fElapsedTime)
       olc::PixelGameEngine::Draw (x, y,
                                   olc::PixelF (0.5f * std::sin (a * n) + 0.5f,
                                                0.5f * std::sin (a * n + 2.094f) + 0.5f,
-                                               0.5f * std::sin (a * n + 4.188f) + 0.5f));
+                                               0.5f * std::sin (a * n + 4.188f) + 0.5f,
+                                               1.0f));
     } // end FOR
 
   // Render UI
