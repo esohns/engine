@@ -22,6 +22,7 @@ struct Engine_OpenGL_GLUT_220_CBData
   float                   f;
   int32_t                 m;
   int32_t                 n;
+  int32_t                 mod;
 
   // menu
   bool                    wireframe;

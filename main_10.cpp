@@ -217,6 +217,7 @@ do_work (int argc_in,
       cb_data_s.f = 0.0f;
       cb_data_s.m = 0;
       cb_data_s.n = 0;
+      cb_data_s.mod = ENGINE_GLUT_220_DEFAULT_MOD;
 
       cb_data_s.wireframe = false;
 
@@ -245,6 +246,9 @@ do_work (int argc_in,
       glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
 
       glEnable (GL_DEPTH_TEST);
+
+      //glEnable (GL_BLEND);
+      //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
       glPolygonMode (GL_FRONT_AND_BACK,
                      GL_FILL);

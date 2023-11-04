@@ -50,13 +50,22 @@ engine_glut_220_key (unsigned char key_in,
                      int x,
                      int y)
 {
+  struct Engine_OpenGL_GLUT_220_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_220_CBData*> (glutGetWindowData ());
+  ACE_ASSERT (cb_data_p);
+
   switch (key_in)
   {
-    case 27:  /* Escape */
-      //exit (0);
-      glutLeaveMainLoop ();
-
-      break;
+    case 'q':
+     cb_data_p->mod++;
+     break;
+    case 'a':
+     cb_data_p->mod--;
+     if (!cb_data_p->mod) cb_data_p->mod = 1;
+     break;
+    case 27: /* escape */
+     glutLeaveMainLoop ();
+     break;
   } // end SWITCH
 }
 
@@ -82,6 +91,9 @@ engine_glut_220_key_special (int key_in,
       cb_data_p->camera.position.y = 0.0f;
       cb_data_p->camera.position.z = 500.0f;
       cb_data_p->camera.rotation.z = 0.0f;
+
+      cb_data_p->mod = ENGINE_GLUT_220_DEFAULT_MOD;
+
       break;
   } // end SWITCH
 }
@@ -171,7 +183,7 @@ engine_glut_220_draw (void)
 
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Reset transformations
+  // reset transformations
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity ();
 
@@ -193,8 +205,8 @@ engine_glut_220_draw (void)
   glPolygonMode (GL_FRONT_AND_BACK,
                  cb_data_p->wireframe ? GL_LINE : GL_FILL);
 
-  // Draw a red x-axis, a green y-axis, and a blue z-axis.  Each of the
-  // axes are ten units long.
+  // draw a red x-axis, a green y-axis, and a blue z-axis. Each of the
+  // axes are 100 units long
   glBegin (GL_LINES);
   glColor4f (1.0f, 0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (100, 0, 0);
   glColor4f (0.0f, 1.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
@@ -215,7 +227,7 @@ engine_glut_220_draw (void)
     glTranslatef (90.0f, 0.0f, 0.0f);
     glRotatef (C * 180.0f / static_cast<float> (M_PI), 0.0f, 1.0f, 0.0f);
     glColor4f (Q, Q, Q, 1.0f);
-    if (cb_data_p->n % 4 == 0)
+    if (cb_data_p->n % cb_data_p->mod == 0)
     {
       cb_data_p->wireframe ? glutWireTorus (1.0f, 40.0f, 24, 24)
                            : glutSolidTorus (1.0f, 40.0f, 24, 24);
@@ -226,7 +238,7 @@ engine_glut_220_draw (void)
     cb_data_p->n++;
     //glColor4f (Q, Q, Q, 12.0f / 255.0f);
     //if (cb_data_p->m % 99 == 0)
-    //  glutSolidSphere (1000.0f, 26, 4); // Dynamic background
+    //  glutSolidSphere (1000.0f, 26, 4); // dynamic background
     //cb_data_p->m++;
     glPopMatrix ();
   } // end WHILE

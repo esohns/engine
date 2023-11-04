@@ -24,5 +24,6 @@
 // pge 220
 #define ENGINE_GLUT_220_DEFAULT_HEIGHT           600
 #define ENGINE_GLUT_220_DEFAULT_WIDTH            600
+#define ENGINE_GLUT_220_DEFAULT_MOD              4
 
 #endif
