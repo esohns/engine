@@ -170,13 +170,10 @@ engine_glut_220_draw (void)
   cb_data_p->n = 0;
 
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  COMMON_GL_ASSERT;
 
   // Reset transformations
   glMatrixMode (GL_MODELVIEW);
-  COMMON_GL_ASSERT;
   glLoadIdentity ();
-  COMMON_GL_ASSERT;
 
   // rotate the camera
   glm::mat4 rotation_matrix = glm::rotate (glm::mat4 (1.0f),
@@ -195,7 +192,6 @@ engine_glut_220_draw (void)
 
   glPolygonMode (GL_FRONT_AND_BACK,
                  cb_data_p->wireframe ? GL_LINE : GL_FILL);
-  COMMON_GL_ASSERT;
 
   // Draw a red x-axis, a green y-axis, and a blue z-axis.  Each of the
   // axes are ten units long.
@@ -204,17 +200,15 @@ engine_glut_220_draw (void)
   glColor4f (0.0f, 1.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
   glColor4f (0.0f, 0.0f, 1.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
-  COMMON_GL_ASSERT;
-
-  glPushMatrix ();
 
   glRotatef (cb_data_p->f * 180.0f / static_cast<float> (M_PI), 1.0f, 0.0f, 0.0f);
 
+  float C, Q;
   while (cb_data_p->i > 0.0f)
   {
     cb_data_p->i -= static_cast<float> (M_PI) / 256.0f;
-    float C = (cb_data_p->f - cb_data_p->i) * 2.0f;
-    float Q = std::abs (std::sin (C + cb_data_p->f));
+    C = (cb_data_p->f - cb_data_p->i) * 2.0f;
+    Q = std::abs (std::sin (C + cb_data_p->f));
 
     glPushMatrix ();
     glRotatef (cb_data_p->i * 180.0f / static_cast<float> (M_PI), 1.0f, 1.0f, 1.0f);
@@ -225,24 +219,19 @@ engine_glut_220_draw (void)
     {
       cb_data_p->wireframe ? glutWireTorus (1.0f, 40.0f, 24, 24)
                            : glutSolidTorus (1.0f, 40.0f, 24, 24);
-      glColor3f (0.0f, 0.0f, 0.0f);
+      glColor4f (0.0f, 0.0f, 0.0f, 1.0f);
       cb_data_p->wireframe ? glutWireTorus (2.0f, 35.0f, 24, 24)
                            : glutSolidTorus (2.0f, 35.0f, 24, 24);
     } // end IF
     cb_data_p->n++;
-    glColor4f (Q, Q, Q, 12.0f / 255.0f);
+    //glColor4f (Q, Q, Q, 12.0f / 255.0f);
     //if (cb_data_p->m % 99 == 0)
-      //glutSolidSphere (1000.0f, 26, 4); // Dynamic background
-    cb_data_p->m++;
+    //  glutSolidSphere (1000.0f, 26, 4); // Dynamic background
+    //cb_data_p->m++;
     glPopMatrix ();
   } // end WHILE
 
   cb_data_p->f += 0.01f;
-
-  glPopMatrix ();
-
-  glFlush ();
-  COMMON_GL_ASSERT;
 
   glutSwapBuffers ();
 }
@@ -250,36 +239,6 @@ engine_glut_220_draw (void)
 void
 engine_glut_220_idle (void)
 {
-  //static float vel0 = -100.0;
-  //static double t0 = -1.;
-  //double t, dt;
-  //t = glutGet (GLUT_ELAPSED_TIME) / 1000.;
-  //if (t0 < 0.)
-  //  t0 = t;
-  //dt = t - t0;
-  //t0 = t;
-
-  //Zrot += Zstep * dt;
-
-  //Xpos += Xvel * dt;
-  //if (Xpos >= Xmax) {
-  //  Xpos = Xmax;
-  //  Xvel = -Xvel;
-  //  Zstep = -Zstep;
-  //}
-  //if (Xpos <= Xmin) {
-  //  Xpos = Xmin;
-  //  Xvel = -Xvel;
-  //  Zstep = -Zstep;
-  //}
-  //Ypos += Yvel * dt;
-  //Yvel += G * dt;
-  //if (Ypos < Ymin) {
-  //  Ypos = Ymin;
-  //  if (vel0 == -100.0)
-  //    vel0 = fabs (Yvel);
-  //  Yvel = vel0;
-  //}
   glutPostRedisplay ();
 }
 

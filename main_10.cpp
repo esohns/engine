@@ -242,12 +242,12 @@ do_work (int argc_in,
       glutSetWindow (window_i);
       glutSetWindowData (&cb_data_s);
 
-      //glClearColor (0.5f, 0.5f, 0.5f, 1.0f);
       glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
-      COMMON_GL_ASSERT;
 
-      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
-      COMMON_GL_ASSERT;
+      glEnable (GL_DEPTH_TEST);
+
+      glPolygonMode (GL_FRONT_AND_BACK,
+                     GL_FILL);
 
       glutDisplayFunc (engine_glut_220_draw);
       glutReshapeFunc (engine_glut_220_reshape);
