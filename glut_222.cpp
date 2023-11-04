@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 
-#include "glut_169.h"
+#include "glut_222.h"
 
 #include "GL/glew.h"
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
@@ -20,14 +20,13 @@
 #include "common_gl_defines.h"
 #include "common_gl_tools.h"
 
-#include "defines_7.h"
+#include "defines_10.h"
 #include "engine_common.h"
 
 void
-engine_glut_169_reshape (int width_in, int height_in)
+engine_glut_222_reshape (int width_in, int height_in)
 {
-  glViewport (0, 0,
-              static_cast<GLsizei> (width_in), static_cast<GLsizei> (height_in));
+  glViewport (0, 0, width_in, height_in);
 
   glMatrixMode (GL_PROJECTION);
 
@@ -43,27 +42,25 @@ engine_glut_169_reshape (int width_in, int height_in)
 }
 
 void
-engine_glut_169_key (unsigned char key_in,
+engine_glut_222_key (unsigned char key_in,
                      int x,
                      int y)
 {
   switch (key_in)
   {
     case 27:  /* Escape */
-      //exit (0);
       glutLeaveMainLoop ();
-
       break;
   } // end SWITCH
 }
 
 void
-engine_glut_169_key_special (int key_in,
+engine_glut_222_key_special (int key_in,
                              int x,
                              int y)
 {
-  struct Engine_OpenGL_GLUT_169_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_169_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -75,19 +72,19 @@ engine_glut_169_key_special (int key_in,
       cb_data_p->camera.rotation.z += 0.5f;
       break;
     case GLUT_KEY_UP:
-      cb_data_p->camera.position.x = ENGINE_GLUT_169_DEFAULT_WIDTH / 2.0f;
-      cb_data_p->camera.position.y = ENGINE_GLUT_169_DEFAULT_HEIGHT / 2.0f;
-      cb_data_p->camera.position.z = 1000.0f;
+      cb_data_p->camera.position.x = 0.0f;
+      cb_data_p->camera.position.y = 0.0f;
+      cb_data_p->camera.position.z = 500.0f;
       cb_data_p->camera.rotation.z = 0.0f;
       break;
   } // end SWITCH
 }
 
 void
-engine_glut_169_menu (int entry_in)
+engine_glut_222_menu (int entry_in)
 {
-  struct Engine_OpenGL_GLUT_169_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_169_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (entry_in)
@@ -100,10 +97,10 @@ engine_glut_169_menu (int entry_in)
 }
 
 void
-engine_glut_169_mouse_button (int button, int state, int x, int y)
+engine_glut_222_mouse_button (int button, int state, int x, int y)
 {
-  struct Engine_OpenGL_GLUT_169_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_169_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   if (button == GLUT_LEFT_BUTTON)
@@ -119,14 +116,11 @@ engine_glut_169_mouse_button (int button, int state, int x, int y)
 }
 
 void
-engine_glut_169_mouse_move (int x, int y)
+engine_glut_222_mouse_move (int x, int y)
 {
-  struct Engine_OpenGL_GLUT_169_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_169_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
-
-  glProgramUniform2f (cb_data_p->programId, cb_data_p->mouseLoc, static_cast<GLfloat> (x),
-                                                                 static_cast<GLfloat> (ENGINE_GLUT_169_DEFAULT_HEIGHT - y));
 
   // this will only be true when the left button is down
   if (cb_data_p->xOrigin >= 0)
@@ -140,10 +134,10 @@ engine_glut_169_mouse_move (int x, int y)
 }
 
 void
-engine_glut_169_timer (int v)
+engine_glut_222_timer (int v)
 {
-  struct Engine_OpenGL_GLUT_169_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_169_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   //if (cb_data_p->spinning)
@@ -155,19 +149,17 @@ engine_glut_169_timer (int v)
     }
   //  glutPostRedisplay();
   //} // end IF
-  glutTimerFunc (1000 / 30, engine_glut_169_timer, v);
+  glutTimerFunc (1000 / 30, engine_glut_222_timer, v);
 }
 
 void
-engine_glut_169_draw (void)
+engine_glut_222_draw (void)
 {
-  struct Engine_OpenGL_GLUT_169_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_169_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
-  static int frame_count_i = 1;
-
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Reset transformations
   glMatrixMode (GL_MODELVIEW);
@@ -177,14 +169,11 @@ engine_glut_169_draw (void)
   glm::mat4 rotation_matrix = glm::rotate (glm::mat4 (1.0f),
                                            glm::radians (cb_data_p->camera.rotation.z),
                                            glm::vec3 (0.0f, 0.0f, 1.0f));
-  glm::vec3 rotation_center (ENGINE_GLUT_169_DEFAULT_WIDTH / 2.0f,
-                             ENGINE_GLUT_169_DEFAULT_HEIGHT / 2.0f,
-                             cb_data_p->camera.position.z);
+  glm::vec3 rotation_center (0.0f, 0.0f, 0.0f);
   glm::vec4 pos_rot_h =
     rotation_matrix * glm::vec4 (cb_data_p->camera.position - rotation_center,
                                  1.0f);
-  glm::vec3 pos_rot = glm::vec3 (pos_rot_h) + rotation_center;
-  cb_data_p->camera.position = pos_rot;
+  cb_data_p->camera.position = glm::vec3 (pos_rot_h) + rotation_center;
 
   // set the camera
   gluLookAt (cb_data_p->camera.position.x, cb_data_p->camera.position.y, cb_data_p->camera.position.z,
@@ -202,23 +191,28 @@ engine_glut_169_draw (void)
   glColor3f (0.0F, 0.0F, 1.0F); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
 
-  glProgramUniform1f (cb_data_p->programId, cb_data_p->frameCountLoc, static_cast<GLfloat> (frame_count_i));
+  // update uniforms
+  glProgramUniform2f (cb_data_p->programId, cb_data_p->resolutionLoc,
+                      static_cast<GLfloat> (ENGINE_GLUT_222_DEFAULT_WIDTH),
+                      static_cast<GLfloat> (ENGINE_GLUT_222_DEFAULT_HEIGHT));
 
-  //glBegin (GL_QUADS);
-  //glColor3f (1.0F, 1.0F, 1.0F);
-  //glVertex3i (ENGINE_GLUT_169_DEFAULT_WIDTH - 1, 0, 0); glVertex3i (0, 0, 0);
-  //glVertex3i (0, ENGINE_GLUT_169_DEFAULT_HEIGHT - 1, 0); glVertex3i (ENGINE_GLUT_169_DEFAULT_WIDTH - 1, ENGINE_GLUT_169_DEFAULT_HEIGHT - 1, 0);
-  //glEnd ();
-  //glBegin (GL_TRIANGLES);
-  //glColor3f (1.0F, 1.0F, 1.0F);
-  //glVertex3i (ENGINE_GLUT_169_DEFAULT_WIDTH - 1, 0, 0); glVertex3i (0, 0, 0); glVertex3i (0, ENGINE_GLUT_169_DEFAULT_HEIGHT - 1, 0);
-  //glVertex3i (0, ENGINE_GLUT_169_DEFAULT_HEIGHT - 1, 0); glVertex3i (ENGINE_GLUT_169_DEFAULT_WIDTH - 1, ENGINE_GLUT_169_DEFAULT_HEIGHT - 1, 0); glVertex3i (ENGINE_GLUT_169_DEFAULT_WIDTH - 1, 0, 0);
-  //glEnd ();
-  //glBegin (GL_TRIANGLE_STRIP);
-  //glVertex3i (0, 0, 0); glVertex3i (ENGINE_GLUT_169_DEFAULT_WIDTH - 1, 0, 0); glVertex3i (0, ENGINE_GLUT_169_DEFAULT_HEIGHT - 1, 0);
-  //glVertex3i (ENGINE_GLUT_169_DEFAULT_WIDTH - 1, ENGINE_GLUT_169_DEFAULT_HEIGHT - 1, 0);
-  //glEnd ();
-  glColor3f (1.0F, 1.0F, 1.0F);
+  // compute elapsed time
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+  std::chrono::steady_clock::time_point tp2 =
+    std::chrono::high_resolution_clock::now ();
+#elif defined (ACE_LINUX)
+  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> tp2 =
+    std::chrono::high_resolution_clock::now ();
+#else
+#error missing implementation, aborting
+#endif // ACE_WIN32 || ACE_WIN64 || ACE_LINUX
+  std::chrono::duration<double> elapsed_time = tp2 - cb_data_p->tp1;
+  glProgramUniform1f (cb_data_p->programId, cb_data_p->timeLoc,
+                      static_cast<GLfloat> (elapsed_time.count ()));
+
+  glTranslatef (-static_cast<GLfloat> (ENGINE_GLUT_222_DEFAULT_WIDTH / 2.0f),
+                -static_cast<GLfloat> (ENGINE_GLUT_222_DEFAULT_HEIGHT / 2.0f),
+                0.0f);
   for (int y = 0; y < cb_data_p->rows - 1; ++y)
   {
     glBegin (GL_TRIANGLE_STRIP);
@@ -230,54 +224,20 @@ engine_glut_169_draw (void)
     glEnd ();
   } // end FOR
 
-  glFlush ();
-
   glutSwapBuffers ();
-
-  ++frame_count_i;
 }
 
 void
-engine_glut_169_idle (void)
+engine_glut_222_idle (void)
 {
-  //static float vel0 = -100.0;
-  //static double t0 = -1.;
-  //double t, dt;
-  //t = glutGet (GLUT_ELAPSED_TIME) / 1000.;
-  //if (t0 < 0.)
-  //  t0 = t;
-  //dt = t - t0;
-  //t0 = t;
-
-  //Zrot += Zstep * dt;
-
-  //Xpos += Xvel * dt;
-  //if (Xpos >= Xmax) {
-  //  Xpos = Xmax;
-  //  Xvel = -Xvel;
-  //  Zstep = -Zstep;
-  //}
-  //if (Xpos <= Xmin) {
-  //  Xpos = Xmin;
-  //  Xvel = -Xvel;
-  //  Zstep = -Zstep;
-  //}
-  //Ypos += Yvel * dt;
-  //Yvel += G * dt;
-  //if (Ypos < Ymin) {
-  //  Ypos = Ymin;
-  //  if (vel0 == -100.0)
-  //    vel0 = fabs (Yvel);
-  //  Yvel = vel0;
-  //}
   glutPostRedisplay ();
 }
 
 void
-engine_glut_169_visible (int vis)
+engine_glut_222_visible (int vis)
 {
   if (vis == GLUT_VISIBLE)
-    glutIdleFunc (engine_glut_169_idle);
+    glutIdleFunc (engine_glut_222_idle);
   else
     glutIdleFunc (NULL);
 }

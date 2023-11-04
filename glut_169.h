@@ -47,4 +47,4 @@ struct Engine_OpenGL_GLUT_169_CBData
   int                     xOrigin;
 };
 
-#endif // GLUT_132_H
+#endif // GLUT_169_H
