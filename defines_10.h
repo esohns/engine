@@ -21,9 +21,15 @@
 #ifndef DEFINES_10_H
 #define DEFINES_10_H
 
-// pge 220
+// glut 220
 #define ENGINE_GLUT_220_DEFAULT_HEIGHT           600
 #define ENGINE_GLUT_220_DEFAULT_WIDTH            600
 #define ENGINE_GLUT_220_DEFAULT_MOD              4
+
+// pge 221
+#define ENGINE_PGE_221_DEFAULT_HEIGHT           600
+#define ENGINE_PGE_221_DEFAULT_WIDTH            800
+#define ENGINE_PGE_221_DEFAULT_NUMBER_OF_AGENTS 80
+#define ENGINE_PGE_221_DEFAULT_ALPHA_DECAY      15
 
 #endif

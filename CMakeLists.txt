@@ -924,6 +924,8 @@ set (engine_10_EXE_SRCS
      main_10.cpp
      glut_220.cpp
      glut_220.h
+     pge_221.cpp
+     pge_221.h
      stdafx.h)
 
 set (EXECUTABLE_10 engine_10)
@@ -931,6 +933,7 @@ add_executable (${EXECUTABLE_10}
                 ${engine_10_EXE_SRCS})
 
 set_target_properties (${EXECUTABLE_9} PROPERTIES CXX_STANDARD 17)
+set_target_properties (${EXECUTABLE_10} PROPERTIES CXX_STANDARD 17)
 if (WIN32 AND HOST_CPU_HAS_AVX2)
 # target_compile_options (${EXECUTABLE_9} PRIVATE $<$CXX_COMPILER_ID:MSVC>:/arch:AVX2>)
  target_compile_options (${EXECUTABLE_9} PRIVATE $<$<BOOL:${MSVC}>:/arch:AVX2>)
@@ -1163,9 +1166,9 @@ target_precompile_headers (${EXECUTABLE_7}
 target_precompile_headers (${EXECUTABLE_8}
                            REUSE_FROM ${EXECUTABLE})
 target_precompile_headers (${EXECUTABLE_9}
-                           PRIVATE stdafx.h)
+                           PRIVATE stdafx.h) # c++std17
 target_precompile_headers (${EXECUTABLE_10}
-                           REUSE_FROM ${EXECUTABLE})
+                           REUSE_FROM ${EXECUTABLE_9})
 
 install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} ${EXECUTABLE_5} ${EXECUTABLE_6} ${EXECUTABLE_7} ${EXECUTABLE_8} ${EXECUTABLE_9} ${EXECUTABLE_10}
          RUNTIME

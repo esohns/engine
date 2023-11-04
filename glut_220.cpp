@@ -19,30 +19,25 @@
 #include "common_gl_defines.h"
 #include "common_gl_tools.h"
 
+#include "common_image_tools.h"
+
 #include "defines_10.h"
 #include "engine_common.h"
 
 void
 engine_glut_220_reshape (int width_in, int height_in)
 {
-  glViewport (0, 0,
-              static_cast<GLsizei> (width_in), static_cast<GLsizei> (height_in));
-  COMMON_GL_ASSERT;
+  glViewport (0, 0, width_in, height_in);
 
   glMatrixMode (GL_PROJECTION);
-  COMMON_GL_ASSERT;
-
   glLoadIdentity ();
-  COMMON_GL_ASSERT;
 
   ACE_ASSERT (height_in);
   gluPerspective (45.0,
                   width_in / static_cast<GLdouble> (height_in),
                   -1.0, 1.0);
-  COMMON_GL_ASSERT;
 
   glMatrixMode (GL_MODELVIEW);
-  COMMON_GL_ASSERT;
 }
 
 void
@@ -216,24 +211,27 @@ engine_glut_220_draw (void)
   glRotatef (cb_data_p->f * 180.0f / static_cast<float> (M_PI), 1.0f, 0.0f, 0.0f);
 
   float C, Q;
+  //float r, g, b;
   while (cb_data_p->i > 0.0f)
   {
+    glPushMatrix ();
     cb_data_p->i -= static_cast<float> (M_PI) / 256.0f;
     C = (cb_data_p->f - cb_data_p->i) * 2.0f;
     Q = std::abs (std::sin (C + cb_data_p->f));
 
-    glPushMatrix ();
-    glRotatef (cb_data_p->i * 180.0f / static_cast<float> (M_PI), 1.0f, 1.0f, 1.0f);
+    glRotatef (cb_data_p->i * 180.0f / static_cast<float> (M_PI), 0.0f, 0.0f, 1.0f);
     glTranslatef (90.0f, 0.0f, 0.0f);
     glRotatef (C * 180.0f / static_cast<float> (M_PI), 0.0f, 1.0f, 0.0f);
     glColor4f (Q, Q, Q, 1.0f);
+    //Common_Image_Tools::HSVToRGB ((cb_data_p->i / (2.0f * static_cast<float> (M_PI))) * 360.0f, 1.0f, 1.0f, r, g, b);
+    //glColor4f (r, g, b, 1.0f);
     if (cb_data_p->n % cb_data_p->mod == 0)
     {
-      cb_data_p->wireframe ? glutWireTorus (1.0f, 40.0f, 24, 24)
-                           : glutSolidTorus (1.0f, 40.0f, 24, 24);
+      cb_data_p->wireframe ? glutWireTorus (1.0f, 40.0f, 16, 40)
+                           : glutSolidTorus (1.0f, 40.0f, 16, 40);
       glColor4f (0.0f, 0.0f, 0.0f, 1.0f);
-      cb_data_p->wireframe ? glutWireTorus (2.0f, 35.0f, 24, 24)
-                           : glutSolidTorus (2.0f, 35.0f, 24, 24);
+      cb_data_p->wireframe ? glutWireTorus (2.0f, 35.0f, 16, 40)
+                           : glutSolidTorus (2.0f, 35.0f, 16, 40);
     } // end IF
     cb_data_p->n++;
     //glColor4f (Q, Q, Q, 12.0f / 255.0f);

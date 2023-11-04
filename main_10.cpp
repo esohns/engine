@@ -43,10 +43,12 @@
 #define OLC_PGE_APPLICATION
 #define OPENSIMPLEXNOISE_STATIC_CONSTANTS
 #include "glut_220.h"
+#include "pge_221.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 220,
+  ENGINE_MODE_221,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -271,6 +273,21 @@ do_work (int argc_in,
       glutMainLoop ();
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_221:
+    {
+      PGE_221 example;
+      if (example.Construct (ENGINE_PGE_221_DEFAULT_WIDTH, ENGINE_PGE_221_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }
