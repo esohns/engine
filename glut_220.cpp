@@ -211,20 +211,20 @@ engine_glut_220_draw (void)
   glRotatef (cb_data_p->f * 180.0f / static_cast<float> (M_PI), 1.0f, 0.0f, 0.0f);
 
   float C, Q;
-  //float r, g, b;
+  float r, g, b;
   while (cb_data_p->i > 0.0f)
   {
     glPushMatrix ();
     cb_data_p->i -= static_cast<float> (M_PI) / 256.0f;
     C = (cb_data_p->f - cb_data_p->i) * 2.0f;
-    Q = std::abs (std::sin (C + cb_data_p->f));
+    //Q = std::abs (std::sin (C + cb_data_p->f));
 
     glRotatef (cb_data_p->i * 180.0f / static_cast<float> (M_PI), 0.0f, 0.0f, 1.0f);
     glTranslatef (90.0f, 0.0f, 0.0f);
     glRotatef (C * 180.0f / static_cast<float> (M_PI), 0.0f, 1.0f, 0.0f);
-    glColor4f (Q, Q, Q, 1.0f);
-    //Common_Image_Tools::HSVToRGB ((cb_data_p->i / (2.0f * static_cast<float> (M_PI))) * 360.0f, 1.0f, 1.0f, r, g, b);
-    //glColor4f (r, g, b, 1.0f);
+    //glColor4f (Q, Q, Q, 1.0f);
+    Common_Image_Tools::HSVToRGB ((cb_data_p->i / (2.0f * static_cast<float> (M_PI))) * 360.0f, 1.0f, 1.0f, r, g, b);
+    glColor4f (r, g, b, 1.0f);
     if (cb_data_p->n % cb_data_p->mod == 0)
     {
       cb_data_p->wireframe ? glutWireTorus (1.0f, 40.0f, 16, 40)
@@ -235,6 +235,7 @@ engine_glut_220_draw (void)
     } // end IF
     cb_data_p->n++;
     //glColor4f (Q, Q, Q, 12.0f / 255.0f);
+    //glColor4f (r, g, b, 12.0f / 255.0f);
     //if (cb_data_p->m % 99 == 0)
     //  glutSolidSphere (1000.0f, 26, 4); // dynamic background
     //cb_data_p->m++;
