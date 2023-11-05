@@ -4,13 +4,12 @@ precision mediump float;
 
 #extension GL_ARB_explicit_uniform_location : enable
 
-
-
 uniform vec2 iResolution;
 uniform float iTime;
 
 varying out vec4 aVertexColor;
 
+//#define SHOW_TILING 1
 #define TAU 6.28318530718
 #define MAX_ITER 5
 

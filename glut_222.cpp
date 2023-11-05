@@ -159,9 +159,9 @@ engine_glut_222_draw (void)
     static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
-  //glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Reset transformations
+  // reset transformations
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity ();
 
@@ -183,8 +183,8 @@ engine_glut_222_draw (void)
   glPolygonMode (GL_FRONT_AND_BACK,
                  cb_data_p->wireframe ? GL_LINE : GL_FILL);
 
-  // Draw a red x-axis, a green y-axis, and a blue z-axis.  Each of the
-  // axes are ten units long.
+  // draw a red x-axis, a green y-axis, and a blue z-axis. Each of the
+  // axes are 100 units long
   glBegin (GL_LINES);
   glColor3f (1.0F, 0.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (100, 0, 0);
   glColor3f (0.0F, 1.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);

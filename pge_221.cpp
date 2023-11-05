@@ -10,6 +10,7 @@
 PGE_221::PGE_221 ()
  : olc::PixelGameEngine ()
  , agents_ ()
+ , noise_ ()
 {
   sAppName = ACE_TEXT_ALWAYS_CHAR ("Example 221");
 }
