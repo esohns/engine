@@ -641,6 +641,8 @@ do_work (int argc_in,
       cb_data_s.camera.up.y = 1.0F;
       cb_data_s.camera.up.z = 0.0F;
 
+      cb_data_s.leftButtonIsDown = false;
+
       // initialize GLUT
       glutInit (&argc_in, argv_in);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);

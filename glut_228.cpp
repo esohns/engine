@@ -36,7 +36,7 @@ engine_glut_228_reshape (int width_in, int height_in)
   gluPerspective (45.0,
                   width_in / static_cast<GLdouble> (height_in),
                   -1.0, 1.0);
-  //glOrtho (0.0, static_cast<GLdouble> (width_in), static_cast<GLdouble> (height_in), 0.0, 0.0, 1.0);
+  //glOrtho (0.0, static_cast<GLdouble> (width_in), static_cast<GLdouble> (height_in), 0.0, -1.0, 1.0);
 
   glMatrixMode (GL_MODELVIEW);
 }
@@ -170,11 +170,11 @@ engine_glut_228_draw (void)
 
   // draw a red x-axis, a green y-axis, and a blue z-axis. Each of the
   // axes are 100 units long
-  glBegin (GL_LINES);
-  glColor3f (1.0F, 0.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (100, 0, 0);
-  glColor3f (0.0F, 1.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
-  glColor3f (0.0F, 0.0F, 1.0F); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
-  glEnd ();
+  //glBegin (GL_LINES);
+  //glColor3f (1.0f, 0.0f, 0.0f); glVertex3i (0, 0, 0); glVertex3i (100, 0, 0);
+  //glColor3f (0.0f, 1.0f, 0.0f); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
+  //glColor3f (0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
+  //glEnd ();
 
   updateBalls (*cb_data_p);
 
@@ -199,9 +199,10 @@ engine_glut_228_draw (void)
   glProgramUniform1f (cb_data_p->programId, cb_data_p->heightLoc,
                       static_cast<float> (ENGINE_GLUT_228_DEFAULT_HEIGHT));
 
-  glTranslatef (-static_cast<GLfloat> (ENGINE_GLUT_228_DEFAULT_WIDTH / 2.0f),
-                -static_cast<GLfloat> (ENGINE_GLUT_228_DEFAULT_HEIGHT / 2.0f),
-                0.0f);
+  //glTranslatef (-static_cast<GLfloat> (ENGINE_GLUT_228_DEFAULT_WIDTH / 2.0f),
+  //              -static_cast<GLfloat> (ENGINE_GLUT_228_DEFAULT_HEIGHT / 2.0f),
+  //              0.0f);
+
   glColor3f (1.0f, 1.0f, 1.0f);
   for (int y = 0; y < cb_data_p->rows - 1; ++y)
   {
