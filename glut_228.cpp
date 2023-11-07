@@ -35,8 +35,8 @@ engine_glut_228_reshape (int width_in, int height_in)
   ACE_ASSERT (height_in);
   gluPerspective (45.0,
                   width_in / static_cast<GLdouble> (height_in),
-                  -1.0, 1.0);
-  //glOrtho (0.0, static_cast<GLdouble> (width_in), static_cast<GLdouble> (height_in), 0.0, -1.0, 1.0);
+                  150.0, -300.0);
+  //glOrtho (0.0, static_cast<GLdouble> (width_in), 0.0, static_cast<GLdouble> (height_in), 150.0, -300.0);
 
   glMatrixMode (GL_MODELVIEW);
 }
@@ -199,9 +199,9 @@ engine_glut_228_draw (void)
   glProgramUniform1f (cb_data_p->programId, cb_data_p->heightLoc,
                       static_cast<float> (ENGINE_GLUT_228_DEFAULT_HEIGHT));
 
-  //glTranslatef (-static_cast<GLfloat> (ENGINE_GLUT_228_DEFAULT_WIDTH / 2.0f),
-  //              -static_cast<GLfloat> (ENGINE_GLUT_228_DEFAULT_HEIGHT / 2.0f),
-  //              0.0f);
+  glTranslatef (-static_cast<GLfloat> (ENGINE_GLUT_228_DEFAULT_WIDTH / 2.0f),
+                -static_cast<GLfloat> (ENGINE_GLUT_228_DEFAULT_HEIGHT / 2.0f),
+                0.0f);
 
   glColor3f (1.0f, 1.0f, 1.0f);
   for (int y = 0; y < cb_data_p->rows - 1; ++y)

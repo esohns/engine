@@ -51,6 +51,7 @@
 #include "pge_226.h"
 #include "glut_227.h"
 #include "glut_228.h"
+#include "glut_229.h"
 
 enum Engine_ModeType
 {
@@ -63,6 +64,7 @@ enum Engine_ModeType
   ENGINE_MODE_226,
   ENGINE_MODE_227,
   ENGINE_MODE_228,
+  ENGINE_MODE_229,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -576,7 +578,7 @@ do_work (int argc_in,
       // initialize GLUT
       glutInit (&argc_in, argv_in);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
-      glutInitWindowSize (ENGINE_GLUT_222_DEFAULT_WIDTH, ENGINE_GLUT_222_DEFAULT_HEIGHT);
+      glutInitWindowSize (ENGINE_GLUT_227_DEFAULT_WIDTH, ENGINE_GLUT_227_DEFAULT_HEIGHT);
 
       int window_i = glutCreateWindow ("engine GLUT 227");
       glutSetWindow (window_i);
@@ -588,18 +590,18 @@ do_work (int argc_in,
 
       glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
 
-      glutDisplayFunc (engine_glut_227_draw);
-      glutReshapeFunc (engine_glut_227_reshape);
-      glutVisibilityFunc (engine_glut_227_visible);
+      glutDisplayFunc (engine_glut_229_draw);
+      glutReshapeFunc (engine_glut_229_reshape);
+      glutVisibilityFunc (engine_glut_229_visible);
 
-      glutKeyboardFunc (engine_glut_227_key);
-      glutSpecialFunc (engine_glut_227_key_special);
-      glutMouseFunc (engine_glut_227_mouse_button);
-      glutMotionFunc (engine_glut_227_mouse_move);
-      glutPassiveMotionFunc (engine_glut_227_mouse_move);
-      glutTimerFunc (100, engine_glut_227_timer, 0);
+      glutKeyboardFunc (engine_glut_229_key);
+      glutSpecialFunc (engine_glut_229_key_special);
+      glutMouseFunc (engine_glut_229_mouse_button);
+      glutMotionFunc (engine_glut_229_mouse_move);
+      glutPassiveMotionFunc (engine_glut_229_mouse_move);
+      glutTimerFunc (100, engine_glut_229_timer, 0);
 
-      glutCreateMenu (engine_glut_227_menu);
+      glutCreateMenu (engine_glut_229_menu);
       glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
       glutAttachMenu (GLUT_RIGHT_BUTTON);
 
@@ -821,6 +823,61 @@ do_work (int argc_in,
                  Common_Tools::getRandomNumber (ENGINE_GLUT_228_DEFAULT_WIDTH / 4.0f, ENGINE_GLUT_228_DEFAULT_WIDTH / 4.0f * 3.0f),
                  Common_Tools::getRandomNumber (ENGINE_GLUT_228_DEFAULT_HEIGHT / 4.0f, ENGINE_GLUT_228_DEFAULT_HEIGHT / 4.0f * 3.0f),
                  Common_Tools::getRandomNumber (1.0f, ENGINE_GLUT_228_DEFAULT_MAX_RADIUS));
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_229:
+    {
+      struct Engine_OpenGL_GLUT_229_CBData cb_data_s;
+
+      cb_data_s.wireframe = true;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 1500.0f;
+      cb_data_s.camera.position.z = 900.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 0.0f;
+      cb_data_s.camera.up.z = 1.0f;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_229_DEFAULT_WIDTH, ENGINE_GLUT_229_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 229");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glEnable (GL_DEPTH_TEST);
+
+      glEnable (GL_BLEND);
+      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_229_draw);
+      glutReshapeFunc (engine_glut_229_reshape);
+      glutVisibilityFunc (engine_glut_229_visible);
+
+      glutKeyboardFunc (engine_glut_229_key);
+      glutSpecialFunc (engine_glut_229_key_special);
+      glutMouseFunc (engine_glut_229_mouse_button);
+      glutMotionFunc (engine_glut_229_mouse_move);
+      glutPassiveMotionFunc (engine_glut_229_mouse_move);
+      glutTimerFunc (100, engine_glut_229_timer, 0);
+
+      glutCreateMenu (engine_glut_229_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
 
       glutMainLoop ();
 
