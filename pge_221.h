@@ -53,7 +53,7 @@ class PGE_221
           within_range_a.push_back (*iterator);
       if (within_range_a.size () == 0)
         return closest;
-
+      float x, y, xmax_f, ymax_f;
       static std::vector<float> sides_a = {-1.0f, 1.0f};
       for (std::vector<float>::iterator iterator = sides_a.begin ();
            iterator != sides_a.end ();
@@ -62,22 +62,22 @@ class PGE_221
              iterator_2 != sides_a.end ();
              ++iterator_2)
         {
-          float xmax_f = std::numeric_limits<float>::min ();
+          xmax_f = std::numeric_limits<float>::lowest ();
           for (std::vector<agent*>::iterator iterator_3 = within_range_a.begin ();
                iterator_3 != within_range_a.end ();
                ++iterator_3)
           {
-            float x = (*iterator_3)->position_.x * (*iterator);
+            x = (*iterator_3)->position_.x * (*iterator);
             if (x > xmax_f)
               xmax_f = x;
           } // end FOR
           xmax_f += 1.0f;
-          float ymax_f = std::numeric_limits<float>::min ();
+          ymax_f = std::numeric_limits<float>::lowest ();
           for (std::vector<agent*>::iterator iterator_3 = within_range_a.begin ();
                iterator_3 != within_range_a.end ();
                ++iterator_3)
           {
-            float y = (*iterator_3)->position_.y * (*iterator_2);
+            y = (*iterator_3)->position_.y * (*iterator_2);
             if (y > ymax_f)
               ymax_f = y;
           } // end FOR
@@ -119,7 +119,7 @@ class PGE_221
       }
       olc::vf2d& operator() (olc::vf2d& lhs, olc::vf2d& rhs)
       {
-        lhs += rhs;
+        //lhs += rhs; // *TODO*: on linux, enable this ? (never reached on Win32)
         return lhs;
       }
 
@@ -162,18 +162,22 @@ class PGE_221
       if (within_range_a.size () == 0)
         return closest;
 
-      olc::vf2d average_s;
-      reduce_agent_positions reduce_agent_positions_c (average_s, within_range_a.size ());
-      average_s = std::reduce (within_range_a.begin (), within_range_a.end (), average_s, reduce_agent_positions_c);
+      olc::vf2d average_s (0.0f, 0.0f);
+      reduce_agent_positions reduce_agent_positions_c (average_s,
+                                                       within_range_a.size ());
+      average_s =
+        std::reduce (within_range_a.begin (), within_range_a.end (),
+                     average_s,
+                     reduce_agent_positions_c);
 
       closest.second = position_;
       closest.second -= average_s;
       // position.x += map(noise(this.id, millis()*0.001, 0), 0, 1, -20, 20)
       // position.y += map(noise(this.id, millis()*0.001, 500), 0, 1, -20, 20)
       closest.second.x *=
-        std::min (static_cast<float> (engine->ScreenWidth ()), static_cast<float> (engine->ScreenHeight ())) * size_factor_f / (std::abs (closest.second.x) + 1e-4f);
+        static_cast<float> (std::min (engine->ScreenWidth (), engine->ScreenHeight ())) * size_factor_f / (std::abs (closest.second.x) + 1e-4f);
       closest.second.y *=
-        std::min (static_cast<float> (engine->ScreenWidth ()), static_cast<float> (engine->ScreenHeight ())) * size_factor_f / (std::abs (closest.second.y) + 1e-4f);
+        static_cast<float> (std::min (engine->ScreenWidth (), engine->ScreenHeight ())) * size_factor_f / (std::abs (closest.second.y) + 1e-4f);
       closest.second += average_s;
 
       if (std::abs (closest.second.x - position_.x) < std::abs (closest.second.y - position_.y))
@@ -184,7 +188,7 @@ class PGE_221
           position_.x + Common_GL_Tools::map (static_cast<float> (noise->GetValue (id_, milliseconds * 0.001, 2500.0f)), -1.0f, 1.0f, -10.0f, 10.0f);
 
       closest.first =
-        static_cast<float> (std::pow (position_.dist (closest.second) / std::min (static_cast<float> (engine->ScreenWidth ()), static_cast<float> (engine->ScreenHeight ())), 2)) * 0.5f / range_factor_f;
+        static_cast<float> (std::pow (position_.dist (closest.second) / static_cast<float> (std::min (engine->ScreenWidth (), engine->ScreenHeight ())), 2)) * 0.5f / range_factor_f;
       return closest;
     }
 
@@ -194,8 +198,7 @@ class PGE_221
       for (std::vector<agent>::iterator iterator = agents.begin ();
            iterator != agents.end ();
            ++iterator)
-        if ((*iterator).id_       != id_ &&
-            (*iterator).position_ != position_)
+        if (&(*iterator) != this)
           others_a.push_back (&*iterator);
 
       std::pair<float, olc::vf2d> closestCornerPair =
@@ -218,7 +221,7 @@ class PGE_221
         float magnitude_f = std::min (toCorner.mag () * 0.8f, 5.0f);
         toCorner = toCorner.norm ();
         toCorner *= magnitude_f;
-        velocity_.lerp (toCorner, 0.5);
+        velocity_ = velocity_.lerp (toCorner, 0.5);
       } // end IF
       else if (closestSidePair.first < 5.0f)
       {
@@ -228,7 +231,7 @@ class PGE_221
         float magnitude_f = std::min (toSide.mag () * 0.8f, 5.0f);
         toSide = toSide.norm ();
         toSide *= magnitude_f;
-        velocity_.lerp (toSide, 0.5);
+        velocity_ = velocity_.lerp (toSide, 0.5);
       } // end ELSE IF
       else
       {
@@ -239,12 +242,12 @@ class PGE_221
 
         randomNewVelocity = randomNewVelocity.norm ();
         randomNewVelocity *= 5.0f;
-        velocity_.lerp (randomNewVelocity, 0.1);
+        velocity_ = velocity_.lerp (randomNewVelocity, 0.1);
       } // end ELSE
 
       // Keep from drifting by going back to the center
-      olc::vf2d temp (engine->ScreenWidth () / 2.0f, engine->ScreenHeight () / 2.0f);
-      temp = position_ - temp;
+      static olc::vf2d center_s (engine->ScreenWidth() / 2.0f, engine->ScreenHeight() / 2.0f);
+      olc::vf2d temp = position_ - center_s;
       temp *= -0.007f;
       velocity_ += temp;
     }
