@@ -2,6 +2,8 @@
 
 #include "glut_229.h"
 
+#include <iomanip>
+
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
 #include "gl/GL.h"
 #else
@@ -131,6 +133,26 @@ engine_glut_229_draw (void)
     static_cast<struct Engine_OpenGL_GLUT_229_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
+  // fps
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+  std::chrono::steady_clock::time_point time_point =
+    std::chrono::high_resolution_clock::now ();
+#elif defined (ACE_LINUX)
+  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> time_point =
+    std::chrono::high_resolution_clock::now ();
+#else
+#error missing implementation, aborting
+#endif // ACE_WIN32 || ACE_WIN64 || ACE_LINUX
+  std::chrono::duration<float, std::milli> elapsed_time = time_point - cb_data_p->lastTimeStamp;
+  float fps_f = 1000.0f / elapsed_time.count ();
+  std::stringstream stream;
+  stream << std::fixed << std::setprecision (2) << fps_f;
+  std::string s = stream.str ();
+  s = ACE_TEXT_ALWAYS_CHAR ("engine GLUT 229 - ") + s;
+  s += ACE_TEXT_ALWAYS_CHAR (" fps");
+  glutSetWindowTitle (s.c_str ());
+  cb_data_p->lastTimeStamp = time_point;
+
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // reset transformations
@@ -163,8 +185,6 @@ engine_glut_229_draw (void)
   glColor3f (0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
 
-  //glRotatef (ENGINE_GLUT_229_DEFAULT_ROTATE_X * 180.0f / static_cast<float> (M_PI), 1.0f, 0.0f, 0.0f);
-
   double noiseOffX = 111.0 + frame_count_i;
   double noiseOffY = 333.0 + frame_count_i * 2.0;
 
@@ -177,11 +197,11 @@ engine_glut_229_draw (void)
     {
       // get height (n) as noise
       float n =
-        std::abs (Common_GL_Tools::map (static_cast<float> (cb_data_p->noise.GetValue ((x + noiseOffX) * 0.15, (y - noiseOffY) * 0.215, 0.0)), -1.0f, 1.0f, 0.0f, 1.0f));
+        Common_GL_Tools::map (static_cast<float> (cb_data_p->noise.GetValue ((x + noiseOffX) * 0.15, (y - noiseOffY) * 0.215, 0.0)), -1.0f, 1.0f, 0.0f, 1.0f);
         //Common_GL_Tools::map (static_cast<float> (cb_data_p->noise.Evaluate ((x + noiseOffX) * 0.15, (y - noiseOffY) * 0.215)), -1.0f, 1.0f, 0.0f, 1.0f);
-      // scale n * 128 and shrink on edges (with limit 0.1)
+      // scale n * 256 and shrink on edges (with limit 0.1)
       float d =
-        n * 128.0f * std::max (0.1f, easeInOutExpo (1.0f - std::abs (x - ENGINE_GLUT_229_DEFAULT_NUMBER_OF_BARS_X / 2.0f) / (ENGINE_GLUT_229_DEFAULT_NUMBER_OF_BARS_X / 2.0f)));
+        n * 256.0f * std::max (0.1f, easeInOutExpo (1.0f - std::abs (x - ENGINE_GLUT_229_DEFAULT_NUMBER_OF_BARS_X / 2.0f) / (ENGINE_GLUT_229_DEFAULT_NUMBER_OF_BARS_X / 2.0f)));
 
       glPushMatrix ();
       glTranslatef (posX, posY, d / 2.0f);

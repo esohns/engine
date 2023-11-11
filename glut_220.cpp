@@ -210,7 +210,7 @@ engine_glut_220_draw (void)
 
   glRotatef (cb_data_p->f * 180.0f / static_cast<float> (M_PI), 1.0f, 0.0f, 0.0f);
 
-  float C, Q;
+  float C/*, Q*/;
   float r, g, b;
   while (cb_data_p->i > 0.0f)
   {

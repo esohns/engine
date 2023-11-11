@@ -117,6 +117,11 @@ class PGE_221
 
         return initial_;
       }
+      olc::vf2d& operator() (olc::vf2d& lhs, olc::vf2d& rhs)
+      {
+        lhs += rhs;
+        return lhs;
+      }
 
       olc::vf2d& operator() (olc::vf2d& lhs, agent* rhs)
       {
