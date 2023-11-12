@@ -29,8 +29,7 @@ PGE_230::OnUserUpdate (float fElapsedTime)
 
   olc::PixelGameEngine::Clear (olc::WHITE);
 
-  static float transition_f = 1.0f / 20.0f; // how long the transition is
-
+  static float transition_f = 1.0f / 20.0f;
   float t = static_cast<float> (frame_count_i % ENGINE_PGE_230_DEFAULT_NUMBER_OF_FRAMES);
   if (static_cast<float> (t) < ENGINE_PGE_230_DEFAULT_NUMBER_OF_FRAMES * (1.0f / 2.0f - transition_f))
     t = 0.0f;
