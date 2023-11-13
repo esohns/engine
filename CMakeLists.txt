@@ -946,6 +946,8 @@ set (engine_10_EXE_SRCS
      pge_230.h
      pge_231.cpp
      pge_231.h
+     glut_232.cpp
+     glut_232.h
      stdafx.h)
 
 set (EXECUTABLE_10 engine_10)

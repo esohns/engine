@@ -167,8 +167,10 @@ PGE_231::makeBlob (float r, float t)
   float maxOffset = r / 10.0f;
   for (int i = 0; i < ENGINE_PGE_231_DEFAULT_NUMBER_OF_POINTS; i++)
   {
-    float theta = 2.0f * static_cast<float> (M_PI) * i / static_cast<float> (ENGINE_PGE_231_DEFAULT_NUMBER_OF_POINTS);
-    float rOffset = std::sin (theta * ENGINE_PGE_231_DEFAULT_NUMBER_OF_BUMPS) * std::cos (t * 10.0f) * maxOffset;
+    float theta =
+      2.0f * static_cast<float> (M_PI) * i / static_cast<float> (ENGINE_PGE_231_DEFAULT_NUMBER_OF_POINTS);
+    float rOffset =
+      std::sin (theta * ENGINE_PGE_231_DEFAULT_NUMBER_OF_BUMPS) * std::cos (t * 10.0f) * maxOffset;
     points_a.push_back (olc::vf2d ((r + rOffset) * std::cos (theta),
                                    (r + rOffset) * std::sin (theta)));
   } // end FOR
