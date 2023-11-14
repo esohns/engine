@@ -950,6 +950,8 @@ set (engine_10_EXE_SRCS
      glut_232.h
      glut_233.cpp
      glut_233.h
+     pge_234.cpp
+     pge_234.h
      stdafx.h)
 
 set (EXECUTABLE_10 engine_10)

@@ -119,4 +119,9 @@
 #define ENGINE_GLUT_233_DEFAULT_WIDTH            400
 #define ENGINE_GLUT_233_DEFAULT_W                400
 
+// pge 234
+#define ENGINE_PGE_234_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_234_DEFAULT_WIDTH             800
+#define ENGINE_PGE_234_DEFAULT_N                 10000
+
 #endif
