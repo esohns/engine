@@ -47,10 +47,10 @@ class object
   {
     glPushMatrix ();
     glRotatef (rot_ * 180.0f / static_cast<float> (M_PI), 0.0f, 0.0f, 1.0f);
-    for (int i2 = 0; i2 < 50; i2 += 1)
+    for (int i2 = 0; i2 < 50; ++i2)
     {
-      glColor4ub (r_, g_, 255, 100);
-
+      // draw (filled) circle
+      glColor4ub (r_, g_, 255, 206 + i2);
       glBegin (GL_TRIANGLE_FAN);
       float x1 = x_ + i2 * xSpeed_;
       float y1 = range_ * std::sin ((x_ + i2 * xSpeed_) * ySpeed_);
@@ -73,6 +73,7 @@ class object
         b_ = static_cast<uint8_t> (Common_Tools::getRandomNumber (0, 255));
         s_ = 1.0f;
       } // end IF
+
       if (x_ + i2 * xSpeed_ < 0.0f)
         r2_ = 0.0f;
       else

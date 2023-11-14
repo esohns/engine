@@ -114,4 +114,9 @@
 #define ENGINE_GLUT_232_DEFAULT_WIDTH            1112
 #define ENGINE_GLUT_232_DEFAULT_NUMBER_OF_OBJECTS 40
 
+// glut 233
+#define ENGINE_GLUT_233_DEFAULT_HEIGHT           400
+#define ENGINE_GLUT_233_DEFAULT_WIDTH            400
+#define ENGINE_GLUT_233_DEFAULT_W                400
+
 #endif

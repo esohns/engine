@@ -55,6 +55,7 @@
 #include "pge_230.h"
 #include "pge_231.h"
 #include "glut_232.h"
+#include "glut_233.h"
 
 enum Engine_ModeType
 {
@@ -71,6 +72,7 @@ enum Engine_ModeType
   ENGINE_MODE_230,
   ENGINE_MODE_231,
   ENGINE_MODE_232,
+  ENGINE_MODE_233,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -950,7 +952,7 @@ do_work (int argc_in,
       glutSetWindow (window_i);
       glutSetWindowData (&cb_data_s);
 
-      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+      glClearColor (0.0f, 0.0f, 0.0f, 10.0f / 255.0f);
 
       glEnable (GL_DEPTH_TEST);
 
@@ -971,6 +973,67 @@ do_work (int argc_in,
       glutTimerFunc (100, engine_glut_232_timer, 0);
 
       glutCreateMenu (engine_glut_232_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_233:
+    {
+      struct Engine_OpenGL_GLUT_233_CBData cb_data_s;
+      cb_data_s.f = 0.0f;
+      cb_data_s.n = 0;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_233_DEFAULT_WIDTH, ENGINE_GLUT_233_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 233");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glEnable (GL_DEPTH_TEST);
+
+      //glEnable (GL_LIGHTING);
+      //glEnable (GL_LIGHT0);
+      //glEnable (GL_LIGHT1);
+
+      glEnable (GL_BLEND);
+      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_233_draw);
+      glutReshapeFunc (engine_glut_233_reshape);
+      glutVisibilityFunc (engine_glut_233_visible);
+
+      glutKeyboardFunc (engine_glut_233_key);
+      glutSpecialFunc (engine_glut_233_key_special);
+      glutMouseFunc (engine_glut_233_mouse_button);
+      glutMotionFunc (engine_glut_233_mouse_move);
+      glutPassiveMotionFunc (engine_glut_233_mouse_move);
+      glutTimerFunc (100, engine_glut_233_timer, 0);
+
+      glutCreateMenu (engine_glut_233_menu);
       glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
       glutAttachMenu (GLUT_RIGHT_BUTTON);
 
