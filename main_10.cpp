@@ -59,6 +59,9 @@
 #include "pge_234.h"
 #include "pge_235.h"
 #include "glut_236.h"
+#include "glut_237.h"
+#include "glut_238.h"
+#include "glut_239.h"
 
 enum Engine_ModeType
 {
@@ -79,6 +82,9 @@ enum Engine_ModeType
   ENGINE_MODE_234,
   ENGINE_MODE_235,
   ENGINE_MODE_236,
+  ENGINE_MODE_237,
+  ENGINE_MODE_238,
+  ENGINE_MODE_239,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1132,6 +1138,320 @@ do_work (int argc_in,
       glutCreateMenu (engine_glut_236_menu);
       glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
       glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_237:
+    {
+      struct Engine_OpenGL_GLUT_237_CBData cb_data_s;
+      cb_data_s.offset = 10.0f;
+      cb_data_s.ring = 2.75f;
+      cb_data_s.Yangle = 0.0f;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 500.0f;
+      cb_data_s.camera.position.z = 800.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.deltaAngle = 0.0f;
+      cb_data_s.xOrigin = -1;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_237_DEFAULT_WIDTH, ENGINE_GLUT_237_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 237");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glEnable (GL_DEPTH_TEST);
+
+      //glEnable (GL_BLEND);
+      //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      glPolygonMode (GL_FRONT_AND_BACK,
+                     GL_FILL);
+
+      glutDisplayFunc (engine_glut_237_draw);
+      glutReshapeFunc (engine_glut_237_reshape);
+      glutVisibilityFunc (engine_glut_237_visible);
+
+      glutKeyboardFunc (engine_glut_237_key);
+      glutSpecialFunc (engine_glut_237_key_special);
+      glutMouseFunc (engine_glut_237_mouse_button);
+      glutMotionFunc (engine_glut_237_mouse_move);
+      glutPassiveMotionFunc (engine_glut_237_mouse_move);
+      glutTimerFunc (100, engine_glut_237_timer, 0);
+
+      glutCreateMenu (engine_glut_237_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_238:
+    {
+      struct Engine_OpenGL_GLUT_238_CBData cb_data_s;
+      cb_data_s.f = 0;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.deltaAngle = 0.0f;
+      cb_data_s.xOrigin = -1;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_238_DEFAULT_WIDTH, ENGINE_GLUT_238_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 238");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glEnable (GL_DEPTH_TEST);
+
+      //glEnable (GL_BLEND);
+      //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      glPolygonMode (GL_FRONT_AND_BACK,
+                     GL_FILL);
+
+      glutDisplayFunc (engine_glut_238_draw);
+      glutReshapeFunc (engine_glut_238_reshape);
+      glutVisibilityFunc (engine_glut_238_visible);
+
+      glutKeyboardFunc (engine_glut_238_key);
+      glutSpecialFunc (engine_glut_238_key_special);
+      glutMouseFunc (engine_glut_238_mouse_button);
+      glutMotionFunc (engine_glut_238_mouse_move);
+      glutPassiveMotionFunc (engine_glut_238_mouse_move);
+      glutTimerFunc (100, engine_glut_238_timer, 0);
+
+      glutCreateMenu (engine_glut_238_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_239:
+    {
+      struct Engine_OpenGL_GLUT_239_CBData cb_data_s;
+      cb_data_s.scaleFactor = ENGINE_GLUT_239_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_239_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_239_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.theta = 0.0f;
+
+      cb_data_s.programId = -1;
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+      cb_data_s.mouseLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 1.0F;
+      cb_data_s.camera.up.z = 0.0F;
+
+      //cb_data_s.leftButtonIsDown = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_239_DEFAULT_WIDTH, ENGINE_GLUT_239_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 239");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_239_draw);
+      glutReshapeFunc (engine_glut_239_reshape);
+      glutVisibilityFunc (engine_glut_239_visible);
+
+      glutKeyboardFunc (engine_glut_239_key);
+      glutSpecialFunc (engine_glut_239_key_special);
+      glutMouseFunc (engine_glut_239_mouse_button);
+      glutMotionFunc (engine_glut_239_mouse_move);
+      glutPassiveMotionFunc (engine_glut_239_mouse_move);
+      glutTimerFunc (100, engine_glut_239_timer, 0);
+
+      glutCreateMenu (engine_glut_239_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      GLuint vertexShader_id = glCreateShader (GL_VERTEX_SHADER);
+      uint8_t* data_p = NULL;
+      ACE_UINT64 file_size_i = 0;
+      if (!Common_File_Tools::load (ACE_TEXT_ALWAYS_CHAR ("glut_239.vert"),
+                                    data_p,
+                                    file_size_i,
+                                    0))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load \"%s\", aborting\n"),
+                    ACE_TEXT ("glut_239.vert")));
+        break;
+      } // end IF
+      GLchar* array_a[2];
+      array_a[0] = reinterpret_cast<GLchar*> (data_p);
+      array_a[1] = NULL;
+      GLint array_2[2];
+      array_2[0] = static_cast<GLint> (file_size_i);
+      array_2[1] = static_cast<GLint> (NULL);
+      glShaderSource (vertexShader_id, 1, array_a, array_2);
+      delete [] data_p;
+      glCompileShader (vertexShader_id);
+      GLint success = 0;
+      glGetShaderiv (vertexShader_id, GL_COMPILE_STATUS, &success);
+      if (success == GL_FALSE)
+      {
+        GLchar info_log_a[1024];
+        GLsizei buf_size_i = 0;
+        glGetShaderInfoLog (vertexShader_id,
+                            sizeof (GLchar) * 1024,
+                            &buf_size_i,
+                            info_log_a);
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to compile \"%s\": \"%s\", aborting\n"),
+                    ACE_TEXT ("glut_239.vert"),
+                    ACE_TEXT (info_log_a)));
+        break;
+      } // end IF
+
+      GLuint fragmentShader_id = glCreateShader (GL_FRAGMENT_SHADER);
+      data_p = NULL;
+      file_size_i = 0;
+      if (!Common_File_Tools::load (ACE_TEXT_ALWAYS_CHAR ("glut_239.frag"),
+                                    data_p,
+                                    file_size_i,
+                                    0))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load \"%s\", aborting\n"),
+                    ACE_TEXT ("glut_239.frag")));
+        break;
+      } // end IF
+      array_a[0] = reinterpret_cast<GLchar*> (data_p);
+      array_a[1] = NULL;
+      array_2[0] = static_cast<GLint> (file_size_i);
+      array_2[1] = NULL;
+      glShaderSource (fragmentShader_id, 1, array_a, array_2);
+      delete [] data_p; data_p = NULL;
+      glCompileShader (fragmentShader_id);
+      success = 0;
+      glGetShaderiv (fragmentShader_id, GL_COMPILE_STATUS, &success);
+      if (success == GL_FALSE)
+      {
+        GLchar info_log_a[4096];
+        GLsizei buf_size_i = 0;
+        glGetShaderInfoLog (fragmentShader_id,
+                            sizeof (GLchar) * 4096,
+                            &buf_size_i,
+                            info_log_a);
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to compile \"%s\": \"%s\", aborting\n"),
+                    ACE_TEXT ("glut_239.frag"),
+                    ACE_TEXT (info_log_a)));
+        break;
+      } // end IF
+
+      cb_data_s.programId = glCreateProgram ();
+      glAttachShader (cb_data_s.programId, vertexShader_id);
+      glAttachShader (cb_data_s.programId, fragmentShader_id);
+      glLinkProgram (cb_data_s.programId);
+      success = 0;
+      glGetProgramiv (cb_data_s.programId, GL_LINK_STATUS, &success);
+      if (success == GL_FALSE)
+      {
+        GLchar info_log_a[4096];
+        GLsizei buf_size_i = 0;
+        glGetProgramInfoLog (cb_data_s.programId,
+                             sizeof (GLchar) * 4096,
+                             &buf_size_i,
+                             info_log_a);
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to link GL program: \"%s\", aborting\n"),
+                    ACE_TEXT (info_log_a)));
+
+        glDetachShader (cb_data_s.programId, vertexShader_id);
+        glDetachShader (cb_data_s.programId, fragmentShader_id);
+        glDeleteShader (vertexShader_id);
+        glDeleteShader (fragmentShader_id);
+        break;
+      } // end IF
+      glDetachShader (cb_data_s.programId, vertexShader_id);
+      glDetachShader (cb_data_s.programId, fragmentShader_id);
+      glDeleteShader (vertexShader_id);
+      glDeleteShader (fragmentShader_id);
+
+      glUseProgram (cb_data_s.programId);
+
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.programId, ACE_TEXT_ALWAYS_CHAR ("u_resolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.programId, ACE_TEXT_ALWAYS_CHAR ("u_time"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+      cb_data_s.mouseLoc =
+        glGetUniformLocation (cb_data_s.programId, ACE_TEXT_ALWAYS_CHAR ("u_mouse"));
+      ACE_ASSERT (cb_data_s.mouseLoc != -1);
 
       glutMainLoop ();
 
