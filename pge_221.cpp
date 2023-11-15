@@ -18,6 +18,8 @@ PGE_221::PGE_221 ()
 bool
 PGE_221::OnUserCreate ()
 {
+  olc::PixelGameEngine::SetPixelMode (olc::Pixel::ALPHA);
+
   for (int i = 0; i < ENGINE_PGE_221_DEFAULT_NUMBER_OF_AGENTS; i++)
     agents_.push_back (agent (this));
 

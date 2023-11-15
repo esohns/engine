@@ -124,4 +124,15 @@
 #define ENGINE_PGE_234_DEFAULT_WIDTH             800
 #define ENGINE_PGE_234_DEFAULT_N                 10000
 
+// pge 235
+#define ENGINE_PGE_235_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_235_DEFAULT_WIDTH             600
+#define ENGINE_PGE_235_DEFAULT_MODULO            30
+#define ENGINE_PGE_235_DEFAULT_NUMBER_OF_DOTS    300
+#define ENGINE_PGE_235_DEFAULT_ALPHA_DECAY       15
+
+// glut 236
+#define ENGINE_GLUT_236_DEFAULT_HEIGHT           400
+#define ENGINE_GLUT_236_DEFAULT_WIDTH            400
+
 #endif
