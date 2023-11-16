@@ -962,6 +962,10 @@ set (engine_10_EXE_SRCS
      glut_238.h
      glut_239.cpp
      glut_239.h
+     glut_240.cpp
+     glut_240.h
+     glut_241.cpp
+     glut_241.h
      stdafx.h)
 
 set (EXECUTABLE_10 engine_10)

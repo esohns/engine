@@ -1,8 +1,7 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
-#include "glut_222.h"
+#include "glut_240.h"
 
-#include "GL/glew.h"
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
 #include "gl/GL.h"
 #else
@@ -24,43 +23,45 @@
 #include "engine_common.h"
 
 void
-engine_glut_222_reshape (int width_in, int height_in)
+engine_glut_240_reshape (int width_in, int height_in)
 {
   glViewport (0, 0, width_in, height_in);
 
   glMatrixMode (GL_PROJECTION);
-
   glLoadIdentity ();
 
   ACE_ASSERT (height_in);
   gluPerspective (45.0,
                   width_in / static_cast<GLdouble> (height_in),
-                  -1.0, 1.0);
-  //glOrtho (0.0, static_cast<GLdouble> (width_in), static_cast<GLdouble> (height_in), 0.0, 0.0, 1.0);
+                  100.0, -100.0);
 
   glMatrixMode (GL_MODELVIEW);
 }
 
 void
-engine_glut_222_key (unsigned char key_in,
+engine_glut_240_key (unsigned char key_in,
                      int x,
                      int y)
 {
+  struct Engine_OpenGL_GLUT_240_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_240_CBData*> (glutGetWindowData ());
+  ACE_ASSERT (cb_data_p);
+
   switch (key_in)
   {
-    case 27:  /* Escape */
-      glutLeaveMainLoop ();
-      break;
+    case 27: /* escape */
+     glutLeaveMainLoop ();
+     break;
   } // end SWITCH
 }
 
 void
-engine_glut_222_key_special (int key_in,
+engine_glut_240_key_special (int key_in,
                              int x,
                              int y)
 {
-  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_240_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_240_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -74,33 +75,37 @@ engine_glut_222_key_special (int key_in,
     case GLUT_KEY_UP:
       cb_data_p->camera.position.x = 0.0f;
       cb_data_p->camera.position.y = 0.0f;
-      cb_data_p->camera.position.z = 500.0f;
+      cb_data_p->camera.position.z = 700.0f;
+
       cb_data_p->camera.rotation.z = 0.0f;
+      break;
+    case GLUT_KEY_DOWN:
       break;
   } // end SWITCH
 }
 
 void
-engine_glut_222_menu (int entry_in)
+engine_glut_240_menu (int entry_in)
 {
-  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_240_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_240_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (entry_in)
   {
     case 0:
-      cb_data_p->wireframe = !cb_data_p->wireframe; break;
+      cb_data_p->wireframe = !cb_data_p->wireframe;
+      break;
     default:
       break;
   } // end SWITCH
 }
 
 void
-engine_glut_222_mouse_button (int button, int state, int x, int y)
+engine_glut_240_mouse_button (int button, int state, int x, int y)
 {
-  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_240_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_240_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   if (button == GLUT_LEFT_BUTTON)
@@ -116,10 +121,10 @@ engine_glut_222_mouse_button (int button, int state, int x, int y)
 }
 
 void
-engine_glut_222_mouse_move (int x, int y)
+engine_glut_240_mouse_move (int x, int y)
 {
-  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_240_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_240_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   // this will only be true when the left button is down
@@ -134,10 +139,10 @@ engine_glut_222_mouse_move (int x, int y)
 }
 
 void
-engine_glut_222_timer (int v)
+engine_glut_240_timer (int v)
 {
-  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_240_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_240_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   //if (cb_data_p->spinning)
@@ -149,14 +154,14 @@ engine_glut_222_timer (int v)
     }
   //  glutPostRedisplay();
   //} // end IF
-  glutTimerFunc (1000 / 30, engine_glut_222_timer, v);
+  glutTimerFunc (1000 / 30, engine_glut_240_timer, v);
 }
 
 void
-engine_glut_222_draw (void)
+engine_glut_240_draw (void)
 {
-  struct Engine_OpenGL_GLUT_222_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_222_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_240_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_240_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -186,58 +191,43 @@ engine_glut_222_draw (void)
   // draw a red x-axis, a green y-axis, and a blue z-axis. Each of the
   // axes are 100 units long
   glBegin (GL_LINES);
-  glColor3f (1.0F, 0.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (100, 0, 0);
-  glColor3f (0.0F, 1.0F, 0.0F); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
-  glColor3f (0.0F, 0.0F, 1.0F); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
+  glColor4f (1.0f, 0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (100, 0, 0);
+  glColor4f (0.0f, 1.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
+  glColor4f (0.0f, 0.0f, 1.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
 
-  // update uniforms
-  glProgramUniform2f (cb_data_p->programId, cb_data_p->resolutionLoc,
-                      static_cast<GLfloat> (ENGINE_GLUT_222_DEFAULT_WIDTH),
-                      static_cast<GLfloat> (ENGINE_GLUT_222_DEFAULT_HEIGHT));
+  glColor4f (1.0f, 1.0f, 1.0f, 1.0f);
 
-  // compute elapsed time
-#if defined (ACE_WIN32) || defined (ACE_WIN64)
-  std::chrono::steady_clock::time_point tp2 =
-    std::chrono::high_resolution_clock::now ();
-#elif defined (ACE_LINUX)
-  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> tp2 =
-    std::chrono::high_resolution_clock::now ();
-#else
-#error missing implementation, aborting
-#endif // ACE_WIN32 || ACE_WIN64 || ACE_LINUX
-  std::chrono::duration<float> elapsed_time = tp2 - cb_data_p->tp1;
-  glProgramUniform1f (cb_data_p->programId, cb_data_p->timeLoc,
-                      elapsed_time.count ());
-
-  glTranslatef (-static_cast<GLfloat> (ENGINE_GLUT_222_DEFAULT_WIDTH / 2.0f),
-                -static_cast<GLfloat> (ENGINE_GLUT_222_DEFAULT_HEIGHT / 2.0f),
-                0.0f);
-  for (int y = 0; y < cb_data_p->rows - 1; ++y)
-  {
-    glBegin (GL_TRIANGLE_STRIP);
-    for (int x = 0; x < cb_data_p->columns; ++x)
+  glRotatef ((std::sin (cb_data_p->f) / 7.0f) * 180.0f / static_cast<float> (M_PI), 1.0f, 0.0f, 0.0f);
+  glRotatef ((std::cos (cb_data_p->f) / 9.0f) * 180.0f / static_cast<float> (M_PI), 0.0f, 1.0f, 0.0f);
+  for (float y = -cb_data_p->P; y < cb_data_p->P; y += cb_data_p->p)
+    for (float x = -cb_data_p->P; x < cb_data_p->P; x += cb_data_p->p)
     {
-      glVertex3f (static_cast<float> (x * cb_data_p->scaleFactor), static_cast<float> (y * cb_data_p->scaleFactor), 0.0f);
-      glVertex3f (static_cast<float> (x * cb_data_p->scaleFactor), static_cast<float> ((y + 1) * cb_data_p->scaleFactor), 0.0f);
+      float X = x + std::fmod ((cb_data_p->f / 4.0f), cb_data_p->p);
+      float M = std::sqrt (X * X + y * y);
+      glPushMatrix ();
+      glTranslatef (X * 60.0f, y * 60.0f, M * -49.0f + std::cos (M) * 90.0f + 130.0f);
+      cb_data_p->wireframe ? glutWireSphere  (std::cos (X / 2.0f) * 9.0f - std::abs (y) * 3.0f, 16, 40)
+                           : glutSolidSphere (std::cos (X / 2.0f) * 9.0f - std::abs (y) * 3.0f, 16, 40);
+      glPopMatrix ();
     } // end FOR
-    glEnd ();
-  } // end FOR
+
+  cb_data_p->f += 0.04f;
 
   glutSwapBuffers ();
 }
 
 void
-engine_glut_222_idle (void)
+engine_glut_240_idle (void)
 {
   glutPostRedisplay ();
 }
 
 void
-engine_glut_222_visible (int vis)
+engine_glut_240_visible (int vis)
 {
   if (vis == GLUT_VISIBLE)
-    glutIdleFunc (engine_glut_222_idle);
+    glutIdleFunc (engine_glut_240_idle);
   else
     glutIdleFunc (NULL);
 }
