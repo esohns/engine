@@ -40,4 +40,8 @@
 #define ENGINE_PGE_243_DEFAULT_HEIGHT            400
 #define ENGINE_PGE_243_DEFAULT_WIDTH             400
 
+// pge 244
+#define ENGINE_PGE_244_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_244_DEFAULT_WIDTH             800
+
 #endif
