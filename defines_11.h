@@ -30,4 +30,14 @@
 #define ENGINE_GLUT_241_DEFAULT_WIDTH            800
 #define ENGINE_GLUT_241_DEFAULT_SCALE_FACTOR     30
 
+// pge 242
+#define ENGINE_PGE_242_DEFAULT_HEIGHT            900
+#define ENGINE_PGE_242_DEFAULT_WIDTH             900
+#define ENGINE_PGE_242_DEFAULT_C                 16
+#define ENGINE_PGE_242_DEFAULT_T1                50
+
+// pge 243
+#define ENGINE_PGE_243_DEFAULT_HEIGHT            400
+#define ENGINE_PGE_243_DEFAULT_WIDTH             400
+
 #endif

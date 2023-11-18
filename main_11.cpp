@@ -44,11 +44,15 @@
 #define OPENSIMPLEXNOISE_STATIC_CONSTANTS
 #include "glut_240.h"
 #include "glut_241.h"
+#include "pge_242.h"
+#include "pge_243.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 240,
   ENGINE_MODE_241,
+  ENGINE_MODE_242,
+  ENGINE_MODE_243,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -464,6 +468,36 @@ do_work (int argc_in,
       glutMainLoop ();
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_242:
+    {
+      PGE_242 example;
+      if (example.Construct (ENGINE_PGE_242_DEFAULT_WIDTH, ENGINE_PGE_242_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_243:
+    {
+      PGE_243 example;
+      if (example.Construct (ENGINE_PGE_243_DEFAULT_WIDTH, ENGINE_PGE_243_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }
