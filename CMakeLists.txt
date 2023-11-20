@@ -987,6 +987,8 @@ set (engine_11_EXE_SRCS
      pge_243.h
      pge_244.cpp
      pge_244.h
+     pge_245.cpp
+     pge_245.h
      stdafx.h)
 
 set (EXECUTABLE_11 engine_11)

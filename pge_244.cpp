@@ -56,8 +56,8 @@ PGE_244::OnUserUpdate (float fElapsedTime)
   } // end FOR
 
   std::vector<cursor> alive_a;
-  for (std::vector<cursor>::iterator iterator = cursors_.begin();
-       iterator != cursors_.end();
+  for (std::vector<cursor>::iterator iterator = cursors_.begin ();
+       iterator != cursors_.end ();
        ++iterator)
     if (!(*iterator).done_)
       alive_a.push_back (*iterator);
@@ -102,8 +102,10 @@ PGE_244::circleSetup ()
   float n = std::floor (r * 2.0f * static_cast<float> (M_PI) / 10.0f);
   for (int i = 0; i < n; i++)
   {
-    float l = std::max (olc::PixelGameEngine::ScreenWidth (), olc::PixelGameEngine::ScreenHeight ()) * (1.0f + 0.1f * i);
-    float a = Common_Tools::getRandomNumber (0.0f, 2.0f * static_cast<float> (M_PI));
+    float l =
+      std::max (olc::PixelGameEngine::ScreenWidth (), olc::PixelGameEngine::ScreenHeight ()) * (1.0f + 0.1f * i);
+    float a =
+      Common_Tools::getRandomNumber (0.0f, 2.0f * static_cast<float> (M_PI));
     block* newBlock = new block (Common_Tools::getRandomNumber (0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth ())),
                                  Common_Tools::getRandomNumber (0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight ())),
                                  r * std::cos (i * 2.0f * static_cast<float> (M_PI) / n) + olc::PixelGameEngine::ScreenWidth () / 2.0f,
@@ -119,13 +121,13 @@ PGE_244::rectSetup ()
 {
   float s = std::min (olc::PixelGameEngine::ScreenWidth (), olc::PixelGameEngine::ScreenHeight ()) * 0.33f;
   int n = static_cast<int> (std::floor (s / 10.0f));
-  olc::vf2d v1 (olc::PixelGameEngine::ScreenWidth () / 2.0f - s / 2.0f,
+  olc::vf2d v1 (olc::PixelGameEngine::ScreenWidth ()  / 2.0f - s / 2.0f,
                 olc::PixelGameEngine::ScreenHeight () / 2.0f - s / 2.0f);
-  olc::vf2d v2 (olc::PixelGameEngine::ScreenWidth () / 2.0f + s / 2.0f,
+  olc::vf2d v2 (olc::PixelGameEngine::ScreenWidth ()  / 2.0f + s / 2.0f,
                 olc::PixelGameEngine::ScreenHeight () / 2.0f - s / 2.0f);
-  olc::vf2d v3 (olc::PixelGameEngine::ScreenWidth () / 2.0f + s / 2.0f,
+  olc::vf2d v3 (olc::PixelGameEngine::ScreenWidth ()  / 2.0f + s / 2.0f,
                 olc::PixelGameEngine::ScreenHeight () / 2.0f + s / 2.0f);
-  olc::vf2d v4 (olc::PixelGameEngine::ScreenWidth () / 2.0f - s / 2.0f,
+  olc::vf2d v4 (olc::PixelGameEngine::ScreenWidth ()  / 2.0f - s / 2.0f,
                 olc::PixelGameEngine::ScreenHeight () / 2.0f + s / 2.0f);
   lineSetup (v1, v2, n, 0);
   lineSetup (v2, v3, n, n);
@@ -138,8 +140,10 @@ PGE_244::lineSetup (olc::vf2d& v1, olc::vf2d& v2, int n, int nOff)
 {
   for (int i = 0; i < n; i++)
   {
-    float l = std::max (olc::PixelGameEngine::ScreenWidth (), olc::PixelGameEngine::ScreenHeight ()) * (1.0f + 0.1f * (i + nOff));
-    float a = Common_Tools::getRandomNumber (0.0f, 2.0f * static_cast<float> (M_PI));
+    float l =
+      std::max (olc::PixelGameEngine::ScreenWidth (), olc::PixelGameEngine::ScreenHeight ()) * (1.0f + 0.1f * (i + nOff));
+    float a =
+      Common_Tools::getRandomNumber (0.0f, 2.0f * static_cast<float> (M_PI));
     olc::vf2d v = v1.lerp (v2, i / static_cast<float> (n));
     block* newBlock = new block (Common_Tools::getRandomNumber (0.0f, static_cast<float> (olc::PixelGameEngine::ScreenWidth ())),
                                  Common_Tools::getRandomNumber (0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight ())),

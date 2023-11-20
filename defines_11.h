@@ -26,8 +26,8 @@
 #define ENGINE_GLUT_240_DEFAULT_WIDTH            400
 
 // glut 241
-#define ENGINE_GLUT_241_DEFAULT_HEIGHT           600
-#define ENGINE_GLUT_241_DEFAULT_WIDTH            800
+#define ENGINE_GLUT_241_DEFAULT_HEIGHT           900
+#define ENGINE_GLUT_241_DEFAULT_WIDTH            900
 #define ENGINE_GLUT_241_DEFAULT_SCALE_FACTOR     30
 
 // pge 242
@@ -43,5 +43,14 @@
 // pge 244
 #define ENGINE_PGE_244_DEFAULT_HEIGHT            600
 #define ENGINE_PGE_244_DEFAULT_WIDTH             800
+
+// pge 245
+#define ENGINE_PGE_245_DEFAULT_HEIGHT            600
+#define ENGINE_PGE_245_DEFAULT_WIDTH             1500
+#define ENGINE_PGE_245_DEFAULT_GRID_SIZE         150
+#define ENGINE_PGE_245_DEFAULT_H                 4
+#define ENGINE_PGE_245_DEFAULT_W                 10
+#define ENGINE_PGE_245_DEFAULT_STEPS             300
+#define ENGINE_PGE_245_DEFAULT_DZ                0.15f
 
 #endif
