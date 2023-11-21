@@ -207,28 +207,20 @@ PGE_245::drawMesh (std::vector<std::vector<olc::vf2d> >& circles)
       olc::vf2d& v3 = circles[j + 1][i];
       olc::vf2d& v4 = circles[j + 1][i + 1];
 
-      olc::vf2d v12 = v2 - v1;
-      olc::vf2d v21 = v1 - v2;
-      olc::vf2d v24 = v4 - v2;
-      olc::vf2d v42 = v2 - v4;
-      olc::vf2d v43 = v3 - v4;
-      olc::vf2d v34 = v4 - v3;
-      olc::vf2d v31 = v1 - v3;
-      olc::vf2d v13 = v3 - v1;
+      olc::vf2d v12 = (v2 - v1).norm ();
+      olc::vf2d v21 = (v1 - v2).norm ();
+      olc::vf2d v24 = (v4 - v2).norm ();
+      olc::vf2d v42 = (v2 - v4).norm ();
+      olc::vf2d v43 = (v3 - v4).norm ();
+      olc::vf2d v34 = (v4 - v3).norm ();
+      olc::vf2d v31 = (v1 - v3).norm ();
+      olc::vf2d v13 = (v3 - v1).norm ();
 
       // angles between vectors
-      float num = std::acos (std::clamp (v24.dot (v21), -1.0f, 1.0f));
-      float den = v24.mag () * v21.mag ();
-      float angle1 = num / den;
-      num = std::acos (std::clamp (v43.dot (v42), -1.0f, 1.0f));
-      den = v43.mag () * v42.mag ();
-      float angle2 = num / den;
-      num = std::acos (std::clamp (v31.dot (v34), -1.0f, 1.0f));
-      den = v31.mag () * v34.mag ();
-      float angle3 = num / den;
-      num = std::acos (std::clamp (v12.dot (v13), -1.0f, 1.0f));
-      den = v12.mag () * v13.mag ();
-      float angle4 = num / den;
+      float angle1 = std::acos (v24.dot (v21));
+      float angle2 = std::acos (v43.dot (v42));
+      float angle3 = std::acos (v31.dot (v34));
+      float angle4 = std::acos (v12.dot (v13));
 
       olc::Pixel& c = g_[j][i];
 

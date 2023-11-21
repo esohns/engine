@@ -1,5 +1,5 @@
-#ifndef GLUT_241_H
-#define GLUT_241_H
+#ifndef GLUT_246_H
+#define GLUT_246_H
 
 #include "GL/glew.h"
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
@@ -11,18 +11,18 @@
 #include "common_gl_common.h"
 
 // GLUT routines
-void engine_glut_241_reshape (int, int);
-void engine_glut_241_key (unsigned char, int, int);
-void engine_glut_241_key_special (int, int, int);
-void engine_glut_241_menu (int);
-void engine_glut_241_mouse_button (int, int, int, int);
-void engine_glut_241_mouse_move (int, int);
-void engine_glut_241_timer (int);
-void engine_glut_241_draw (void);
-void engine_glut_241_idle (void);
-void engine_glut_241_visible (int);
+void engine_glut_246_reshape (int, int);
+void engine_glut_246_key (unsigned char, int, int);
+void engine_glut_246_key_special (int, int, int);
+void engine_glut_246_menu (int);
+void engine_glut_246_mouse_button (int, int, int, int);
+void engine_glut_246_mouse_move (int, int);
+void engine_glut_246_timer (int);
+void engine_glut_246_draw (void);
+void engine_glut_246_idle (void);
+void engine_glut_246_visible (int);
 
-struct Engine_OpenGL_GLUT_241_CBData
+struct Engine_OpenGL_GLUT_246_CBData
 {
   //
 
@@ -53,4 +53,4 @@ struct Engine_OpenGL_GLUT_241_CBData
   struct Common_GL_Camera camera;
 };
 
-#endif // GLUT_241_H
+#endif // GLUT_246_H

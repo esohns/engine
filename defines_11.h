@@ -53,4 +53,9 @@
 #define ENGINE_PGE_245_DEFAULT_STEPS             300
 #define ENGINE_PGE_245_DEFAULT_DZ                0.15f
 
+// glut 246
+#define ENGINE_GLUT_246_DEFAULT_HEIGHT           900
+#define ENGINE_GLUT_246_DEFAULT_WIDTH            900
+#define ENGINE_GLUT_246_DEFAULT_SCALE_FACTOR     30
+
 #endif
