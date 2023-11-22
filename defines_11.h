@@ -67,4 +67,9 @@
 #define ENGINE_PGE_247_DEFAULT_R                 100
 #define ENGINE_PGE_247_DEFAULT_FACTOR            18.0f
 
+// glut 248
+#define ENGINE_GLUT_248_DEFAULT_HEIGHT           900
+#define ENGINE_GLUT_248_DEFAULT_WIDTH            900
+#define ENGINE_GLUT_248_DEFAULT_SCALE_FACTOR     30
+
 #endif
