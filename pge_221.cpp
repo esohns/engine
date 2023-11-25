@@ -34,8 +34,8 @@ PGE_221::OnUserUpdate (float fElapsedTime)
 
   //olc::PixelGameEngine::Clear (olc::BLACK);
   int pixels =
-    olc::PixelGameEngine::GetDrawTargetWidth() * olc::PixelGameEngine::GetDrawTargetHeight();
-  olc::Pixel* p = olc::PixelGameEngine::GetDrawTarget()->GetData();
+    olc::PixelGameEngine::GetDrawTargetWidth () * olc::PixelGameEngine::GetDrawTargetHeight ();
+  olc::Pixel* p = olc::PixelGameEngine::GetDrawTarget ()->GetData ();
   for (int i = 0; i < pixels; i++)
     p[i].a = (p[i].a > ENGINE_PGE_221_DEFAULT_ALPHA_DECAY ? p[i].a - ENGINE_PGE_221_DEFAULT_ALPHA_DECAY : 0);
 
