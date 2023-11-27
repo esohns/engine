@@ -41,8 +41,8 @@ class PGE_242
                                         olc::Pixel (0x63, 0x6E, 0x73), olc::Pixel (0xF2, 0xE6, 0xD8), olc::Pixel (0xff, 0x8c, 0x42), olc::Pixel (0x81, 0xc1, 0x4b), olc::Pixel (0x2e, 0x93, 0x3c)};
       std::vector<olc::Pixel> colors_2;
       colors_2.insert (colors_2.end (), &colors_a[0], &colors_a[9]);
-      std::random_device rd;
-      std::default_random_engine rng (rd ());
+      static std::random_device rd;
+      static std::default_random_engine rng (rd ());
       std::shuffle (std::begin (colors_2), std::end (colors_2), rng);
       //std::random_shuffle (colors_2.begin (), colors_2.end ());
       for (int i = 0; i < 4; i++)

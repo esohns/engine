@@ -72,4 +72,16 @@
 #define ENGINE_GLUT_248_DEFAULT_WIDTH            900
 #define ENGINE_GLUT_248_DEFAULT_SCALE_FACTOR     30
 
+// pge 249
+#define ENGINE_PGE_249_DEFAULT_HEIGHT            500
+#define ENGINE_PGE_249_DEFAULT_WIDTH             500
+#define ENGINE_PGE_249_DEFAULT_N                 8
+#define ENGINE_PGE_249_DEFAULT_GAP_SUM           8
+#define ENGINE_PGE_249_DEFAULT_MARGIN            75
+#define ENGINE_PGE_249_DEFAULT_NUMBER_OF_FRAMES  50
+
+// pge 250
+#define ENGINE_PGE_250_DEFAULT_HEIGHT            800
+#define ENGINE_PGE_250_DEFAULT_WIDTH             1280
+
 #endif
