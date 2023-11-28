@@ -54,6 +54,8 @@
 #include "pge_249.h"
 #include "pge_250.h"
 #include "glut_251.h"
+#include "pge_252.h"
+#include "glut_253.h"
 
 enum Engine_ModeType
 {
@@ -69,6 +71,8 @@ enum Engine_ModeType
   ENGINE_MODE_249,
   ENGINE_MODE_250,
   ENGINE_MODE_251,
+  ENGINE_MODE_252,
+  ENGINE_MODE_253,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1160,6 +1164,85 @@ do_work (int argc_in,
 
       for (int i = 0; i < ENGINE_GLUT_251_DEFAULT_NUMBER_OF_BALLS; i++)
         cb_data_s.balls.push_back (metaball (ENGINE_GLUT_251_DEFAULT_WIDTH, ENGINE_GLUT_251_DEFAULT_HEIGHT));
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_252:
+    {
+      PGE_252 example;
+      if (example.Construct (ENGINE_PGE_252_DEFAULT_WIDTH, ENGINE_PGE_252_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_253:
+    {
+      struct Engine_OpenGL_GLUT_253_CBData cb_data_s;
+      cb_data_s.a0 = -0.5f;
+      cb_data_s.flip = true;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 1000.0f;
+      cb_data_s.camera.position.z = 3000.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.deltaAngle = 0.0f;
+      cb_data_s.xOrigin = -1;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_253_DEFAULT_WIDTH, ENGINE_GLUT_253_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 253");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glEnable (GL_DEPTH_TEST);
+
+      //glEnable (GL_BLEND);
+      //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      glPolygonMode (GL_FRONT_AND_BACK,
+                     GL_FILL);
+
+      glutDisplayFunc (engine_glut_253_draw);
+      glutReshapeFunc (engine_glut_253_reshape);
+      glutVisibilityFunc (engine_glut_253_visible);
+
+      glutKeyboardFunc (engine_glut_253_key);
+      glutSpecialFunc (engine_glut_253_key_special);
+      glutMouseFunc (engine_glut_253_mouse_button);
+      glutMotionFunc (engine_glut_253_mouse_move);
+      glutPassiveMotionFunc (engine_glut_253_mouse_move);
+      glutTimerFunc (100, engine_glut_253_timer, 0);
+
+      glutCreateMenu (engine_glut_253_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      createVoxWorld (cb_data_s);
+      irregularSubDivide (cb_data_s);
 
       glutMainLoop ();
 
