@@ -1005,6 +1005,12 @@ set (engine_11_EXE_SRCS
      pge_252.h
      glut_253.cpp
      glut_253.h
+     pge_254.cpp
+     pge_254.h
+     pge_255.cpp
+     pge_255.h
+     pge_256.cpp
+     pge_256.h
      stdafx.h)
 
 set (EXECUTABLE_11 engine_11)
