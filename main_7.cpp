@@ -34,7 +34,7 @@
 #include "common_ui_gtk_manager_common.h"
 
 #if defined (HAVE_CONFIG_H)
-#include "config.h"
+#include "engine_config.h"
 #endif // HAVE_CONFIG_H
 //#include "resource.h"
 

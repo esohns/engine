@@ -67,7 +67,7 @@ endif ()
 
 set (PACKAGE ${PROJECT_NAME})
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in
-                ${CMAKE_CURRENT_BINARY_DIR}/config.h
+                ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
                 @ONLY
                 NEWLINE_STYLE ${NEWLINE_STYLE})
 add_definitions (-DHAVE_CONFIG_H)

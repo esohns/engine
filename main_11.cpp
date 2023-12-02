@@ -32,7 +32,7 @@
 #include "common_ui_gtk_manager_common.h"
 
 #if defined (HAVE_CONFIG_H)
-#include "config.h"
+#include "engine_config.h"
 #endif // HAVE_CONFIG_H
 //#include "resource.h"
 
@@ -428,7 +428,7 @@ do_work (int argc_in,
       array_a[0] = reinterpret_cast<GLchar*> (data_p);
       array_a[1] = NULL;
       array_2[0] = static_cast<GLint> (file_size_i);
-      array_2[1] = NULL;
+      array_2[1] = static_cast<GLint> (NULL);
       glShaderSource (fragmentShader_id, 1, array_a, array_2);
       delete [] data_p; data_p = NULL;
       glCompileShader (fragmentShader_id);
@@ -681,7 +681,7 @@ do_work (int argc_in,
       array_a[0] = reinterpret_cast<GLchar*> (data_p);
       array_a[1] = NULL;
       array_2[0] = static_cast<GLint> (file_size_i);
-      array_2[1] = NULL;
+      array_2[1] = static_cast<GLint> (NULL);
       glShaderSource (fragmentShader_id, 1, array_a, array_2);
       delete [] data_p; data_p = NULL;
       glCompileShader (fragmentShader_id);
@@ -890,7 +890,7 @@ do_work (int argc_in,
       array_a[0] = reinterpret_cast<GLchar*> (data_p);
       array_a[1] = NULL;
       array_2[0] = static_cast<GLint> (file_size_i);
-      array_2[1] = NULL;
+      array_2[1] = static_cast<GLint> (NULL);
       glShaderSource (fragmentShader_id, 1, array_a, array_2);
       delete [] data_p; data_p = NULL;
       glCompileShader (fragmentShader_id);
@@ -1114,7 +1114,7 @@ do_work (int argc_in,
       array_a[0] = reinterpret_cast<GLchar*> (data_p);
       array_a[1] = NULL;
       array_2[0] = static_cast<GLint> (file_size_i);
-      array_2[1] = NULL;
+      array_2[1] = static_cast<GLint> (NULL);
       glShaderSource (fragmentShader_id, 1, array_a, array_2);
       delete [] data_p; data_p = NULL;
       glCompileShader (fragmentShader_id);

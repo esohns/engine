@@ -55,10 +55,14 @@ PGE_245::OnUserCreate ()
 {
   points_ = genPoints ();
   newPoints_ = genPoints ();
-  
+
+  olc::Pixel color1 (34, 193, 195);
+  olc::Pixel color2 (253, 187, 45);
+  olc::Pixel color3 (151, 68, 238);
+  olc::Pixel color4 (255, 97, 198);
   g_ =
     gradient (ENGINE_PGE_245_DEFAULT_W + 2, ENGINE_PGE_245_DEFAULT_H + 2,
-              olc::Pixel (34, 193, 195), olc::Pixel (253, 187, 45), olc::Pixel (151, 68, 238), olc::Pixel (255, 97, 198));
+              color1, color2, color3, color4);
 
   for (int i = 0; i < ENGINE_PGE_245_DEFAULT_H + 2; i++)
   {

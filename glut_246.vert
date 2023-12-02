@@ -13,7 +13,7 @@ varying vec2 vTexCoord;
 void main()
 {
   //vTexCoord = aTexCoord;
-  vTexCoord = aPosition;
+  vTexCoord = aPosition.xy;
 
   // copy the position data into a vec4, using 1.0 as the w component
   vec4 positionVec4 = vec4(aPosition, 1.0);
