@@ -1011,6 +1011,8 @@ set (engine_11_EXE_SRCS
      pge_255.h
      pge_256.cpp
      pge_256.h
+     pge_257.cpp
+     pge_257.h
      stdafx.h)
 
 set (EXECUTABLE_11 engine_11)

@@ -89,7 +89,8 @@ class PGE_256
         olc::vf2d vec2 = {pos3a.x - pos2a.x, pos3a.y - pos2a.y};
         vec1 = vec1.norm ();
         vec2 = vec2.norm ();
-        olc::vf2d vec2_inv = vec2; vec2_inv *= -1.0f;
+        olc::vf2d vec2_inv = vec2;
+        vec2_inv *= -1.0f;
         // angle between vec1 and vec2_inv
         float dot_f = vec1.x * vec2_inv.x + vec1.y * vec2_inv.y;
         float det_f = vec1.x * vec2_inv.y - vec1.y * vec2_inv.x;
@@ -98,11 +99,13 @@ class PGE_256
         float diamFactor = diameterFunc (r) / 12.0f;
         olc::vf2d temp = vec1 + vec2;
         olc::vf2d temp_rot;
-        angle_f = -static_cast<float> (M_PI_2);
-        temp_rot.x = std::cos (angle_f) * temp.x - std::sin (angle_f) * temp.y;
-        temp_rot.y = std::sin (angle_f) * temp.x + std::cos (angle_f) * temp.y;
+        temp_rot.x =
+          std::cos (-static_cast<float> (M_PI_2)) * temp.x - std::sin (-static_cast<float> (M_PI_2)) * temp.y;
+        temp_rot.y =
+          std::sin (-static_cast<float> (M_PI_2)) * temp.x + std::cos (-static_cast<float> (M_PI_2)) * temp.y;
         temp_rot = temp_rot.norm ();
-        temp_rot *= ENGINE_PGE_256_DEFAULT_ZAPWIDTH * zap::weightFunction (i + 1 - phase_) * angleFactor * diamFactor;
+        temp_rot *=
+          static_cast<float> (ENGINE_PGE_256_DEFAULT_ZAPWIDTH) * zap::weightFunction (i + 1 - phase_) * angleFactor * diamFactor;
         olc::vf2d sideVector = temp_rot;
         //let sideVector = p5.Vector.add(vec1,vec2).rotate(-PI/2).setMag(5);
 
@@ -120,6 +123,19 @@ class PGE_256
 
       olc::vf2d prev_s;
       bool is_first_b = true;
+      for (std::vector<olc::vf2d>::iterator iterator = vertices_forward_a.begin ();
+           iterator != vertices_forward_a.end ();
+           ++iterator)
+      {
+        if (is_first_b)
+        {
+          is_first_b = false;
+          prev_s = *iterator;
+        } // end IF
+        engine_in->DrawLine (prev_s, *iterator, color_, 0xFFFFFFFF);
+        prev_s = *iterator;
+      } // end FOR
+      is_first_b = true;
       for (std::vector<olc::vf2d>::iterator iterator = vertices_backward_a.begin ();
            iterator != vertices_backward_a.end ();
            ++iterator)
@@ -132,19 +148,7 @@ class PGE_256
         engine_in->DrawLine (prev_s, *iterator, color_, 0xFFFFFFFF);
         prev_s = *iterator;
       } // end FOR
-      for (std::vector<olc::vf2d>::iterator iterator = vertices_forward_a.begin ();
-           iterator != vertices_forward_a.end ();
-           ++iterator)
-      {
-        //if (is_first_b)
-        //{
-        //  is_first_b = false;
-        //  prev_s = *iterator;
-        //} // end IF
-        engine_in->DrawLine (prev_s, *iterator, color_, 0xFFFFFFFF);
-        prev_s = *iterator;
-      } // end FOR
-      is_first_b = true;
+      //engine_in->DrawLine (prev_s, *vertices_forward_a.begin (), color_, 0xFFFFFFFF);
     }
 
     olc::Pixel             color_;
