@@ -33,7 +33,7 @@ engine_glut_253_reshape (int width_in, int height_in)
   ACE_ASSERT (height_in);
   gluPerspective (45.0,
                   width_in / static_cast<GLdouble> (height_in),
-                  3000.0, -3000.0);
+                  1.0, -1.0);
 
   //glOrtho (width_in / 2.0, -width_in / 2.0, -height_in / 2.0, height_in / 2.0, 3000.0, -3000.0);
 
@@ -76,8 +76,8 @@ engine_glut_253_key_special (int key_in,
       break;
     case GLUT_KEY_UP:
       cb_data_p->camera.position.x = 0.0f;
-      cb_data_p->camera.position.y = 0.0f;
-      cb_data_p->camera.position.z = 700.0f;
+      cb_data_p->camera.position.y = 1000.0f;
+      cb_data_p->camera.position.z = 3000.0f;
 
       cb_data_p->camera.rotation.z = 0.0f;
       break;
@@ -301,7 +301,7 @@ drawFaceBox (int boxWidth, int boxHeight, int boxDepth, Common_GL_Color_t& top, 
   glPushMatrix ();
   glColor3ub (top.r, top.g, top.b);
   glRotatef (-static_cast<float> (M_PI) * 0.5f * (180.0f / static_cast<float> (M_PI)), 1.0f, 0.0f, 0.0f);
-  //glTranslatef (0.0f, 0.0f, -boxHeight * 0.5f);
+  glTranslatef (0.0f, 0.0f, -boxHeight * 0.5f);
   //plane(boxWidth, boxDepth);
   glBegin (GL_QUADS);
   glVertex3f (0.0f, 0.0f, 0.0f);
@@ -314,7 +314,7 @@ drawFaceBox (int boxWidth, int boxHeight, int boxDepth, Common_GL_Color_t& top, 
   glPushMatrix ();
   glColor3ub (right.r, right.g, right.b);
   glRotatef (static_cast<float> (M_PI) * 0.5f * (180.0f / static_cast<float> (M_PI)), 0.0f, 1.0f, 0.0f);
-  //glTranslatef (0.0f, 0.0f, -boxWidth * 0.5f);
+  glTranslatef (0.0f, 0.0f, -boxWidth * 0.5f);
   //plane (boxDepth, boxHeight);
   glBegin (GL_QUADS);
   glVertex3f (0.0f, 0.0f, 0.0f);
@@ -327,7 +327,7 @@ drawFaceBox (int boxWidth, int boxHeight, int boxDepth, Common_GL_Color_t& top, 
   glPushMatrix ();
   glColor3ub (front.r, front.g, front.b);
   glRotatef (static_cast<float> (M_PI) * (180.0f / static_cast<float> (M_PI)), 0.0f, 1.0f, 0.0f);
-  //glTranslatef (0.0f, 0.0f, -boxDepth * 0.5f);
+  glTranslatef (0.0f, 0.0f, -boxDepth * 0.5f);
   //plane (boxWidth, boxHeight);
   glBegin (GL_QUADS);
   glVertex3f (0.0f, 0.0f, 0.0f);

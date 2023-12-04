@@ -143,4 +143,10 @@
 #define ENGINE_PGE_257_DEFAULT_AMP_MIN           0.3f
 #define ENGINE_PGE_257_DEFAULT_AMP_MAX           0.5f
 
+// glut 258
+#define ENGINE_GLUT_258_DEFAULT_HEIGHT           400
+#define ENGINE_GLUT_258_DEFAULT_WIDTH            400
+#define ENGINE_GLUT_258_DEFAULT_W                400
+#define ENGINE_GLUT_258_DEFAULT_R                1.85f
+
 #endif
