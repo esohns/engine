@@ -149,4 +149,12 @@
 #define ENGINE_GLUT_258_DEFAULT_W                400
 #define ENGINE_GLUT_258_DEFAULT_R                1.85f
 
+// pge 259
+#define ENGINE_PGE_259_DEFAULT_HEIGHT            800
+#define ENGINE_PGE_259_DEFAULT_WIDTH             800
+#define ENGINE_PGE_259_DEFAULT_BLOCK_SIZE        12
+#define ENGINE_PGE_259_DEFAULT_MOUSE_POWER       0.03f
+#define ENGINE_PGE_259_DEFAULT_FRICTION          0.95f
+#define ENGINE_PGE_259_DEFAULT_RESILIENCY        -0.025f
+
 #endif
