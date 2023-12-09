@@ -26,4 +26,28 @@
 #define ENGINE_PGE_260_DEFAULT_WIDTH               1112
 #define ENGINE_PGE_260_DEFAULT_NUMBER_OF_PARTICLES 5000
 
+// pge 261
+#define ENGINE_PGE_261_DEFAULT_HEIGHT              800
+#define ENGINE_PGE_261_DEFAULT_WIDTH               800
+#define ENGINE_PGE_261_DEFAULT_RADIUS              200
+#define ENGINE_PGE_261_DEFAULT_SPEED               0.01f
+#define ENGINE_PGE_261_DEFAULT_AMOUNT              200
+#define ENGINE_PGE_261_DEFAULT_CIRCLE_RADIUS       5
+
+// pge 262
+#define ENGINE_PGE_262_DEFAULT_HEIGHT              800
+#define ENGINE_PGE_262_DEFAULT_WIDTH               800
+#define ENGINE_PGE_262_DEFAULT_SIZE                800
+#define ENGINE_PGE_262_DEFAULT_N                   19
+#define ENGINE_PGE_262_DEFAULT_P                   5
+
+// pge 263
+#define ENGINE_PGE_263_DEFAULT_HEIGHT              400
+#define ENGINE_PGE_263_DEFAULT_WIDTH               400
+
+// glut 264
+#define ENGINE_GLUT_264_DEFAULT_HEIGHT             768
+#define ENGINE_GLUT_264_DEFAULT_WIDTH              1024
+#define ENGINE_GLUT_264_DEFAULT_TIME_SCALE         0.055f
+
 #endif
