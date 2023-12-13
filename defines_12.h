@@ -50,4 +50,36 @@
 #define ENGINE_GLUT_264_DEFAULT_WIDTH              1024
 #define ENGINE_GLUT_264_DEFAULT_TIME_SCALE         0.055f
 
+// pge 265
+#define ENGINE_PGE_265_DEFAULT_HEIGHT              891
+#define ENGINE_PGE_265_DEFAULT_WIDTH               630
+#define ENGINE_PGE_265_DEFAULT_BORDER              50
+#define ENGINE_PGE_265_DEFAULT_INTENSITY           90
+#define ENGINE_PGE_265_DEFAULT_SPACE               10
+#define ENGINE_PGE_265_DEFAULT_FREQUENCY           1.3f
+#define ENGINE_PGE_265_DEFAULT_INTERACT            600
+#define ENGINE_PGE_265_DEFAULT_L                   20
+
+// pge 266
+#define ENGINE_PGE_266_DEFAULT_HEIGHT              600
+#define ENGINE_PGE_266_DEFAULT_WIDTH               600
+#define ENGINE_PGE_266_DEFAULT_STEPS               50
+#define ENGINE_PGE_266_DEFAULT_MIN                 1.0001f
+#define ENGINE_PGE_266_DEFAULT_MAX                 1.2f
+
+// glut 267
+#define ENGINE_GLUT_267_DEFAULT_HEIGHT             400
+#define ENGINE_GLUT_267_DEFAULT_WIDTH              400
+#define ENGINE_GLUT_267_DEFAULT_SIZE               400
+
+// pge 268
+#define ENGINE_PGE_268_DEFAULT_HEIGHT              600
+#define ENGINE_PGE_268_DEFAULT_WIDTH               800
+
+// glut 269
+#define ENGINE_GLUT_269_DEFAULT_HEIGHT             1000
+#define ENGINE_GLUT_269_DEFAULT_WIDTH              1000
+#define ENGINE_GLUT_269_DEFAULT_SCALE_FACTOR       30
+#define ENGINE_GLUT_269_DEFAULT_NUMBER_OF_WHIRLS   10
+
 #endif

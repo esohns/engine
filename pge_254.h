@@ -1,6 +1,7 @@
 ﻿#ifndef PGE_254_H
 #define PGE_254_H
 
+#include <random>
 #include <vector>
 
 #include "olcPixelGameEngine.h"
