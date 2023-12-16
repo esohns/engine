@@ -52,6 +52,8 @@
 #include "glut_267.h"
 #include "pge_268.h"
 #include "glut_269.h"
+#include "pge_270.h"
+#include "glut_271.h"
 
 enum Engine_ModeType
 {
@@ -65,6 +67,8 @@ enum Engine_ModeType
   ENGINE_MODE_267,
   ENGINE_MODE_268,
   ENGINE_MODE_269,
+  ENGINE_MODE_270,
+  ENGINE_MODE_271,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -652,7 +656,8 @@ do_work (int argc_in,
       glm::vec2 lastP (-5.0f, -5.0f);
       for (int i = 0; i < ENGINE_GLUT_269_DEFAULT_NUMBER_OF_WHIRLS; i++)
       {
-        glm::vec2 p (Common_Tools::getRandomNumber (0.0f, 1.0f), Common_Tools::getRandomNumber (0.0f, 1.0f));
+        glm::vec2 p (Common_Tools::getRandomNumber (0.0f, 1.0f),
+                     Common_Tools::getRandomNumber (0.0f, 1.0f));
         // update random position if it's too close to the previous ball
         while (glm::distance (p, lastP) < 0.3f)
         {
@@ -663,6 +668,111 @@ do_work (int argc_in,
         cb_data_s.whirls.push_back (whirl (p));
         lastP = p;
       } // end FOR
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_270:
+    {
+      PGE_270 example;
+      if (example.Construct (ENGINE_PGE_270_DEFAULT_WIDTH, ENGINE_PGE_270_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_271:
+    {
+      struct Engine_OpenGL_GLUT_271_CBData cb_data_s;
+      cb_data_s.maxAreaR = ENGINE_GLUT_271_DEFAULT_WIDTH / 2.5f;
+
+      float maxSphereR = ENGINE_GLUT_271_DEFAULT_WIDTH / 5.0f;
+      for (int i = 0; i < ENGINE_GLUT_271_DEFAULT_NUMBER_OF_SPHERES; i++)
+      {
+        cb_data_s.aryR.push_back (maxSphereR);
+
+        float maxCentX = cb_data_s.maxAreaR - cb_data_s.aryR[i];
+        float maxCentY = cb_data_s.maxAreaR - cb_data_s.aryR[i];
+        float maxCentZ = cb_data_s.maxAreaR - cb_data_s.aryR[i];
+        glm::vec3 sphere_center_s (maxCentX * Common_Tools::getRandomNumber (-1.0f, 1.0f),
+                                   maxCentY * Common_Tools::getRandomNumber (-1.0f, 1.0f),
+                                   maxCentZ * Common_Tools::getRandomNumber (-1.0f, 1.0f));
+        cb_data_s.arySphereCenter.push_back (sphere_center_s);
+
+        base_triangle (cb_data_s.aryR[i], i, cb_data_s.arySphereCenter[i], cb_data_s);
+      } // end FOR
+
+      cb_data_s.initNoiseXYZ.x = Common_Tools::getRandomNumber (0.0f, 100.0f);
+      cb_data_s.initNoiseXYZ.y = Common_Tools::getRandomNumber (0.0f, 100.0f);
+      cb_data_s.initNoiseXYZ.z = Common_Tools::getRandomNumber (0.0f, 100.0f);
+      cb_data_s.initRot.x = Common_Tools::getRandomNumber (0.0f, 360.0f);
+      cb_data_s.initRot.y = Common_Tools::getRandomNumber (0.0f, 360.0f);
+      cb_data_s.initRot.z = Common_Tools::getRandomNumber (0.0f, 360.0f);
+      cb_data_s.noiseRangeXYZ.x = 1.0f / 1.5f / 2.0f;
+      cb_data_s.noiseRangeXYZ.y = 1.0f / 1.5f / 2.0f;
+      cb_data_s.noiseRangeXYZ.z = 1.0f / 1.5f / 2.0f;
+
+      cb_data_s.sphereR = ENGINE_GLUT_271_DEFAULT_WIDTH / 1000.0f;
+
+      cb_data_s.count = 0;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 1500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.deltaAngle = 0.0f;
+      cb_data_s.xOrigin = -1;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_271_DEFAULT_WIDTH, ENGINE_GLUT_271_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 271");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glEnable (GL_DEPTH_TEST);
+
+      //glEnable (GL_BLEND);
+      //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      glPolygonMode (GL_FRONT_AND_BACK,
+                     GL_FILL);
+
+      glutDisplayFunc (engine_glut_271_draw);
+      glutReshapeFunc (engine_glut_271_reshape);
+      glutVisibilityFunc (engine_glut_271_visible);
+
+      glutKeyboardFunc (engine_glut_271_key);
+      glutSpecialFunc (engine_glut_271_key_special);
+      glutMouseFunc (engine_glut_271_mouse_button);
+      glutMotionFunc (engine_glut_271_mouse_move);
+      glutPassiveMotionFunc (engine_glut_271_mouse_move);
+      glutTimerFunc (100, engine_glut_271_timer, 0);
+
+      glutCreateMenu (engine_glut_271_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
 
       glutMainLoop ();
 

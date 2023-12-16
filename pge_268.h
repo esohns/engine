@@ -144,6 +144,8 @@ class PGE_268
         float y = a * x + b;
         return olc::vf2d (x, y);
       } // end ELSE
+
+      return olc::vf2d ();
     }
 
     std::string leftOrRight (float x, float y)

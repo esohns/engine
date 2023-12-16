@@ -1052,6 +1052,10 @@ set (engine_12_EXE_SRCS
      pge_268.h
      glut_269.cpp
      glut_269.h
+     pge_270.cpp
+     pge_270.h
+     glut_271.cpp
+     glut_271.h
      stdafx.h)
 
 set (EXECUTABLE_12 engine_12)
