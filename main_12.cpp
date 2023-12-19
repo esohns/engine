@@ -54,6 +54,8 @@
 #include "glut_269.h"
 #include "pge_270.h"
 #include "glut_271.h"
+#include "glut_272.h"
+#include "glut_273.h"
 
 enum Engine_ModeType
 {
@@ -69,6 +71,8 @@ enum Engine_ModeType
   ENGINE_MODE_269,
   ENGINE_MODE_270,
   ENGINE_MODE_271,
+  ENGINE_MODE_272,
+  ENGINE_MODE_273,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -771,6 +775,146 @@ do_work (int argc_in,
       glutTimerFunc (100, engine_glut_271_timer, 0);
 
       glutCreateMenu (engine_glut_271_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_272:
+    {
+      struct Engine_OpenGL_GLUT_272_CBData cb_data_s;
+      cb_data_s.f = 0;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 1500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.deltaAngle = 0.0f;
+      cb_data_s.xOrigin = -1;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_272_DEFAULT_WIDTH, ENGINE_GLUT_272_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 272");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glEnable (GL_DEPTH_TEST);
+
+      glEnable (GL_LIGHTING);
+      glEnable (GL_LIGHT0);
+      glEnable (GL_LIGHT1);
+      //glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
+      //glEnable (GL_BLEND);
+      //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_272_draw);
+      glutReshapeFunc (engine_glut_272_reshape);
+      glutVisibilityFunc (engine_glut_272_visible);
+
+      glutKeyboardFunc (engine_glut_272_key);
+      glutSpecialFunc (engine_glut_272_key_special);
+      glutMouseFunc (engine_glut_272_mouse_button);
+      glutMotionFunc (engine_glut_272_mouse_move);
+      glutPassiveMotionFunc (engine_glut_272_mouse_move);
+      glutTimerFunc (100, engine_glut_272_timer, 0);
+
+      glutCreateMenu (engine_glut_272_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_273:
+    {
+      struct Engine_OpenGL_GLUT_273_CBData cb_data_s;
+      cb_data_s.style = 0;
+      for (float a = 0.0f; a < 150.0f * static_cast<float> (M_PI); a += 2.3999f) // <-- golden angle
+      {
+        float x =
+          Common_GL_Tools::map (a, 0.0f, 150.0f * static_cast<float> (M_PI), 0.0f, ENGINE_GLUT_273_DEFAULT_HEIGHT / 3.0f);
+        float y =
+          Common_GL_Tools::map (a, 0.0f, 150.0f * static_cast<float> (M_PI), -ENGINE_GLUT_273_DEFAULT_HEIGHT / 3.0f, ENGINE_GLUT_273_DEFAULT_HEIGHT / 3.0f);
+        float s =
+          Common_GL_Tools::map (a, 0.0f, 150.0f * static_cast<float> (M_PI), ENGINE_GLUT_273_DEFAULT_HEIGHT / 48.0f, ENGINE_GLUT_273_DEFAULT_HEIGHT / 16.0f);
+        glm::vec3 pos (x, y, 0.0f);
+        glm::vec3 ang (a, -a / 150.0f, a / 150.0f);
+        cb_data_s.shapes.push_back (shape (pos, ang, s));
+      } // end FOR
+      cb_data_s.tip = 0.0f;
+      cb_data_s.angle = 0.0f;
+      cb_data_s.angleVelocity = 0.0f;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 200.0f;
+      cb_data_s.camera.position.z = 750.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.deltaAngleX = 0.0f;
+      cb_data_s.xOrigin = -1;
+      cb_data_s.deltaZoomZ = 0.0f;
+      cb_data_s.zOrigin = -1;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_273_DEFAULT_WIDTH, ENGINE_GLUT_273_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 273");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glEnable (GL_DEPTH_TEST);
+
+      //glEnable (GL_BLEND);
+      //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_273_draw);
+      glutReshapeFunc (engine_glut_273_reshape);
+      glutVisibilityFunc (engine_glut_273_visible);
+
+      glutKeyboardFunc (engine_glut_273_key);
+      glutSpecialFunc (engine_glut_273_key_special);
+      glutMouseFunc (engine_glut_273_mouse_button);
+      glutMotionFunc (engine_glut_273_mouse_move);
+      glutPassiveMotionFunc (engine_glut_273_mouse_move);
+      glutTimerFunc (100, engine_glut_273_timer, 0);
+
+      glutCreateMenu (engine_glut_273_menu);
       glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
       glutAttachMenu (GLUT_RIGHT_BUTTON);
 

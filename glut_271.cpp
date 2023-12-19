@@ -202,36 +202,33 @@ engine_glut_271_draw (void)
   glRotatef (cb_data_p->initRot.x + (cb_data_p->count / 300.0f) * (180.0f / static_cast<float> (M_PI)), 1.0f, 0.0f, 0.0f);
   glRotatef (cb_data_p->initRot.y + (cb_data_p->count / 100.0f) * (180.0f / static_cast<float> (M_PI)), 0.0f, 1.0f, 0.0f);
   glRotatef (cb_data_p->initRot.z + (cb_data_p->count / 200.0f) * (180.0f / static_cast<float> (M_PI)), 0.0f, 0.0f, 1.0f);
-  static float freq = 4.0f;
-  static int d = 2;
   for (int j = 0; j < ENGINE_GLUT_271_DEFAULT_NUMBER_OF_SPHERES; j++)
     for (int i = 0; i < static_cast<int> (cb_data_p->aryTriangle[j].size ()); i++)
     {
       float noiseVal =
-        static_cast<float> (std::pow (std::sin (freq * 2.0f * static_cast<float> (M_PI) * Common_GL_Tools::map (static_cast<float> (cb_data_p->noise.GetValue (
+        //static_cast<float> (std::pow (std::sin (ENGINE_GLUT_271_DEFAULT_FREQUENCY * 2.0f * static_cast<float> (M_PI) * Common_GL_Tools::map (static_cast<float> (cb_data_p->noise.GetValue (
+        static_cast<float> (std::pow (std::sin (ENGINE_GLUT_271_DEFAULT_FREQUENCY * 2.0f * static_cast<float> (M_PI) * Common_GL_Tools::map (static_cast<float> (cb_data_p->noise.Evaluate (
           cb_data_p->initNoiseXYZ.x + cb_data_p->noiseRangeXYZ.x * cb_data_p->aryTriCenter[j][i].x / cb_data_p->maxAreaR,
           cb_data_p->initNoiseXYZ.y + (cb_data_p->noiseRangeXYZ.y * cb_data_p->aryTriCenter[j][i].y / cb_data_p->maxAreaR) - (ENGINE_GLUT_271_DEFAULT_NOISE_STEP * cb_data_p->count),
-          cb_data_p->initNoiseXYZ.z + cb_data_p->noiseRangeXYZ.z * cb_data_p->aryTriCenter[j][i].z / cb_data_p->maxAreaR)), -1.0f, 1.0f, 0.0f, 1.0f)), d));
+          cb_data_p->initNoiseXYZ.z + cb_data_p->noiseRangeXYZ.z * cb_data_p->aryTriCenter[j][i].z / cb_data_p->maxAreaR)), -1.0f, 1.0f, 0.0f, 1.0f)), ENGINE_GLUT_271_DEFAULT_D));
 
-      static float threshold = 0.1f;
-      float ratio = (noiseVal - threshold) / (1.0f - threshold);
-      if (noiseVal > threshold)
+      float ratio = (noiseVal - ENGINE_GLUT_271_DEFAULT_THRESHOLD) / (1.0f - ENGINE_GLUT_271_DEFAULT_THRESHOLD);
+      if (noiseVal > ENGINE_GLUT_271_DEFAULT_THRESHOLD)
       {
         glPushMatrix ();
         glTranslatef (cb_data_p->arySphereCenter[j].x, cb_data_p->arySphereCenter[j].y, cb_data_p->arySphereCenter[j].z);
-        glRotatef (-static_cast<float> (M_PI_2) * (180.0f / static_cast<float> (M_PI)), 0.0f, 0.0f, 1.0f);
+        glRotatef (static_cast<float> (-M_PI_2) * (180.0f / static_cast<float> (M_PI)), 0.0f, 0.0f, 1.0f);
         glRotatef (cb_data_p->aryCentRotYZ[j][i].x * (180.0f / static_cast<float> (M_PI)), 1.0f, 0.0f, 0.0f);
         glRotatef (cb_data_p->aryCentRotYZ[j][i].y * (180.0f / static_cast<float> (M_PI)), 0.0f, 0.0f, 1.0f);
-        static float coneRatio = 0.07f;
-        float coneHeight = cb_data_p->sphereR * ratio;
         glTranslatef (0.0f, cb_data_p->aryR[j], 0.0f);
+        float coneHeight = cb_data_p->sphereR * ratio;
         glTranslatef (0.0f, coneHeight / 2.0f, 0.0f);
         float hue_f = (i % 256) / 255.0f * 360.0f;
         float r, g, b;
         Common_Image_Tools::HSVToRGB (hue_f, 1.0f, 1.0f, r, g, b);
         glColor3f (r, g, b);
-        cb_data_p->wireframe ? glutWireCone (coneHeight / coneRatio, coneHeight, 40, 40)
-                             : glutSolidCone (coneHeight / coneRatio, coneHeight, 40, 40);
+        cb_data_p->wireframe ? glutWireCone (coneHeight / ENGINE_GLUT_271_DEFAULT_CONE_RATIO, coneHeight, 40, 40)
+                             : glutSolidCone (coneHeight / ENGINE_GLUT_271_DEFAULT_CONE_RATIO, coneHeight, 40, 40);
         glPopMatrix ();
       } // end IF
     } // end FOR

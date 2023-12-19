@@ -3,7 +3,8 @@
 
 #include <vector>
 
-#include "noise/noise.h"
+//#include "noise/noise.h"
+#include "opensimplexnoise.h"
 
 #include "common_gl_common.h"
 
@@ -44,7 +45,8 @@ struct Engine_OpenGL_GLUT_271_CBData
   std::vector<std::vector<glm::vec2> >       aryCentRotYZ;
 
   // noise
-  noise::module::Perlin   noise;
+  //noise::module::Perlin   noise;
+  OpenSimplexNoise        noise;
 
   // menu
   bool                    wireframe;
@@ -244,4 +246,4 @@ class base_triangle
   }
 };
 
-#endif // GLUT_267_H
+#endif // GLUT_271_H
