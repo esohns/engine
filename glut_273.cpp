@@ -165,9 +165,9 @@ engine_glut_273_mouse_move (int x, int y)
     Common_Math_Tools::lerp (cb_data_p->tip, Common_GL_Tools::map (static_cast<float> (y), 0.0f, static_cast<float> (ENGINE_GLUT_273_DEFAULT_HEIGHT), static_cast<float> (-M_PI), static_cast<float> (M_PI)), 0.1f);
 
   cb_data_p->angleVelocity =
-    Common_Math_Tools::lerp (cb_data_p->angleVelocity, Common_GL_Tools::map (static_cast<float> (x), 0.0f, static_cast<float> (ENGINE_GLUT_273_DEFAULT_WIDTH), -1.0f, 1.0f), 0.05f);
+    Common_Math_Tools::lerp (cb_data_p->angleVelocity, Common_GL_Tools::map (static_cast<float> (x), 0.0f, static_cast<float> (ENGINE_GLUT_273_DEFAULT_WIDTH), -1.0f, 1.0f), 0.001f);
   if (std::abs (static_cast<float> (x) - static_cast<float> (ENGINE_GLUT_273_DEFAULT_WIDTH) / 2.0f) < static_cast<float> (ENGINE_GLUT_273_DEFAULT_WIDTH) / 10.0f)
-    cb_data_p->angleVelocity *= 0.9f;
+    cb_data_p->angleVelocity *= 0.75f;
 
   // this will only be true when the left button is down
 	if (cb_data_p->xOrigin >= 0)
@@ -240,12 +240,21 @@ engine_glut_273_draw (void)
   static GLfloat light_position_2[] = {static_cast<float> (ENGINE_GLUT_273_DEFAULT_HEIGHT) / 8.0f, static_cast<float> (-ENGINE_GLUT_273_DEFAULT_HEIGHT) / 8.0f, static_cast<float> (ENGINE_GLUT_273_DEFAULT_HEIGHT) / 8.0f};
   glLightfv (GL_LIGHT0, GL_POSITION, light_position_a);
   glLightfv (GL_LIGHT1, GL_POSITION, light_position_2);
-  static GLint light_ambient_a[] = { 0, 0, 200, 255 };
-  static GLint light_diffuse_a[] = { 0, 0, 200, 255 };
+  static GLint light_ambient_a[] = { 255, 255, 255, 255 };
+  static GLint light_diffuse_a[] = { 255, 255, 255, 255 };
   static GLint light_specular_a[] = { 0, 0, 200, 255 };
   glLightiv (GL_LIGHT1, GL_AMBIENT, light_ambient_a);
   glLightiv (GL_LIGHT1, GL_DIFFUSE, light_diffuse_a);
   glLightiv (GL_LIGHT1, GL_SPECULAR, light_specular_a);
+
+  static GLfloat material_color_a[] = {1.0f, 1.0f, 0.0f, 1.0f};
+  static GLfloat material_specular_a[] = {0.0f, 0.0f, 1.0f, 1.0f};
+  static GLfloat material_emission_a[] = {0.0f, 0.0f, 0.0f, 1.0f};
+  static GLfloat material_shininess_f = 20.0f;
+  glMaterialfv (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, material_color_a);
+  glMaterialfv (GL_FRONT_AND_BACK, GL_SPECULAR, material_specular_a);
+  glMaterialfv (GL_FRONT_AND_BACK, GL_EMISSION, material_emission_a);
+  glMaterialf (GL_FRONT_AND_BACK, GL_SHININESS, material_shininess_f);
 
   glRotatef (cb_data_p->tip * 180.0f / static_cast<float> (M_PI), 1.0f, 0.0f, 0.0f);
   glRotatef (static_cast<float> (M_PI_2) * 180.0f / static_cast<float> (M_PI), 0.0f, 0.0f, 1.0f);

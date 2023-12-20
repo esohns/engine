@@ -332,8 +332,7 @@ do_work (int argc_in,
       //glEnable (GL_BLEND);
       //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-      glPolygonMode (GL_FRONT_AND_BACK,
-                     GL_FILL);
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 
       glutDisplayFunc (engine_glut_264_draw);
       glutReshapeFunc (engine_glut_264_reshape);
@@ -898,8 +897,15 @@ do_work (int argc_in,
 
       glEnable (GL_DEPTH_TEST);
 
+      glEnable (GL_LIGHTING);
+      glEnable (GL_LIGHT0);
+      glEnable (GL_LIGHT1);
+      glDisable (GL_COLOR_MATERIAL);
+
       //glEnable (GL_BLEND);
       //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      glEnable (GL_NORMALIZE);
 
       glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 
