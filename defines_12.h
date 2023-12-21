@@ -111,4 +111,9 @@
 #define ENGINE_GLUT_273_DEFAULT_HEIGHT             768
 #define ENGINE_GLUT_273_DEFAULT_WIDTH              1024
 
+// glut 274
+#define ENGINE_GLUT_274_DEFAULT_HEIGHT             1000
+#define ENGINE_GLUT_274_DEFAULT_WIDTH              1000
+#define ENGINE_GLUT_274_DEFAULT_SCALE_FACTOR       30
+
 #endif
