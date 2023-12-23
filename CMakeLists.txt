@@ -1078,6 +1078,23 @@ set (EXECUTABLE_12 engine_12)
 add_executable (${EXECUTABLE_12}
                 ${engine_12_EXE_SRCS})
 
+set (engine_13_EXE_SRCS
+     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
+#     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
+     camera.cpp
+     camera.h
+     engine_common.h
+     defines_13.h
+     main_13.cpp
+     pge_280.cpp
+     pge_280.h
+     stdafx.h)
+
+set (EXECUTABLE_13 engine_13)
+add_executable (${EXECUTABLE_13}
+                ${engine_13_EXE_SRCS})
+
 set_target_properties (${EXECUTABLE_9} PROPERTIES CXX_STANDARD 17)
 set_target_properties (${EXECUTABLE_10} PROPERTIES CXX_STANDARD 17)
 set_target_properties (${EXECUTABLE_11} PROPERTIES CXX_STANDARD 17)
@@ -1134,6 +1151,10 @@ if (UNIX)
  target_link_libraries (${EXECUTABLE_12} X11)
  target_link_libraries (${EXECUTABLE_12} GL)
  target_link_libraries (${EXECUTABLE_12} png)
+
+ target_link_libraries (${EXECUTABLE_13} X11)
+ target_link_libraries (${EXECUTABLE_13} GL)
+ target_link_libraries (${EXECUTABLE_13} png)
 endif ()
 target_link_libraries (${EXECUTABLE} ${BOX2D_LIBRARIES})
 target_link_libraries (${EXECUTABLE} ${LIBNOISE_LIB})
@@ -1320,6 +1341,23 @@ target_link_libraries (${EXECUTABLE_12} CommonOpenGL)
 target_link_libraries (${EXECUTABLE_12} CommonTimer)
 target_link_libraries (${EXECUTABLE_12} CommonUI)
 #target_link_libraries (${EXECUTABLE_12} CommonUI_GTK)
+
+target_link_libraries (${EXECUTABLE_13} ${BOX2D_LIBRARIES})
+target_link_libraries (${EXECUTABLE_13} ${LIBNOISE_LIB})
+target_link_libraries (${EXECUTABLE_13} ${GLUT_LIBRARIES})
+target_link_libraries (${EXECUTABLE_13} ${GLEW_LIBRARIES})
+target_link_libraries (${EXECUTABLE_13} ${GTK_LIBRARIES})
+
+target_link_libraries (${EXECUTABLE_13} ${ACE_LIBRARY})
+
+target_link_libraries (${EXECUTABLE_13} Common)
+target_link_libraries (${EXECUTABLE_13} CommonError)
+target_link_libraries (${EXECUTABLE_13} CommonLog)
+target_link_libraries (${EXECUTABLE_13} CommonOpenGL)
+target_link_libraries (${EXECUTABLE_13} CommonTimer)
+target_link_libraries (${EXECUTABLE_13} CommonUI)
+#target_link_libraries (${EXECUTABLE_13} CommonUI_GTK)
+
 if (UNIX)
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
  target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
@@ -1362,8 +1400,12 @@ target_precompile_headers (${EXECUTABLE_11}
                            REUSE_FROM ${EXECUTABLE_9})
 target_precompile_headers (${EXECUTABLE_12}
                            REUSE_FROM ${EXECUTABLE})
+target_precompile_headers (${EXECUTABLE_13}
+                           REUSE_FROM ${EXECUTABLE})
 
-install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} ${EXECUTABLE_5} ${EXECUTABLE_6} ${EXECUTABLE_7} ${EXECUTABLE_8} ${EXECUTABLE_9} ${EXECUTABLE_10} ${EXECUTABLE_11} ${EXECUTABLE_12}
+install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} ${EXECUTABLE_5} ${EXECUTABLE_6}
+                 ${EXECUTABLE_7} ${EXECUTABLE_8} ${EXECUTABLE_9} ${EXECUTABLE_10} ${EXECUTABLE_11} ${EXECUTABLE_12}
+                 ${EXECUTABLE_13}
          RUNTIME
          DESTINATION bin
          COMPONENT applications)
@@ -1380,6 +1422,26 @@ install (FILES
          "glut_16.gtk3"
          "glut_169.vert"
          "glut_169.frag"
+         "glut_222.vert"
+         "glut_222.frag"
+         "glut_228.vert"
+         "glut_228.frag"
+         "glut_239.vert"
+         "glut_239.frag"
+         "glut_241.vert"
+         "glut_241.frag"
+         "glut_246.vert"
+         "glut_246.frag"
+         "glut_248.vert"
+         "glut_248.frag"
+         "glut_251.vert"
+         "glut_251.frag"
+         "glut_269.vert"
+         "glut_269.frag"
+         "glut_274.vert"
+         "glut_274.frag"
+         "glut_277.vert"
+         "glut_277.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
@@ -1471,6 +1533,7 @@ set (ARGS_9 "-l -m200")
 set (ARGS_10 "-l -m220")
 set (ARGS_11 "-l -m240")
 set (ARGS_12 "-l -m260")
+set (ARGS_13 "-l -m280")
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS "${ARGS} -t")
  set (ARGS_2 "${ARGS_2} -t")
@@ -1484,6 +1547,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS_10 "${ARGS_10} -t")
  set (ARGS_11 "${ARGS_11} -t")
  set (ARGS_12 "${ARGS_12} -t")
+ set (ARGS_13 "${ARGS_13} -t")
 endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 file (TO_CMAKE_PATH ${LIBNOISE_LIB_DIR} LIBNOISE_PATH)
 file (TO_CMAKE_PATH "${GLUT_LIB_DIR}" GLUT_PATH)
@@ -1518,6 +1582,7 @@ if (UNIX)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_10}" COMMAND_10)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_11}" COMMAND_11)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_12}" COMMAND_12)
+ file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_13}" COMMAND_13)
 elseif (WIN32)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE}.exe" COMMAND)
  string (REPLACE "\\" "\\\\" COMMAND ${COMMAND})
@@ -1543,6 +1608,8 @@ elseif (WIN32)
  string (REPLACE "\\" "\\\\" COMMAND_11 ${COMMAND_11})
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_12}.exe" COMMAND_12)
  string (REPLACE "\\" "\\\\" COMMAND_12 ${COMMAND_12})
+ file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_13}.exe" COMMAND_13)
+ string (REPLACE "\\" "\\\\" COMMAND_13 ${COMMAND_13})
  set (ENVIRONMENT_MAGICK "MAGICK_CODER_MODULE_PATH=${IMAGEMAGICK_PATH}\\\\modules\\\\coders")
 endif ()
 create_target_launcher (${EXECUTABLE}
@@ -1625,6 +1692,13 @@ create_target_launcher (${EXECUTABLE_11}
 create_target_launcher (${EXECUTABLE_12}
                         COMMAND ${COMMAND_12}
                         ARGS ${ARGS_12}
+#                        FORWARD_ARGS
+                        RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                        ENVIRONMENT ${ENVIRONMENT_MAGICK})
+create_target_launcher (${EXECUTABLE_13}
+                        COMMAND ${COMMAND_13}
+                        ARGS ${ARGS_13}
 #                        FORWARD_ARGS
                         RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
                         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
