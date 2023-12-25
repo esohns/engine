@@ -1089,6 +1089,14 @@ set (engine_13_EXE_SRCS
      main_13.cpp
      pge_280.cpp
      pge_280.h
+     glut_281.cpp
+     glut_281.h
+     glut_282.cpp
+     glut_282.h
+     glut_283.cpp
+     glut_283.h
+     glut_284.cpp
+     glut_284.h
      stdafx.h)
 
 set (EXECUTABLE_13 engine_13)
@@ -1098,6 +1106,7 @@ add_executable (${EXECUTABLE_13}
 set_target_properties (${EXECUTABLE_9} PROPERTIES CXX_STANDARD 17)
 set_target_properties (${EXECUTABLE_10} PROPERTIES CXX_STANDARD 17)
 set_target_properties (${EXECUTABLE_11} PROPERTIES CXX_STANDARD 17)
+set_target_properties (${EXECUTABLE_13} PROPERTIES CXX_STANDARD 17)
 if (WIN32 AND HOST_CPU_HAS_AVX2)
 # target_compile_options (${EXECUTABLE_9} PRIVATE $<$CXX_COMPILER_ID:MSVC>:/arch:AVX2>)
  target_compile_options (${EXECUTABLE_9} PRIVATE $<$<BOOL:${MSVC}>:/arch:AVX2>)
@@ -1401,7 +1410,7 @@ target_precompile_headers (${EXECUTABLE_11}
 target_precompile_headers (${EXECUTABLE_12}
                            REUSE_FROM ${EXECUTABLE})
 target_precompile_headers (${EXECUTABLE_13}
-                           REUSE_FROM ${EXECUTABLE})
+                           REUSE_FROM ${EXECUTABLE_9})
 
 install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} ${EXECUTABLE_5} ${EXECUTABLE_6}
                  ${EXECUTABLE_7} ${EXECUTABLE_8} ${EXECUTABLE_9} ${EXECUTABLE_10} ${EXECUTABLE_11} ${EXECUTABLE_12}
