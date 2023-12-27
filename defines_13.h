@@ -47,4 +47,25 @@
 #define ENGINE_GLUT_284_DEFAULT_HEIGHT             834
 #define ENGINE_GLUT_284_DEFAULT_WIDTH              1112
 
+// glut 285
+#define ENGINE_GLUT_285_DEFAULT_HEIGHT             600
+#define ENGINE_GLUT_285_DEFAULT_WIDTH              600
+
+// glut 286
+#define ENGINE_GLUT_286_DEFAULT_HEIGHT             600
+#define ENGINE_GLUT_286_DEFAULT_WIDTH              600
+#define ENGINE_GLUT_286_DEFAULT_W                  600
+
+// glut 287
+#define ENGINE_GLUT_287_DEFAULT_HEIGHT             600
+#define ENGINE_GLUT_287_DEFAULT_WIDTH              600
+#define ENGINE_GLUT_287_DEFAULT_W                  600
+
+// pge 288
+#define ENGINE_PGE_288_DEFAULT_HEIGHT              600
+#define ENGINE_PGE_288_DEFAULT_WIDTH               800
+#define ENGINE_PGE_288_DEFAULT_ARC_RESOLUTION      64
+#define ENGINE_PGE_288_DEFAULT_MAX_NUMBER_OF_ARCS  1000
+#define ENGINE_PGE_288_DEFAULT_DT                  0.01f
+
 #endif // DEFINES_13_H

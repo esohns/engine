@@ -335,9 +335,9 @@ engine_glut_283_draw (void)
       float barScale = easeInOutCubic (Common_GL_Tools::map (atomProgress, 0.5f, 1.0f, 0.0f, 1.0f));
       if (row % 2 == 1)
       {
-        glTranslatef (0.0f, -30.0f, 0.0f);
+        glTranslatef (0.0f, -60.0f / 2.0f, 0.0f);
         glScalef (barScale, barScale, barScale);
-        glTranslatef (0.0f, 0.0f, -30.0f);
+        glTranslatef (0.0f, 0.0f, -60.0f / 2.0f);
         cb_data_p->wireframe ? glutWireCylinder (2.0, 60.0, 6, 1)
                              : glutSolidCylinder (2.0, 60.0, 6, 1);
       } // end IF

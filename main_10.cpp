@@ -610,18 +610,18 @@ do_work (int argc_in,
 
       glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
 
-      glutDisplayFunc (engine_glut_229_draw);
-      glutReshapeFunc (engine_glut_229_reshape);
-      glutVisibilityFunc (engine_glut_229_visible);
+      glutDisplayFunc (engine_glut_227_draw);
+      glutReshapeFunc (engine_glut_227_reshape);
+      glutVisibilityFunc (engine_glut_227_visible);
 
-      glutKeyboardFunc (engine_glut_229_key);
-      glutSpecialFunc (engine_glut_229_key_special);
-      glutMouseFunc (engine_glut_229_mouse_button);
-      glutMotionFunc (engine_glut_229_mouse_move);
-      glutPassiveMotionFunc (engine_glut_229_mouse_move);
-      glutTimerFunc (100, engine_glut_229_timer, 0);
+      glutKeyboardFunc (engine_glut_227_key);
+      glutSpecialFunc (engine_glut_227_key_special);
+      glutMouseFunc (engine_glut_227_mouse_button);
+      glutMotionFunc (engine_glut_227_mouse_move);
+      glutPassiveMotionFunc (engine_glut_227_mouse_move);
+      glutTimerFunc (100, engine_glut_227_timer, 0);
 
-      glutCreateMenu (engine_glut_229_menu);
+      glutCreateMenu (engine_glut_227_menu);
       glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
       glutAttachMenu (GLUT_RIGHT_BUTTON);
 

@@ -222,7 +222,7 @@ engine_glut_220_draw (void)
     glRotatef (cb_data_p->i * 180.0f / static_cast<float> (M_PI), 0.0f, 0.0f, 1.0f);
     glTranslatef (90.0f, 0.0f, 0.0f);
     glRotatef (C * 180.0f / static_cast<float> (M_PI), 0.0f, 1.0f, 0.0f);
-    //glColor4f (Q, Q, Q, 1.0f);
+    //glColor3f (Q, Q, Q);
     Common_Image_Tools::HSVToRGB ((cb_data_p->i / (2.0f * static_cast<float> (M_PI))) * 360.0f, 1.0f, 1.0f, r, g, b);
     glColor4f (r, g, b, 1.0f);
     if (cb_data_p->n % cb_data_p->mod == 0)
