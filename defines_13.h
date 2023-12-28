@@ -68,4 +68,11 @@
 #define ENGINE_PGE_288_DEFAULT_MAX_NUMBER_OF_ARCS  1000
 #define ENGINE_PGE_288_DEFAULT_DT                  0.01f
 
+// pge 289
+#define ENGINE_PGE_289_DEFAULT_HEIGHT              600
+#define ENGINE_PGE_289_DEFAULT_WIDTH               800
+#define ENGINE_PGE_289_DEFAULT_STEP                2.0f
+#define ENGINE_PGE_289_DEFAULT_MIN_SIZE            10
+#define ENGINE_PGE_289_DEFAULT_MAX_SIZE            100
+
 #endif // DEFINES_13_H
