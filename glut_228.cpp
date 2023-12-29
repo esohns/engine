@@ -256,11 +256,11 @@ updateBalls (struct Engine_OpenGL_GLUT_228_CBData& CBData_in)
     CBData_in.ballsY[i] += CBData_in.velocY[i] * ENGINE_GLUT_228_DEFAULT_SPEED;
 
     // collide with window edges
-    if (static_cast<int> (CBData_in.ballsX[i] + CBData_in.radii[i]) >= ENGINE_GLUT_228_DEFAULT_WIDTH ||
-        static_cast<int> (CBData_in.ballsX[i] - CBData_in.radii[i]) <= 0)
+    if ((static_cast<int> (CBData_in.ballsX[i] + CBData_in.radii[i]) >= ENGINE_GLUT_228_DEFAULT_WIDTH) ||
+        (static_cast<int> (CBData_in.ballsX[i] - CBData_in.radii[i]) <= 0))
       CBData_in.velocX[i] *= -1.0f;
-    if (static_cast<int> (CBData_in.ballsY[i] + CBData_in.radii[i]) >= ENGINE_GLUT_228_DEFAULT_HEIGHT ||
-        static_cast<int> (CBData_in.ballsY[i] - CBData_in.radii[i]) <= 0)
+    if ((static_cast<int> (CBData_in.ballsY[i] + CBData_in.radii[i]) >= ENGINE_GLUT_228_DEFAULT_HEIGHT) ||
+        (static_cast<int> (CBData_in.ballsY[i] - CBData_in.radii[i]) <= 0))
       CBData_in.velocY[i] *= -1.0f;
   } // end FOR
 }

@@ -11,5 +11,10 @@ void main()
   v_uv.y = v_uv.y * 0.5 + 0.5;
 
   // set position
-  gl_Position = aPosition;
+//  gl_Position = aPosition;
+  vec4 positionVec4 = aPosition;
+  positionVec4.xy = positionVec4.xy * 2.0 - 1.0;
+
+  // send the vertex information on to the fragment shader
+  gl_Position = positionVec4;
 }

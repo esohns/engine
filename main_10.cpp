@@ -840,8 +840,8 @@ do_work (int argc_in,
 
       for (int i = 0; i < ENGINE_GLUT_228_DEFAULT_NUMBER_OF_BALLS; ++i)
         addBall (cb_data_s,
-                 Common_Tools::getRandomNumber (ENGINE_GLUT_228_DEFAULT_WIDTH / 4.0f, ENGINE_GLUT_228_DEFAULT_WIDTH / 4.0f * 3.0f),
-                 Common_Tools::getRandomNumber (ENGINE_GLUT_228_DEFAULT_HEIGHT / 4.0f, ENGINE_GLUT_228_DEFAULT_HEIGHT / 4.0f * 3.0f),
+                 Common_Tools::getRandomNumber (ENGINE_GLUT_228_DEFAULT_WIDTH / 4.0f, (ENGINE_GLUT_228_DEFAULT_WIDTH / 4.0f) * 3.0f),
+                 Common_Tools::getRandomNumber (ENGINE_GLUT_228_DEFAULT_HEIGHT / 4.0f, (ENGINE_GLUT_228_DEFAULT_HEIGHT / 4.0f) * 3.0f),
                  Common_Tools::getRandomNumber (1.0f, ENGINE_GLUT_228_DEFAULT_MAX_RADIUS));
 
       glutMainLoop ();

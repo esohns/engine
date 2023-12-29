@@ -75,4 +75,22 @@
 #define ENGINE_PGE_289_DEFAULT_MIN_SIZE            10
 #define ENGINE_PGE_289_DEFAULT_MAX_SIZE            100
 
+// pge 290
+#define ENGINE_PGE_290_DEFAULT_HEIGHT              800
+#define ENGINE_PGE_290_DEFAULT_WIDTH               800
+#define ENGINE_PGE_290_DEFAULT_NUM                 960
+
+// pge 291
+#define ENGINE_PGE_291_DEFAULT_HEIGHT              800
+#define ENGINE_PGE_291_DEFAULT_WIDTH               800
+
+// pge 292
+#define ENGINE_PGE_292_DEFAULT_HEIGHT              600
+#define ENGINE_PGE_292_DEFAULT_WIDTH               600
+
+// glut 293
+#define ENGINE_GLUT_293_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_293_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_293_DEFAULT_SCALE_FACTOR       30
+
 #endif // DEFINES_13_H
