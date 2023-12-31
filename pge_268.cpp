@@ -30,23 +30,37 @@ PGE_268::OnUserCreate ()
   if (walls_)
   {
     float padding = 0.0f;
-    edges_.push_back (edge (olc::vf2d (padding, 0.0f),
-                            olc::vf2d (padding, static_cast<float> (olc::PixelGameEngine::ScreenHeight ())),
+    olc::vf2d position_1 (padding, 0.0f);
+    olc::vf2d position_2 (padding, static_cast<float> (olc::PixelGameEngine::ScreenHeight ()));
+    edges_.push_back (edge (position_1,
+                            position_2,
                             1.0f,
                             0.0000001f,
                             true));
-    edges_.push_back (edge (olc::vf2d (static_cast<float> (olc::PixelGameEngine::ScreenWidth ()) - padding, static_cast<float> (olc::PixelGameEngine::ScreenHeight ())),
-                            olc::vf2d (static_cast<float> (olc::PixelGameEngine::ScreenWidth ()) - padding, 0.0f),
+    position_1.x = static_cast<float> (olc::PixelGameEngine::ScreenWidth ()) - padding;
+    position_1.y = static_cast<float> (olc::PixelGameEngine::ScreenHeight ());
+    position_2.x = static_cast<float> (olc::PixelGameEngine::ScreenWidth ()) - padding;
+    position_2.y = 0.0f;
+    edges_.push_back (edge (position_1,
+                            position_2,
                             1.0f,
                             0.0000001f,
                             true));
-    edges_.push_back (edge (olc::vf2d (static_cast<float> (olc::PixelGameEngine::ScreenWidth ()), padding),
-                            olc::vf2d (0.0f, padding),
+    position_1.x = static_cast<float> (olc::PixelGameEngine::ScreenWidth ());
+    position_1.y = padding;
+    position_2.x = 0.0f;
+    position_2.y = padding;
+    edges_.push_back (edge (position_1,
+                            position_2,
                             1.0f,
                             0.0000001f,
                             true));
-    edges_.push_back (edge (olc::vf2d (0.0f, static_cast<float> (olc::PixelGameEngine::ScreenHeight ()) - padding),
-                            olc::vf2d (static_cast<float> (olc::PixelGameEngine::ScreenWidth ()), static_cast<float> (olc::PixelGameEngine::ScreenHeight ()) - padding),
+    position_1.x = 0.0f;
+    position_1.y = static_cast<float> (olc::PixelGameEngine::ScreenHeight ()) - padding;
+    position_2.x = static_cast<float> (olc::PixelGameEngine::ScreenWidth ());
+    position_2.y = static_cast<float> (olc::PixelGameEngine::ScreenHeight ()) - padding;
+    edges_.push_back (edge (position_1,
+                            position_2,
                             1.0f,
                             0.0000001f,
                             true));
@@ -116,10 +130,14 @@ PGE_268::generateParticle ()
   static std::mt19937 m (rd ());
   std::normal_distribution<float> dist (main_hue_f, 20.0f);
 
+  olc::vf2d mouse_s (static_cast<float> (olc::PixelGameEngine::GetMouseX ()),
+                     static_cast<float> (olc::PixelGameEngine::GetMouseY ()));
+
   for (int i = 0; i < 150; i++)
   {
     float angle = Common_GL_Tools::map (static_cast<float> (i), 0.0f, 150.0f, 0.0f, 360.0f) + 0.1f;
     angle = glm::radians (angle);
+    olc::vf2d angle_s (std::cos (angle), std::sin (angle));
 
     float r, g, b;
     float hue_f = std::fmod (dist (m) + 360.0f, 360.0f);
@@ -133,9 +151,9 @@ PGE_268::generateParticle ()
     color.b = static_cast<uint8_t> (b * 255.0f);
     color.a =
       static_cast<uint8_t> (Common_GL_Tools::map (Common_Tools::getRandomNumber (0.01f, 0.05f), 0.0f, 100.0f, 0.0f, 255.0f));
-  
-    particles_.push_back (particle (olc::vf2d (static_cast<float> (olc::PixelGameEngine::GetMouseX ()), static_cast<float> (olc::PixelGameEngine::GetMouseY ())),
-                                    olc::vf2d (std::cos (angle), std::sin (angle)),
+
+    particles_.push_back (particle (mouse_s,
+                                    angle_s,
                                     color));
   } // end FOR
 }

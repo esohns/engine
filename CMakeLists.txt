@@ -337,7 +337,7 @@ include_directories (${CMAKE_CURRENT_BINARY_DIR})
 
 ############## next target ###############
 set (engine_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -413,7 +413,7 @@ add_executable (${EXECUTABLE}
                 ${engine_EXE_SRCS})
 
 set (engine_2_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -488,7 +488,7 @@ add_executable (${EXECUTABLE_2}
                 ${engine_2_EXE_SRCS})
 
 set (engine_3_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -563,7 +563,7 @@ add_executable (${EXECUTABLE_3}
                 ${engine_3_EXE_SRCS})
 
 set (engine_4_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -638,7 +638,7 @@ add_executable (${EXECUTABLE_4}
                 ${engine_4_EXE_SRCS})
 
 set (engine_5_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -694,7 +694,7 @@ add_executable (${EXECUTABLE_5}
                 ${engine_5_EXE_SRCS})
 
 set (engine_6_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -749,7 +749,7 @@ add_executable (${EXECUTABLE_6}
                 ${engine_6_EXE_SRCS})
 
 set (engine_7_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -804,7 +804,7 @@ add_executable (${EXECUTABLE_7}
                 ${engine_7_EXE_SRCS})
 
 set (engine_8_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -859,7 +859,7 @@ add_executable (${EXECUTABLE_8}
                 ${engine_8_EXE_SRCS})
 
 set (engine_9_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -914,7 +914,7 @@ add_executable (${EXECUTABLE_9}
                 ${engine_9_EXE_SRCS})
 
 set (engine_10_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -969,7 +969,7 @@ add_executable (${EXECUTABLE_10}
                 ${engine_10_EXE_SRCS})
 
 set (engine_11_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -1024,7 +1024,7 @@ add_executable (${EXECUTABLE_11}
                 ${engine_11_EXE_SRCS})
 
 set (engine_12_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
@@ -1079,7 +1079,7 @@ add_executable (${EXECUTABLE_12}
                 ${engine_12_EXE_SRCS})
 
 set (engine_13_EXE_SRCS
-     ${CMAKE_CURRENT_BINARY_DIR}/config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
      ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
