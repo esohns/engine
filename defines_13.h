@@ -120,4 +120,10 @@
 #define ENGINE_GLUT_298_DEFAULT_W                  500
 #define ENGINE_GLUT_298_DEFAULT_R                  300
 
+// pge 299
+#define ENGINE_PGE_299_DEFAULT_HEIGHT              900
+#define ENGINE_PGE_299_DEFAULT_WIDTH               900
+#define ENGINE_PGE_299_DEFAULT_MIN                 40
+#define ENGINE_PGE_299_DEFAULT_MIN_T               -90
+
 #endif // DEFINES_13_H
