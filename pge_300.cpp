@@ -3,7 +3,6 @@
 #include "pge_300.h"
 
 #include "ace/Log_Msg.h"
-#include "ace/OS.h"
 
 #include "engine_common.h"
 
@@ -14,6 +13,7 @@ PGE_300::PGE_300 ()
  , X_ (0)
  , Y_ (0)
  , P_ (0.0f)
+ , color_ (false)
 {
   sAppName = ACE_TEXT_ALWAYS_CHAR ("Example 300");
 }
@@ -33,6 +33,9 @@ bool
 PGE_300::OnUserUpdate (float fElapsedTime)
 {
   static int32_t half_height_i = olc::PixelGameEngine::ScreenHeight () / 2;
+
+  if (olc::PixelGameEngine::GetKey (olc::SPACE).bPressed)
+    color_ = !color_;
 
   while (Y_ < half_height_i)
   {
@@ -55,7 +58,21 @@ PGE_300::OnUserUpdate (float fElapsedTime)
         KY = KY * ENGINE_PGE_300_DEFAULT_B;
       } // end IF
     } // TT
-    olc::Pixel color (static_cast<uint8_t> (std::sin ((KY - KX) / 500.0f) * 125.0f + 125.0f), 0, 0, 255U);
+    olc::Pixel color;
+    if (color_)
+    {
+      uint8_t red_i   = static_cast<uint8_t> (std::sin ((KY - KX) / 500.0f) * 125.0f + 125.0f);
+      uint8_t green_i = static_cast<uint8_t> (std::cos ((KY - KX) / 500.0f) * 125.0f + 125.0f);
+      uint8_t blue_i  = static_cast<uint8_t> (std::tan ((KY - KX) / 500.0f) * 125.0f + 125.0f);
+      color.r = red_i;
+      color.g = green_i;
+      color.b = blue_i;
+    } // end IF
+    else
+    {
+      uint8_t gray_i = static_cast<uint8_t> (std::sin ((KY - KX) / 500.0f) * 125.0f + 125.0f);
+      color.r = color.g = color.b = gray_i;
+    } // end ELSE
     olc::PixelGameEngine::Draw (olc::PixelGameEngine::ScreenWidth () - 1, Y_ + half_height_i, color);
     ++Y_;
   } // Y

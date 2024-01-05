@@ -18,6 +18,7 @@ class PGE_300
   int   X_;
   int   Y_;
   float P_;
+  bool  color_;
 };
 
 #endif // PGE_300_H
