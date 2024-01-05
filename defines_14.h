@@ -31,4 +31,10 @@
 #define ENGINE_PGE_300_DEFAULT_H                   4.0f
 #define ENGINE_PGE_300_DEFAULT_B                   2.0f;
 
+// pge 301
+#define ENGINE_PGE_301_DEFAULT_HEIGHT              900
+#define ENGINE_PGE_301_DEFAULT_WIDTH               900
+#define ENGINE_PGE_301_DEFAULT_N                   32
+#define ENGINE_PGE_301_DEFAULT_LEVEL               10
+
 #endif // DEFINES_14_H

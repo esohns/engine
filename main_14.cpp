@@ -45,10 +45,12 @@
 #define OLC_PGE_APPLICATION
 #define OPENSIMPLEXNOISE_STATIC_CONSTANTS
 #include "pge_300.h"
+#include "pge_301.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 300,
+  ENGINE_MODE_301,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -216,6 +218,21 @@ do_work (int argc_in,
     {
       PGE_300 example;
       if (example.Construct (ENGINE_PGE_300_DEFAULT_WIDTH, ENGINE_PGE_300_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_301:
+    {
+      PGE_301 example;
+      if (example.Construct (ENGINE_PGE_301_DEFAULT_WIDTH, ENGINE_PGE_301_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
