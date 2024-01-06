@@ -37,4 +37,9 @@
 #define ENGINE_PGE_301_DEFAULT_N                   32
 #define ENGINE_PGE_301_DEFAULT_LEVEL               10
 
+// glut 302
+#define ENGINE_GLUT_302_DEFAULT_HEIGHT             768
+#define ENGINE_GLUT_302_DEFAULT_WIDTH              1024
+#define ENGINE_GLUT_302_DEFAULT_SCALE_FACTOR       30
+
 #endif // DEFINES_14_H
