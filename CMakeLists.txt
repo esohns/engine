@@ -1148,6 +1148,8 @@ set (engine_14_EXE_SRCS
      pge_301.h
      glut_302.cpp
      glut_302.h
+     pge_303.cpp
+     pge_303.h
      stdafx.h)
 
 set (EXECUTABLE_14 engine_14)

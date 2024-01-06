@@ -47,12 +47,14 @@
 #include "pge_300.h"
 #include "pge_301.h"
 #include "glut_302.h"
+#include "pge_303.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 300,
   ENGINE_MODE_301,
   ENGINE_MODE_302,
+  ENGINE_MODE_303,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -433,6 +435,21 @@ do_work (int argc_in,
       glutMainLoop ();
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_303:
+    {
+      PGE_303 example;
+      if (example.Construct (ENGINE_PGE_303_DEFAULT_WIDTH, ENGINE_PGE_303_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }
