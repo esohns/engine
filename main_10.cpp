@@ -272,6 +272,8 @@ do_work (int argc_in,
       cb_data_s.deltaAngle = 0.0f;
       cb_data_s.xOrigin = -1;
 
+      cb_data_s.writeFrames = 0; // *TODO*: 200 gives a(n almost) complete loop
+
       // initialize GLUT
       glutInit (&argc_in, argv_in);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);

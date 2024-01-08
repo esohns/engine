@@ -16,6 +16,8 @@
 
 #include "common_tools.h"
 
+#include "common_file_tools.h"
+
 #include "common_gl_defines.h"
 #include "common_gl_tools.h"
 
@@ -200,13 +202,16 @@ engine_glut_220_draw (void)
   glPolygonMode (GL_FRONT_AND_BACK,
                  cb_data_p->wireframe ? GL_LINE : GL_FILL);
 
-  // draw a red x-axis, a green y-axis, and a blue z-axis. Each of the
-  // axes are 100 units long
-  glBegin (GL_LINES);
-  glColor4f (1.0f, 0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (100, 0, 0);
-  glColor4f (0.0f, 1.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
-  glColor4f (0.0f, 0.0f, 1.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
-  glEnd ();
+  if (cb_data_p->writeFrames == 0)
+  {
+    // draw a red x-axis, a green y-axis, and a blue z-axis. Each of the
+    // axes are 100 units long
+    glBegin (GL_LINES);
+    glColor3f (1.0f, 0.0f, 0.0f); glVertex3i (0, 0, 0); glVertex3i (100, 0, 0);
+    glColor3f (0.0f, 1.0f, 0.0f); glVertex3i (0, 0, 0); glVertex3i (0, 100, 0);
+    glColor3f (0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
+    glEnd ();
+  } // end IF
 
   glRotatef (cb_data_p->f * 180.0f / static_cast<float> (M_PI), 1.0f, 0.0f, 0.0f);
 
@@ -245,6 +250,48 @@ engine_glut_220_draw (void)
   cb_data_p->f += 0.01f;
 
   glutSwapBuffers ();
+
+  // *IMPORTANT NOTE*: skip the first frame (it's black)
+  static bool is_first_b = true;
+  if (is_first_b)
+  {
+    is_first_b = false;
+    return;
+  } // end IF
+  static int frame_count_i = 1;
+  if (cb_data_p->writeFrames > 0 &&
+      frame_count_i % 3 == 0)
+  {
+    static int counter_i = 0;
+    GLubyte pixels_a[4 * ENGINE_GLUT_220_DEFAULT_WIDTH * ENGINE_GLUT_220_DEFAULT_HEIGHT];
+    glReadPixels (0, 0, ENGINE_GLUT_220_DEFAULT_WIDTH, ENGINE_GLUT_220_DEFAULT_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, &pixels_a);
+    Common_Image_Resolution_t resolution_s;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+    resolution_s.cx = ENGINE_GLUT_220_DEFAULT_WIDTH;
+    resolution_s.cy = ENGINE_GLUT_220_DEFAULT_HEIGHT;
+#else
+    resolution_s.width = ENGINE_GLUT_220_DEFAULT_WIDTH;
+    resolution_s.height = ENGINE_GLUT_220_DEFAULT_HEIGHT;
+#endif // ACE_WIN32 || ACE_WIN64
+    uint8_t* buffers_a[1];
+    buffers_a[0] = pixels_a;
+    std::string filename_string = Common_File_Tools::getTempDirectory ();
+    filename_string += ACE_DIRECTORY_SEPARATOR_STR_A;
+    filename_string += ACE_TEXT_ALWAYS_CHAR ("output_");
+    std::ostringstream converter;
+    converter << counter_i++;
+    filename_string += converter.str ();
+    filename_string += ACE_TEXT_ALWAYS_CHAR (".bmp");
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
+    Common_Image_Tools::saveBMP (resolution_s,
+                                 32,
+                                 buffers_a,
+                                 filename_string);
+#endif // ACE_WIN32 || ACE_WIN64
+
+    cb_data_p->writeFrames--;
+  } // end IF
+  ++frame_count_i;
 }
 
 void

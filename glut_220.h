@@ -34,6 +34,9 @@ struct Engine_OpenGL_GLUT_220_CBData
   float                   angle;
   float                   deltaAngle;
   int                     xOrigin;
+
+  // save
+  int                     writeFrames;
 };
 
 #endif // GLUT_220_H
