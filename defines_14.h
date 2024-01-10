@@ -47,4 +47,9 @@
 #define ENGINE_PGE_303_DEFAULT_WIDTH               1024
 #define ENGINE_PGE_303_DEFAULT_INTERVAL_MS         3000.0f
 
+// glut 304
+#define ENGINE_GLUT_304_DEFAULT_HEIGHT             768
+#define ENGINE_GLUT_304_DEFAULT_WIDTH              1024
+#define ENGINE_GLUT_304_DEFAULT_SCALE_FACTOR       30
+
 #endif // DEFINES_14_H
