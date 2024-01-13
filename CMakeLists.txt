@@ -1156,6 +1156,8 @@ set (engine_14_EXE_SRCS
      pge_305.h
      pge_306.cpp
      pge_306.h
+     pge_307.cpp
+     pge_307.h
      stdafx.h)
 
 set (EXECUTABLE_14 engine_14)

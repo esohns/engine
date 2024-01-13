@@ -51,6 +51,7 @@
 #include "glut_304.h"
 #include "pge_305.h"
 #include "pge_306.h"
+#include "pge_307.h"
 
 enum Engine_ModeType
 {
@@ -61,6 +62,7 @@ enum Engine_ModeType
   ENGINE_MODE_304,
   ENGINE_MODE_305,
   ENGINE_MODE_306,
+  ENGINE_MODE_307,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -678,6 +680,21 @@ do_work (int argc_in,
     {
       PGE_306 example;
       if (example.Construct (ENGINE_PGE_306_DEFAULT_WIDTH, ENGINE_PGE_306_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_307:
+    {
+      PGE_307 example;
+      if (example.Construct (ENGINE_PGE_307_DEFAULT_WIDTH, ENGINE_PGE_307_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
