@@ -52,4 +52,18 @@
 #define ENGINE_GLUT_304_DEFAULT_WIDTH              1024
 #define ENGINE_GLUT_304_DEFAULT_SCALE_FACTOR       30
 
+// pge 305
+#define ENGINE_PGE_305_DEFAULT_HEIGHT              690
+#define ENGINE_PGE_305_DEFAULT_WIDTH               920
+#define ENGINE_PGE_305_DEFAULT_ACCEPTANCE          0.001f
+#define ENGINE_PGE_305_DEFAULT_N                   1000
+#define ENGINE_PGE_305_DEFAULT_W                   600
+#define ENGINE_PGE_305_DEFAULT_STEPS               60*7
+
+// pge 306
+#define ENGINE_PGE_306_DEFAULT_HEIGHT              690
+#define ENGINE_PGE_306_DEFAULT_WIDTH               920
+#define ENGINE_PGE_306_DEFAULT_R                   240
+//#define ENGINE_PGE_306_DEFAULT_ALPHA_DECAY         175
+
 #endif // DEFINES_14_H
