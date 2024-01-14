@@ -15,7 +15,7 @@ vec3 hsv2rgb (vec3 c)
     return c.z * mix (K.xxx, clamp (p - K.xxx, 0.0, 1.0), c.y);
 }
 
-void main()
+void main ()
 {
   float x = vTexCoord.x * WIDTH;
   float y = vTexCoord.y * HEIGHT;
@@ -32,8 +32,8 @@ void main()
 
   if (0.9 < v && v < 1.1)
   {
-    float a = (v - 0.9) * 4.;
-    gl_FragColor = vec4 (hsv2rgb (vec3 (a, 1., 1.)), 1.0);
+    float a = (v - 0.9) * 4.0;
+    gl_FragColor = vec4 (hsv2rgb (vec3 (a, 1.0, 1.0)), 1.0);
   }
   else
     gl_FragColor = vec4 (0.0, 0.0, 0.0, 1.0);
