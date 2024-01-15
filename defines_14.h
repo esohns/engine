@@ -108,4 +108,13 @@
 #define ENGINE_GLUT_312_DEFAULT_MAX_SPEED          15
 #define ENGINE_GLUT_312_DEFAULT_RADIUS             20
 
+// glut 313
+#define ENGINE_GLUT_313_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_313_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_313_DEFAULT_SCALE_FACTOR       30
+
+// pge 314
+#define ENGINE_PGE_314_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_314_DEFAULT_WIDTH               1112
+
 #endif // DEFINES_14_H
