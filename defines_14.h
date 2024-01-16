@@ -117,4 +117,8 @@
 #define ENGINE_PGE_314_DEFAULT_HEIGHT              834
 #define ENGINE_PGE_314_DEFAULT_WIDTH               1112
 
+// glut 315
+#define ENGINE_GLUT_315_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_315_DEFAULT_WIDTH              1112
+
 #endif // DEFINES_14_H
