@@ -132,4 +132,17 @@
 #define ENGINE_GLUT_317_DEFAULT_SIZE               20
 #define ENGINE_GLUT_317_DEFAULT_O                  36
 
+// glut 318
+#define ENGINE_GLUT_318_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_318_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_318_DEFAULT_W                  834
+
+// pge 319
+#define ENGINE_PGE_319_DEFAULT_HEIGHT              800
+#define ENGINE_PGE_319_DEFAULT_WIDTH               800
+#define ENGINE_PGE_319_DEFAULT_MIN_SIZE            3
+#define ENGINE_PGE_319_DEFAULT_MAX_SIZE            15
+#define ENGINE_PGE_319_DEFAULT_NUMBER_OF_BALLS     600
+#define ENGINE_PGE_319_DEFAULT_ALPHA_DECAY         5
+
 #endif // DEFINES_14_H
