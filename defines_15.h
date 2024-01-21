@@ -35,4 +35,14 @@
 #define ENGINE_GLUT_322_DEFAULT_WIDTH              1112
 #define ENGINE_GLUT_322_DEFAULT_SCALE_FACTOR       30
 
+// pge 323
+#define ENGINE_PGE_323_DEFAULT_HEIGHT              675
+#define ENGINE_PGE_323_DEFAULT_WIDTH               900
+
+// pge 324
+#define ENGINE_PGE_324_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_324_DEFAULT_WIDTH               1112
+#define ENGINE_PGE_324_DEFAULT_RADIUS              250
+#define ENGINE_PGE_324_DEFAULT_WAVES               24
+
 #endif // DEFINES_15_H
