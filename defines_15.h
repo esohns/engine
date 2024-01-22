@@ -45,4 +45,13 @@
 #define ENGINE_PGE_324_DEFAULT_RADIUS              250
 #define ENGINE_PGE_324_DEFAULT_WAVES               24
 
+// pge 325
+#define ENGINE_PGE_325_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_325_DEFAULT_WIDTH               1112
+#define ENGINE_PGE_325_DEFAULT_SIZE                7
+#define ENGINE_PGE_325_DEFAULT_ZOOM                1.5f
+#define ENGINE_PGE_325_DEFAULT_R_MIN               1
+#define ENGINE_PGE_325_DEFAULT_R_MAX               13
+#define ENGINE_PGE_325_DEFAULT_MULT                5
+
 #endif // DEFINES_15_H
