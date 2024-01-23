@@ -54,4 +54,10 @@
 #define ENGINE_PGE_325_DEFAULT_R_MAX               13
 #define ENGINE_PGE_325_DEFAULT_MULT                5
 
+// pge 326
+#define ENGINE_PGE_326_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_326_DEFAULT_WIDTH               1112
+#define ENGINE_PGE_326_DEFAULT_SIDES               5
+#define ENGINE_PGE_326_DEFAULT_STEPS               100
+
 #endif // DEFINES_15_H
