@@ -60,4 +60,14 @@
 #define ENGINE_PGE_326_DEFAULT_SIDES               5
 #define ENGINE_PGE_326_DEFAULT_STEPS               100
 
+// glut 327
+#define ENGINE_GLUT_327_DEFAULT_HEIGHT             680
+#define ENGINE_GLUT_327_DEFAULT_WIDTH              906
+#define ENGINE_GLUT_327_DEFAULT_W                  680
+
+// glut 328
+#define ENGINE_GLUT_328_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_328_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_328_DEFAULT_FPS                60
+
 #endif // DEFINES_15_H
