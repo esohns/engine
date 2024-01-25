@@ -70,4 +70,9 @@
 #define ENGINE_GLUT_328_DEFAULT_WIDTH              1112
 #define ENGINE_GLUT_328_DEFAULT_FPS                60
 
+// glut 329
+#define ENGINE_GLUT_329_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_329_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_329_DEFAULT_NUMBER_OF_CIRCLES  100
+
 #endif // DEFINES_15_H
