@@ -300,12 +300,12 @@ drawCircle (float cx, float cy, float r, int num_segments)
   
   for (int ii = 0; ii < num_segments; ii++)
   {
-    float theta = 2.0f * static_cast<float> (M_PI) * float(ii) / float (num_segments);//get the current angle
+    float theta = 2.0f * static_cast<float> (M_PI) * float(ii) / float (num_segments);
 
-    float x = r * cosf(theta);//calculate the x component
-    float y = r * sinf(theta);//calculate the y component
+    float x = r * std::cos (theta);
+    float y = r * std::sin (theta);
 
-    glVertex2f (x + cx, y + cy);//output vertex
+    glVertex2f (x + cx, y + cy);
   } // end FOR
 
   glEnd ();
