@@ -1,12 +1,6 @@
 #ifndef GLUT_233_H
 #define GLUT_233_H
 
-#if defined (ACE_WIN32) || defined (ACE_WIN64)
-#include "gl/GL.h"
-#else
-#include "GL/gl.h"
-#endif // ACE_WIN32 || ACE_WIN64
-
 #include "common_gl_common.h"
 
 // GLUT routines

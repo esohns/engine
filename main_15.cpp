@@ -3,7 +3,9 @@
 #include <iostream>
 #include <string>
 
+#if defined (GLEW_SUPPORT)
 #include "GL/glew.h"
+#endif // GLEW_SUPPORT
 #include "GL/freeglut.h"
 
 #include "ace/config-lite.h"
@@ -60,6 +62,7 @@
 #include "glut_333.h"
 #include "pge_334.h"
 #include "glut_335.h"
+#include "pge_336.h"
 
 enum Engine_ModeType
 {
@@ -79,6 +82,7 @@ enum Engine_ModeType
   ENGINE_MODE_333,
   ENGINE_MODE_334,
   ENGINE_MODE_335,
+  ENGINE_MODE_336,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -345,7 +349,7 @@ do_work (int argc_in,
       array_2[0] = static_cast<GLint> (file_size_i);
       array_2[1] = static_cast<GLint> (NULL);
       glShaderSource (vertexShader_id, 1, array_a, array_2);
-      delete [] data_p;
+      delete [] data_p; data_p = NULL;
       glCompileShader (vertexShader_id);
       GLint success = 0;
       glGetShaderiv (vertexShader_id, GL_COMPILE_STATUS, &success);
@@ -1256,6 +1260,21 @@ do_work (int argc_in,
       glutMainLoop ();
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_336:
+    {
+      PGE_336 example;
+      if (example.Construct (ENGINE_PGE_336_DEFAULT_WIDTH, ENGINE_PGE_336_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }

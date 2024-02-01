@@ -1229,6 +1229,8 @@ set (engine_15_EXE_SRCS
      pge_334.h
      glut_335.cpp
      glut_335.h
+     pge_336.cpp
+     pge_336.h
      stdafx.h)
 
 set (EXECUTABLE_15 engine_15)

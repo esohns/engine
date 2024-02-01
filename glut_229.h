@@ -1,12 +1,6 @@
 #ifndef GLUT_229_H
 #define GLUT_229_H
 
-#if defined (ACE_WIN32) || defined (ACE_WIN64)
-#include "gl/GL.h"
-#else
-#include "GL/gl.h"
-#endif // ACE_WIN32 || ACE_WIN64
-
 #include "noise/noise.h"
 //#include "opensimplexnoise.h"
 

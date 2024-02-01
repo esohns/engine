@@ -197,12 +197,13 @@ engine_glut_335_draw (void)
   glColor3f (0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
 
-  glColor3f (1.0f, 1.0f, 1.0f);
+  //glColor3f (1.0f, 1.0f, 1.0f);
 
   glRotatef ((180.0f / static_cast<float> (M_PI)) * (cb_data_p->initRot[0] + cb_data_p->count / 300.0f), 1.0f, 0.0f, 0.0f);
   glRotatef ((180.0f / static_cast<float> (M_PI)) * (cb_data_p->initRot[1] + cb_data_p->count / 100.0f * cb_data_p->direction), 0.0f, 1.0f, 0.0f);
   glRotatef ((180.0f / static_cast<float> (M_PI)) * (cb_data_p->initRot[2] + cb_data_p->count / 200.0f), 0.0f, 0.0f, 1.0f);
 
+  // *TODO*
   //directionalLight(0, 0, 100, -1, 1, -1);
   //ambientLight(220, 20, 70);
 
