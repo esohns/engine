@@ -52,33 +52,31 @@ PGE_336::OnUserUpdate (float fElapsedTime)
 
     float disp = Common_GL_Tools::map (static_cast<float> ((*iterator).r), 100.0f, 1092.0f, 5.0f, 0.0f);
     if ((*iterator).r < 100)
-      disp = Common_GL_Tools::map (static_cast<float> ((*iterator).r), 10.0f, 112.0f, 2.0f, 1.0f);
+      disp = Common_GL_Tools::map (static_cast<float> ((*iterator).r), 12.0f, 100.0f, 2.0f, 1.0f);
 
     static float aberr = 0.015f;
     olc::Pixel color (255U, 0, 0, 255U);
     float theta = (*iterator).theta + t * disp;
     float r =
       (*iterator).r + (1.0f + std::cos (theta * 7.0f + static_cast<float> (M_PI) + t * 4.0f)) * disp * 14.0f;
-    olc::PixelGameEngine::FillCircle (center_s.x + static_cast<int32_t> (r * std::cos (theta)), center_s.y + static_cast<int32_t> (r * std::sin (theta)), 3,
-                                      color);
+    olc::PixelGameEngine::FillCircle (center_s.x + static_cast<int32_t> (r * std::cos (theta)), center_s.y + static_cast<int32_t> (r * std::sin (theta)),
+                                      3, color);
 
     t += aberr;
-    color = olc::BLACK;
-    color.g = 255U;
+    color.r = 0U; color.g = 255U;
     theta = (*iterator).theta + t * disp;
     r =
       (*iterator).r + (1.0f + std::cos (theta * 7.0f + static_cast<float> (M_PI) + t * 4.0f)) * disp * 14.0f;
-    olc::PixelGameEngine::FillCircle (center_s.x + static_cast<int32_t> (r * std::cos (theta)), center_s.y + static_cast<int32_t> (r * std::sin (theta)), 3,
-                                      color);
+    olc::PixelGameEngine::FillCircle (center_s.x + static_cast<int32_t> (r * std::cos (theta)), center_s.y + static_cast<int32_t> (r * std::sin (theta)),
+                                      3, color);
 
     t += aberr;
-    color = olc::BLACK;
-    color.b = 255U;
+    color.g = 0U; color.b = 255U;
     theta = (*iterator).theta + t * disp;
     r =
       (*iterator).r + (1.0f + std::cos (theta * 7.0f + static_cast<float> (M_PI) + t * 4.0f)) * disp * 14.0f;
-    olc::PixelGameEngine::FillCircle (center_s.x + static_cast<int32_t> (r * std::cos (theta)), center_s.y + static_cast<int32_t> (r * std::sin (theta)), 3,
-                                      color);
+    olc::PixelGameEngine::FillCircle (center_s.x + static_cast<int32_t> (r * std::cos (theta)), center_s.y + static_cast<int32_t> (r * std::sin (theta)),
+                                      3, color);
   } // end FOR
 
   ++frame_count_i;

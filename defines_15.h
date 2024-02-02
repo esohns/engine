@@ -117,4 +117,9 @@
 #define ENGINE_PGE_336_DEFAULT_HEIGHT              834
 #define ENGINE_PGE_336_DEFAULT_WIDTH               1112
 
+// pge 337
+#define ENGINE_PGE_337_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_337_DEFAULT_WIDTH               1112
+#define ENGINE_PGE_337_DEFAULT_ALPHA_DECAY         15
+
 #endif // DEFINES_15_H
