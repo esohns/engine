@@ -64,6 +64,8 @@
 #include "glut_335.h"
 #include "pge_336.h"
 #include "pge_337.h"
+#include "glut_338.h"
+#include "pge_339.h"
 
 enum Engine_ModeType
 {
@@ -85,6 +87,8 @@ enum Engine_ModeType
   ENGINE_MODE_335,
   ENGINE_MODE_336,
   ENGINE_MODE_337,
+  ENGINE_MODE_338,
+  ENGINE_MODE_339,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1284,6 +1288,169 @@ do_work (int argc_in,
     {
       PGE_337 example;
       if (example.Construct (ENGINE_PGE_337_DEFAULT_WIDTH, ENGINE_PGE_337_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_338:
+    {
+      struct Engine_OpenGL_GLUT_338_CBData cb_data_s;
+      cb_data_s.centerVector.x = 0.0f;
+      cb_data_s.centerVector.y = 0.0f;
+      cb_data_s.centerVector.z = 30.0f;
+      cb_data_s.xProjVector.x = 1.0f;
+      cb_data_s.xProjVector.y = 0.0f;
+      cb_data_s.xProjVector.z = 0.0f;
+      cb_data_s.yProjVector.x = 0.0f;
+      cb_data_s.yProjVector.y = 0.0f;
+      cb_data_s.yProjVector.z = 0.0f;
+      cb_data_s.zProjVector.x = 0.0f;
+      cb_data_s.zProjVector.y = 0.0f;
+      cb_data_s.zProjVector.z = 1.0f;
+      cb_data_s.scaleFactor = ENGINE_GLUT_338_DEFAULT_SCALE_FACTOR;
+      cb_data_s.dt = ENGINE_GLUT_338_DEFAULT_DT;
+      cb_data_s.zoom = ENGINE_GLUT_338_DEFAULT_ZOOM;
+      std::vector<float> zero_a;
+      zero_a.push_back (0.0f);
+      std::vector<float> temp_a;
+      temp_a.push_back (-10.0f);
+      temp_a.push_back ( 10.0f);
+      temp_a.push_back (  0.0f);
+      std::vector<float> temp_2;
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      std::vector<std::vector<float> > row_a;
+      row_a.push_back (zero_a);
+      row_a.push_back (temp_a);
+      row_a.push_back (temp_2);
+      cb_data_s.coefficients.push_back (row_a);
+      temp_a.clear (); temp_2.clear (); row_a.clear ();
+      temp_a.push_back ( 28.0f);
+      temp_a.push_back ( -1.0f);
+      temp_a.push_back (  0.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (-1.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      row_a.push_back (zero_a);
+      row_a.push_back (temp_a);
+      row_a.push_back (temp_2);
+      cb_data_s.coefficients.push_back (row_a);
+      temp_a.clear (); temp_2.clear (); row_a.clear ();
+      temp_a.push_back (  0.0f);
+      temp_a.push_back (  0.0f);
+      temp_a.push_back ( -2.66f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (1.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      temp_2.push_back (0.0f);
+      row_a.push_back (zero_a);
+      row_a.push_back (temp_a);
+      row_a.push_back (temp_2);
+      cb_data_s.coefficients.push_back (row_a);
+      std::vector<int> temp_3;
+      temp_3 = {0, 0};
+      cb_data_s.coefficients2oGuide.push_back (temp_3);
+      temp_3 = {0, 1};
+      cb_data_s.coefficients2oGuide.push_back (temp_3);
+      temp_3 = {0, 2};
+      cb_data_s.coefficients2oGuide.push_back (temp_3);
+      temp_3 = {1, 1};
+      cb_data_s.coefficients2oGuide.push_back (temp_3);
+      temp_3 = {1, 2};
+      cb_data_s.coefficients2oGuide.push_back (temp_3);
+      temp_3 = {2, 2};
+      cb_data_s.coefficients2oGuide.push_back (temp_3);
+      for (int i = 0; i < ENGINE_GLUT_338_DEFAULT_NUMBER_OF_PARTICLES; i++)
+      {
+        static float ff = 12.0f;
+        cb_data_s.particles.push_back (particle ((Common_Tools::getRandomNumber (0.0f, 2.0f) - 1.0f) * ff + 0.3f,
+                                                 (Common_Tools::getRandomNumber (0.0f, 2.0f) - 1.0f) * ff,
+                                                 (Common_Tools::getRandomNumber (0.0f, 2.0f) - 1.0f) * ff + 1.0f));
+      } // end FOR
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 2500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_338_DEFAULT_WIDTH, ENGINE_GLUT_338_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 338");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glEnable (GL_DEPTH_TEST);
+
+      //glEnable (GL_LIGHTING);
+      //glEnable (GL_LIGHT0);
+      //glEnable (GL_LIGHT1);
+      //glEnable (GL_LIGHT2);
+      //glDisable (GL_COLOR_MATERIAL);
+
+      glEnable (GL_BLEND);
+      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      //glEnable (GL_NORMALIZE);
+
+      //glEnable (GL_CULL_FACE);
+      //glCullFace (GL_FRONT);
+      //glFrontFace (GL_CCW);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_338_draw);
+      glutReshapeFunc (engine_glut_338_reshape);
+      glutVisibilityFunc (engine_glut_338_visible);
+
+      glutKeyboardFunc (engine_glut_338_key);
+      glutSpecialFunc (engine_glut_338_key_special);
+      glutMouseFunc (engine_glut_338_mouse_button);
+      glutMotionFunc (engine_glut_338_mouse_move);
+      glutPassiveMotionFunc (engine_glut_338_mouse_move);
+      glutTimerFunc (100, engine_glut_338_timer, 0);
+
+      glutCreateMenu (engine_glut_338_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_339:
+    {
+      PGE_339 example;
+      if (example.Construct (ENGINE_PGE_339_DEFAULT_WIDTH, ENGINE_PGE_339_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
