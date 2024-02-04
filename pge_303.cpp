@@ -129,7 +129,8 @@ PGE_303::gradients (int ppf)
       Common_GL_Tools::map (points_[pointer_].x, static_cast<float> (0.0f), static_cast<float> (olc::PixelGameEngine::ScreenWidth () - 1), -1.0f, 1.0f);
     float gY =
       Common_GL_Tools::map (points_[pointer_].y, static_cast<float> (0.0f), static_cast<float> (olc::PixelGameEngine::ScreenHeight () - 1), -1.0f, 1.0f);
-    float d = sdf (olc::vf2d (gX, gY));
+    olc::vf2d temp (gX, gY);
+    float d = sdf (temp);
 
     olc::Pixel c;
     float r, g, b;
