@@ -47,10 +47,14 @@
 #define OLC_PGE_APPLICATION
 #define OPENSIMPLEXNOISE_STATIC_CONSTANTS
 #include "pge_340.h"
+#include "pge_341.h"
+#include "pge_342.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 340,
+  ENGINE_MODE_341,
+  ENGINE_MODE_342,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -218,6 +222,36 @@ do_work (int argc_in,
     {
       PGE_340 example;
       if (example.Construct (ENGINE_PGE_340_DEFAULT_WIDTH, ENGINE_PGE_340_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_341:
+    {
+      PGE_341 example;
+      if (example.Construct (ENGINE_PGE_341_DEFAULT_WIDTH, ENGINE_PGE_341_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_342:
+    {
+      PGE_342 example;
+      if (example.Construct (ENGINE_PGE_342_DEFAULT_WIDTH, ENGINE_PGE_342_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?

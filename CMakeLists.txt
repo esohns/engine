@@ -1254,6 +1254,10 @@ set (engine_16_EXE_SRCS
      main_16.cpp
      pge_340.cpp
      pge_340.h
+     pge_341.cpp
+     pge_341.h
+     pge_342.cpp
+     pge_342.h
      stdafx.h)
 
 set (EXECUTABLE_16 engine_16)
