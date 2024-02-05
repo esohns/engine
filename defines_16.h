@@ -53,4 +53,9 @@
 #define ENGINE_GLUT_345_DEFAULT_HEIGHT             690
 #define ENGINE_GLUT_345_DEFAULT_WIDTH              920
 
+// pge 346
+#define ENGINE_PGE_346_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_346_DEFAULT_WIDTH               1112
+//#define ENGINE_PGE_346_DEFAULT_ALPHA_DECAY         15
+
 #endif // DEFINES_16_H
