@@ -1266,6 +1266,10 @@ set (engine_16_EXE_SRCS
      glut_345.h
      pge_346.cpp
      pge_346.h
+     glut_347.cpp
+     glut_347.h
+     glut_348.cpp
+     glut_348.h
      stdafx.h)
 
 set (EXECUTABLE_16 engine_16)
@@ -1705,6 +1709,8 @@ install (FILES
          "glut_321.frag"
          "glut_322.vert"
          "glut_322.frag"
+         "glut_347.vert"
+         "glut_347.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"

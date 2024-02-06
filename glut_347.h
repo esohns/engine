@@ -1,5 +1,5 @@
-#ifndef GLUT_322_H
-#define GLUT_322_H
+#ifndef GLUT_347_H
+#define GLUT_347_H
 
 #include "GL/glew.h"
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
@@ -8,23 +8,21 @@
 #include "GL/gl.h"
 #endif // ACE_WIN32 || ACE_WIN64
 
-#include "glm/glm.hpp"
-
 #include "common_gl_common.h"
 
 // GLUT routines
-void engine_glut_322_reshape (int, int);
-void engine_glut_322_key (unsigned char, int, int);
-void engine_glut_322_key_special (int, int, int);
-void engine_glut_322_menu (int);
-void engine_glut_322_mouse_button (int, int, int, int);
-void engine_glut_322_mouse_move (int, int);
-void engine_glut_322_timer (int);
-void engine_glut_322_draw (void);
-void engine_glut_322_idle (void);
-void engine_glut_322_visible (int);
+void engine_glut_347_reshape (int, int);
+void engine_glut_347_key (unsigned char, int, int);
+void engine_glut_347_key_special (int, int, int);
+void engine_glut_347_menu (int);
+void engine_glut_347_mouse_button (int, int, int, int);
+void engine_glut_347_mouse_move (int, int);
+void engine_glut_347_timer (int);
+void engine_glut_347_draw (void);
+void engine_glut_347_idle (void);
+void engine_glut_347_visible (int);
 
-struct Engine_OpenGL_GLUT_322_CBData
+struct Engine_OpenGL_GLUT_347_CBData
 {
   //
 
@@ -59,4 +57,4 @@ struct Engine_OpenGL_GLUT_322_CBData
 #endif // ACE_WIN32 || ACE_WIN64 || ACE_LINUX
 };
 
-#endif // GLUT_322_H
+#endif // GLUT_347_H

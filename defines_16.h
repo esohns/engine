@@ -58,4 +58,13 @@
 #define ENGINE_PGE_346_DEFAULT_WIDTH               1112
 //#define ENGINE_PGE_346_DEFAULT_ALPHA_DECAY         15
 
+// glut 347
+#define ENGINE_GLUT_347_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_347_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_347_DEFAULT_SCALE_FACTOR       30
+
+// glut 348
+#define ENGINE_GLUT_348_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_348_DEFAULT_WIDTH              1112
+
 #endif // DEFINES_16_H
