@@ -1270,6 +1270,12 @@ set (engine_16_EXE_SRCS
      glut_347.h
      glut_348.cpp
      glut_348.h
+     pge_349.cpp
+     pge_349.h
+     pge_350.cpp
+     pge_350.h
+     glut_351.cpp
+     glut_351.h
      stdafx.h)
 
 set (EXECUTABLE_16 engine_16)

@@ -67,4 +67,22 @@
 #define ENGINE_GLUT_348_DEFAULT_HEIGHT             834
 #define ENGINE_GLUT_348_DEFAULT_WIDTH              1112
 
+// pge 349
+#define ENGINE_PGE_349_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_349_DEFAULT_WIDTH               1112
+#define ENGINE_PGE_349_DEFAULT_C_SIZE              ENGINE_PGE_349_DEFAULT_HEIGHT
+#define ENGINE_PGE_349_DEFAULT_K                   6
+#define ENGINE_PGE_349_DEFAULT_K_2                 40
+#define ENGINE_PGE_349_DEFAULT_D                   2
+//#define ENGINE_PGE_349_DEFAULT_ALPHA_DECAY         15
+
+// pge 350
+#define ENGINE_PGE_350_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_350_DEFAULT_WIDTH               1112
+
+// glut 351
+#define ENGINE_GLUT_351_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_351_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_351_DEFAULT_NUMBER_OF_PARTICLES 1000
+
 #endif // DEFINES_16_H
