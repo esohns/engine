@@ -100,4 +100,36 @@
 #define ENGINE_PGE_353_DEFAULT_L1SIZE              2.0f
 #define ENGINE_PGE_353_DEFAULT_DT                  static_cast<float> (M_PI) / 30.0f
 
+// pge 354
+#define ENGINE_PGE_354_DEFAULT_HEIGHT              1000
+#define ENGINE_PGE_354_DEFAULT_WIDTH               1000
+#define ENGINE_PGE_354_DEFAULT_N_MAX               100
+#define ENGINE_PGE_354_DEFAULT_TY                  250
+#define ENGINE_PGE_354_DEFAULT_R                   20
+#define ENGINE_PGE_354_DEFAULT_FPE                 3000.0f
+#define ENGINE_PGE_354_DEFAULT_M                   1.0f
+#define ENGINE_PGE_354_DEFAULT_K                   0.5f
+#define ENGINE_PGE_354_DEFAULT_H                   0.95f
+#define ENGINE_PGE_354_DEFAULT_V_MAX               5
+
+// glut 355
+#define ENGINE_GLUT_355_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_355_DEFAULT_WIDTH              1112
+
+// pge 356
+#define ENGINE_PGE_356_DEFAULT_HEIGHT              700
+#define ENGINE_PGE_356_DEFAULT_WIDTH               700
+#define ENGINE_PGE_356_DEFAULT_SIZE                700
+#define ENGINE_PGE_356_DEFAULT_VWX1                -2.0f
+#define ENGINE_PGE_356_DEFAULT_VWX2                2.0f
+#define ENGINE_PGE_356_DEFAULT_VWY1                -2.0f
+#define ENGINE_PGE_356_DEFAULT_VWY2                2.0f
+#define ENGINE_PGE_356_DEFAULT_MAX_ITERATIONS      20
+#define ENGINE_PGE_356_DEFAULT_ALPHA_DECAY         10
+
+// glut 357
+#define ENGINE_GLUT_357_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_357_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_357_DEFAULT_SCALE_FACTOR       30
+
 #endif // DEFINES_16_H
