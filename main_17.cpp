@@ -47,10 +47,12 @@
 #define OLC_PGE_APPLICATION
 #define OPENSIMPLEXNOISE_STATIC_CONSTANTS
 #include "glut_360.h"
+#include "pge_361.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 360,
+  ENGINE_MODE_361,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -292,6 +294,21 @@ do_work (int argc_in,
       glutMainLoop ();
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_361:
+    {
+      PGE_361 example;
+      if (example.Construct (ENGINE_PGE_361_DEFAULT_WIDTH, ENGINE_PGE_361_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }
