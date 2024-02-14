@@ -190,7 +190,7 @@ engine_glut_351_draw (void)
   glColor3f (0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
 
-  cb_data_p->particles.run2 (cb_data_p->wireframe);
+  cb_data_p->particlesystem.run2 (cb_data_p->wireframe);
 
   glutSwapBuffers ();
 }

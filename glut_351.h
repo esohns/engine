@@ -183,7 +183,7 @@ class particles
 struct Engine_OpenGL_GLUT_351_CBData
 {
   // context
-  particles               particles;
+  particles               particlesystem;
 
   // menu
   bool                    wireframe;
