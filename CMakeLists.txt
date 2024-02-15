@@ -1317,6 +1317,8 @@ set (engine_17_EXE_SRCS
      glut_363.h
      pge_364.cpp
      pge_364.h
+     pge_365.cpp
+     pge_365.h
      stdafx.h)
 
 set (EXECUTABLE_17 engine_17)
