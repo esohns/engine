@@ -116,7 +116,7 @@ engine_glut_360_mouse_move (int x, int y)
   ACE_ASSERT (cb_data_p);
 
   cb_data_p->mousex = x;
-  cb_data_p->mousey = y;
+  cb_data_p->mousey = ENGINE_GLUT_360_DEFAULT_HEIGHT - y;
 }
 
 void
@@ -148,8 +148,7 @@ engine_glut_360_draw (void)
                                            glm::vec3 (0.0f, 0.0f, 1.0f));
   glm::vec3 rotation_center (0.0f, 0.0f, 0.0f);
   glm::vec4 pos_rot_h =
-    rotation_matrix * glm::vec4 (cb_data_p->camera.position - rotation_center,
-                                 1.0f);
+    rotation_matrix * glm::vec4 (cb_data_p->camera.position - rotation_center, 1.0f);
   cb_data_p->camera.position = glm::vec3 (pos_rot_h) + rotation_center;
 
   // set the camera
