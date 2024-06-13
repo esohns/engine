@@ -124,19 +124,19 @@ PGE_8::build ()
 void
 PGE_8::shuffle ()
 {
-//  // obtain a time-based seed:
-//  unsigned seed =
-//    std::chrono::system_clock::now ().time_since_epoch ().count ();
+  // obtain a time-based seed:
+  static unsigned seed =
+    static_cast<unsigned int> (std::chrono::system_clock::now ().time_since_epoch ().count ());
 
-//  std::shuffle (line, line + totalPoints, std::default_random_engine (seed));
-//  std::shuffle (square, square + totalPoints, std::default_random_engine (seed));
-//  std::shuffle (poly, poly + totalPoints, std::default_random_engine (seed));
-//  std::shuffle (triangle, triangle + totalPoints, std::default_random_engine (seed));
+  std::shuffle (line, line + totalPoints, std::default_random_engine (seed));
+  std::shuffle (square, square + totalPoints, std::default_random_engine (seed));
+  std::shuffle (poly, poly + totalPoints, std::default_random_engine (seed));
+  std::shuffle (triangle, triangle + totalPoints, std::default_random_engine (seed));
 
-  std::random_shuffle (line, line + totalPoints);
-  std::random_shuffle (square, square + totalPoints);
-  std::random_shuffle (poly, poly + totalPoints);
-  std::random_shuffle (triangle, triangle + totalPoints);
+  //std::random_shuffle (line, line + totalPoints);
+  //std::random_shuffle (square, square + totalPoints);
+  //std::random_shuffle (poly, poly + totalPoints);
+  //std::random_shuffle (triangle, triangle + totalPoints);
 }
 
 bool

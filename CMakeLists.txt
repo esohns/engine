@@ -321,6 +321,7 @@ include_directories (${LIBNOISE_INCLUDES})
 include_directories (${GLUT_INCLUDE_DIRS})
 include_directories (${GLEW_INCLUDE_DIRS})
 include_directories (${GTK_INCLUDE_DIRS})
+include_directories (${ImageMagick_INCLUDE_DIRS})
 
 include_directories (${ACE_INCLUDE_DIR})
 
