@@ -1,6 +1,8 @@
 #ifndef GLUT_293_H
 #define GLUT_293_H
 
+#include <chrono>
+
 #include "GL/glew.h"
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
 #include "gl/GL.h"

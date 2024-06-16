@@ -1,6 +1,8 @@
 #ifndef GLUT_229_H
 #define GLUT_229_H
 
+#include <chrono>
+
 #include "noise/noise.h"
 //#include "opensimplexnoise.h"
 

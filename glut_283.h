@@ -1,6 +1,8 @@
 #ifndef GLUT_283_H
 #define GLUT_283_H
 
+#include <chrono>
+
 #include "noise/noise.h"
 
 #include "common_gl_common.h"
