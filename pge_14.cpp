@@ -640,10 +640,6 @@ PGE_14::PGE_14 ()
   sAppName = "Example 14";
 }
 
-PGE_14::~PGE_14 ()
-{
-}
-
 bool
 PGE_14::OnUserCreate ()
 {
@@ -669,7 +665,7 @@ PGE_14::OnUserCreate ()
 bool
 PGE_14::OnUserUpdate (float fElapsedTime)
 {
-  const olc::vf2d m_pos = olc::PixelGameEngine::GetMousePos () * 1.0f;
+  const olc::vf2d m_pos = olc::PixelGameEngine::GetMousePos ();
 
   // Input
   if (olc::PixelGameEngine::GetKey (olc::Z).bPressed)
