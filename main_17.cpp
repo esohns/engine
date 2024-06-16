@@ -266,7 +266,7 @@ do_work (int argc_in,
 
       glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
 
-      glEnable (GL_DEPTH_TEST);
+      //glEnable (GL_DEPTH_TEST);
 
       //glDisable (GL_CULL_FACE);
       //glFrontFace (GL_CCW);

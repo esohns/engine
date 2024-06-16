@@ -186,8 +186,8 @@ engine_glut_360_draw (void)
   else
     cb_data_p->zPos += (-115.0f - cb_data_p->zPos) * 0.1f;
   glTranslatef (static_cast<float> (cb_data_p->mousex), static_cast<float> (cb_data_p->mousey), cb_data_p->zPos);
-  cb_data_p->wireframe ? glutWireSphere (25.0, 8, 8)
-                       : glutSolidSphere (25.0, 8, 8);
+  cb_data_p->wireframe ? glutWireSphere (25.0, 16, 16)
+                       : glutSolidSphere (25.0, 16, 16);
 
   glutSwapBuffers ();
 }
