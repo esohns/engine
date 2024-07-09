@@ -3,7 +3,7 @@
 
 #include "noise/noise.h"
 
-#include "common_gl_common.h"
+#include "engine_common.h"
 
 // GLUT routines
 void engine_glut_333_reshape (int, int);
@@ -27,7 +27,7 @@ struct Engine_OpenGL_GLUT_333_CBData
   bool                    wireframe;
 
   // camera
-  struct Common_GL_Camera camera;
+  struct Engine_GL_Camera camera;
 
   // mouse
   int                     mouseX;

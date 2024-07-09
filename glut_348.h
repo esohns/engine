@@ -3,6 +3,8 @@
 
 #include "common_gl_common.h"
 
+#include "engine_common.h"
+
 // GLUT routines
 void engine_glut_348_reshape (int, int);
 void engine_glut_348_key (unsigned char, int, int);
@@ -23,7 +25,7 @@ struct Engine_OpenGL_GLUT_348_CBData
   bool                    wireframe;
 
   // camera
-  struct Common_GL_Camera camera;
+  struct Engine_GL_Camera camera;
 
   // mouse
   float                   angle;

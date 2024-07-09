@@ -1,11 +1,13 @@
 #ifndef GLUT_16_H
 #define GLUT_16_H
 
-#include "common_gl_common.h"
-
-#include "common_image_common.h"
+#if defined (GLM_SUPPORT)
+#include "glm/glm.hpp"
+#endif // GLM_SUPPORT
 
 #include "common_ui_gtk_common.h"
+
+#include "engine_common.h"
 
 struct Engine_OpenGL_GLUT_16_CBData
 {
@@ -13,7 +15,7 @@ struct Engine_OpenGL_GLUT_16_CBData
   bool                      color;
 
   // camera
-  struct Common_GL_Camera   camera;
+  struct Engine_GL_Camera   camera;
 
   // mouse
   bool                      spinning;
@@ -24,7 +26,9 @@ struct Engine_OpenGL_GLUT_16_CBData
   // shape parameters
   int                       total;
   int                       radius;
+#if defined (GLM_SUPPORT)
   glm::vec3*                globe;
+#endif // GLM_SUPPORT
   float                     m;
   float                     n1, n2, n3;
   float                     a, b;

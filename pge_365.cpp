@@ -19,7 +19,7 @@ PGE_365::OnUserCreate ()
   olc::PixelGameEngine::SetPixelMode (olc::Pixel::ALPHA);
 
   for (float jter = olc::PixelGameEngine::ScreenHeight () * 0.2f; jter <= olc::PixelGameEngine::ScreenHeight (); jter += olc::PixelGameEngine::ScreenHeight () * 0.2f)
-    for (float iter = olc::PixelGameEngine::ScreenWidth () * 0.15; iter <= olc::PixelGameEngine::ScreenWidth (); iter += olc::PixelGameEngine::ScreenWidth () * 0.15f)
+    for (float iter = olc::PixelGameEngine::ScreenWidth () * 0.15f; iter <= olc::PixelGameEngine::ScreenWidth (); iter += olc::PixelGameEngine::ScreenWidth () * 0.15f)
     {
       whirls_.push_back (whirl (iter, jter, 0.0f));
       whirls_.push_back (whirl (iter, jter, static_cast<float> (M_PI)));

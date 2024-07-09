@@ -17,6 +17,8 @@
 
 #include "common_gl_common.h"
 
+#include "engine_common.h"
+
 #include "defines_13.h"
 
 // GLUT routines
@@ -191,7 +193,7 @@ struct Engine_OpenGL_GLUT_284_CBData
   bool                     wireframe;
 
   // camera
-  struct Common_GL_Camera  camera;
+  struct Engine_GL_Camera  camera;
 
   // mouse
   float                    angle;

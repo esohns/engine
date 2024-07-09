@@ -8,7 +8,7 @@
 #include "GL/gl.h"
 #endif // ACE_WIN32 || ACE_WIN64
 
-#include "common_gl_common.h"
+#include "engine_common.h"
 
 // GLUT routines
 void engine_glut_239_reshape (int, int);
@@ -42,7 +42,7 @@ struct Engine_OpenGL_GLUT_239_CBData
   bool                    wireframe;
 
   // camera
-  struct Common_GL_Camera camera;
+  struct Engine_GL_Camera camera;
 };
 
 #endif // GLUT_228_H

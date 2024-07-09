@@ -16,9 +16,9 @@
 //#include "noise/noise.h"
 #include "opensimplexnoise.h"
 
-#include "common_gl_common.h"
-
 #include "common_image_tools.h"
+
+#include "engine_common.h"
 
 #include "defines_15.h"
 
@@ -151,7 +151,7 @@ struct Engine_OpenGL_GLUT_335_CBData
   bool                    wireframe;
 
   // camera
-  struct Common_GL_Camera camera;
+  struct Engine_GL_Camera camera;
 
   // mouse
   int                     mouseX;

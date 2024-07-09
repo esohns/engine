@@ -10,7 +10,7 @@
 #include "GL/gl.h"
 #endif // ACE_WIN32 || ACE_WIN64
 
-#include "common_gl_common.h"
+#include "engine_common.h"
 
 // other functions
 void addBall (struct Engine_OpenGL_GLUT_228_CBData&, float, float, float);
@@ -60,7 +60,7 @@ struct Engine_OpenGL_GLUT_228_CBData
   bool                    wireframe;
 
   // camera
-  struct Common_GL_Camera camera;
+  struct Engine_GL_Camera camera;
 
   // mouse
   bool                    leftButtonIsDown;

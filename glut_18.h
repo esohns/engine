@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "common_gl_common.h"
+#include "engine_common.h"
 
 typedef std::pair<char, std::string> rule_t;
 typedef std::vector<rule_t> rules_t;
@@ -13,7 +13,7 @@ typedef std::vector<rule_t> rules_t;
 struct Engine_OpenGL_GLUT_18_CBData
 {
   // camera
-  struct Common_GL_Camera camera;
+  struct Engine_GL_Camera camera;
 
   // mouse
   float                   xangle;

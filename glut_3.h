@@ -5,11 +5,11 @@
 
 #include "gtk/gtk.h"
 
-#include "common_gl_common.h"
-
 #include "common_image_common.h"
 
 #include "common_ui_gtk_common.h"
+
+#include "engine_common.h"
 
 enum Engine_GLUTMode
 {
@@ -62,7 +62,7 @@ struct Engine_OpenGL_GLUT_3_CBData
   bool                      color;
 
   // camera
-  struct Common_GL_Camera   camera;
+  struct Engine_GL_Camera   camera;
 
   // mouse
   float                     angle;

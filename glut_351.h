@@ -15,10 +15,11 @@
 
 #include "common_tools.h"
 
-#include "common_gl_common.h"
 #include "common_gl_tools.h"
 
 #include "common_image_tools.h"
+
+#include "engine_common.h"
 
 #include "defines_16.h"
 
@@ -189,7 +190,7 @@ struct Engine_OpenGL_GLUT_351_CBData
   bool                    wireframe;
 
   // camera
-  struct Common_GL_Camera camera;
+  struct Engine_GL_Camera camera;
 
   // mouse
   float                   angle;

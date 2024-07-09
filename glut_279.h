@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "common_gl_common.h"
+#include "engine_common.h"
 
 #include "defines_12.h"
 
@@ -29,7 +29,7 @@ struct Engine_OpenGL_GLUT_279_CBData
   bool                    wireframe;
 
   // camera
-  struct Common_GL_Camera camera;
+  struct Engine_GL_Camera camera;
 
   // mouse
   float                   angle;

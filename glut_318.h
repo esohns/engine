@@ -1,7 +1,7 @@
 #ifndef GLUT_318_H
 #define GLUT_318_H
 
-#include "common_gl_common.h"
+#include "engine_common.h"
 
 // GLUT routines
 void engine_glut_318_reshape (int, int);
@@ -24,7 +24,7 @@ struct Engine_OpenGL_GLUT_318_CBData
   bool                    wireframe;
 
   // camera
-  struct Common_GL_Camera camera;
+  struct Engine_GL_Camera camera;
 };
 
 #endif // GLUT_318_H
