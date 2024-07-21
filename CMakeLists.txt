@@ -3,6 +3,7 @@ include (${CMAKE_CURRENT_SOURCE_DIR}/VersionConfig.cmake)
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts")
 include (CPU)
 include (OS)
+include (compiler_init)
 
 cmake_minimum_required (VERSION 2.8)
 
