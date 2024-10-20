@@ -99,7 +99,8 @@ engine_glut_311_menu (int entry_in)
   switch (entry_in)
   {
     case 0:
-      cb_data_p->wireframe = !cb_data_p->wireframe; break;
+      cb_data_p->wireframe = !cb_data_p->wireframe;
+      break;
     default:
       break;
   } // end SWITCH

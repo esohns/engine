@@ -20,8 +20,8 @@ void main ()
     float dx = b.x - x;
     float dy = b.y - y;
     float r = b.z;
-    v += r * r / pow (pow (dx, 8.0) + pow (dy, 8.0), 2.0 / 8.0); // *TODO*: why doesn't this work ?
-//    v += r * r / (dx * dx + dy * dy); // *NOTE*: this works just fine
+//    v += r * r / pow (pow (dx, 8.0) + pow (dy, 8.0), 2.0 / 8.0); // *TODO*: why doesn't this work ?
+    v += r * r / (dx * dx + dy * dy); // *NOTE*: this works just fine
   }
 
   float p = v;
