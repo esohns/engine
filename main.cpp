@@ -1267,6 +1267,7 @@ ACE_TMAIN (int argc_in,
       ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
       ui_definition_file_path +=
         ACE_TEXT_ALWAYS_CHAR (ENGINE_PGE_2_UI_DEFINITION_FILE);
+      break;
     } // end IF
     case ENGINE_MODE_3:
     case ENGINE_MODE_4:
@@ -1275,6 +1276,7 @@ ACE_TMAIN (int argc_in,
       ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
       ui_definition_file_path +=
         ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_3_UI_DEFINITION_FILE);
+      break;
     } // end IF
     case ENGINE_MODE_16:
     {
@@ -1282,6 +1284,7 @@ ACE_TMAIN (int argc_in,
       ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
       ui_definition_file_path +=
         ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_16_UI_DEFINITION_FILE);
+      break;
     } // end IF
     case ENGINE_MODE_27:
     {
@@ -1289,6 +1292,7 @@ ACE_TMAIN (int argc_in,
       ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
       ui_definition_file_path +=
         ACE_TEXT_ALWAYS_CHAR (ENGINE_PGE_27_UI_DEFINITION_FILE);
+      break;
     } // end IF
     default:
       break;

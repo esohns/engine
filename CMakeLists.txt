@@ -157,7 +157,7 @@ if (UNIX)
                REQUIRED
                NO_DEFAULT_PATH)
 elseif (WIN32)
- set (LIBNOISE_LIBRARY "noise.lib")
+ set (LIBNOISE_LIBRARY "libnoise.lib")
  find_library (LIBNOISE_LIB ${LIBNOISE_LIBRARY}
                PATHS ${LIBNOISE_DIR}
                PATH_SUFFIXES build/msvc/${CMAKE_BUILD_TYPE}
