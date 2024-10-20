@@ -168,6 +168,7 @@
 // pge 21
 #define ENGINE_PGE_21_DEFAULT_HEIGHT            800
 #define ENGINE_PGE_21_DEFAULT_WIDTH             800
+#define ENGINE_PGE_21_DEFAULT_RADIUS_F          8.0f
 
 // pge 22
 #define ENGINE_PGE_22_DEFAULT_HEIGHT            400
