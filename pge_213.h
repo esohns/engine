@@ -95,7 +95,7 @@ class PGE_213
      , z_ (z)
      , center_ (z * (1.0f / k))
      , tangentCircles_ ()
-     , gray_ (255)
+     //, gray_ (255)
     {}
 
     bool isEqual (circle& c)
@@ -104,7 +104,7 @@ class PGE_213
 
       bool equalR_b = std::abs (r_ - c.r_) < tolerance_f;
       bool equalX_b = std::abs (center_.real () - c.center_.real ()) < tolerance_f;
-      bool equalY_b = std::abs (center_.imag () - c.center_.imag()) < tolerance_f;
+      bool equalY_b = std::abs (center_.imag () - c.center_.imag ()) < tolerance_f;
 
       return equalR_b && equalX_b && equalY_b;
     }
@@ -124,7 +124,7 @@ class PGE_213
     std::complex<float> z_;
     std::complex<float> center_;
     std::vector<circle> tangentCircles_;
-    uint8_t             gray_;
+    //uint8_t             gray_;
   };
 
   std::vector<circle> circles_;
