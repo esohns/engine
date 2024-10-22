@@ -21,7 +21,18 @@ PGE_22::PGE_22 ()
  , circles_ ()
  , spots_ ()
 {
+#if defined (IMAGEMAGICK_SUPPORT)
+  MagickWandGenesis ();
+#endif // IMAGEMAGICK_SUPPORT
+
   sAppName = "Example 22";
+}
+
+PGE_22::~PGE_22 ()
+{
+#if defined (IMAGEMAGICK_SUPPORT)
+  MagickWandTerminus ();
+#endif // IMAGEMAGICK_SUPPORT
 }
 
 bool
@@ -30,10 +41,12 @@ PGE_22::OnUserCreate ()
   Common_Image_Resolution_t resolution_s;
   uint8_t* data_p = NULL;
 
+#if defined (IMAGEMAGICK_SUPPORT)
   if (!Common_Image_Tools::load (ACE_TEXT_ALWAYS_CHAR (ENGINE_PGE_22_DEFAULT_SPOTS_FILE),
                                  ACE_TEXT_ALWAYS_CHAR ("RGB"),
                                  resolution_s,
                                  data_p))
+#endif // IMAGEMAGICK_SUPPORT
   {
     ACE_DEBUG ((LM_ERROR,
                 ACE_TEXT ("failed to Common_Image_Tools::load (\"%s\"), aborting\n"),
@@ -41,6 +54,7 @@ PGE_22::OnUserCreate ()
     return false;
   } // end IF
   ACE_ASSERT (data_p);
+
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
   for (int y = 0; y < resolution_s.cy; ++y)
     for (int x = 0; x < resolution_s.cx; ++x)
@@ -62,7 +76,11 @@ PGE_22::OnUserCreate ()
             spots_.push_back ({x, y});
     } // end FOR
 #endif // ACE_WIN32 || ACE_WIN64
+
+#if defined (IMAGEMAGICK_SUPPORT)
   MagickRelinquishMemory (data_p); data_p = NULL;
+#endif // IMAGEMAGICK_SUPPORT
+
   ACE_DEBUG ((LM_DEBUG,
               ACE_TEXT ("loaded image \"%s\": found %u bright spot(s)\n"),
               ACE_TEXT (ENGINE_PGE_22_DEFAULT_SPOTS_FILE),

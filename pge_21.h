@@ -47,21 +47,24 @@ class PGE_21
     {
       static ACE_INT32 half_width_i = ENGINE_PGE_21_DEFAULT_WIDTH / 2;
       ACE_INT32 sx =
-        half_width_i + static_cast<ACE_INT32> (Common_GL_Tools::map (position_.x / (float)z_, -0.5f, 0.5f, -static_cast<float> (half_width_i), static_cast<float> (half_width_i)));
+        half_width_i + static_cast<ACE_INT32> (Common_GL_Tools::map (position_.x / (float)z_, -0.5f, 0.5f, static_cast<float> (-half_width_i), static_cast<float> (half_width_i)));
       static ACE_INT32 half_height_i = ENGINE_PGE_21_DEFAULT_HEIGHT / 2;
       ACE_INT32 sy =
-        half_height_i + static_cast<ACE_INT32> (Common_GL_Tools::map (position_.y / (float)z_, -0.5f, 0.5f, -static_cast<float> (half_height_i), static_cast<float> (half_height_i)));
+        half_height_i + static_cast<ACE_INT32> (Common_GL_Tools::map (position_.y / (float)z_, -0.5f, 0.5f, static_cast<float> (-half_height_i), static_cast<float> (half_height_i)));
 
       ACE_INT32 px =
-        half_width_i + static_cast<ACE_INT32> (Common_GL_Tools::map (position_.x / (float)pz_, -0.5f, 0.5f, -static_cast<float> (half_width_i), static_cast<float> (half_width_i)));
+        half_width_i + static_cast<ACE_INT32> (Common_GL_Tools::map (position_.x / (float)pz_, -0.5f, 0.5f, static_cast<float> (-half_width_i), static_cast<float> (half_width_i)));
       ACE_INT32 py =
-        half_height_i + static_cast<ACE_INT32> (Common_GL_Tools::map (position_.y / (float)pz_, -0.5f, 0.5f, -static_cast<float> (half_height_i), static_cast<float> (half_height_i)));
-
-      engine_in->DrawLine (px, py, sx, sy, olc::WHITE, 0xFFFFFFFF);
+        half_height_i + static_cast<ACE_INT32> (Common_GL_Tools::map (position_.y / (float)pz_, -0.5f, 0.5f, static_cast<float> (-half_height_i), static_cast<float> (half_height_i)));
 
       ACE_INT32 r =
-        static_cast<ACE_INT32> (ENGINE_PGE_21_DEFAULT_RADIUS_F - Common_GL_Tools::map (static_cast<float> (z_), 0.0f, static_cast<float> (ENGINE_PGE_21_DEFAULT_WIDTH - 1), 0.0f, ENGINE_PGE_21_DEFAULT_RADIUS_F));
-      engine_in->FillCircle (sx, sy, r, olc::WHITE);
+        static_cast<ACE_INT32> (ENGINE_PGE_21_DEFAULT_MAX_RADIUS_F - Common_GL_Tools::map (static_cast<float> (z_), 0.0f, static_cast<float> (ENGINE_PGE_21_DEFAULT_WIDTH - 1), 0.0f, ENGINE_PGE_21_DEFAULT_MAX_RADIUS_F));
+
+      if ((sx > 0 && sx < (ENGINE_PGE_21_DEFAULT_WIDTH - 1)) && (sy > 0 && sy < (ENGINE_PGE_21_DEFAULT_HEIGHT - 1)))
+      {
+        engine_in->DrawLine (px, py, sx, sy, olc::WHITE, 0xFFFFFFFF);
+        engine_in->FillCircle (sx, sy, r, olc::WHITE);
+      } // end IF
 
       pz_ = z_;
     }

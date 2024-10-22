@@ -49,7 +49,7 @@ class PGE_22
 
  public:
   PGE_22 ();
-  inline virtual ~PGE_22 () {}
+  virtual ~PGE_22 ();
 
   virtual bool OnUserCreate ();
   virtual bool OnUserUpdate (float); // elapsed time

@@ -29,6 +29,9 @@ PGE_207::PGE_207 ()
 //#if defined (FFMPEG_SUPPORT)
 //  ACE_OS::memset (imageData_, 0, sizeof (uint8_t*) * AV_NUM_DATA_POINTERS);
 //#endif // FFMPEG_SUPPORT
+#if defined (IMAGEMAGICK_SUPPORT)
+  MagickWandGenesis ();
+#endif // IMAGEMAGICK_SUPPORT
 
   sAppName = ACE_TEXT_ALWAYS_CHAR ("Example 207");
 }
@@ -37,6 +40,8 @@ PGE_207::~PGE_207 ()
 {
 #if defined (IMAGEMAGICK_SUPPORT)
   MagickRelinquishMemory (imageData_);
+
+  MagickWandTerminus ();
 #endif // IMAGEMAGICK_SUPPORT
 //#if defined (FFMPEG_SUPPORT)
   //delete [] imageData_[0];
