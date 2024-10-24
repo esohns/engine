@@ -32,14 +32,14 @@ idle_initialize_UI_2_cb (gpointer userData_in)
   ACE_ASSERT (dialog_p);
  
   // step2: (auto-)connect signals/slots
-#if GTK_CHECK_VERSION(4,0,0)
+#if GTK_CHECK_VERSION (4,0,0)
 #else
   gtk_builder_connect_signals ((*iterator).second.second,
                                ui_cb_data_p);
-#endif // GTK_CHECK_VERSION(4,0,0)
+#endif // GTK_CHECK_VERSION (4,0,0)
 
   // step6a: connect default signals
-#if GTK_CHECK_VERSION(4,0,0)
+#if GTK_CHECK_VERSION (4,0,0)
 #else
   gulong result_2 =
       g_signal_connect (dialog_p,
@@ -47,14 +47,14 @@ idle_initialize_UI_2_cb (gpointer userData_in)
                         G_CALLBACK (gtk_widget_destroyed),
                         &dialog_p);
   ACE_ASSERT (result_2);
-#endif // GTK_CHECK_VERSION(4,0,0)
+#endif // GTK_CHECK_VERSION (4,0,0)
 
   // step9: draw main dialog
-#if GTK_CHECK_VERSION(4,0,0)
+#if GTK_CHECK_VERSION (4,0,0)
   gtk_widget_show (dialog_p);
 #else
   gtk_widget_show_all (dialog_p);
-#endif // GTK_CHECK_VERSION(4,0,0)
+#endif // GTK_CHECK_VERSION (4,0,0)
 
   return G_SOURCE_REMOVE;
 }
@@ -66,6 +66,8 @@ idle_finalize_UI_2_cb (gpointer userData_in)
     static_cast<struct Engine_UI_GTK_2_CBData*> (userData_in);
   ACE_ASSERT (ui_cb_data_p);
   ACE_UNUSED_ARG (ui_cb_data_p);
+
+  gtk_main_quit ();
 
   return G_SOURCE_REMOVE;
 }
@@ -213,11 +215,15 @@ PGE_2::~PGE_2 ()
 int
 PGE_2::IX (int x, int y)
 {
-  if (x < 0) { x = 0; }
-  if (x > resolution_ - 1) { x = resolution_ - 1; }
+  if (x < 0)
+    x = 0;
+  if (x > resolution_ - 1)
+    x = resolution_ - 1;
 
-  if (y < 0) { y = 0; }
-  if (y > resolution_ - 1) { y = resolution_ - 1; }
+  if (y < 0)
+    y = 0;
+  if (y > resolution_ - 1)
+    y = resolution_ - 1;
 
   return (y * resolution_) + x;
 }
@@ -227,20 +233,20 @@ PGE_2::set_bounds (int b, float x[])
 {
   for (int i = 1; i < resolution_ - 1; i++)
   {
-    x[IX(0,i)]                   = b == 1 ? -x[IX(1,i)] : x[IX(1,i)];
-    x[IX(resolution_ - 1,i)]     = b == 1 ? -x[IX(resolution_ - 2,i)] : x[IX(resolution_ - 2,i)];
-    x[IX(i,0 )]                  = b == 2 ? -x[IX(i,1)] : x[IX(i,1)];
-    x[IX(i,resolution_ - 1)]     = b == 2 ? -x[IX(i,resolution_ - 2)] : x[IX(i,resolution_ - 2)];
-  }
+    x[IX (0, i)]               = b == 1 ? -x[IX (1, i)] : x[IX (1, i)];
+    x[IX (resolution_ - 1, i)] = b == 1 ? -x[IX (resolution_ - 2, i)] : x[IX (resolution_ - 2, i)];
+    x[IX (i, 0)]               = b == 2 ? -x[IX (i, 1)] : x[IX (i, 1)];
+    x[IX (i, resolution_ - 1)] = b == 2 ? -x[IX (i, resolution_ - 2)] : x[IX (i, resolution_ - 2)];
+  } // end FOR
 
   //x[IX(0, 0)]                                     = 0.5f * (x[IX(1, 0)] + x[IX(0, 1)]);
   //x[IX(0, resolution_ - 2 + 1)]                   = 0.5f * (x[IX(1, resolution_ - 2 + 1)] + x[IX(0, resolution_ - 2)]);
   //x[IX(resolution_ - 2 + 1, 0)]                   = 0.5f * (x[IX(resolution_ - 2, 0)] + x[IX(resolution_ - 2 + 1, 1)]);
   //x[IX(resolution_ - 2 + 1, resolution_ - 2 + 1)] = 0.5f * (x[IX(resolution_ - 2, resolution_ - 2 + 1)] + x[IX(resolution_ - 2 + 1, resolution_ - 2)]);
-  x[IX(0, 0)]                                     = 0.33f * (x[IX(1, 0)] + x[IX(0, 1)] + x[IX(0, 0)]);
-  x[IX(0, resolution_ - 1)]                       = 0.33f * (x[IX(1, resolution_ - 2 + 1)] + x[IX(0, resolution_ - 2)] + x[IX(0, resolution_ - 2 + 1)]);
-  x[IX(resolution_ - 1, 0)]                       = 0.33f * (x[IX(resolution_ - 2, 0)] + x[IX(resolution_ - 1, 1)] + x[IX(resolution_ - 1, 0)]);
-  x[IX(resolution_ - 1, resolution_ - 1)]         = 0.33f * (x[IX(resolution_ - 2, resolution_ - 1)] + x[IX(resolution_ - 1, resolution_ - 2)] + x[IX(resolution_ - 1, resolution_ - 1)]);
+  x[IX (0, 0)]                                     = 0.33f * (x[IX (1, 0)] + x[IX (0, 1)] + x[IX (0, 0)]);
+  x[IX (0, resolution_ - 1)]                       = 0.33f * (x[IX (1, resolution_ - 2 + 1)] + x[IX (0, resolution_ - 2)] + x[IX (0, resolution_ - 2 + 1)]);
+  x[IX (resolution_ - 1, 0)]                       = 0.33f * (x[IX (resolution_ - 2, 0)] + x[IX (resolution_ - 1, 1)] + x[IX (resolution_ - 1, 0)]);
+  x[IX (resolution_ - 1, resolution_ - 1)]         = 0.33f * (x[IX (resolution_ - 2, resolution_ - 1)] + x[IX (resolution_ - 1, resolution_ - 2)] + x[IX (resolution_ - 1, resolution_ - 1)]);
 }
 
 void
@@ -252,16 +258,16 @@ PGE_2::solve (int b, float x[], float x0[], float a, float c, int iterations)
   {
     for (int j = 1; j < resolution_ - 1; j++)
       for (int i = 1; i < resolution_ - 1; i++)
-        x[IX(i, j)] = (x0[IX(i, j)] + a
-          * (x[IX(i + 1, j)]
-            + x[IX(i - 1, j)]
-            + x[IX(i, j + 1)]
-            + x[IX(i, j - 1)]
-            + x[IX(i, j)]
-            + x[IX(i, j)]
+        x[IX (i, j)] = (x0[IX (i, j)] + a
+          * (x[IX (i + 1, j)]
+            + x[IX (i - 1, j)]
+            + x[IX (i, j + 1)]
+            + x[IX (i, j - 1)]
+            + x[IX (i, j)]
+            + x[IX (i, j)]
             )) * cRecip;
     set_bounds (b, x);
-  }
+  } // end FOR
 }
 
 void
@@ -283,15 +289,15 @@ PGE_2::diffuse (int b, float x[], float x0[], float diff, float dt, int iteratio
 void
 PGE_2::project (float v_x[], float v_y[], float p[], float div[], int iterations)
 {
-  float h = 1.0f / resolution_;
+  static float h = 1.0f / resolution_;
 
   for (int i = 1; i < resolution_ - 1; i++)
     for (int j = 1; j < resolution_ - 1; j++)
     {
-      div[IX(i, j)] = -0.5f * h * (v_x[IX(i + 1, j)] - v_x[IX(i - 1, j)] +
-                                   v_y[IX(i, j + 1)] - v_y[IX(i, j - 1)]);
-      p[IX(i, j)] = 0.0f;
-    }
+      div[IX (i, j)] = -0.5f * h * (v_x[IX (i + 1, j)] - v_x[IX (i - 1, j)] +
+                                    v_y[IX (i, j + 1)] - v_y[IX (i, j - 1)]);
+      p[IX (i, j)] = 0.0f;
+    } // end FOR
   set_bounds (0, div); set_bounds (0, p);
 
   //for (int k = 0; k < iterations; k++)
@@ -309,10 +315,11 @@ PGE_2::project (float v_x[], float v_y[], float p[], float div[], int iterations
     {
       //v_x[IX(i, j)] -= 0.5f * (p[IX(i + 1, j)] - p[IX(i - 1, j)]) / h;
       //v_y[IX(i, j)] -= 0.5f * (p[IX(i, j + 1)] - p[IX(i, j - 1)]) / h;
-      v_x[IX(i, j)] -= 0.5f * (p[IX(i + 1, j)] - p[IX(i - 1, j)]) * static_cast<float> (resolution_);
-      v_y[IX(i, j)] -= 0.5f * (p[IX(i, j + 1)] - p[IX(i, j - 1)]) * static_cast<float> (resolution_);
+      v_x[IX (i, j)] -= 0.5f * (p[IX (i + 1, j)] - p[IX (i - 1, j)]) * static_cast<float> (resolution_);
+      v_y[IX (i, j)] -= 0.5f * (p[IX (i, j + 1)] - p[IX (i, j - 1)]) * static_cast<float> (resolution_);
     }
-  set_bounds (1, v_x); set_bounds (2, v_y);
+  set_bounds (1, v_x);
+  set_bounds (2, v_y);
 }
 
 void
@@ -326,25 +333,25 @@ PGE_2::advect (int b, float d[], float d0[], float v_x[], float v_y[], float dt)
   float s0, s1, t0, t1;
   float tmp1, tmp2, x, y;
 
-  float Nfloat = static_cast<float> (resolution_);
+  static float Nfloat = static_cast<float> (resolution_);
   float ifloat, jfloat;
 
   int i, j;
 
   for (j = 1, jfloat = 1; j < resolution_ - 1; j++, jfloat++) {
     for (i = 1, ifloat = 1; i < resolution_ - 1; i++, ifloat++) {
-      tmp1 = dtx * v_x[IX(i, j)];
-      tmp2 = dty * v_y[IX(i, j)];
+      tmp1 = dtx * v_x[IX (i, j)];
+      tmp2 = dty * v_y[IX (i, j)];
       x = ifloat - tmp1;
       y = jfloat - tmp2;
 
       if (x < 0.5f) x = 0.5f;
       if (x > Nfloat + 0.5f) x = Nfloat + 0.5f;
-      i0 = ::floorf(x);
+      i0 = ::floorf (x);
       i1 = i0 + 1.0f;
       if (y < 0.5f) y = 0.5f;
       if (y > Nfloat + 0.5f) y = Nfloat + 0.5f;
-      j0 = ::floorf(y);
+      j0 = ::floorf (y);
       j1 = j0 + 1.0f;
 
       s1 = x - i0;
@@ -357,9 +364,9 @@ PGE_2::advect (int b, float d[], float d0[], float v_x[], float v_y[], float dt)
       int j0i = static_cast<int> (j0);
       int j1i = static_cast<int> (j1);
 
-      d[IX(i, j)] =
-        s0 * (t0 * d0[IX(i0i, j0i)] + t1 * d0[IX(i0i, j1i)]) +
-        s1 * (t0 * d0[IX(i1i, j0i)] + t1 * d0[IX(i1i, j1i)]);
+      d[IX (i, j)] =
+        s0 * (t0 * d0[IX (i0i, j0i)] + t1 * d0[IX (i0i, j1i)]) +
+        s1 * (t0 * d0[IX (i1i, j0i)] + t1 * d0[IX (i1i, j1i)]);
     }
   }
   set_bounds (b, d);
@@ -369,9 +376,9 @@ bool
 PGE_2::OnUserCreate ()
 {
   // sanity check(s)
-  ACE_ASSERT (ScreenWidth () == ScreenHeight ());
+  ACE_ASSERT (olc::PixelGameEngine::ScreenWidth () == olc::PixelGameEngine::ScreenHeight ());
 
-  resolution_ = ScreenWidth ();
+  resolution_ = olc::PixelGameEngine::ScreenWidth ();
 
   x_ = new float[resolution_ * resolution_];
   x0_ = new float[resolution_ * resolution_];
@@ -398,8 +405,8 @@ PGE_2::reset ()
 void
 PGE_2::addVelocity (int x, int y, float amountX, float amountY)
 {
-  v_x_[IX(x, y)] += amountX;
-  v_y_[IX(x, y)] += amountY;
+  v_x_[IX (x, y)] += amountX;
+  v_y_[IX (x, y)] += amountY;
 }
 
 void
@@ -407,8 +414,11 @@ PGE_2::render_density ()
 {
   for (int i = 0; i < resolution_; i++)
     for (int j = 0; j < resolution_; j++)
-      Draw (i, j,
-            olc::Pixel (255, 255, 255, int(x_[IX(i, j)]) > 255 ? 255 : int (x_[IX(i, j)])));
+    {
+      int alpha_i = static_cast<int> (x_[IX (i, j)]);
+      olc::PixelGameEngine::Draw (i, j,
+                                  olc::Pixel (255, 255, 255, alpha_i > 255 ? 255 : alpha_i < 0 ? 0 : alpha_i));
+    } // end FOR
 }
 
 void
@@ -417,15 +427,15 @@ PGE_2::render_velocity ()
   for (int j = 0; j < resolution_; j++)
     for (int i = 0; i < resolution_; i++)
     {
-      int vx = static_cast<int> (v_x_[IX(i, j)]);
-      int vy = static_cast<int> (v_y_[IX(i, j)]);
+      int vx = static_cast<int> (v_x_[IX (i, j)]);
+      int vy = static_cast<int> (v_y_[IX (i, j)]);
 
       if (vx || vy)
-        DrawLine (i, j,
-                  i + vx, j + vy,
-                  olc::WHITE,
-                  0xFFFFFFFF);
-    }
+        olc::PixelGameEngine::DrawLine (i, j,
+                                        i + vx, j + vy,
+                                        olc::WHITE,
+                                        0xFFFFFFFF);
+    } // end FOR
 }
 
 void
@@ -434,10 +444,10 @@ PGE_2::fade_density ()
   for (int i = 0; i < resolution_; i++)
     for (int j = 0; j < resolution_; j++)
     {
-      x_[IX(i, j)] -= 0.05f;
-      if (x_[IX(i, j)] < 0.0f)
-        x_[IX(i, j)] = 0.0f;
-    }
+      x_[IX (i, j)] -= 0.05f;
+      if (x_[IX (i, j)] < 0.0f)
+        x_[IX (i, j)] = 0.0f;
+    } // end FOR
 }
 
 bool
@@ -445,16 +455,16 @@ PGE_2::OnUserUpdate (float fElapsedTime)
 {
   if (CBData_->clearScreen)
   {
-    olc::PixelGameEngine::Clear (olc::Pixel (0, 0, 0, 255)); // black
+    olc::PixelGameEngine::Clear (olc::BLACK); // black
     reset ();
     CBData_->clearScreen = false;
   } // end IF
 
-  static int32_t mouse_x_prev = GetMouseX ();
-  static int32_t mouse_y_prev = GetMouseY ();
-  int32_t mouse_x = GetMouseX ();
-  int32_t mouse_y = GetMouseY ();
-  struct olc::HWButton button_s = GetMouse (olc::Mouse::LEFT);
+  static int32_t mouse_x_prev = olc::PixelGameEngine::GetMouseX ();
+  static int32_t mouse_y_prev = olc::PixelGameEngine::GetMouseY ();
+  int32_t mouse_x = olc::PixelGameEngine::GetMouseX ();
+  int32_t mouse_y = olc::PixelGameEngine::GetMouseY ();
+  struct olc::HWButton button_s = olc::PixelGameEngine::GetMouse (olc::Mouse::LEFT);
   if (button_s.bPressed || button_s.bHeld)
     for (int i = -7; i <= 7; i++)
       for (int j = -7; j <= 7; j++)
@@ -481,8 +491,8 @@ PGE_2::OnUserUpdate (float fElapsedTime)
     //addVelocity (mouse_x, mouse_y,
     //             std::abs (std::cos (angle_f) * 0.05f), std::abs (std::sin (angle_f) * 0.05f));
   //}
-   
-  button_s = GetMouse (olc::Mouse::RIGHT);
+
+  button_s = olc::PixelGameEngine::GetMouse (olc::Mouse::RIGHT);
   if (button_s.bPressed || button_s.bHeld)
   {
     float amountX =

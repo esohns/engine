@@ -38,6 +38,8 @@ PGE_120::OnUserUpdate (float fElapsedTime)
     for (int i = 0; i < ENGINE_PGE_120_DEFAULT_NUMBER_OF_PARTICLES; i++)
       particles_.push_back (new particle (this));
   } // end IF
+  if (olc::PixelGameEngine::GetMouse (1).bPressed)
+    olc::PixelGameEngine::Clear (olc::BLACK);
 
   for (std::vector<particle*>::iterator iterator = particles_.begin ();
        iterator != particles_.end ();
@@ -53,12 +55,6 @@ PGE_120::OnUserUpdate (float fElapsedTime)
       ++iterator;
   } // end FOR
 
-  int pixels =
-    olc::PixelGameEngine::GetDrawTargetWidth () * olc::PixelGameEngine::GetDrawTargetHeight ();
-  olc::Pixel* p = olc::PixelGameEngine::GetDrawTarget ()->GetData ();
-  for (int i = 0; i < pixels; i++)
-    p[i].a = (p[i].a > ENGINE_PGE_120_DEFAULT_ALPHA_DECAY ? p[i].a - ENGINE_PGE_120_DEFAULT_ALPHA_DECAY : 0);
-
   for (std::vector<particle*>::iterator iterator = particles_.begin ();
        iterator != particles_.end ();
        ++iterator)
@@ -66,6 +62,12 @@ PGE_120::OnUserUpdate (float fElapsedTime)
     (*iterator)->update (this);
     (*iterator)->show (this);
   } // end FOR
+
+  int pixels =
+    olc::PixelGameEngine::GetDrawTargetWidth () * olc::PixelGameEngine::GetDrawTargetHeight ();
+  olc::Pixel* p = olc::PixelGameEngine::GetDrawTarget ()->GetData ();
+  for (int i = 0; i < pixels; i++)
+    p[i].a = (p[i].a > ENGINE_PGE_120_DEFAULT_ALPHA_DECAY ? p[i].a - ENGINE_PGE_120_DEFAULT_ALPHA_DECAY : 0);
 
   return !olc::PixelGameEngine::GetKey (olc::Key::ESCAPE).bPressed;
 }

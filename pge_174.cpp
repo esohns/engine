@@ -24,7 +24,7 @@ PGE_174::OnUserUpdate (float fElapsedTime)
 {
   if (olc::PixelGameEngine::GetMouse (0).bPressed)
     particles_.push_back (particle (this));
-  if (olc::PixelGameEngine::GetMouse (1).bPressed)
+  if (olc::PixelGameEngine::GetMouse (1).bPressed && !particles_.empty ())
     particles_.pop_back ();
 
   olc::PixelGameEngine::Clear (olc::WHITE);

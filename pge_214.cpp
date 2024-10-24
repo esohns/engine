@@ -41,15 +41,12 @@ PGE_214::OnUserCreate ()
   float k2 = 1.0f / r2_;
   float k3 = 1.0f / r3_;
 
-  //initial circles
-  complex z1_scaled = z1_.scale (k1);
-  complex z2_scaled = z2_.scale (k2);
-  complex z3_scaled = z3_.scale (k3);
-  circle c1 (z1_scaled, k1);
-  circle c2 (z2_scaled, k2);
-  circle c3 (z3_scaled, k3);
+  // initial circles
+  circle c1 (z1_.scale (k1), k1);
+  circle c2 (z2_.scale (k2), k2);
+  circle c3 (z3_.scale (k3), k3);
 
-  //we've set them up to be touching tangent to the other two
+  // we've set them up to be touching tangent to the other two
   c1.tangentCircles_.push_back (c2);
   c1.tangentCircles_.push_back (c3);
   c2.tangentCircles_.push_back (c1);
@@ -83,7 +80,7 @@ PGE_214::OnUserUpdate (float fElapsedTime)
     if (!(*iterator).tangentCircles_.empty () && (*iterator).tangentCircles_.size () < 5)
       incompleteCircles_a.push_back (*iterator);
   completion_a =
-      std::reduce (incompleteCircles_a.begin (), incompleteCircles_a.end (), completion_a, reduce_vector_circle_c);
+    std::reduce (incompleteCircles_a.begin (), incompleteCircles_a.end (), completion_a, reduce_vector_circle_c);
 //  completion_a =
 //    std::reduce (incompleteCircles_a.begin (), incompleteCircles_a.end (), completion_a,
 //                 [this] (std::vector<circle> first, circle& second)
@@ -92,10 +89,10 @@ PGE_214::OnUserUpdate (float fElapsedTime)
 //                   return first;
 //                 });
   circles_.insert (circles_.end (), completion_a.begin (), completion_a.end ());
-  std::sort (circles_.begin (), circles_.end (), [] (const circle& rhs, const circle& lhs) { return rhs.isLessThan (lhs); });
-  ip =
-    std::unique (circles_.begin (), circles_.end (), [] (const circle& rhs, const circle& lhs) { return rhs.isEqual (lhs); });
-  circles_.resize (std::distance (circles_.begin (), ip));
+  //std::sort (circles_.begin (), circles_.end (), [] (const circle& rhs, const circle& lhs) { return rhs.isLessThan (lhs); });
+  //ip =
+  //  std::unique (circles_.begin (), circles_.end (), [] (const circle& rhs, const circle& lhs) { return rhs.isEqual (lhs); });
+  //circles_.resize (std::distance (circles_.begin (), ip));
 
 //continue_:
   for (std::vector<circle>::iterator iterator = circles_.begin ();
@@ -113,8 +110,10 @@ PGE_214::apollonian (circle& c)
 
   //Apply Decartes theorem iterativly to pack circles within a circle.
   //https://en.wikipedia.org/wiki/Apollonian_gasket
-  if (c.tangentCircles_.size () < 2) return result_a;
-  if (c.tangentCircles_.size () == 2) return decartes (c, c.tangentCircles_[0], c.tangentCircles_[1]);
+  if (c.tangentCircles_.size () < 2)
+    return result_a;
+  else if (c.tangentCircles_.size () == 2)
+    return decartes (c, c.tangentCircles_[0], c.tangentCircles_[1]);
 
   circle& c1 = c.tangentCircles_[0];
   circle& c2 = c.tangentCircles_[1];
