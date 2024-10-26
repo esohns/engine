@@ -1321,6 +1321,10 @@ set (engine_17_EXE_SRCS
      pge_364.h
      pge_365.cpp
      pge_365.h
+     glut_366.cpp
+     glut_366.h
+     pge_367.cpp
+     pge_367.h
      stdafx.h)
 
 set (EXECUTABLE_17 engine_17)
@@ -1790,6 +1794,8 @@ install (FILES
          "glut_358.frag"
          "glut_363.vert"
          "glut_363.frag"
+         "glut_366.vert"
+         "glut_366.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"

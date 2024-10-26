@@ -62,4 +62,15 @@
 #define ENGINE_PGE_365_DEFAULT_SIZE                7
 #define ENGINE_PGE_365_DEFAULT_ALPHA_DECAY         15
 
+// glut 366
+#define ENGINE_GLUT_366_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_366_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_366_DEFAULT_SCALE_FACTOR       30
+
+// pge 367
+#define ENGINE_PGE_367_DEFAULT_HEIGHT              700
+#define ENGINE_PGE_367_DEFAULT_WIDTH               700
+#define ENGINE_PGE_367_DEFAULT_R                   20
+#define ENGINE_PGE_367_DEFAULT_MARGIN              2
+
 #endif // DEFINES_17_H
