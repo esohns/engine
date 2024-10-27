@@ -68,6 +68,13 @@ PGE_367::OnUserCreate ()
 bool
 PGE_367::OnUserUpdate (float fElapsedTime)
 {
+  if (olc::PixelGameEngine::GetMouse (0).bPressed)
+  {
+    grid_.clear ();
+    active_.clear ();
+    OnUserCreate ();
+  } // end IF
+
   if (active_.size () > 0)
   {
     std::list<active_position>::iterator iterator = active_.begin ();
