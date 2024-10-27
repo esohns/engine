@@ -242,7 +242,7 @@ engine_glut_369_draw (void)
   {
     particles_a.push_back (Common_GL_Tools::map (static_cast<float> (cb_data_p->particles[i].position_.x), 0.0f, static_cast<float> (ENGINE_GLUT_369_DEFAULT_WIDTH), 0.0f, 1.0f));
     particles_a.push_back (Common_GL_Tools::map (static_cast<float> (cb_data_p->particles[i].position_.y), 0.0f, static_cast<float> (ENGINE_GLUT_369_DEFAULT_HEIGHT), 1.0f, 0.0f));
-    particles_a.push_back (cb_data_p->particles[i].mass_ * cb_data_p->particles[i].velocity_.length () / 100.0f);
+    particles_a.push_back (cb_data_p->particles[i].mass_ * glm::length (cb_data_p->particles[i].velocity_) / 100.0f);
 
     Common_GL_Color_t color = palette_a[cb_data_p->particles[i].colorIndex_];
     colors_a.push_back (static_cast<float> (color.r));

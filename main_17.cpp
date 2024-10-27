@@ -56,6 +56,7 @@
 #include "pge_367.h"
 #include "pge_368.h"
 #include "glut_369.h"
+#include "glut_370.h"
 
 enum Engine_ModeType
 {
@@ -69,6 +70,7 @@ enum Engine_ModeType
   ENGINE_MODE_367,
   ENGINE_MODE_368,
   ENGINE_MODE_369,
+  ENGINE_MODE_370,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -817,16 +819,16 @@ do_work (int argc_in,
       cb_data_s.camera.up.y = 1.0F;
       cb_data_s.camera.up.z = 0.0F;
 
-      cb_data_s.mouseX = ENGINE_GLUT_366_DEFAULT_WIDTH / 2;
-      cb_data_s.mouseY = ENGINE_GLUT_366_DEFAULT_HEIGHT / 2;
-      cb_data_s.pmouseX = ENGINE_GLUT_366_DEFAULT_WIDTH / 2;
-      cb_data_s.pmouseY = ENGINE_GLUT_366_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseX = ENGINE_GLUT_369_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_369_DEFAULT_HEIGHT / 2;
+      cb_data_s.pmouseX = ENGINE_GLUT_369_DEFAULT_WIDTH / 2;
+      cb_data_s.pmouseY = ENGINE_GLUT_369_DEFAULT_HEIGHT / 2;
       cb_data_s.mouseCenterPressed = false;
 
       // initialize GLUT
       glutInit (&argc_in, argv_in);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
-      glutInitWindowSize (ENGINE_GLUT_366_DEFAULT_WIDTH, ENGINE_GLUT_366_DEFAULT_HEIGHT);
+      glutInitWindowSize (ENGINE_GLUT_369_DEFAULT_WIDTH, ENGINE_GLUT_369_DEFAULT_HEIGHT);
 
       int window_i = glutCreateWindow ("engine GLUT 369");
       glutSetWindow (window_i);
@@ -989,6 +991,222 @@ do_work (int argc_in,
       cb_data_s.colorsLoc =
         glGetUniformLocation (cb_data_s.programId, ACE_TEXT_ALWAYS_CHAR ("colors"));
       ACE_ASSERT (cb_data_s.colorsLoc != -1);
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_370:
+    {
+      struct Engine_OpenGL_GLUT_370_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_370_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_370_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_370_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.programId = -1;
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.particlesLoc = -1;
+      cb_data_s.particleCountLoc = -1;
+      cb_data_s.particleColorsLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 1.0F;
+      cb_data_s.camera.up.z = 0.0F;
+
+      cb_data_s.mouseX = ENGINE_GLUT_370_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_370_DEFAULT_HEIGHT / 2;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_370_DEFAULT_WIDTH, ENGINE_GLUT_370_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 370");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_370_draw);
+      glutReshapeFunc (engine_glut_370_reshape);
+      glutVisibilityFunc (engine_glut_370_visible);
+
+      glutKeyboardFunc (engine_glut_370_key);
+      glutSpecialFunc (engine_glut_370_key_special);
+      glutMouseFunc (engine_glut_370_mouse_button);
+      glutMotionFunc (engine_glut_370_mouse_move);
+      glutPassiveMotionFunc (engine_glut_370_mouse_move);
+      glutTimerFunc (100, engine_glut_370_timer, 0);
+
+      glutCreateMenu (engine_glut_370_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      GLuint vertexShader_id = glCreateShader (GL_VERTEX_SHADER);
+      uint8_t* data_p = NULL;
+      ACE_UINT64 file_size_i = 0;
+      if (!Common_File_Tools::load (ACE_TEXT_ALWAYS_CHAR ("glut_370.vert"),
+                                    data_p,
+                                    file_size_i,
+                                    0))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load \"%s\", aborting\n"),
+                    ACE_TEXT ("glut_370.vert")));
+        break;
+      } // end IF
+      GLchar* array_a[2];
+      array_a[0] = reinterpret_cast<GLchar*> (data_p);
+      array_a[1] = NULL;
+      GLint array_2[2];
+      array_2[0] = static_cast<GLint> (file_size_i);
+      array_2[1] = static_cast<GLint> (NULL);
+      glShaderSource (vertexShader_id, 1, array_a, array_2);
+      delete [] data_p;
+      glCompileShader (vertexShader_id);
+      GLint success = 0;
+      glGetShaderiv (vertexShader_id, GL_COMPILE_STATUS, &success);
+      if (success == GL_FALSE)
+      {
+        GLchar info_log_a[1024];
+        GLsizei buf_size_i = 0;
+        glGetShaderInfoLog (vertexShader_id,
+                            sizeof (GLchar) * 1024,
+                            &buf_size_i,
+                            info_log_a);
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to compile \"%s\": \"%s\", aborting\n"),
+                    ACE_TEXT ("glut_370.vert"),
+                    ACE_TEXT (info_log_a)));
+        break;
+      } // end IF
+
+      GLuint fragmentShader_id = glCreateShader (GL_FRAGMENT_SHADER);
+      data_p = NULL;
+      file_size_i = 0;
+      if (!Common_File_Tools::load (ACE_TEXT_ALWAYS_CHAR ("glut_370.frag"),
+                                    data_p,
+                                    file_size_i,
+                                    0))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load \"%s\", aborting\n"),
+                    ACE_TEXT ("glut_370.frag")));
+        break;
+      } // end IF
+      array_a[0] = reinterpret_cast<GLchar*> (data_p);
+      array_a[1] = NULL;
+      array_2[0] = static_cast<GLint> (file_size_i);
+      array_2[1] = static_cast<GLint> (NULL);
+      glShaderSource (fragmentShader_id, 1, array_a, array_2);
+      delete [] data_p; data_p = NULL;
+      glCompileShader (fragmentShader_id);
+      success = 0;
+      glGetShaderiv (fragmentShader_id, GL_COMPILE_STATUS, &success);
+      if (success == GL_FALSE)
+      {
+        GLchar info_log_a[4096];
+        GLsizei buf_size_i = 0;
+        glGetShaderInfoLog (fragmentShader_id,
+                            sizeof (GLchar) * 4096,
+                            &buf_size_i,
+                            info_log_a);
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to compile \"%s\": \"%s\", aborting\n"),
+                    ACE_TEXT ("glut_370.frag"),
+                    ACE_TEXT (info_log_a)));
+        break;
+      } // end IF
+
+      cb_data_s.programId = glCreateProgram ();
+      glAttachShader (cb_data_s.programId, vertexShader_id);
+      glAttachShader (cb_data_s.programId, fragmentShader_id);
+      glLinkProgram (cb_data_s.programId);
+      success = 0;
+      glGetProgramiv (cb_data_s.programId, GL_LINK_STATUS, &success);
+      if (success == GL_FALSE)
+      {
+        GLchar info_log_a[4096];
+        GLsizei buf_size_i = 0;
+        glGetProgramInfoLog (cb_data_s.programId,
+                             sizeof (GLchar) * 4096,
+                             &buf_size_i,
+                             info_log_a);
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to link GL program: \"%s\", aborting\n"),
+                    ACE_TEXT (info_log_a)));
+
+        glDetachShader (cb_data_s.programId, vertexShader_id);
+        glDetachShader (cb_data_s.programId, fragmentShader_id);
+        glDeleteShader (vertexShader_id);
+        glDeleteShader (fragmentShader_id);
+        break;
+      } // end IF
+      glDetachShader (cb_data_s.programId, vertexShader_id);
+      glDetachShader (cb_data_s.programId, fragmentShader_id);
+      glDeleteShader (vertexShader_id);
+      glDeleteShader (fragmentShader_id);
+
+      glUseProgram (cb_data_s.programId);
+
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.programId, ACE_TEXT_ALWAYS_CHAR ("resolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.particlesLoc =
+        glGetUniformLocation (cb_data_s.programId, ACE_TEXT_ALWAYS_CHAR ("particles"));
+      ACE_ASSERT (cb_data_s.particlesLoc != -1);
+      cb_data_s.particleCountLoc =
+        glGetUniformLocation (cb_data_s.programId, ACE_TEXT_ALWAYS_CHAR ("particleCount"));
+      ACE_ASSERT (cb_data_s.particleCountLoc != -1);
+      cb_data_s.particleColorsLoc =
+        glGetUniformLocation (cb_data_s.programId, ACE_TEXT_ALWAYS_CHAR ("particleColors"));
+      ACE_ASSERT (cb_data_s.particleColorsLoc != -1);
+
+      static Common_GL_Color_t colorScheme1[1] = { Common_GL_Color_t (0x47, 0xCB, 0xB0) };
+      static Common_GL_Color_t colorScheme2[1] = { Common_GL_Color_t (0xFF, 0xA9, 0x10) };
+      static Common_GL_Color_t colorScheme3[1] = { Common_GL_Color_t (0x31, 0x1A, 0xE7) };
+
+      int index_i = Common_Tools::getRandomNumber (0, 0);
+      Common_GL_Color_t c1 = colorScheme1[index_i];
+      index_i = Common_Tools::getRandomNumber (0, 0);
+      Common_GL_Color_t c2 = colorScheme2[index_i];
+      index_i = Common_Tools::getRandomNumber (0, 0);
+      Common_GL_Color_t c3 = colorScheme3[index_i];
+
+      for (int i = 0; i < ENGINE_GLUT_370_DEFAULT_MAX_PARTICLE_COUNT; i++)
+      {
+        cb_data_s.particles.push_back (particle_2 (ENGINE_GLUT_370_DEFAULT_WIDTH / 2, ENGINE_GLUT_370_DEFAULT_HEIGHT / 2, c1));
+        cb_data_s.particles.push_back (particle_2 (ENGINE_GLUT_370_DEFAULT_WIDTH / 2, ENGINE_GLUT_370_DEFAULT_HEIGHT / 2, c2));
+        cb_data_s.particles.push_back (particle_2 (ENGINE_GLUT_370_DEFAULT_WIDTH / 2, ENGINE_GLUT_370_DEFAULT_HEIGHT / 2, c3));
+      } // end FOR
+
+      cb_data_s.particleGroup.initialize (cb_data_s.particles);
 
       glutMainLoop ();
 
