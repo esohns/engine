@@ -205,7 +205,7 @@ engine_glut_369_draw (void)
   } // end IF
 
   // move and kill particles
-  for (int i = cb_data_p->particles.size () - 1; i > -1; i--)
+  for (int i = static_cast<int> (cb_data_p->particles.size () - 1); i > -1; i--)
   {
     cb_data_p->particles[i].move ();
 
