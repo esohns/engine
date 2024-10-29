@@ -121,4 +121,11 @@
 #define ENGINE_GLUT_375_DEFAULT_WIDTH              1112
 #define ENGINE_GLUT_375_DEFAULT_SCALE_FACTOR       30
 
+// pge 376
+#define ENGINE_PGE_376_DEFAULT_HEIGHT              700
+#define ENGINE_PGE_376_DEFAULT_WIDTH               700
+#define ENGINE_PGE_376_DEFAULT_N                   30
+#define ENGINE_PGE_376_DEFAULT_NUMBER_OF_FRAMES    120
+#define ENGINE_PGE_376_DEFAULT_MARGIN              20
+
 #endif // DEFINES_17_H
