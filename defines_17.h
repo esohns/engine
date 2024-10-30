@@ -128,4 +128,19 @@
 #define ENGINE_PGE_376_DEFAULT_NUMBER_OF_FRAMES    120
 #define ENGINE_PGE_376_DEFAULT_MARGIN              20
 
+// glut 377
+#define ENGINE_GLUT_377_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_377_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_377_DEFAULT_SCALE_FACTOR       30
+
+// pge 378
+#define ENGINE_PGE_378_DEFAULT_HEIGHT              800
+#define ENGINE_PGE_378_DEFAULT_WIDTH               800
+#define ENGINE_PGE_378_DEFAULT_W                   80
+#define ENGINE_PGE_378_DEFAULT_H                   80
+#define ENGINE_PGE_378_DEFAULT_RATE_1              1.0f
+#define ENGINE_PGE_378_DEFAULT_RATE_2              0.1f
+#define ENGINE_PGE_378_DEFAULT_RATE_3              0.007f
+#define ENGINE_PGE_378_DEFAULT_FRICTION            1.05f
+
 #endif // DEFINES_17_H

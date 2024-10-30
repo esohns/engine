@@ -40,7 +40,7 @@ PGE_376::OnUserUpdate (float fElapsedTime)
   float t =
     2.0f * static_cast<float> (M_PI) * (frame_count_i % ENGINE_PGE_376_DEFAULT_NUMBER_OF_FRAMES) / static_cast<float> (ENGINE_PGE_376_DEFAULT_NUMBER_OF_FRAMES);
 
-  int s = (olc::PixelGameEngine::ScreenWidth () - 2 * ENGINE_PGE_376_DEFAULT_MARGIN) / ENGINE_PGE_376_DEFAULT_N;
+  static int s = (olc::PixelGameEngine::ScreenWidth () - 2 * ENGINE_PGE_376_DEFAULT_MARGIN) / ENGINE_PGE_376_DEFAULT_N;
 
   for (int i = 0; i < ENGINE_PGE_376_DEFAULT_N; i++)
   {
@@ -63,7 +63,7 @@ PGE_376::OnUserUpdate (float fElapsedTime)
       {
         color = rainbow (t / (2.0f * static_cast<float> (M_PI)));
         z =
-          Common_GL_Tools::map (static_cast<float> (noise_.Evaluate (1.0 + std::cos (t), 1.0f + std::sin (t))), -1.0f, 1.0f, 0.0f, 1.0f);
+          Common_GL_Tools::map (static_cast<float> (noise_.Evaluate (1.0 + std::cos (t), 1.0 + std::sin (t))), -1.0f, 1.0f, 0.0f, 1.0f);
       } // end IF
 
       olc::PixelGameEngine::FillRect (x, y, static_cast<int32_t> (z * s), s, color);
