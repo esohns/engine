@@ -143,4 +143,13 @@
 #define ENGINE_PGE_378_DEFAULT_RATE_3              0.007f
 #define ENGINE_PGE_378_DEFAULT_FRICTION            1.05f
 
+// glut 379
+#define ENGINE_GLUT_379_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_379_DEFAULT_WIDTH              1112
+
+// pge 380
+#define ENGINE_PGE_380_DEFAULT_HEIGHT              800
+#define ENGINE_PGE_380_DEFAULT_WIDTH               800
+#define ENGINE_PGE_380_DEFAULT_ALPHA_DECAY         5
+
 #endif // DEFINES_17_H
