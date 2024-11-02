@@ -73,6 +73,7 @@
 #include "pge_384.h"
 #include "pge_385.h"
 #include "glut_386.h"
+#include "pge_387.h"
 
 enum Engine_ModeType
 {
@@ -103,6 +104,7 @@ enum Engine_ModeType
   ENGINE_MODE_384,
   ENGINE_MODE_385,
   ENGINE_MODE_386,
+  ENGINE_MODE_387,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -3135,6 +3137,21 @@ do_work (int argc_in,
       glutMainLoop ();
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_387:
+    {
+      PGE_387 example;
+      if (example.Construct (ENGINE_PGE_387_DEFAULT_WIDTH, ENGINE_PGE_387_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }

@@ -133,13 +133,13 @@ class PGE_17
 
     void flock (const std::vector<boid*>& boids_in)
     {
-      olc::vd2d alignment_force = align (boids_in);
-      olc::vd2d alignment_force_2 = cohesion (boids_in);
-      olc::vd2d alignment_force_3 = separation (boids_in);
+      olc::vd2d force = align (boids_in);
+      olc::vd2d force_2 = cohesion (boids_in);
+      olc::vd2d force_3 = separation (boids_in);
 
-      applyForce (alignment_force);
-      applyForce (alignment_force_2);
-      applyForce (alignment_force_3);
+      applyForce (force);
+      applyForce (force_2);
+      applyForce (force_3);
     }
 
     void update ()
@@ -155,35 +155,27 @@ class PGE_17
       acceleration_ = {0.0, 0.0};
     }
 
-    void applyForce (const olc::vd2d& force_in)
+    inline void applyForce (const olc::vd2d& force_in)
     {
       acceleration_ += force_in;
     }
 
-    void show (olc::PixelGameEngine* engine_in)
+    inline void show (olc::PixelGameEngine* engine_in)
     {
       engine_in->Draw (position_, olc::WHITE);
     }
 
     void edges ()
     {
-      if (position_.x > ENGINE_PGE_17_DEFAULT_WIDTH - 1)
-      {
-        position_.x = 0;
-      }
-      if (position_.x < 0)
-      {
-        position_.x = ENGINE_PGE_17_DEFAULT_WIDTH - 1;
-      }
+      if (position_.x > static_cast<double> (ENGINE_PGE_17_DEFAULT_WIDTH - 1))
+        position_.x = 0.0;
+      else if (position_.x < 0.0)
+        position_.x = static_cast<double> (ENGINE_PGE_17_DEFAULT_WIDTH - 1);
 
-      if (position_.y > ENGINE_PGE_17_DEFAULT_HEIGHT - 1)
-      {
-        position_.y = 0;
-      }
-      if (position_.y < 0)
-      {
-        position_.y = ENGINE_PGE_17_DEFAULT_HEIGHT - 1;
-      }
+      if (position_.y > static_cast<double> (ENGINE_PGE_17_DEFAULT_HEIGHT - 1))
+        position_.y = 0.0;
+      else if (position_.y < 0.0)
+        position_.y = static_cast<double> (ENGINE_PGE_17_DEFAULT_HEIGHT - 1);
     }
 
    public:
