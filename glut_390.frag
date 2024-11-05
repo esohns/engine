@@ -70,8 +70,8 @@ sdHexagram (vec2 p, float r)
 vec3
 dust (vec2 uv, vec3 oriChannel, vec3 dustChannel, float wei)
 {
-  oriChannel += dustChannel*wei;
-  return oriChannel-wei/2.;
+  oriChannel += dustChannel * wei;
+  return oriChannel - wei / 2.;
 }
 
 float
@@ -84,12 +84,12 @@ Hexagon (vec2 uv)
 vec4
 HexCoord (vec2 uv)
 {
-  vec2 r = vec2(1., sqrt(3.));
-  vec2 h = r*.5;
-  vec2 a = mod(uv, r)-h;
-  vec2 b = mod(uv-h, r)-h;
-  vec2 gv = dot(a, a) < dot(b, b) ? a : b;
-  return vec4(gv, uv-gv);
+  vec2 r = vec2 (1., sqrt (3.));
+  vec2 h = r * .5;
+  vec2 a = mod (uv, r) - h;
+  vec2 b = mod (uv - h, r) - h;
+  vec2 gv = dot (a, a) < dot (b, b) ? a : b;
+  return vec4 (gv, uv - gv);
 }
 
 float
@@ -113,10 +113,10 @@ starRing (vec2 uv, vec2 pos, float size)
 vec2
 rotate (vec2 uv, float angle)
 {
-  float s = sin(angle);
-  float c = cos(angle);
-  mat2 rot = mat2(c, -s, s, c);
-  return rot*uv;
+  float s = sin (angle);
+  float c = cos (angle);
+  mat2 rot = mat2 (c, -s, s, c);
+  return rot * uv;
 }
 
 void

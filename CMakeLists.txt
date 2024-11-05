@@ -1386,6 +1386,10 @@ set (engine_18_EXE_SRCS
      main_18.cpp
      glut_390.cpp
      glut_390.h
+     glut_391.cpp
+     glut_391.h
+     glut_392.cpp
+     glut_392.h
      stdafx.h)
 
 set (EXECUTABLE_18 engine_18)
@@ -1909,6 +1913,10 @@ install (FILES
          "glut_389.frag"
          "glut_390.vert"
          "glut_390.frag"
+         "glut_391.vert"
+         "glut_391.frag"
+         "glut_392.vert"
+         "glut_392.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
