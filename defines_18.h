@@ -37,4 +37,15 @@
 #define ENGINE_GLUT_392_DEFAULT_WIDTH              1112
 #define ENGINE_GLUT_392_DEFAULT_SCALE_FACTOR       30
 
+// pge 393
+#define ENGINE_PGE_393_DEFAULT_HEIGHT              768
+#define ENGINE_PGE_393_DEFAULT_WIDTH               1024
+#define ENGINE_PGE_393_DEFAULT_C                   15
+#define ENGINE_PGE_393_DEFAULT_ALPHA_DECAY         35
+
+// glut 394
+#define ENGINE_GLUT_394_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_394_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_394_DEFAULT_SCALE_FACTOR       30
+
 #endif // DEFINES_18_H

@@ -1390,6 +1390,10 @@ set (engine_18_EXE_SRCS
      glut_391.h
      glut_392.cpp
      glut_392.h
+     pge_393.cpp
+     pge_393.h
+     glut_394.cpp
+     glut_394.h
      stdafx.h)
 
 set (EXECUTABLE_18 engine_18)
@@ -1831,6 +1835,7 @@ install (FILES
          "background_pattern_tenth.png"
          "bluedark.png"
          "circle.png"
+         "opengl_logo.png"
          "glut_3.gtk2"
          "glut_3.gtk3"
          "glut_16.gtk2"
@@ -1917,6 +1922,8 @@ install (FILES
          "glut_391.frag"
          "glut_392.vert"
          "glut_392.frag"
+         "glut_394.vert"
+         "glut_394.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
