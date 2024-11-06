@@ -1394,6 +1394,8 @@ set (engine_18_EXE_SRCS
      pge_393.h
      glut_394.cpp
      glut_394.h
+     pge_395.cpp
+     pge_395.h
      stdafx.h)
 
 set (EXECUTABLE_18 engine_18)

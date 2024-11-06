@@ -151,33 +151,27 @@ palette (float t)
 void
 main ()
 {
-  // copy the vTexCoord
-  // vTexCoord is a value that goes from 0.0 - 1.0 depending on the pixels location
-  // we can use it to access every pixel on the screen
-  
   vec2 coord = vTexCoord;
   vec2 uv = (coord * 2.0 - 1.0) * iResolution.xy / iResolution.y;
 
-  //vec2 uv0 = vec2(u, v);
-
   vec2 m = iMouse.xy / iResolution.xy;
 
-  vec3 ro = vec3 (0., 3., -3.);
-  ro.yz *= Rot (-m.y * PI + 1.);
+  vec3 ro = vec3 (0.0, 3.0, -3.0);
+  ro.yz *= Rot (-m.y * PI + 1.0);
   ro.xz *= Rot (-m.x * TAU);
 
-  vec3 rd = GetRayDir (uv, ro, vec3 (0., 0., 0.), 5.0);
-  vec3 col = vec3 (0.);
+  vec3 rd = GetRayDir (uv, ro, vec3 (0.0, 0.0, 0.0), 5.0);
 
   float d = RayMarch (ro, rd);
 
+  vec3 col = vec3 (0.0);
   if (d < MAX_DIST)
   {
     vec3 p = ro + rd * d;
     vec3 n = GetNormal (p);
     vec3 r = reflect (rd, n);
 
-    float dif = dot (n, normalize (vec3 (1., 2., 3.))) * .5 + .5;
+    float dif = dot (n, normalize (vec3 (1.0, 2.0, 3.0))) * 0.5 + 0.5;
     col = vec3 (dif);
 
     col = n * 0.5 + 0.5;
@@ -185,14 +179,11 @@ main ()
     col *= tex.xyz;
   }
 
-  //col *= 0.0;
+  //vec2 st = Koch (uv) * 4.0;
+  //col = vec3 (st.y);
 
-  // vec2 st = Koch(uv) * 4.0;
-
-  //col = vec3(st.y);
-
-  col = pow (col, vec3 (.4545)); // gamma correction
-  //col =  palette(col.z  - iTime*.08); // Funny colors
+  col = pow (col, vec3 (0.4545)); // gamma correction
+  //col = palette (col.z  - iTime * 0.08); // Funny colors
 
   // gl_FragColor is a built in shader variable, and your .frag file must contain it
   // We are setting the vec3 color into a new vec4, with a transparency of 1 (no opacity)
