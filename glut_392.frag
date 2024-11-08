@@ -68,7 +68,7 @@ map (vec3 p)
   return sdBoxFrame (q, vec3 (0.5), 0.025);
 }
 
-static vec2 mousePrevious = vec2 (0.0, 0.0);
+vec2 mousePrevious = vec2 (0.0, 0.0);
 
 void
 main ()

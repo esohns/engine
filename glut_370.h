@@ -99,7 +99,7 @@ struct Engine_OpenGL_GLUT_370_CBData
 {
   // particles
   std::vector<particle_2>           particles;
-  particleGroup                     particleGroup;
+  particleGroup                     group;
 
   // canvas
   int                               columns;

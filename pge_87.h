@@ -1,6 +1,8 @@
 #ifndef PGE_87_H
 #define PGE_87_H
 
+#include <vector>
+
 #include "olcPixelGameEngine.h"
 
 class PGE_87

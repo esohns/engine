@@ -23,7 +23,7 @@ bool
 PGE_384::OnUserCreate ()
 {
   points_ = initialize (points_);
-  fields_ = struct fields ();
+  fields_ = fields ();
   stepsPerFrame_ = Common_Tools::getRandomNumber (3, 12);
   randomColor_ = Common_Tools::getRandomNumber (0.0f, 1.0f);
 

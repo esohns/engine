@@ -36,15 +36,18 @@ PGE_214::OnUserCreate ()
   r2_ = 200.0f;
   r3_ = 100.0f;
 
-  //curvatures
+  // curvatures
   float k1 = -1.0f / r1_;
   float k2 = 1.0f / r2_;
   float k3 = 1.0f / r3_;
 
   // initial circles
-  circle c1 (z1_.scale (k1), k1);
-  circle c2 (z2_.scale (k2), k2);
-  circle c3 (z3_.scale (k3), k3);
+  complex z1_scaled = z1_.scale (k1);
+  complex z2_scaled = z2_.scale (k2);
+  complex z3_scaled = z3_.scale (k3);
+  circle c1 (z1_scaled, k1);
+  circle c2 (z2_scaled, k2);
+  circle c3 (z3_scaled, k3);
 
   // we've set them up to be touching tangent to the other two
   c1.tangentCircles_.push_back (c2);

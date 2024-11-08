@@ -43,7 +43,7 @@ cosh (float val)
 float
 sinh (float val)
 {
-  float tmp = exp(val);
+  float tmp = exp (val);
   float sinH = (tmp - 1.0 / tmp) / 2.0;
   return sinH;
 } 
@@ -51,7 +51,7 @@ sinh (float val)
 float
 tanh (float val)
 {
-  float tmp = exp(val);
+  float tmp = exp (val);
   float tanH = (tmp - 1.0 / tmp) / (tmp + 1.0 / tmp);
   return tanH;
 }
@@ -94,7 +94,7 @@ cx_log (vec2 a)
   if (ipart > PI)
     ipart = ipart - (2.0 * PI);
 
-  return vec2(log(rpart), ipart);
+  return vec2 (log (rpart), ipart);
 }
 
 ///////////////////////////////////////////////
@@ -104,7 +104,7 @@ cx_log (vec2 a)
 vec3
 palette (float t, vec3 a, vec3 b, vec3 c, vec3 d)
 {
-  return a + b * cos(0.38*2.*PI * (c * t + d));
+  return a + b * cos (0.38 * 2. * PI * (c * t + d));
 }
 
 float

@@ -43,6 +43,7 @@ PGE_397::OnUserUpdate (float fElapsedTime)
     points_.clear ();
     for (int i = 0; i < ENGINE_PGE_397_DEFAULT_NUMBER_OF_POINTS; i++)
       points_.push_back ({0, 0});
+    t_ = 0;
   } // end IF
 
   static int W = olc::PixelGameEngine::ScreenWidth ();

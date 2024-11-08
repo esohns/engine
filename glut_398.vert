@@ -1,20 +1,18 @@
-#version 330
-//precision highp float;
+//precision mediump float;
 
 attribute vec3 aPosition;
 attribute vec2 aTexCoord;
 
-// Pass-through to the fragment shader
 varying vec2 vTexCoord;
 
 void
 main ()
 {
+  vTexCoord = aTexCoord;
+
   // Transform the position into normalized device coordinates (NDC)
   vec4 positionVec4 = vec4 (aPosition, 1.0);
 
-  // Pass texture coordinates to the fragment shader
-//  vTexCoord = aTexCoord;
   vTexCoord = positionVec4.xy;
 
   // Scale and shift to NDC (Normalize Device Coordinate) range [-1, 1]

@@ -43,7 +43,7 @@ protected:
     {
       if (Next != nullptr)
       {
-        delete Next;
+        delete Next; Next = nullptr;
       }
     }
   };
@@ -69,7 +69,7 @@ protected:
     {
       if (Next != nullptr)
       {
-        delete Next;
+        delete Next; Next = nullptr;
       }
     }
   };
@@ -97,7 +97,7 @@ protected:
     {
       if (Next != nullptr)
       {
-        delete Next;
+        delete Next; Next = nullptr;
       }
     }
   };

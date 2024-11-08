@@ -1,3 +1,4 @@
+#version 330
 //precision mediump float;
 
 attribute vec4 aPosition;

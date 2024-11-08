@@ -1244,7 +1244,7 @@ do_work (int argc_in,
         cb_data_s.particles.push_back (particle_2 (ENGINE_GLUT_370_DEFAULT_WIDTH / 2, ENGINE_GLUT_370_DEFAULT_HEIGHT / 2, c3));
       } // end FOR
 
-      cb_data_s.particleGroup.initialize (cb_data_s.particles);
+      cb_data_s.group.initialize (cb_data_s.particles);
 
       glutMainLoop ();
 
