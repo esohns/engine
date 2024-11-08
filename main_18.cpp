@@ -56,6 +56,7 @@
 #include "pge_397.h"
 #include "glut_398.h"
 #include "pge_399.h"
+#include "pge_400.h"
 
 enum Engine_ModeType
 {
@@ -69,6 +70,7 @@ enum Engine_ModeType
   ENGINE_MODE_397,
   ENGINE_MODE_398,
   ENGINE_MODE_399,
+  ENGINE_MODE_400,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1103,6 +1105,21 @@ do_work (int argc_in,
     {
       PGE_399 example;
       if (example.Construct (ENGINE_PGE_399_DEFAULT_WIDTH, ENGINE_PGE_399_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_400:
+    {
+      PGE_400 example;
+      if (example.Construct (ENGINE_PGE_400_DEFAULT_WIDTH, ENGINE_PGE_400_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
