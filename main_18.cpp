@@ -57,6 +57,9 @@
 #include "glut_398.h"
 #include "pge_399.h"
 #include "pge_400.h"
+#include "pge_401.h"
+#include "pge_402.h"
+#include "pge_403.h"
 
 enum Engine_ModeType
 {
@@ -71,6 +74,9 @@ enum Engine_ModeType
   ENGINE_MODE_398,
   ENGINE_MODE_399,
   ENGINE_MODE_400,
+  ENGINE_MODE_401,
+  ENGINE_MODE_402,
+  ENGINE_MODE_403,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1120,6 +1126,51 @@ do_work (int argc_in,
     {
       PGE_400 example;
       if (example.Construct (ENGINE_PGE_400_DEFAULT_WIDTH, ENGINE_PGE_400_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_401:
+    {
+      PGE_401 example;
+      if (example.Construct (ENGINE_PGE_401_DEFAULT_WIDTH, ENGINE_PGE_401_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_402:
+    {
+      PGE_402 example;
+      if (example.Construct (ENGINE_PGE_402_DEFAULT_WIDTH, ENGINE_PGE_402_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_403:
+    {
+      PGE_403 example;
+      if (example.Construct (ENGINE_PGE_403_DEFAULT_WIDTH, ENGINE_PGE_403_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
