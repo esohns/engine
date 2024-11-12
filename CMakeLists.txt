@@ -1412,6 +1412,12 @@ set (engine_18_EXE_SRCS
      pge_402.h
      pge_403.cpp
      pge_403.h
+     pge_404.cpp
+     pge_404.h
+     pge_405.cpp
+     pge_405.h
+     pge_406.cpp
+     pge_406.h
      stdafx.h)
 
 set (EXECUTABLE_18 engine_18)

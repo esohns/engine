@@ -60,6 +60,9 @@
 #include "pge_401.h"
 #include "pge_402.h"
 #include "pge_403.h"
+#include "pge_404.h"
+#include "pge_405.h"
+#include "pge_406.h"
 
 enum Engine_ModeType
 {
@@ -77,6 +80,9 @@ enum Engine_ModeType
   ENGINE_MODE_401,
   ENGINE_MODE_402,
   ENGINE_MODE_403,
+  ENGINE_MODE_404,
+  ENGINE_MODE_405,
+  ENGINE_MODE_406,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1171,6 +1177,51 @@ do_work (int argc_in,
     {
       PGE_403 example;
       if (example.Construct (ENGINE_PGE_403_DEFAULT_WIDTH, ENGINE_PGE_403_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_404:
+    {
+      PGE_404 example;
+      if (example.Construct (ENGINE_PGE_404_DEFAULT_WIDTH, ENGINE_PGE_404_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_405:
+    {
+      PGE_405 example;
+      if (example.Construct (ENGINE_PGE_405_DEFAULT_WIDTH, ENGINE_PGE_405_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_406:
+    {
+      PGE_406 example;
+      if (example.Construct (ENGINE_PGE_406_DEFAULT_WIDTH, ENGINE_PGE_406_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
