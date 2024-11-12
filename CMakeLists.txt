@@ -64,8 +64,6 @@ else ()
 #  set_property (SOURCE PROPERTY COMPILE_DEFINITIONS COMMON_NTRACE=1)
 endif ()
 
-#include (valgrind)
-
 set (PACKAGE ${PROJECT_NAME})
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in
                 ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
@@ -78,7 +76,9 @@ configure_file (resource.rc.in
 
 include (FindPkgConfig)
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts;${CMAKE_CURRENT_SOURCE_DIR}/../Common/src/gl/scripts")
+include (assimp)
 include (glew)
+include (glut)
 
 include (ffmpeg)
 if (NOT FFMPEG_SUPPORT)
@@ -167,103 +167,9 @@ elseif (WIN32)
 endif () 
 set (LIBNOISE_LIB_DIR "${LIBNOISE_DIR}/build/msvc/${CMAKE_BUILD_TYPE}")
 
-if (UNIX)
- set (GLUT_LIB_FILE libglut.so)
- find_library (GLUT_LIBRARY ${GLUT_LIB_FILE}
-               PATHS /usr /usr/lib
-               PATH_SUFFIXES lib64 x86_64-linux-gnu
-               DOC "searching for ${GLUT_LIB_FILE}"
-               REQUIRED)
- if (GLUT_LIBRARY)
-  message (STATUS "Found Glut library \"${GLUT_LIBRARY}\"")
-  set (GLUT_FOUND TRUE)
-#   set (GLUT_INCLUDE_DIR "/usr/include")
-  set (GLUT_LIBRARIES "${GLUT_LIBRARY}")
- else ()
-  message (WARNING "could not find ${GLUT_LIB_FILE}, continuing")
- endif (GLUT_LIBRARY)
-elseif (WIN32)
- set (GLUT_LIB_FILE freeglut.lib)
- set (BIN_PATH_SUFFIX "bin")
- set (LIB_PATH_BASE "freeglut")
- set (LIB_PATH_SUFFIX "lib")
- if (${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE} STREQUAL "x64")
-  set (BIN_PATH_SUFFIX "${BIN_PATH_SUFFIX}/x64")
-  set (LIB_PATH_BASE "${LIB_PATH_BASE}/lib")
-  set (LIB_PATH_SUFFIX "x64")
- endif (${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE} STREQUAL "x64")
- find_library (GLUT_LIBRARY ${GLUT_LIB_FILE}
-               PATHS $ENV{LIB_ROOT}/${LIB_PATH_BASE}
-               PATH_SUFFIXES ${LIB_PATH_SUFFIX}
-               DOC "searching for ${GLUT_LIB_FILE}")
- if (GLUT_LIBRARY)
-  message (STATUS "Found Glut library \"${GLUT_LIBRARY}\"")
-  set (GLUT_INCLUDE_DIRS "$ENV{LIB_ROOT}/freeglut/include")
-  set (GLUT_LIBRARIES "${GLUT_LIBRARY}")
-  set (GLUT_LIB_DIR "$ENV{LIB_ROOT}/freeglut/${BIN_PATH_SUFFIX}")
- else ()
-  message (WARNING "could not find ${GLUT_LIB_FILE}, continuing")
- endif (GLUT_LIBRARY)
-endif () 
-add_definitions (-DGLUT_SUPPORT)
-
-if (UNIX)
- pkg_check_modules (PKG_ASSIMP assimp)
- if (PKG_ASSIMP_FOUND)
-  if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-   if (${LSB_RELEASE_ID_SHORT} MATCHES "Fedora")
-# *WORKAROUND*: 'prefix' variable must be prepended to 'includedir'
-    pkg_get_variable (PKG_ASSIMP_PREFIX assimp prefix)
-    set (ASSIMP_INCLUDE_DIRS "${PKG_ASSIMP_PREFIX}/${PKG_ASSIMP_INCLUDE_DIRS}")
-   elseif (${LSB_RELEASE_ID_SHORT} MATCHES "Ubuntu")
-# *WORKAROUND*: there seems to be a problem on Ubuntu
-    set (ASSIMP_INCLUDE_DIRS "/usr/include/assimp")
-   endif ()
-  endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
-  set (ASSIMP_LIBRARIES ${PKG_ASSIMP_LIBRARIES})
- endif (PKG_ASSIMP_FOUND)
-# find_library (ASSIMP_LIBRARY libassimp.so.3
-#               DOC "searching for libassimp")
-# if (NOT ASSIMP_LIBRARY)
-#  message (FATAL_ERROR "could not find libassimp, aborting")
-# endif (NOT ASSIMP_LIBRARY)
-elseif (WIN32)
- if (NOT ASSIMP_FOUND)
-  set (ASSIMP_INCLUDE_DIRS "$ENV{LIB_ROOT}/assimp/include;$ENV{LIB_ROOT}/assimp/cmake/include")
-  set (LIB_WITH_SUFFIX "assimp-vc${MSVC_TOOLSET_VERSION}-mt")
-  if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
-      CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-   set (LIB_WITH_SUFFIX "${LIB_WITH_SUFFIX}d")
-  set (LIB_WITH_SUFFIX "${LIB_WITH_SUFFIX}.lib")
-  endif (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
-         CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-  set (ASSIMP_LIBRARIES "$ENV{LIB_ROOT}/assimp/cmake/lib/${CMAKE_BUILD_TYPE}/${LIB_WITH_SUFFIX}")
-  set (ASSIMP_LIB_DIR "$ENV{LIB_ROOT}/assimp/cmake/bin/${CMAKE_BUILD_TYPE}")
- endif (NOT ASSIMP_FOUND)
-endif ()
-
-if (UNIX)
- find_library (PNG_LIBRARY libpng16.so.16
-               DOC "searching for libpng")
- if (NOT PNG_LIBRARY)
-  message (WARNING "could not find libpng, continuing")
- else ()
-  message (STATUS "Found libpng \"${PNG_LIBRARY}\"")
-  set (PNG_LIBRARIES "${PNG_LIBRARY}")
- endif (NOT PNG_LIBRARY)
-elseif (WIN32)
- if (NOT PNG_FOUND)
-  unset (LIB_FILE_SUFFIX)
-  if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-   set (LIB_FILE_SUFFIX "d")
-  else ()
-   set (LIB_FILE_SUFFIX "")
-  endif (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-  set (PNG_INCLUDE_DIRS "$ENV{LIB_ROOT}/libpng/build;$ENV{LIB_ROOT}/libpng")
-  set (PNG_LIBRARIES "$ENV{LIB_ROOT}/libpng/build/${CMAKE_BUILD_TYPE}/libpng16${LIB_FILE_SUFFIX}.lib")
-  set (PNG_LIB_DIR "$ENV{LIB_ROOT}/zlib/build/${CMAKE_BUILD_TYPE};$ENV{LIB_ROOT}/libpng/build/${CMAKE_BUILD_TYPE}")
- endif (NOT PNG_FOUND)
-endif ()
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/src/image/scripts")
+include (png)
+include (stb)
 
 if (UNIX)
  find_library (BOX2D_LIBRARY liquidfun
@@ -1430,6 +1336,23 @@ set (EXECUTABLE_18 engine_18)
 add_executable (${EXECUTABLE_18}
                 ${engine_18_EXE_SRCS})
 
+set (engine_19_EXE_SRCS
+     ${CMAKE_CURRENT_BINARY_DIR}/engine_config.h
+     ${CMAKE_CURRENT_BINARY_DIR}/resource.rc
+#     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
+     camera.cpp
+     camera.h
+     engine_common.h
+     defines_19.h
+     main_19.cpp
+     glut_410.cpp
+     glut_410.h
+     stdafx.h)
+
+set (EXECUTABLE_19 engine_19)
+add_executable (${EXECUTABLE_19}
+                ${engine_19_EXE_SRCS})
+
 set_target_properties (${EXECUTABLE_9} PROPERTIES CXX_STANDARD 17)
 set_target_properties (${EXECUTABLE_10} PROPERTIES CXX_STANDARD 17)
 set_target_properties (${EXECUTABLE_11} PROPERTIES CXX_STANDARD 17)
@@ -1511,6 +1434,10 @@ if (UNIX)
  target_link_libraries (${EXECUTABLE_18} X11)
  target_link_libraries (${EXECUTABLE_18} GL)
  target_link_libraries (${EXECUTABLE_18} png)
+
+ target_link_libraries (${EXECUTABLE_19} X11)
+ target_link_libraries (${EXECUTABLE_19} GL)
+ target_link_libraries (${EXECUTABLE_19} png)
 endif ()
 target_link_libraries (${EXECUTABLE} ${BOX2D_LIBRARIES})
 target_link_libraries (${EXECUTABLE} ${LIBNOISE_LIB})
@@ -1793,6 +1720,22 @@ target_link_libraries (${EXECUTABLE_18} CommonOpenGL)
 target_link_libraries (${EXECUTABLE_18} CommonTimer)
 target_link_libraries (${EXECUTABLE_18} CommonUI)
 #target_link_libraries (${EXECUTABLE_18} CommonUI_GTK)
+
+target_link_libraries (${EXECUTABLE_19} ${BOX2D_LIBRARIES})
+target_link_libraries (${EXECUTABLE_19} ${LIBNOISE_LIB})
+target_link_libraries (${EXECUTABLE_19} ${GLUT_LIBRARIES})
+target_link_libraries (${EXECUTABLE_19} ${GLEW_LIBRARIES})
+target_link_libraries (${EXECUTABLE_19} ${GTK_LIBRARIES})
+
+target_link_libraries (${EXECUTABLE_19} ${ACE_LIBRARY})
+
+target_link_libraries (${EXECUTABLE_19} Common)
+target_link_libraries (${EXECUTABLE_19} CommonError)
+target_link_libraries (${EXECUTABLE_19} CommonLog)
+target_link_libraries (${EXECUTABLE_19} CommonOpenGL)
+target_link_libraries (${EXECUTABLE_19} CommonTimer)
+target_link_libraries (${EXECUTABLE_19} CommonUI)
+#target_link_libraries (${EXECUTABLE_19} CommonUI_GTK)
 if (UNIX)
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
  target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
@@ -1803,6 +1746,7 @@ if (UNIX)
  target_link_options (${EXECUTABLE_15} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
  target_link_options (${EXECUTABLE_17} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
  target_link_options (${EXECUTABLE_18} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
+# target_link_options (${EXECUTABLE_19} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
 elseif (WIN32)
  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:20000000")
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
@@ -1814,6 +1758,7 @@ elseif (WIN32)
  target_link_options (${EXECUTABLE_15} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
  target_link_options (${EXECUTABLE_17} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
  target_link_options (${EXECUTABLE_18} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
+# target_link_options (${EXECUTABLE_19} PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-FORCE:MULTIPLE>")
 endif ()
 
 # add PCH
@@ -1853,10 +1798,13 @@ target_precompile_headers (${EXECUTABLE_17}
                            REUSE_FROM ${EXECUTABLE})
 target_precompile_headers (${EXECUTABLE_18}
                            REUSE_FROM ${EXECUTABLE})
+target_precompile_headers (${EXECUTABLE_19}
+                           REUSE_FROM ${EXECUTABLE})
 
 install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} ${EXECUTABLE_5} ${EXECUTABLE_6}
                  ${EXECUTABLE_7} ${EXECUTABLE_8} ${EXECUTABLE_9} ${EXECUTABLE_10} ${EXECUTABLE_11} ${EXECUTABLE_12}
                  ${EXECUTABLE_13} ${EXECUTABLE_14} ${EXECUTABLE_15} ${EXECUTABLE_16} ${EXECUTABLE_17} ${EXECUTABLE_18}
+                 ${EXECUTABLE_19}
          RUNTIME
          DESTINATION bin
          COMPONENT applications)
@@ -1866,6 +1814,7 @@ install (FILES
          "2017.png"
          "background_pattern_tenth.png"
          "bluedark.png"
+         "cat.jpg"
          "circle.png"
          "opengl_logo.png"
          "glut_3.gtk2"
@@ -1962,6 +1911,8 @@ install (FILES
          "glut_407.frag"
          "glut_408.vert"
          "glut_408.frag"
+         "glut_410.vert"
+         "glut_410.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
@@ -2059,6 +2010,7 @@ set (ARGS_15 "-l -m320")
 set (ARGS_16 "-l -m340")
 set (ARGS_17 "-l -m360")
 set (ARGS_18 "-l -m390")
+set (ARGS_19 "-l -m410")
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS "${ARGS} -t")
  set (ARGS_2 "${ARGS_2} -t")
@@ -2078,6 +2030,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
  set (ARGS_16 "${ARGS_16} -t")
  set (ARGS_17 "${ARGS_17} -t")
  set (ARGS_18 "${ARGS_18} -t")
+ set (ARGS_19 "${ARGS_19} -t")
 endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 file (TO_CMAKE_PATH ${LIBNOISE_LIB_DIR} LIBNOISE_PATH)
 file (TO_CMAKE_PATH "${GLUT_LIB_DIR}" GLUT_PATH)
@@ -2123,6 +2076,7 @@ if (UNIX)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_16}" COMMAND_16)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_17}" COMMAND_17)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_18}" COMMAND_18)
+ file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_19}" COMMAND_19)
 elseif (WIN32)
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE}.exe" COMMAND)
  string (REPLACE "\\" "\\\\" COMMAND ${COMMAND})
@@ -2160,6 +2114,8 @@ elseif (WIN32)
  string (REPLACE "\\" "\\\\" COMMAND_17 ${COMMAND_17})
  file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_18}.exe" COMMAND_18)
  string (REPLACE "\\" "\\\\" COMMAND_18 ${COMMAND_18})
+ file (TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${EXECUTABLE_19}.exe" COMMAND_19)
+ string (REPLACE "\\" "\\\\" COMMAND_19 ${COMMAND_19})
  set (ENVIRONMENT_MAGICK "MAGICK_CODER_MODULE_PATH=${IMAGEMAGICK_PATH}\\\\modules\\\\coders")
 endif ()
 create_target_launcher (${EXECUTABLE}
@@ -2284,6 +2240,13 @@ create_target_launcher (${EXECUTABLE_17}
 create_target_launcher (${EXECUTABLE_18}
                         COMMAND ${COMMAND_18}
                         ARGS ${ARGS_18}
+#                        FORWARD_ARGS
+                        RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                        ENVIRONMENT ${ENVIRONMENT_MAGICK})
+create_target_launcher (${EXECUTABLE_19}
+                        COMMAND ${COMMAND_19}
+                        ARGS ${ARGS_19}
 #                        FORWARD_ARGS
                         RUNTIME_LIBRARY_DIRS ${RUNTIME_LIBRARY_DIRS}
                         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
