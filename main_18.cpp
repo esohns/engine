@@ -63,6 +63,9 @@
 #include "pge_404.h"
 #include "pge_405.h"
 #include "pge_406.h"
+#include "glut_407.h"
+#include "glut_408.h"
+#include "pge_409.h"
 
 enum Engine_ModeType
 {
@@ -83,6 +86,9 @@ enum Engine_ModeType
   ENGINE_MODE_404,
   ENGINE_MODE_405,
   ENGINE_MODE_406,
+  ENGINE_MODE_407,
+  ENGINE_MODE_408,
+  ENGINE_MODE_409,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1222,6 +1228,251 @@ do_work (int argc_in,
     {
       PGE_406 example;
       if (example.Construct (ENGINE_PGE_406_DEFAULT_WIDTH, ENGINE_PGE_406_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_407:
+    {
+      struct Engine_OpenGL_GLUT_407_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_407_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_407_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_407_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+      cb_data_s.colorPhaseLoc = -1;
+      cb_data_s.displaceWeiLoc = -1;
+      cb_data_s.floorUVLoc = -1;
+      cb_data_s.UVScaleLoc = -1;
+      cb_data_s.seedLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 1.0F;
+      cb_data_s.camera.up.z = 0.0F;
+
+      cb_data_s.mouseX = ENGINE_GLUT_407_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_407_DEFAULT_HEIGHT / 2;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_407_DEFAULT_WIDTH, ENGINE_GLUT_407_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 407");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_407_draw);
+      glutReshapeFunc (engine_glut_407_reshape);
+      glutVisibilityFunc (engine_glut_407_visible);
+
+      glutKeyboardFunc (engine_glut_407_key);
+      glutSpecialFunc (engine_glut_407_key_special);
+      glutMouseFunc (engine_glut_407_mouse_button);
+      glutMotionFunc (engine_glut_407_mouse_move);
+      glutPassiveMotionFunc (engine_glut_407_mouse_move);
+      glutTimerFunc (100, engine_glut_407_timer, 0);
+
+      glutCreateMenu (engine_glut_407_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_407.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_407.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.shader.use ();
+
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+      cb_data_s.colorPhaseLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iColorPhase"));
+      ACE_ASSERT (cb_data_s.colorPhaseLoc != -1);
+      cb_data_s.displaceWeiLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iDisplaceWei"));
+      ACE_ASSERT (cb_data_s.displaceWeiLoc != -1);
+      cb_data_s.floorUVLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iFloorUvMode"));
+      ACE_ASSERT (cb_data_s.floorUVLoc != -1);
+      cb_data_s.UVScaleLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iUvScale"));
+      ACE_ASSERT (cb_data_s.UVScaleLoc != -1);
+      cb_data_s.seedLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iSeed"));
+      ACE_ASSERT (cb_data_s.seedLoc != -1);
+
+      static std::vector<float> color_phases_a[7] = { {0.1f, 0.9f, 0.9f},
+                                                      {0.0f, 0.0f, 0.0f},
+                                                      {0.9f, 0.1f, 0.5f}, 
+                                                      {0.0f, 0.0f, 0.2f}, 
+                                                      {0.0f, 0.33f, 0.67f}, 
+                                                      {0.0f, 0.1f, 0.2f}, 
+                                                      {0.3f, 0.2f, 0.2f} };
+      int index_i = Common_Tools::getRandomNumber (0, 6);
+      cb_data_s.colorPhase = color_phases_a[index_i];
+
+      static float displace_weis_a[3] = { 0.0f, 0.01f, 0.015f };
+      index_i = Common_Tools::getRandomNumber (0, 2);
+      cb_data_s.displaceWei = displace_weis_a[index_i];
+
+      static int floor_UV_modes_a[5] = { 0, 1, 2, 3, 4 };
+      index_i = Common_Tools::getRandomNumber (0, 4);
+      cb_data_s.floorUVMode = floor_UV_modes_a[index_i];
+
+      static int UV_scales_a[4] = { 0, 50, 100, 1000 };
+      index_i = Common_Tools::getRandomNumber (0, 3);
+      cb_data_s.UVScale = UV_scales_a[index_i];
+
+      cb_data_s.seed = { Common_Tools::getRandomNumber (-20.0f, 20.0f),
+                         Common_Tools::getRandomNumber (-20.0f, 20.0f) };
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_408:
+    {
+      struct Engine_OpenGL_GLUT_408_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_408_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_408_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_408_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+      cb_data_s.mouseLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 1.0F;
+      cb_data_s.camera.up.z = 0.0F;
+
+      cb_data_s.mouseX = ENGINE_GLUT_408_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_408_DEFAULT_HEIGHT / 2;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_408_DEFAULT_WIDTH, ENGINE_GLUT_408_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 408");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_408_draw);
+      glutReshapeFunc (engine_glut_408_reshape);
+      glutVisibilityFunc (engine_glut_408_visible);
+
+      glutKeyboardFunc (engine_glut_408_key);
+      glutSpecialFunc (engine_glut_408_key_special);
+      glutMouseFunc (engine_glut_408_mouse_button);
+      glutMotionFunc (engine_glut_408_mouse_move);
+      glutPassiveMotionFunc (engine_glut_408_mouse_move);
+      glutTimerFunc (100, engine_glut_408_timer, 0);
+
+      glutCreateMenu (engine_glut_408_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_408.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_408.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.shader.use ();
+
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+      cb_data_s.mouseLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iMouse"));
+      ACE_ASSERT (cb_data_s.mouseLoc != -1);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_409:
+    {
+      PGE_409 example;
+      if (example.Construct (ENGINE_PGE_409_DEFAULT_WIDTH, ENGINE_PGE_409_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?

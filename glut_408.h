@@ -1,5 +1,5 @@
-#ifndef GLUT_394_H
-#define GLUT_394_H
+#ifndef GLUT_408_H
+#define GLUT_408_H
 
 #include <chrono>
 
@@ -11,23 +11,22 @@
 #endif // ACE_WIN32 || ACE_WIN64
 
 #include "common_gl_shader.h"
-#include "common_gl_texture.h"
 
 #include "engine_common.h"
 
 // GLUT routines
-void engine_glut_394_reshape (int, int);
-void engine_glut_394_key (unsigned char, int, int);
-void engine_glut_394_key_special (int, int, int);
-void engine_glut_394_menu (int);
-void engine_glut_394_mouse_button (int, int, int, int);
-void engine_glut_394_mouse_move (int, int);
-void engine_glut_394_timer (int);
-void engine_glut_394_draw (void);
-void engine_glut_394_idle (void);
-void engine_glut_394_visible (int);
+void engine_glut_408_reshape (int, int);
+void engine_glut_408_key (unsigned char, int, int);
+void engine_glut_408_key_special (int, int, int);
+void engine_glut_408_menu (int);
+void engine_glut_408_mouse_button (int, int, int, int);
+void engine_glut_408_mouse_move (int, int);
+void engine_glut_408_timer (int);
+void engine_glut_408_draw (void);
+void engine_glut_408_idle (void);
+void engine_glut_408_visible (int);
 
-struct Engine_OpenGL_GLUT_394_CBData
+struct Engine_OpenGL_GLUT_408_CBData
 {
   // canvas
   int                               columns;
@@ -38,11 +37,8 @@ struct Engine_OpenGL_GLUT_394_CBData
   GLint                             resolutionLoc;
   GLint                             timeLoc;
   GLint                             mouseLoc;
-  GLint                             clickedLoc;
-  GLint                             textureLoc;
 
   Common_GL_Shader                  shader;
-  Common_GL_Texture                 texture;
 
   // menu
   bool                              wireframe;
@@ -53,9 +49,6 @@ struct Engine_OpenGL_GLUT_394_CBData
   // mouse
   int                               mouseX;
   int                               mouseY;
-  bool                              mouse0Clicked;
-  float                             viewX;
-  float                             viewY;
 
   // time
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
@@ -67,4 +60,4 @@ struct Engine_OpenGL_GLUT_394_CBData
 #endif // ACE_WIN32 || ACE_WIN64 || ACE_LINUX
 };
 
-#endif // GLUT_394_H
+#endif // GLUT_408_H
