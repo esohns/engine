@@ -1353,6 +1353,8 @@ set (engine_19_EXE_SRCS
      glut_412.h
      glut_413.cpp
      glut_413.h
+     pge_414.cpp
+     pge_414.h
      stdafx.h)
 
 set (EXECUTABLE_19 engine_19)
@@ -1818,6 +1820,7 @@ install (FILES
          "peace.dat"
          "800x500.png"
          "2017.png"
+         "Apple_Computer_Logo_rainbow.png"
          "background_pattern_tenth.png"
          "bluedark.png"
          "cat.jpg"
