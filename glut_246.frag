@@ -1,20 +1,8 @@
-/*
 
-Original shader by Syntopia 
-https://www.shadertoy.com/user/Syntopia
-
-From Shadertoy.com:
-https://www.shadertoy.com/view/Mdf3z7
-
-*/
-
-// These are necessary definitions that let you graphics card know how to render the shader
 #ifdef GL_ES
 precision highp float;
 #endif
 
-
-// These are our passed in information from the sketch.js
 uniform vec2 iResolution;
 uniform vec2 iMouse;
 uniform float iTime;

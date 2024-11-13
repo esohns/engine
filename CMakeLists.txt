@@ -1347,6 +1347,12 @@ set (engine_19_EXE_SRCS
      main_19.cpp
      glut_410.cpp
      glut_410.h
+     pge_411.cpp
+     pge_411.h
+     glut_412.cpp
+     glut_412.h
+     glut_413.cpp
+     glut_413.h
      stdafx.h)
 
 set (EXECUTABLE_19 engine_19)
@@ -1913,6 +1919,10 @@ install (FILES
          "glut_408.frag"
          "glut_410.vert"
          "glut_410.frag"
+         "glut_412.vert"
+         "glut_412.frag"
+         "glut_413.vert"
+         "glut_413.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
