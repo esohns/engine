@@ -48,22 +48,20 @@ PGE_414::OnUserCreate ()
       uint8_t pixelG = data_p[pixelIndex + 1];
       uint8_t pixelB = data_p[pixelIndex + 2];
       uint8_t pixelA = data_p[pixelIndex + 3];
-
       pixelIndex += 4;
 
       // assign a particle to this pixel ?
-      if (!Common_Tools::testRandomProbability (ENGINE_PGE_414_DEFAULT_LOAD_PERCENTAGE))
+      if (pixelA == 0 || !Common_Tools::testRandomProbability (ENGINE_PGE_414_DEFAULT_LOAD_PROBABILITY))
         continue; // no --> proceed
 
       static int screen_width_i = olc::PixelGameEngine::ScreenWidth ();
       static int screen_height_i = olc::PixelGameEngine::ScreenHeight ();
       static olc::vf2d center_s (screen_width_i / 2.0f, screen_height_i / 2.0f);
-
-      olc::Pixel pixelColor (pixelR, pixelG, pixelB, 255);
-
       particle particle_s (center_s.x, center_s.y);
       particle_s.target.x = center_s.x - (resolution_s.cx / 2) + x;
       particle_s.target.y = center_s.y - (resolution_s.cy / 2) + y;
+
+      olc::Pixel pixelColor (pixelR, pixelG, pixelB, 255);
       particle_s.targetColor = pixelColor;
 
       particles_.push_back (particle_s);

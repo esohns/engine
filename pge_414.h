@@ -50,12 +50,12 @@ class PGE_414
       if (distToTarget < static_cast<float> (ENGINE_PGE_414_DEFAULT_OK_DISTANCE))
       {
         proximityMult = distToTarget / static_cast<float> (ENGINE_PGE_414_DEFAULT_OK_DISTANCE);
-        velocity *= 0.9f;
+        velocity *= ENGINE_PGE_414_DEFAULT_FRICTION_CLOSE;
       } // end IF
       else
       {
         proximityMult = 1.0f;
-        velocity *= 0.95f;
+        velocity *= ENGINE_PGE_414_DEFAULT_FRICTION;
       } // end ELSE
 
       if (distToTarget > 1.0f)
@@ -71,7 +71,7 @@ class PGE_414
       {
         olc::vf2d push = (isLMBPressed ? mouse - position : position - mouse);
         push = push.norm ();
-        push *= (ENGINE_PGE_414_DEFAULT_MOUSE_SIZE - mouseDist) * 0.05f;
+        push *= (ENGINE_PGE_414_DEFAULT_MOUSE_SIZE - mouseDist) * ENGINE_PGE_414_DEFAULT_MOUSE_ATTRACT;
         acceleration += push;
       } // end IF
 
@@ -87,13 +87,13 @@ class PGE_414
 
     void draw (olc::PixelGameEngine* engine)
     {
-      float targetSize = 1.0f;
+      float targetSize = 2.0f;
       if (!isDead)
       {
         float distToTarget = position.dist (target);
         targetSize = Common_GL_Tools::map (std::min (distToTarget, static_cast<float> (ENGINE_PGE_414_DEFAULT_OK_DISTANCE)),
                                            0.0f, static_cast<float> (ENGINE_PGE_414_DEFAULT_OK_DISTANCE),
-                                           1.0f, ENGINE_PGE_414_DEFAULT_PARTICLE_MAX_SIZE);
+                                           2.0f, ENGINE_PGE_414_DEFAULT_PARTICLE_MAX_SIZE);
       } // end IF
       size = Common_Math_Tools::lerp (size, targetSize, 0.1f);
 
