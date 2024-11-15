@@ -1359,6 +1359,8 @@ set (engine_19_EXE_SRCS
      glut_415.h
      pge_416.cpp
      pge_416.h
+     glut_417.cpp
+     glut_417.h
      stdafx.h)
 
 set (EXECUTABLE_19 engine_19)

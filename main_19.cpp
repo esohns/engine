@@ -53,6 +53,7 @@
 #include "pge_414.h"
 #include "glut_415.h"
 #include "pge_416.h"
+#include "glut_417.h"
 
 enum Engine_ModeType
 {
@@ -63,6 +64,7 @@ enum Engine_ModeType
   ENGINE_MODE_414,
   ENGINE_MODE_415,
   ENGINE_MODE_416,
+  ENGINE_MODE_417,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -678,6 +680,84 @@ do_work (int argc_in,
         example.Start ();
         result = true;
       } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_417:
+    {
+      struct Engine_OpenGL_GLUT_417_CBData cb_data_s;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 750.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.mousex = ENGINE_GLUT_417_DEFAULT_WIDTH / 2;
+      cb_data_s.mousey = ENGINE_GLUT_417_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouse_0_ButtonDown = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_417_DEFAULT_WIDTH, ENGINE_GLUT_417_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 417");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      //glEnable (GL_DEPTH_TEST);
+
+      //glDisable (GL_CULL_FACE);
+      //glFrontFace (GL_CCW);
+
+      //glEnable (GL_LIGHTING);
+      //glEnable (GL_LIGHT0);
+      //glEnable (GL_LIGHT1);
+      //glDisable (GL_COLOR_MATERIAL);
+
+      //glEnable (GL_BLEND);
+      //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      //glEnable (GL_NORMALIZE);
+
+      glPolygonMode (GL_FRONT_AND_BACK,
+                     GL_FILL);
+
+      glutDisplayFunc (engine_glut_417_draw);
+      glutReshapeFunc (engine_glut_417_reshape);
+      glutVisibilityFunc (engine_glut_417_visible);
+
+      glutKeyboardFunc (engine_glut_417_key);
+      glutSpecialFunc (engine_glut_417_key_special);
+      glutMouseFunc (engine_glut_417_mouse_button);
+      glutMotionFunc (engine_glut_417_mouse_move);
+      glutPassiveMotionFunc (engine_glut_417_mouse_move);
+      glutTimerFunc (100, engine_glut_417_timer, 0);
+
+      glutCreateMenu (engine_glut_417_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      cb_data_s.r = std::min (ENGINE_GLUT_417_DEFAULT_WIDTH, ENGINE_GLUT_417_DEFAULT_HEIGHT) / 3.0f;
+
+      cb_data_s.xOffset = Common_Tools::getRandomNumber (0.0, 10000.0);
+      cb_data_s.yOffset = Common_Tools::getRandomNumber (0.0, 10000.0);
+      cb_data_s.zOffset = Common_Tools::getRandomNumber (0.0, 10000.0);
+
+      cb_data_s.points = getPointDistribution (ENGINE_GLUT_417_DEFAULT_N, cb_data_s.r);
+
+      glutMainLoop ();
+
+      result = true;
 
       break;
     }
