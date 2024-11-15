@@ -52,6 +52,7 @@
 #include "glut_413.h"
 #include "pge_414.h"
 #include "glut_415.h"
+#include "pge_416.h"
 
 enum Engine_ModeType
 {
@@ -61,6 +62,7 @@ enum Engine_ModeType
   ENGINE_MODE_413,
   ENGINE_MODE_414,
   ENGINE_MODE_415,
+  ENGINE_MODE_416,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -664,6 +666,21 @@ do_work (int argc_in,
 
       break;
     }
+    case ENGINE_MODE_416:
+    {
+      PGE_416 example;
+      if (example.Construct (ENGINE_PGE_416_DEFAULT_WIDTH, ENGINE_PGE_416_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
     default:
     {
       ACE_DEBUG ((LM_ERROR,
@@ -677,7 +694,7 @@ do_work (int argc_in,
   return result;
 }
 
-COMMON_DEFINE_PRINTVERSION_FUNCTION (do_printVersion, MAKE_VERSION_STRING_VARIABLE (programName_in, ACE_TEXT_ALWAYS_CHAR (engine_PACKAGE_VERSION_FULL), version_string), version_string)
+COMMON_DEFINE_PRINTVERSION_FUNCTION (do_print_version, MAKE_VERSION_STRING_VARIABLE (programName_in, ACE_TEXT_ALWAYS_CHAR (engine_PACKAGE_VERSION_FULL), version_string), version_string)
 
 int
 ACE_TMAIN (int argc_in,
@@ -730,7 +747,7 @@ ACE_TMAIN (int argc_in,
   } // end IF
   if (print_version_and_exit)
   {
-    do_printVersion (ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0])));
+    do_print_version (ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0])));
     result = EXIT_SUCCESS;
     goto clean;
   } // end IF
