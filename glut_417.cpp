@@ -65,17 +65,17 @@ engine_glut_417_key_special (int key_in,
   switch (key_in)
   {
     case GLUT_KEY_LEFT:
-      cb_data_p->camera.rotation.z -= 0.5f;
+      cb_data_p->camera.rotation.y -= 0.5f;
       break;
     case GLUT_KEY_RIGHT:
-      cb_data_p->camera.rotation.z += 0.5f;
+      cb_data_p->camera.rotation.y += 0.5f;
       break;
     case GLUT_KEY_UP:
       cb_data_p->camera.position.x = 0.0f;
       cb_data_p->camera.position.y = 400.0f;
       cb_data_p->camera.position.z = 750.0f;
 
-      cb_data_p->camera.rotation.z = 0.0f;
+      cb_data_p->camera.rotation.y = 0.0f;
 
       break;
   } // end SWITCH
@@ -146,8 +146,8 @@ engine_glut_417_draw (void)
 
   // rotate the camera
   glm::mat4 rotation_matrix = glm::rotate (glm::mat4 (1.0f),
-                                           glm::radians (cb_data_p->camera.rotation.z),
-                                           glm::vec3 (0.0f, 0.0f, 1.0f));
+                                           glm::radians (cb_data_p->camera.rotation.y),
+                                           glm::vec3 (0.0f, 1.0f, 0.0f));
   glm::vec3 rotation_center (0.0f, 0.0f, 0.0f);
   glm::vec4 pos_rot_h =
     rotation_matrix * glm::vec4 (cb_data_p->camera.position - rotation_center, 1.0f);
