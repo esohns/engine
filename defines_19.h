@@ -88,4 +88,17 @@
 #define ENGINE_GLUT_418_DEFAULT_WIDTH              1112
 #define ENGINE_GLUT_418_DEFAULT_SCALE_FACTOR       30
 
+// pge 419
+#define ENGINE_PGE_419_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_419_DEFAULT_WIDTH               1112
+#define ENGINE_PGE_419_DEFAULT_H                   64
+
+// pge 420
+#define ENGINE_PGE_420_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_420_DEFAULT_WIDTH               1112
+#define ENGINE_PGE_420_DEFAULT_INNER_RADIUS        200.0f
+#define ENGINE_PGE_420_DEFAULT_OUTER_RADIUS        300.0f
+#define ENGINE_PGE_420_DEFAULT_SPEED               1.0f
+#define ENGINE_PGE_420_DEFAULT_THICKNESS           30.0f
+
 #endif // DEFINES_19_H
