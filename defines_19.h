@@ -101,4 +101,17 @@
 #define ENGINE_PGE_420_DEFAULT_SPEED               1.0f
 #define ENGINE_PGE_420_DEFAULT_THICKNESS           30.0f
 
+// pge 421
+#define ENGINE_PGE_421_DEFAULT_HEIGHT              834
+#define ENGINE_PGE_421_DEFAULT_WIDTH               1112
+#define ENGINE_PGE_421_DEFAULT_MAX_DISTANCE        300.0f
+#define ENGINE_PGE_421_DEFAULT_MIN_DISTANCE        10.0f
+#define ENGINE_PGE_421_DEFAULT_BRANCH_LENGTH       10.0f
+
+// pge 422
+#define ENGINE_PGE_422_DEFAULT_HEIGHT              600
+#define ENGINE_PGE_422_DEFAULT_WIDTH               600
+#define ENGINE_PGE_422_DEFAULT_W                   600
+#define ENGINE_PGE_422_DEFAULT_BRUSH_RADIUS        5
+
 #endif // DEFINES_19_H
