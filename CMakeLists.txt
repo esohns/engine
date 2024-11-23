@@ -1371,6 +1371,8 @@ set (engine_19_EXE_SRCS
      pge_421.h
      pge_422.cpp
      pge_422.h
+     glut_423.cpp
+     glut_423.h
      stdafx.h)
 
 set (EXECUTABLE_19 engine_19)
@@ -2008,11 +2010,11 @@ if (WIN32)
           DESTINATION bin
           COMPONENT binaries)
  if (CMAKE_BUILD_TYPE STREQUAL Debug)
- install(FILES
-         "C:/Windows/System32/msvcp140d.dll"
-         "C:/Windows/System32/vcruntime140d.dll"
-         DESTINATION bin
-         COMPONENT runtime)
+ install (FILES
+          "C:/Windows/System32/msvcp140d.dll"
+          "C:/Windows/System32/vcruntime140d.dll"
+          DESTINATION bin
+          COMPONENT runtime)
  endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 endif (WIN32)
 

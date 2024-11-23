@@ -114,4 +114,9 @@
 #define ENGINE_PGE_422_DEFAULT_W                   600
 #define ENGINE_PGE_422_DEFAULT_BRUSH_RADIUS        5
 
+// glut 423
+#define ENGINE_GLUT_423_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_423_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_423_DEFAULT_RADIUS             320.0f
+
 #endif // DEFINES_19_H
