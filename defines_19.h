@@ -119,4 +119,9 @@
 #define ENGINE_GLUT_423_DEFAULT_WIDTH              1112
 #define ENGINE_GLUT_423_DEFAULT_RADIUS             320.0f
 
+// pge 424
+#define ENGINE_PGE_424_DEFAULT_HEIGHT              500
+#define ENGINE_PGE_424_DEFAULT_WIDTH               500
+#define ENGINE_PGE_424_DEFAULT_N                   9
+
 #endif // DEFINES_19_H
