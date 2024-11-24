@@ -61,6 +61,9 @@
 #include "pge_422.h"
 #include "glut_423.h"
 #include "pge_424.h"
+#include "glut_425.h"
+#include "glut_426.h"
+#include "pge_427.h"
 
 enum Engine_ModeType
 {
@@ -79,6 +82,9 @@ enum Engine_ModeType
   ENGINE_MODE_422,
   ENGINE_MODE_423,
   ENGINE_MODE_424,
+  ENGINE_MODE_425,
+  ENGINE_MODE_426,
+  ENGINE_MODE_427,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -981,6 +987,221 @@ do_work (int argc_in,
     {
       PGE_424 example;
       if (example.Construct (ENGINE_PGE_424_DEFAULT_WIDTH, ENGINE_PGE_424_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_425:
+    {
+      struct Engine_OpenGL_GLUT_425_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_425_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_425_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_425_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+      cb_data_s.skewFactorLoc = -1;
+      cb_data_s.rotationSpeedLoc = -1;
+      cb_data_s.wobblynessLoc = -1;
+      cb_data_s.subDivisionsLoc = -1;
+      cb_data_s.paletteLoc = -1;
+      cb_data_s.spiralFactorLoc = -1;
+      cb_data_s.spiralSpeedLoc = -1;
+      cb_data_s.xOffLoc = -1;
+      cb_data_s.yOffLoc = -1;
+      cb_data_s.numColorsLoc = -1;
+      cb_data_s.blendColorsLoc = -1;
+      cb_data_s.blendSameLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 1.0F;
+      cb_data_s.camera.up.z = 0.0F;
+
+      cb_data_s.mouseX = ENGINE_GLUT_425_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_425_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_425_DEFAULT_WIDTH, ENGINE_GLUT_425_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 425");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_425_draw);
+      glutReshapeFunc (engine_glut_425_reshape);
+      glutVisibilityFunc (engine_glut_425_visible);
+
+      glutKeyboardFunc (engine_glut_425_key);
+      glutSpecialFunc (engine_glut_425_key_special);
+      glutMouseFunc (engine_glut_425_mouse_button);
+      glutMotionFunc (engine_glut_425_mouse_move);
+      glutPassiveMotionFunc (engine_glut_425_mouse_move);
+      glutTimerFunc (100, engine_glut_425_timer, 0);
+
+      glutCreateMenu (engine_glut_425_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_425.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_425.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.shader.use ();
+
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+      cb_data_s.skewFactorLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("skewFactor"));
+      ACE_ASSERT (cb_data_s.skewFactorLoc != -1);
+      cb_data_s.rotationSpeedLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("rotationSpeed"));
+      ACE_ASSERT (cb_data_s.rotationSpeedLoc != -1);
+      cb_data_s.wobblynessLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("wobblyness"));
+      ACE_ASSERT (cb_data_s.wobblynessLoc != -1);
+      cb_data_s.subDivisionsLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("subDivisions"));
+      ACE_ASSERT (cb_data_s.subDivisionsLoc != -1);
+      cb_data_s.paletteLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("palette"));
+      ACE_ASSERT (cb_data_s.paletteLoc != -1);
+      cb_data_s.spiralFactorLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("spiralFactor"));
+      ACE_ASSERT (cb_data_s.spiralFactorLoc != -1);
+      cb_data_s.spiralSpeedLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("spiralSpeed"));
+      ACE_ASSERT (cb_data_s.spiralSpeedLoc != -1);
+      cb_data_s.xOffLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("xOff"));
+      ACE_ASSERT (cb_data_s.xOffLoc != -1);
+      cb_data_s.yOffLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("yOff"));
+      ACE_ASSERT (cb_data_s.yOffLoc != -1);
+      cb_data_s.numColorsLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("numColors"));
+      ACE_ASSERT (cb_data_s.numColorsLoc != -1);
+      cb_data_s.blendColorsLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("blendColors"));
+      ACE_ASSERT (cb_data_s.blendColorsLoc != -1);
+      cb_data_s.blendSameLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("blendSame"));
+      ACE_ASSERT (cb_data_s.blendSameLoc != -1);
+
+      randomizeParameters (cb_data_s);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_426:
+    {
+      struct Engine_OpenGL_GLUT_426_CBData cb_data_s;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 750.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.mousex = ENGINE_GLUT_426_DEFAULT_WIDTH / 2;
+      cb_data_s.mousey = ENGINE_GLUT_426_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouse_0_ButtonDown = false;
+
+      cb_data_s.f = 0.0f;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_426_DEFAULT_WIDTH, ENGINE_GLUT_426_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 426");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK,
+                     GL_FILL);
+
+      glutDisplayFunc (engine_glut_426_draw);
+      glutReshapeFunc (engine_glut_426_reshape);
+      glutVisibilityFunc (engine_glut_426_visible);
+
+      glutKeyboardFunc (engine_glut_426_key);
+      glutSpecialFunc (engine_glut_426_key_special);
+      glutMouseFunc (engine_glut_426_mouse_button);
+      glutMotionFunc (engine_glut_426_mouse_move);
+      glutPassiveMotionFunc (engine_glut_426_mouse_move);
+      glutTimerFunc (100, engine_glut_426_timer, 0);
+
+      glutCreateMenu (engine_glut_426_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_427:
+    {
+      PGE_427 example;
+      if (example.Construct (ENGINE_PGE_427_DEFAULT_WIDTH, ENGINE_PGE_427_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
