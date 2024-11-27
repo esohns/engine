@@ -13,6 +13,8 @@
 #include "ace/Assert.h"
 #include "ace/Log_Msg.h"
 
+#include "common_tools.h"
+
 #include "common_gl_tools.h"
 
 #include "common_image_tools.h"
@@ -63,17 +65,37 @@ engine_glut_430_key_special (int key_in,
   {
     case GLUT_KEY_LEFT:
       cb_data_p->camera.rotation.y -= 0.5f;
+
+      cb_data_p->otarget.y += 0.2f;
+      cb_data_p->ttwist.y -= 0.4f;
+      cb_data_p->amp += 0.2f;
+
       break;
     case GLUT_KEY_RIGHT:
       cb_data_p->camera.rotation.y += 0.5f;
+
+      cb_data_p->otarget.y -= 0.2f;
+      cb_data_p->ttwist.y += 0.4f;
+      cb_data_p->amp += 0.2f;
+
       break;
     case GLUT_KEY_UP:
+      cb_data_p->amp += 1.0f;
+
+      break;
+    case GLUT_KEY_DOWN:
+      cb_data_p->amp -= 0.5f;
+
+      break;
+    case GLUT_KEY_HOME:
       cb_data_p->camera.position.x = 0.0f;
-      cb_data_p->camera.position.y = 0.0f;
+      cb_data_p->camera.position.y = 400.0f;
       cb_data_p->camera.position.z = 750.0f;
 
       cb_data_p->camera.rotation.y = 0.0f;
 
+      break;
+    default:
       break;
   } // end SWITCH
 }
@@ -115,8 +137,11 @@ engine_glut_430_mouse_move (int x, int y)
     static_cast<struct Engine_OpenGL_GLUT_430_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
+  cb_data_p->pmousex = cb_data_p->mousex;
+  cb_data_p->pmousey = cb_data_p->mousey;
+
   cb_data_p->mousex = x;
-  cb_data_p->mousey = ENGINE_GLUT_430_DEFAULT_HEIGHT - y;
+  cb_data_p->mousey = y;
 }
 
 void
@@ -168,14 +193,20 @@ engine_glut_430_draw (void)
   glEnd ();
 
   glRotatef ((static_cast<float> (-M_PI) / 8.0f) * (180.0f / static_cast<float> (M_PI)), 1.0f, 0.0f, 0.0f);
-  moveFish();
-  drawBubbles();
+
+  static int frame_count_i = 1;
+  moveFish (*cb_data_p,
+            frame_count_i);
+  drawBubbles (*cb_data_p);
   drawFish (*cb_data_p);
-  drawBowl();
-  checkInputs();
-  makeBubbles();
+  drawBowl (*cb_data_p);
+  checkInputs (*cb_data_p,
+               frame_count_i);
+  makeBubbles (*cb_data_p);
 
   glutSwapBuffers ();
+
+  ++frame_count_i;
 }
 
 void
@@ -210,6 +241,16 @@ makeScales (struct Engine_OpenGL_GLUT_430_CBData& CBData_inout)
     return;
   } // end IF
   ACE_ASSERT (data_p);
+
+  // flip image
+  std::vector<uint8_t> flipPixels (resolution_s.cx * resolution_s.cy * 4, 0);
+  for (int r = 0; r < resolution_s.cy; r++)
+  {
+    unsigned char* src = &data_p[r * 4 * resolution_s.cx];
+    unsigned char *dst = &flipPixels[(resolution_s.cy - r - 1) * 4 * resolution_s.cx];
+    ACE_OS::memcpy (dst, src, 4 * resolution_s.cx);
+  } // end FOR
+  ACE_OS::memcpy (data_p, flipPixels.data (), resolution_s.cx * resolution_s.cy * 4);
 
   Common_Image_Resolution_t resolution_2 = { ENGINE_GLUT_430_DEFAULT_DETAIL, -1 };
   uint8_t* data_2 = NULL;
@@ -258,6 +299,54 @@ makeScales (struct Engine_OpenGL_GLUT_430_CBData& CBData_inout)
 }
 
 void
+moveFish (struct Engine_OpenGL_GLUT_430_CBData& CBData_in,
+          int frameCount)
+{
+  if (frameCount > 20)
+  {
+    CBData_in.orient = glm::mix (CBData_in.orient, CBData_in.otarget, 0.1f);
+    CBData_in.tvel.z += CBData_in.amp * std::sin (CBData_in.orient.y);
+    CBData_in.tvel.x -= CBData_in.amp * std::cos (CBData_in.orient.y);
+    CBData_in.tpos += CBData_in.tvel;
+    if (glm::length (CBData_in.tpos) > 2.0f * ENGINE_GLUT_430_DEFAULT_HEIGHT)
+    {
+      CBData_in.tpos - CBData_in.tvel;
+      CBData_in.tvel *= -0.25f;
+    } // end IF
+    CBData_in.tvel *= 0.95f;
+    CBData_in.ttwist *= 0.8f;
+    CBData_in.otarget.z *= 0.95f;
+    CBData_in.amp *= 0.8f;
+    CBData_in.twist = glm::mix (CBData_in.twist, CBData_in.ttwist, 0.25f);
+    CBData_in.wiggle = (static_cast<float> (M_PI) / 8.0f) * CBData_in.amp * std::sin (frameCount / 2.0f);
+  } // end IF
+}
+
+void
+drawBubbles (struct Engine_OpenGL_GLUT_430_CBData& CBData_in)
+{
+  for (std::vector<bubble>::iterator iterator = CBData_in.bubbles.begin ();
+       iterator != CBData_in.bubbles.end ();
+      )
+  {
+    if (!(*iterator).isAlive)
+    {
+      iterator = CBData_in.bubbles.erase (iterator);
+      continue;
+    } // end IF
+    ++iterator;
+  } // end FOR
+
+  for (std::vector<bubble>::iterator iterator = CBData_in.bubbles.begin ();
+       iterator != CBData_in.bubbles.end ();
+       ++iterator)
+  {
+    (*iterator).update ();
+    (*iterator).draw ();
+  } // end FOR
+}
+
+void
 drawFish (struct Engine_OpenGL_GLUT_430_CBData& CBData_in)
 {
   glPushMatrix ();
@@ -271,4 +360,54 @@ drawFish (struct Engine_OpenGL_GLUT_430_CBData& CBData_in)
        ++iterator)
     (*iterator).draw (CBData_in.twist, CBData_in.wiggle);
   glPopMatrix ();
+}
+
+void
+drawBowl (struct Engine_OpenGL_GLUT_430_CBData& CBData_in)
+{
+  //specularMaterial(100);
+  //shininess(5);
+  //metalness(10);
+
+  glPushMatrix ();
+  glTranslatef (0.0f, -5.0f, 0.0f);
+  glColor4f (0.0f, 1.0f, 1.0f, 0.1f);
+  glutSolidCylinder (ENGINE_GLUT_430_DEFAULT_HEIGHT / 1.5f - 5.0f, ENGINE_GLUT_430_DEFAULT_HEIGHT / 3.0f - 10.0f, 32, 1);
+  glPopMatrix ();
+
+  glPushMatrix ();
+  glColor4f (1.0f, 1.0f, 1.0f, 0.05f);
+  glTranslatef (0.0f, -50.0f, 0.0f);
+  glutSolidCylinder (ENGINE_GLUT_430_DEFAULT_HEIGHT / 1.49f, ENGINE_GLUT_430_DEFAULT_HEIGHT / 3.0f + 100.0f, 32, 1);
+
+  glTranslatef (0.0f, -ENGINE_GLUT_430_DEFAULT_HEIGHT / 6.0f - 50.0f, 0.0f);
+  glRotatef (static_cast<float> (M_PI_2) * 180.0f / static_cast<float> (M_PI), 1.0f, 0.0f, 0.0f);
+  glutSolidTorus (ENGINE_GLUT_430_DEFAULT_HEIGHT / 1.49f, ENGINE_GLUT_430_DEFAULT_HEIGHT / 100.0f, 64, 16);
+  glPopMatrix ();
+}
+
+void
+checkInputs (struct Engine_OpenGL_GLUT_430_CBData& CBData_in,
+             int frameCount)
+{
+  if (frameCount > 20)
+  {
+    CBData_in.ttwist.y -= (CBData_in.mousex - CBData_in.pmousex) / 200.0f;
+    CBData_in.ttwist.z += (CBData_in.mousey - CBData_in.pmousey) / 100.0f;
+    CBData_in.otarget.y += (CBData_in.mousex - CBData_in.pmousex) / 400.0f;
+    CBData_in.otarget.z -= (CBData_in.mousey - CBData_in.pmousey) / 800.0f;
+  } // end IF
+}
+
+void
+makeBubbles (struct Engine_OpenGL_GLUT_430_CBData& CBData_in)
+{
+  if (std::floor (Common_Tools::getRandomNumber (0.0f, 40.0f)) == 0.0f)
+  {
+    float sc = 0.25f * ENGINE_GLUT_430_DEFAULT_HEIGHT / 566.0f;
+    glm::vec3 pos (CBData_in.tpos.x * sc - (ENGINE_GLUT_430_DEFAULT_HEIGHT / 6.0f) * std::cos (CBData_in.orient.y),
+                   CBData_in.tpos.y * sc,
+                   CBData_in.tpos.z * sc + (ENGINE_GLUT_430_DEFAULT_HEIGHT / 6.0f) * std::sin (CBData_in.orient.y));
+    CBData_in.bubbles.push_back (bubble (pos, 2.0f * ENGINE_GLUT_430_DEFAULT_HEIGHT / 548.0f));
+  } // end IF
 }

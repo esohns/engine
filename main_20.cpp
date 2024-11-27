@@ -221,7 +221,7 @@ do_work (int argc_in,
       cb_data_s.wireframe = false;
 
       cb_data_s.camera.position.x = 0.0f;
-      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.y = 400.0f;
       cb_data_s.camera.position.z = 750.0f;
       cb_data_s.camera.looking_at.x = 0.0f;
       cb_data_s.camera.looking_at.y = 0.0f;
@@ -230,13 +230,19 @@ do_work (int argc_in,
       cb_data_s.camera.up.y = 1.0f;
       cb_data_s.camera.up.z = 0.0f;
 
+      cb_data_s.pmousex = ENGINE_GLUT_430_DEFAULT_WIDTH / 2;
+      cb_data_s.pmousey = ENGINE_GLUT_430_DEFAULT_HEIGHT / 2;
       cb_data_s.mousex = ENGINE_GLUT_430_DEFAULT_WIDTH / 2;
       cb_data_s.mousey = ENGINE_GLUT_430_DEFAULT_HEIGHT / 2;
       cb_data_s.mouse_0_ButtonDown = false;
 
+      cb_data_s.amp = 0.0f;
       cb_data_s.orient = { 0.0f, 0.0f, 0.0f };
+      cb_data_s.otarget = { 0.0f, 0.0f, 0.0f };
       cb_data_s.tpos = { 0.0f, 0.0f, 0.0f };
+      cb_data_s.tvel = { 0.0f, 0.0f, 0.0f };
       cb_data_s.twist = { 0.0f, 0.0f, 0.0f };
+      cb_data_s.ttwist = { 0.0f, 0.0f, 0.0f };
       cb_data_s.wiggle = 0.0f;
 
       // initialize GLUT
@@ -260,8 +266,8 @@ do_work (int argc_in,
       //glEnable (GL_LIGHT1);
       //glDisable (GL_COLOR_MATERIAL);
 
-      //glEnable (GL_BLEND);
-      //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glEnable (GL_BLEND);
+      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
       //glEnable (GL_NORMALIZE);
 

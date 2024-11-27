@@ -95,6 +95,42 @@ class scale
   Common_GL_Color_t color;
 };
 
+class bubble
+{
+ public:
+  bubble (glm::vec3& pos, float rad)
+   : position (pos)
+   , radius (rad)
+   , yvel (0.1f)
+   , isAlive (true)
+  {}
+
+  void draw ()
+  {
+    glPushMatrix ();
+    glTranslatef (position.x, position.y, position.z);
+    glColor4f (1.0f, 1.0f, 1.0f, 0.3f);
+    //ellipsoid(radius, radius - yvel / 2.0f, radius);
+    glutSolidSphere (radius, 16, 16);
+    glPopMatrix ();
+  }
+
+  void update ()
+  {
+    position.y += yvel;
+    yvel += 0.2f;
+    radius += 0.1f;
+
+    if (position.y > ENGINE_GLUT_430_DEFAULT_HEIGHT / 6.0f)
+      isAlive = false;
+  }
+
+  glm::vec3 position;
+  float     radius;
+  float     yvel;
+  bool      isAlive;
+};
+
 //////////////////////////////////////////
 
 struct Engine_OpenGL_GLUT_430_CBData
@@ -106,6 +142,8 @@ struct Engine_OpenGL_GLUT_430_CBData
   struct Engine_GL_Camera camera;
 
   // mouse
+  int                     pmousex;
+  int                     pmousey;
   int                     mousex;
   int                     mousey;
   bool                    mouse_0_ButtonDown;
@@ -120,11 +158,17 @@ struct Engine_OpenGL_GLUT_430_CBData
   float                   amp;
   float                   wiggle;
   std::vector<scale>      scales;
+  std::vector<bubble>     bubbles;
 };
 
 //////////////////////////////////////////
 
 void makeScales (struct Engine_OpenGL_GLUT_430_CBData&);
+void moveFish (struct Engine_OpenGL_GLUT_430_CBData&, int);
+void drawBubbles (struct Engine_OpenGL_GLUT_430_CBData&);
 void drawFish (struct Engine_OpenGL_GLUT_430_CBData&);
+void drawBowl (struct Engine_OpenGL_GLUT_430_CBData&);
+void checkInputs (struct Engine_OpenGL_GLUT_430_CBData&, int);
+void makeBubbles (struct Engine_OpenGL_GLUT_430_CBData&);
 
 #endif // GLUT_430_H
