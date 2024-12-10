@@ -21,9 +21,8 @@ sminq (float a, float b, float k)
   return min (a, b) - h * h * k * .25;
 }
 
-// Smooth min for scalars
-// which can be used as smooth union
-// by making b and k negative.
+// Smooth min for scalars which can be used as smooth union by making b and k
+// negative
 float
 smin (float a, float b, float k)
 {
@@ -60,8 +59,7 @@ rnd (vec2 p)
   return fract (p.x * p.y);
 }
 
-// A kaleidoscopic iterated function system
-// generates points in a fractal set
+// A kaleidoscopic iterated function system generates points in a fractal set
 vec3
 kifs (vec3 p)
 {
@@ -78,10 +76,8 @@ kifs (vec3 p)
   return p;
 }
 
-// Defines the scene you look at
-// using the kifs fractal to generate
-// multiple objects despite defining
-// it only once
+// Defines the scene you look at using the kifs fractal to generate
+// multiple objects despite defining it only once
 vec2
 map (vec3 p)
 {
@@ -97,9 +93,7 @@ map (vec3 p)
   return vec2 (d, S (.05, .3, a - b));
 }
 
-// Returns the normal vector of the 
-// surface at the given point
-#define ZERO min(T,.0)
+// Returns the normal vector of the surface at the given point
 vec3
 norm (vec3 p)
 {
@@ -111,8 +105,7 @@ norm (vec3 p)
             k.xxx * map (p + k.xxx * h).x);
 }
 
-// Returns the amount of shadow
-// at the given point and the given
+// Returns the amount of shadow at the given point and the given
 // light position
 float
 shadow (vec3 p, vec3 lp)
@@ -134,15 +127,13 @@ shadow (vec3 p, vec3 lp)
   return shd;
 }
 
-// Rotates the camera position
-// to a fixed angle
+// Rotates the camera position to a fixed angle
 void
 cam (vec3 p)
 {
   p.yz *= rot (.42);
 }
 
-// Defines the entry function of the shader
 void
 main ()
 {
@@ -178,5 +169,5 @@ main ()
   col *= 1. - .01 * dot (p, p);
   col += sin (FC.x * 114.0) * sin (FC.y * 211.1) / 512.0;
   col = max (col, .04);
-  gl_FragColor = vec4 (col,1);
+  gl_FragColor = vec4 (col, 1);
 }
