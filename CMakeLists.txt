@@ -1410,6 +1410,12 @@ set (engine_20_EXE_SRCS
      glut_433.h
      glut_434.cpp
      glut_434.h
+     pge_435.cpp
+     pge_435.h
+     glut_436.cpp
+     glut_436.h
+     pge_437.cpp
+     pge_437.h
      stdafx.h)
 
 set (EXECUTABLE_20 engine_20)
@@ -1901,6 +1907,7 @@ install (FILES
          "2017.png"
          "Apple_Computer_Logo_rainbow.png"
          "background_pattern_tenth.png"
+         "bladen.png"
          "bluedark.png"
          "cat.jpg"
          "circle.png"
@@ -2017,6 +2024,8 @@ install (FILES
          "glut_433.frag"
          "glut_434.vert"
          "glut_434.frag"
+         "glut_436.vert"
+         "glut_436.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
