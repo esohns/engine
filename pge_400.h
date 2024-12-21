@@ -28,9 +28,9 @@ class PGE_400
   };
 
   void setupPalette ();
-  struct splat createSplat (olc::vf2d&, float, olc::Pixel&);
+  struct splat createSplat (const olc::vf2d&, float, olc::Pixel&);
   void deformSplatBasedOn (struct splat&, struct splat&);
-  void createAndAddOneSplat (olc::vf2d&, float, std::vector<struct splat>&);
+  void createAndAddOneSplat (const olc::vf2d&, float, std::vector<struct splat>&);
   void restart ();
   void drawSplat (struct splat&);
 

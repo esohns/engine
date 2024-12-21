@@ -145,7 +145,7 @@ class PGE_429
   class module
   {
    public:
-    module (olc::vi2d& index_, float size, olc::vf2d& margin, std::vector<olc::Pixel>& colors, olc::PixelGameEngine* engine)
+    module (const olc::vi2d& index_, float size, olc::vf2d& margin, std::vector<olc::Pixel>& colors, olc::PixelGameEngine* engine)
      : index (index_)
      , position (index_.x * size + margin.x,
                  index_.y * size + margin.y)
@@ -153,7 +153,7 @@ class PGE_429
      , speed (ENGINE_PGE_429_DEFAULT_SPEED)
      , direction (1)
      , delay (0)
-     , element (NULL)
+     , element_ (NULL)
     {
       static olc::vf2d center_s (engine->ScreenWidth () / 2.0f, engine->ScreenHeight () / 2.0f);
       float distance =
@@ -167,14 +167,14 @@ class PGE_429
       std::shuffle (colors_a.begin (), colors_a.end (), rng);
 
       if (Common_Tools::testRandomProbability (0.5f))
-        element = new arc (position, colors_a);
+        element_ = new arc (position, colors_a);
       else
-        element = new line (position, size, colors_a);
+        element_ = new line (position, size, colors_a);
     }
 
     ~module ()
     {
-      delete element;
+      delete element_;
     }
 
     void draw (float size, olc::PixelGameEngine* engine)
@@ -195,10 +195,10 @@ class PGE_429
         direction = 1;
         lifespan = 0;
         delay = 500;
-        element->initialize (size);
+        element_->initialize (size);
       } // end ELSE IF
 
-      element->draw (lifespan, direction, size, engine);
+      element_->draw (lifespan, direction, size, engine);
       lifespan += direction * speed;
     }
 
@@ -208,7 +208,7 @@ class PGE_429
     int       speed;
     int       direction;
     int       delay;
-    element*  element;
+    element*  element_;
   };
 
   void initialize ();

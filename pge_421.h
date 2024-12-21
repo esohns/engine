@@ -24,7 +24,7 @@ class PGE_421
   class branch
   {
    public:
-    branch (branch* par, olc::vf2d& pos, olc::vf2d& dir)
+    branch (branch* par, const olc::vf2d& pos, const olc::vf2d& dir)
      : parent (par)
      , position (pos)
      , direction (dir)

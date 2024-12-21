@@ -1,7 +1,8 @@
 ﻿#ifndef PGE_437_H
 #define PGE_437_H
 
-#include "noise/noise.h"
+//#include "noise/noise.h"
+#include "opensimplexnoise.h"
 
 #include "olcPixelGameEngine.h"
 
@@ -17,7 +18,8 @@ class PGE_437
   virtual bool OnUserUpdate (float); // elapsed time
 
  private:
-  noise::module::Perlin noise_;
+  //noise::module::Perlin noise_;
+  OpenSimplexNoise noise_;
 };
 
 #endif // PGE_437_H

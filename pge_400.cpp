@@ -81,7 +81,7 @@ PGE_400::setupPalette ()
 }
 
 PGE_400::splat
-PGE_400::createSplat (olc::vf2d& position, float radius, olc::Pixel& colour)
+PGE_400::createSplat (const olc::vf2d& position, float radius, olc::Pixel& colour)
 {
   float angleStep =
     2.0f * static_cast<float> (M_PI) / static_cast<float> (ENGINE_PGE_400_DEFAULT_POINTS_PER_SPLAT);
@@ -116,7 +116,7 @@ PGE_400::deformSplatBasedOn (struct splat& thisSplat, struct splat& otherSplat)
 }
 
 void
-PGE_400::createAndAddOneSplat (olc::vf2d& position, float radius, std::vector<struct splat>& splats)
+PGE_400::createAndAddOneSplat (const olc::vf2d& position, float radius, std::vector<struct splat>& splats)
 {
   int index_i = Common_Tools::getRandomNumber (0, static_cast<int> (palette_.size ()) - 1);
 

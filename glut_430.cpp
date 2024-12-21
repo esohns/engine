@@ -243,6 +243,7 @@ makeScales (struct Engine_OpenGL_GLUT_430_CBData& CBData_inout)
   ACE_ASSERT (data_p);
 
   // flip image
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
   std::vector<uint8_t> flipPixels (resolution_s.cx * resolution_s.cy * 4, 0);
   for (int r = 0; r < resolution_s.cy; r++)
   {
@@ -251,8 +252,22 @@ makeScales (struct Engine_OpenGL_GLUT_430_CBData& CBData_inout)
     ACE_OS::memcpy (dst, src, 4 * resolution_s.cx);
   } // end FOR
   ACE_OS::memcpy (data_p, flipPixels.data (), resolution_s.cx * resolution_s.cy * 4);
+#else
+  std::vector<uint8_t> flipPixels (resolution_s.width * resolution_s.height * 4, 0);
+  for (int r = 0; r < resolution_s.height; r++)
+  {
+      unsigned char* src = &data_p[r * 4 * resolution_s.width];
+      unsigned char *dst = &flipPixels[(resolution_s.height - r - 1) * 4 * resolution_s.width];
+      ACE_OS::memcpy (dst, src, 4 * resolution_s.width);
+  } // end FOR
+  ACE_OS::memcpy (data_p, flipPixels.data (), resolution_s.width * resolution_s.height * 4);
+#endif // ACE_WIN32 || ACE_WIN64
 
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
   Common_Image_Resolution_t resolution_2 = { ENGINE_GLUT_430_DEFAULT_DETAIL, -1 };
+#else
+  Common_Image_Resolution_t resolution_2 = { ENGINE_GLUT_430_DEFAULT_DETAIL, static_cast<unsigned int> (-1) };
+#endif // ACE_WIN32 || ACE_WIN64
   uint8_t* data_2 = NULL;
   if (!Common_Image_Tools::scale (resolution_s,
                                   ACE_TEXT_ALWAYS_CHAR ("RGBA"),
@@ -269,10 +284,19 @@ makeScales (struct Engine_OpenGL_GLUT_430_CBData& CBData_inout)
   MagickRelinquishMemory (data_p); data_p = NULL;
 
   Common_GL_Color_t color;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
   for (int y = 0; y < resolution_2.cy; y += 15)
     for (int x = 0; x < resolution_2.cx; x += 15)
+#else
+  for (int y = 0; y < resolution_2.height; y += 15)
+    for (int x = 0; x < resolution_2.width; x += 15)
+#endif // ACE_WIN32 || ACE_WIN64
     {
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
       data_p = data_2 + (y * resolution_2.cx + x) * 4;
+#else
+      data_p = data_2 + (y * resolution_2.width + x) * 4;
+#endif // ACE_WIN32 || ACE_WIN64
       color.r = *(data_p + 0);
       color.g = *(data_p + 1);
       color.b = *(data_p + 2);
@@ -280,17 +304,38 @@ makeScales (struct Engine_OpenGL_GLUT_430_CBData& CBData_inout)
       if (Common_GL_Tools::brightness (color) > 0.2f)
       {
         float ax =
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
           Common_GL_Tools::map ((y - resolution_2.cy / 2.0f), -resolution_2.cy / 8.0f, resolution_2.cy / 3.0f, static_cast<float> (-M_PI_2), static_cast<float> (M_PI_2));
+#else
+          Common_GL_Tools::map ((y - resolution_2.height / 2.0f), -static_cast<int> (resolution_2.height) / 8.0f, resolution_2.height / 3.0f, static_cast<float> (-M_PI_2), static_cast<float> (M_PI_2));
+#endif // ACE_WIN32 || ACE_WIN64
         float ay =
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
           Common_GL_Tools::map ((x - resolution_2.cx / 2.0f), -resolution_2.cx / 2.0f, resolution_2.cx / 3.0f, static_cast<float> (-M_PI_2), static_cast<float> (M_PI_2));
         float tz = std::cos (ax) * (resolution_2.cy / 6.0f) * std::cos (ay);
+#else
+          Common_GL_Tools::map ((x - resolution_2.width / 2.0f), -static_cast<int> (resolution_2.width) / 2.0f, resolution_2.width / 3.0f, static_cast<float> (-M_PI_2), static_cast<float> (M_PI_2));
+        float tz = std::cos (ax) * (resolution_2.height / 6.0f) * std::cos (ay);
+#endif // ACE_WIN32 || ACE_WIN64
         float z = std::max (-1.0f, tz);
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
         if (y < resolution_2.cy / 4.0f || y > 4.0f * resolution_2.cy / 5.0f)
+#else
+        if (y < resolution_2.height / 4.0f || y > 4.0f * resolution_2.height / 5.0f)
+#endif // ACE_WIN32 || ACE_WIN64
           ax = 0.0f;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
         if (x > 5.0f * resolution_2.cx / 6.0f)
+#else
+        if (x > 5.0f * resolution_2.width / 6.0f)
+#endif // ACE_WIN32 || ACE_WIN64
           ay = 0.0f;
         glm::vec3 ang (ax, ay, 0.0f);
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
         glm::vec3 pos (x - resolution_2.cx / 2.0f, y - resolution_2.cy / 2.0f, z);
+#else
+        glm::vec3 pos (x - resolution_2.width / 2.0f, y - resolution_2.height / 2.0f, z);
+#endif // ACE_WIN32 || ACE_WIN64
         CBData_inout.scales.push_back (scale (pos, ang, color));
       } // end IF
     } // end FOR
@@ -310,7 +355,7 @@ moveFish (struct Engine_OpenGL_GLUT_430_CBData& CBData_in,
     CBData_in.tpos += CBData_in.tvel;
     if (glm::length (CBData_in.tpos) > 2.0f * ENGINE_GLUT_430_DEFAULT_HEIGHT)
     {
-      CBData_in.tpos - CBData_in.tvel;
+      CBData_in.tpos -= CBData_in.tvel;
       CBData_in.tvel *= -0.25f;
     } // end IF
     CBData_in.tvel *= 0.95f;

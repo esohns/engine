@@ -41,8 +41,13 @@ PGE_414::OnUserCreate ()
   ACE_ASSERT (data_p);
 
   int pixelIndex = 0;
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
   for (int y = 0; y < resolution_s.cy; y++)
     for (int x = 0; x < resolution_s.cx; x++)
+#else
+  for (int y = 0; y < resolution_s.height; y++)
+    for (int x = 0; x < resolution_s.width; x++)
+#endif // ACE_WIN32 || ACE_WIN64
     {
       uint8_t pixelR = data_p[pixelIndex];
       uint8_t pixelG = data_p[pixelIndex + 1];
@@ -58,8 +63,13 @@ PGE_414::OnUserCreate ()
       static int screen_height_i = olc::PixelGameEngine::ScreenHeight ();
       static olc::vf2d center_s (screen_width_i / 2.0f, screen_height_i / 2.0f);
       particle particle_s (center_s.x, center_s.y);
+#if defined (ACE_WIN32) || defined (ACE_WIN64)
       particle_s.target.x = center_s.x - (resolution_s.cx / 2) + x;
       particle_s.target.y = center_s.y - (resolution_s.cy / 2) + y;
+#else
+      particle_s.target.x = center_s.x - (resolution_s.width / 2) + x;
+      particle_s.target.y = center_s.y - (resolution_s.height / 2) + y;
+#endif // ACE_WIN32 || ACE_WIN64
 
       olc::Pixel pixelColor (pixelR, pixelG, pixelB, 255);
       particle_s.targetColor = pixelColor;
