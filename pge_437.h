@@ -1,8 +1,7 @@
 ﻿#ifndef PGE_437_H
 #define PGE_437_H
 
-//#include "noise/noise.h"
-#include "opensimplexnoise.h"
+#include <vector>
 
 #include "olcPixelGameEngine.h"
 
@@ -18,8 +17,17 @@ class PGE_437
   virtual bool OnUserUpdate (float); // elapsed time
 
  private:
-  //noise::module::Perlin noise_;
-  OpenSimplexNoise noise_;
+  struct dot
+  {
+    int32_t x;
+    int32_t y;
+    int32_t r;
+    float   theta;
+    float   dMin;
+    float   dMax;
+  };
+
+  std::vector<struct dot> dots_;
 };
 
 #endif // PGE_437_H
