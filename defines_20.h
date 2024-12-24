@@ -86,4 +86,11 @@
 #define ENGINE_PGE_438_DEFAULT_MAX_FORCE           1.0f
 #define ENGINE_PGE_438_DEFAULT_ALPHA_DECAY         30
 
+// glut 439
+#define ENGINE_GLUT_439_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_439_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_439_DEFAULT_SCALE_FACTOR       30
+#define ENGINE_GLUT_439_DEFAULT_M                  6000
+#define ENGINE_GLUT_439_DEFAULT_BB                 3.0f
+
 #endif // DEFINES_20_H

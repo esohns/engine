@@ -1418,6 +1418,8 @@ set (engine_20_EXE_SRCS
      pge_437.h
      pge_438.cpp
      pge_438.h
+     glut_439.cpp
+     glut_439.h
      stdafx.h)
 
 set (EXECUTABLE_20 engine_20)

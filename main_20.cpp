@@ -55,6 +55,7 @@
 #include "glut_436.h"
 #include "pge_437.h"
 #include "pge_438.h"
+#include "glut_439.h"
 
 enum Engine_ModeType
 {
@@ -67,6 +68,7 @@ enum Engine_ModeType
   ENGINE_MODE_436,
   ENGINE_MODE_437,
   ENGINE_MODE_438,
+  ENGINE_MODE_439,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -772,6 +774,147 @@ do_work (int argc_in,
         example.Start ();
         result = true;
       } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_439:
+    {
+      struct Engine_OpenGL_GLUT_439_CBData cb_data_s;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = -200.0f;
+      cb_data_s.camera.position.z = 750.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = -1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.mousex = ENGINE_GLUT_439_DEFAULT_WIDTH / 2;
+      cb_data_s.mousey = ENGINE_GLUT_439_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouse_0_ButtonDown = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_439_DEFAULT_WIDTH, ENGINE_GLUT_439_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 439");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      //glDisable (GL_DEPTH_TEST);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_439_draw);
+      glutReshapeFunc (engine_glut_439_reshape);
+      glutVisibilityFunc (engine_glut_439_visible);
+
+      glutKeyboardFunc (engine_glut_439_key);
+      glutSpecialFunc (engine_glut_439_key_special);
+      glutMouseFunc (engine_glut_439_mouse_button);
+      glutMotionFunc (engine_glut_439_mouse_move);
+      glutPassiveMotionFunc (engine_glut_439_mouse_move);
+      glutTimerFunc (100, engine_glut_439_timer, 0);
+
+      glutCreateMenu (engine_glut_439_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      cb_data_s.cf = Common_Tools::getRandomNumber (0.0f, 360.0f);
+      float h, r, g, b;
+      Common_GL_Color_t c;
+      for (int i = 0; i < ENGINE_GLUT_439_DEFAULT_M; i++)
+      {
+        cb_data_s.random[i] = Common_Tools::getRandomNumber (0.0f, 1.0f);
+
+        h = std::fmod (cb_data_s.cf + Common_Tools::getRandomNumber (-90.0f, 90.0f), 360.0f);
+        Common_Image_Tools::HSVToRGB (h,
+                                      Common_Tools::getRandomNumber (80.0f, 90.0f) / 100.0f,
+                                      Common_Tools::getRandomNumber (80.0f, 90.0f) / 100.0f,
+                                      r, g, b);
+        c.r = static_cast<glm::u8> (r * 255.0f);
+        c.g = static_cast<glm::u8> (g * 255.0f);
+        c.b = static_cast<glm::u8> (b * 255.0f);
+        cb_data_s.color[i] = c;
+
+        cb_data_s.o[i] = Common_Tools::getRandomNumber (2, 5);
+      } // end FOR
+
+      cb_data_s.xm[0] = -ENGINE_GLUT_439_DEFAULT_WIDTH  / 2.0f + ENGINE_GLUT_439_DEFAULT_WIDTH  / 4.0f;
+      cb_data_s.ym[0] = -ENGINE_GLUT_439_DEFAULT_HEIGHT / 2.0f + ENGINE_GLUT_439_DEFAULT_HEIGHT / 4.0f;
+      cb_data_s.sz[0] =  ENGINE_GLUT_439_DEFAULT_WIDTH  / 2.0f;
+  
+      cb_data_s.xm[1] = -ENGINE_GLUT_439_DEFAULT_WIDTH  / 2.0f + ENGINE_GLUT_439_DEFAULT_WIDTH  / 2.0f + ENGINE_GLUT_439_DEFAULT_WIDTH / 4.0f;
+      cb_data_s.ym[1] = -ENGINE_GLUT_439_DEFAULT_HEIGHT / 2.0f + ENGINE_GLUT_439_DEFAULT_HEIGHT / 4.0f;
+      cb_data_s.sz[1] =  ENGINE_GLUT_439_DEFAULT_WIDTH  / 2.0f;
+
+      cb_data_s.xm[2] = -ENGINE_GLUT_439_DEFAULT_WIDTH  / 2.0f + ENGINE_GLUT_439_DEFAULT_WIDTH  / 2.0f + ENGINE_GLUT_439_DEFAULT_WIDTH  / 4.0f;
+      cb_data_s.ym[2] = -ENGINE_GLUT_439_DEFAULT_HEIGHT / 2.0f + ENGINE_GLUT_439_DEFAULT_HEIGHT / 2.0f + ENGINE_GLUT_439_DEFAULT_HEIGHT / 4.0f;
+      cb_data_s.sz[2] =  ENGINE_GLUT_439_DEFAULT_WIDTH  / 2.0f;
+  
+      cb_data_s.xm[3] = -ENGINE_GLUT_439_DEFAULT_WIDTH  / 2.0f + ENGINE_GLUT_439_DEFAULT_WIDTH  / 4.0f;
+      cb_data_s.ym[3] = -ENGINE_GLUT_439_DEFAULT_HEIGHT / 2.0f + ENGINE_GLUT_439_DEFAULT_HEIGHT / 2.0f + ENGINE_GLUT_439_DEFAULT_HEIGHT / 4.0f;
+      cb_data_s.sz[3] =  ENGINE_GLUT_439_DEFAULT_WIDTH  / 2.0f;
+ 
+      static std::random_device rd;
+      static std::mt19937 m (rd ());
+      static std::normal_distribution dist (0.0f, 1.0f);
+      cb_data_s.top = 3;
+      for (int k = 0; k < 175; k++)
+      {
+        float x = dist (m) * 0.15f * ENGINE_GLUT_439_DEFAULT_WIDTH;
+        float y = dist (m) * 0.15f * ENGINE_GLUT_439_DEFAULT_HEIGHT;
+    
+        int h = -1;
+        int i = 0;
+        while ((h == -1) && (i <= cb_data_s.top))
+        {
+          if ((x > cb_data_s.xm[i] - cb_data_s.sz[i] / 2.0f) &&
+              (x < cb_data_s.xm[i] + cb_data_s.sz[i] / 2.0f) &&
+              (y > cb_data_s.ym[i] - cb_data_s.sz[i] / 2.0f) &&
+              (y < cb_data_s.ym[i] + cb_data_s.sz[i] / 2.0f))
+            h = i;
+          i++;
+        } // end WHILE
+        if (h >= 0)
+        {
+          cb_data_s.sz[h] = cb_data_s.sz[h] / 2.0f;
+     
+          cb_data_s.top++;
+      
+          cb_data_s.xm[cb_data_s.top] = cb_data_s.xm[h] + cb_data_s.sz[h] / 2.0f;
+          cb_data_s.ym[cb_data_s.top] = cb_data_s.ym[h] - cb_data_s.sz[h] / 2.0f;
+          cb_data_s.sz[cb_data_s.top] = cb_data_s.sz[h];
+      
+          cb_data_s.top++;
+      
+          cb_data_s.xm[cb_data_s.top] = cb_data_s.xm[h] + cb_data_s.sz[h] / 2.0f;
+          cb_data_s.ym[cb_data_s.top] = cb_data_s.ym[h] + cb_data_s.sz[h] / 2.0f;
+          cb_data_s.sz[cb_data_s.top] = cb_data_s.sz[h];
+     
+          cb_data_s.top++;
+      
+          cb_data_s.xm[cb_data_s.top] = cb_data_s.xm[h] - cb_data_s.sz[h] / 2.0f;
+          cb_data_s.ym[cb_data_s.top] = cb_data_s.ym[h] + cb_data_s.sz[h] / 2.0f;
+          cb_data_s.sz[cb_data_s.top] = cb_data_s.sz[h];
+      
+          cb_data_s.xm[h] = cb_data_s.xm[h] - cb_data_s.sz[h] / 2.0f;
+          cb_data_s.ym[h] = cb_data_s.ym[h] - cb_data_s.sz[h] / 2.0f;
+      
+          cb_data_s.top++;
+        } // end IF
+      } // end FOR
+
+      glutMainLoop ();
+
+      result = true;
 
       break;
     }
