@@ -1,6 +1,31 @@
 include (${CMAKE_CURRENT_SOURCE_DIR}/VersionConfig.cmake)
 
-set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts")
+string (REPLACE ${CMAKE_SOURCE_DIR} "" BUILD_PATH_SUFFIX ${CMAKE_BINARY_DIR})
+string (SUBSTRING ${BUILD_PATH_SUFFIX} 1 -1 BUILD_PATH_SUFFIX)
+#message (STATUS "BUILD_PATH_SUFFIX \"${BUILD_PATH_SUFFIX}\"")
+#string (FIND ${BUILD_PATH_SUFFIX} "/" SLASH_LOCATION REVERSE)
+#string (SUBSTRING ${BUILD_PATH_SUFFIX} 0 ${SLASH_LOCATION} BUILD_PATH_SUFFIX)
+#message (STATUS "BUILD_PATH_SUFFIX \"${BUILD_PATH_SUFFIX}\"")
+if (UNIX)
+ set (Common_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Common/${BUILD_PATH_SUFFIX}/${CMAKE_BUILD_TYPE}")
+endif (UNIX)
+find_package (Common 0.0.2
+              REQUIRED COMPONENTS lib
+              CONFIG
+              PATHS ${CMAKE_CURRENT_SOURCE_DIR}/..
+              PATH_SUFFIXES Common/${BUILD_PATH_SUFFIX}
+              NO_DEFAULT_PATH)
+if (NOT EXISTS ${Common_DIR})
+ message (FATAL_ERROR "could not find package \"Common\", aborting")
+endif (NOT EXISTS ${Common_DIR})
+if (UNIX)
+ set (COMMON_ROOT_DIR "${Common_DIR}/../../.." )
+elseif (WIN32)
+ set (COMMON_ROOT_DIR "${Common_DIR}/../.." )
+endif ()
+#message (STATUS "\"COMMON_ROOT_DIR\": ${COMMON_ROOT_DIR}")
+
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/scripts")
 include (CPU)
 include (OS)
 include (compiler_init)
@@ -75,11 +100,12 @@ configure_file (resource.rc.in
                 resource.rc)
 
 include (FindPkgConfig)
-set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/scripts;${CMAKE_CURRENT_SOURCE_DIR}/../Common/src/gl/scripts")
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/src/gl/scripts")
 include (assimp)
 include (glew)
 include (glut)
 
+#set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/scripts")
 include (ffmpeg)
 if (NOT FFMPEG_SUPPORT)
  message (FATAL_ERROR "could not find ffmpeg, aborting")
@@ -94,36 +120,11 @@ else ()
 endif (NOT IMAGEMAGICK_SUPPORT)
 
 include (ACE)
-if (NOT ACE_LIBRARY)
- message (FATAL_ERROR "could not find ${ACE_LIB_FILE} (was: \"${ACE_LIBRARY}\"), aborting")
-else ()
- message (STATUS "Found ACE library \"${ACE_LIBRARY}\"")
-endif (NOT ACE_LIBRARY)
-
-string (REPLACE ${CMAKE_SOURCE_DIR} "" BUILD_PATH_SUFFIX ${CMAKE_BINARY_DIR})
-string (SUBSTRING ${BUILD_PATH_SUFFIX} 1 -1 BUILD_PATH_SUFFIX)
-#message (STATUS "BUILD_PATH_SUFFIX \"${BUILD_PATH_SUFFIX}\"")
-#string (FIND ${BUILD_PATH_SUFFIX} "/" SLASH_LOCATION REVERSE)
-#string (SUBSTRING ${BUILD_PATH_SUFFIX} 0 ${SLASH_LOCATION} BUILD_PATH_SUFFIX)
-#message (STATUS "BUILD_PATH_SUFFIX \"${BUILD_PATH_SUFFIX}\"")
-if (UNIX)
- set (Common_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Common/${BUILD_PATH_SUFFIX}/${CMAKE_BUILD_TYPE}")
-endif (UNIX)
-find_package (Common 0.0.2
-              REQUIRED COMPONENTS lib
-              CONFIG
-              PATHS ${CMAKE_CURRENT_SOURCE_DIR}/..
-              PATH_SUFFIXES Common/${BUILD_PATH_SUFFIX}
-              NO_DEFAULT_PATH)
-if (NOT EXISTS ${Common_DIR})
- message (FATAL_ERROR "could not find package \"Common\", aborting")
-endif (NOT EXISTS ${Common_DIR})
-if (UNIX)
- set (COMMON_ROOT_DIR "${Common_DIR}/../../.." )
-elseif (WIN32)
- set (COMMON_ROOT_DIR "${Common_DIR}/../.." )
-endif ()
-#message (STATUS "\"COMMON_ROOT_DIR\": ${COMMON_ROOT_DIR}")
+#if (NOT ACE_LIBRARY)
+# message (FATAL_ERROR "could not find ${ACE_LIB_FILE} (was: \"${ACE_LIBRARY}\"), aborting")
+#else ()
+# message (STATUS "Found ACE library \"${ACE_LIBRARY}\"")
+#endif (NOT ACE_LIBRARY)
 
 if (DEFINED ENV{LIB_ROOT})
  set (PGE_DIR "$ENV{LIB_ROOT}/olcPixelGameEngine" )
@@ -132,42 +133,10 @@ find_path (PGE_INCLUDE_DIR
            olcPixelGameEngine.h
            HINTS ${PGE_DIR})
 
-if (WIN32)
-# set (CMAKE_BUILD_TYPE $<CONFIG> CACHE STRING "build type" FORCE)
-endif (WIN32)
-#if ($<CONFIG> STREQUAL "Debug" OR
-#    $<CONFIG> STREQUAL "RelWithDebInfo" OR
-#    ${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR
-#    ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
-# set (LIB_FILE_SUFFIX "d" CACHE STRING "lib file suffix" FORCE)
-#else ()
-# set (LIB_FILE_SUFFIX "" CACHE STRING "lib file suffix" FORCE)
-#endif ()
+#set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/scripts")
+include (libnoise)
 
-if (DEFINED ENV{LIB_ROOT})
- set (LIBNOISE_DIR "$ENV{LIB_ROOT}/libnoise" )
-endif (DEFINED ENV{LIB_ROOT})
-set (LIBNOISE_INCLUDES "${LIBNOISE_DIR}/include")
-if (UNIX)
- set (LIBNOISE_LIBRARY "libnoise.so")
- find_library (LIBNOISE_LIB ${LIBNOISE_LIBRARY}
-               PATHS ${LIBNOISE_DIR}
-               PATH_SUFFIXES build/gcc
-               DOC "libnoise library"
-               REQUIRED
-               NO_DEFAULT_PATH)
-elseif (WIN32)
- set (LIBNOISE_LIBRARY "libnoise.lib")
- find_library (LIBNOISE_LIB ${LIBNOISE_LIBRARY}
-               PATHS ${LIBNOISE_DIR}
-               PATH_SUFFIXES build/msvc/${CMAKE_BUILD_TYPE}
-               DOC "libnoise library"
-               REQUIRED
-               NO_DEFAULT_PATH)
-endif () 
-set (LIBNOISE_LIB_DIR "${LIBNOISE_DIR}/build/msvc/${CMAKE_BUILD_TYPE}")
-
-set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/../Common/src/image/scripts")
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/src/image/scripts")
 include (png)
 include (stb)
 
@@ -224,7 +193,7 @@ include (glm)
 include_directories (${BOX2D_INCLUDE_DIR})
 include_directories (${PGE_INCLUDE_DIR})
 include_directories (${PGE_INCLUDE_DIR}/extensions)
-include_directories (${LIBNOISE_INCLUDES})
+include_directories (${LIBNOISE_INCLUDE_DIRS})
 include_directories (${GLUT_INCLUDE_DIRS})
 include_directories (${GLEW_INCLUDE_DIRS})
 include_directories (${GTK_INCLUDE_DIRS})
