@@ -41,6 +41,8 @@ struct Engine_UI_GTK_2_CBData
   float viscosity;
 };
 
+//////////////////////////////////////////
+
 // *NOTE*: see also: https://www.dgp.toronto.edu/public_user/stam/reality/Research/pdf/GDC03.pdf
 class PGE_2
  : public olc::PixelGameEngine

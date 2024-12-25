@@ -1420,6 +1420,10 @@ set (engine_20_EXE_SRCS
      pge_438.h
      glut_439.cpp
      glut_439.h
+     pge_440.cpp
+     pge_440.h
+     glut_441.cpp
+     glut_441.h
      stdafx.h)
 
 set (EXECUTABLE_20 engine_20)
@@ -1828,7 +1832,7 @@ target_link_libraries (${EXECUTABLE_20} CommonLog)
 target_link_libraries (${EXECUTABLE_20} CommonOpenGL)
 target_link_libraries (${EXECUTABLE_20} CommonTimer)
 target_link_libraries (${EXECUTABLE_20} CommonUI)
-#target_link_libraries (${EXECUTABLE_20} CommonUI_GTK)
+target_link_libraries (${EXECUTABLE_20} CommonUI_GTK)
 if (UNIX)
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
  target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
@@ -2030,10 +2034,13 @@ install (FILES
          "glut_434.frag"
          "glut_436.vert"
          "glut_436.frag"
+         "glut_441.vert"
+         "glut_441.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
          "pge_27.gtk3"
+         "pge_440.gtk3"
          DESTINATION bin
          COMPONENT config)
 if (WIN32)

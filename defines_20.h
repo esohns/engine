@@ -93,4 +93,26 @@
 #define ENGINE_GLUT_439_DEFAULT_M                  6000
 #define ENGINE_GLUT_439_DEFAULT_BB                 3.0f
 
+// pge 440
+#define ENGINE_PGE_440_DEFAULT_HEIGHT              768
+#define ENGINE_PGE_440_DEFAULT_WIDTH               1024
+#define ENGINE_PGE_440_DEFAULT_SIZE                4
+#define ENGINE_PGE_440_DEFAULT_ALPHA               1.2f
+#define ENGINE_PGE_440_DEFAULT_BETA                1.0f
+#define ENGINE_PGE_440_DEFAULT_GAMMA               1.0f
+#if defined (GTK2_USE)
+#define ENGINE_PGE_440_GTK_UI_DEFINITION_FILE      "pge_440.gtk2"
+#else
+#define ENGINE_PGE_440_GTK_UI_DEFINITION_FILE      "pge_440.gtk3"
+#endif // GTK2_USE
+#define ENGINE_PGE_440_GTK_DIALOG_MAIN_NAME        "dialog_main"
+#define ENGINE_PGE_440_GTK_SCALE_ALPHA_NAME        "scale_alpha"
+#define ENGINE_PGE_440_GTK_SCALE_BETA_NAME         "scale_beta"
+#define ENGINE_PGE_440_GTK_SCALE_GAMMA_NAME        "scale_gamma"
+
+// glut 441
+#define ENGINE_GLUT_441_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_441_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_441_DEFAULT_SCALE_FACTOR       30
+
 #endif // DEFINES_20_H
