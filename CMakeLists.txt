@@ -1393,6 +1393,8 @@ set (engine_20_EXE_SRCS
      pge_440.h
      glut_441.cpp
      glut_441.h
+     glut_442.cpp
+     glut_442.h
      stdafx.h)
 
 set (EXECUTABLE_20 engine_20)
@@ -2005,6 +2007,8 @@ install (FILES
          "glut_436.frag"
          "glut_441.vert"
          "glut_441.frag"
+         "glut_442.vert"
+         "glut_442.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
