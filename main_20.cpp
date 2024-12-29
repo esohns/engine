@@ -1602,8 +1602,8 @@ do_work (int argc_in,
       cb_data_s.wireframe = false;
 
       cb_data_s.camera.position.x = 0.0f;
-      cb_data_s.camera.position.y = 400.0f;
-      cb_data_s.camera.position.z = 1500.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 2000.0f;
       cb_data_s.camera.looking_at.x = 0.0f;
       cb_data_s.camera.looking_at.y = 0.0f;
       cb_data_s.camera.looking_at.z = 0.0f;

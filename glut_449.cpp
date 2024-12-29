@@ -63,8 +63,8 @@ engine_glut_449_key_special (int key_in,
       break;
     case GLUT_KEY_UP:
       cb_data_p->camera.position.x = 0.0f;
-      cb_data_p->camera.position.y = 400.0f;
-      cb_data_p->camera.position.z = 1500.0f;
+      cb_data_p->camera.position.y = 0.0f;
+      cb_data_p->camera.position.z = 2000.0f;
 
       cb_data_p->camera.rotation.y = 0.0f;
       break;
@@ -131,6 +131,14 @@ engine_glut_449_draw (void)
     static_cast<struct Engine_OpenGL_GLUT_449_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
+  static int frame_count_i = 1;
+  if (unlikely (cb_data_p->mouse_0_ButtonDown))
+  {
+    cb_data_p->noise.SetSeed (frame_count_i * Common_Tools::getRandomNumber (1, 10000000));
+    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    frame_count_i = 1;
+  } // end IF
+
   // reset transformations
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity ();
@@ -149,8 +157,8 @@ engine_glut_449_draw (void)
              cb_data_p->camera.looking_at.x, cb_data_p->camera.looking_at.y, cb_data_p->camera.looking_at.z,
              cb_data_p->camera.up.x, cb_data_p->camera.up.y, cb_data_p->camera.up.z);
 
-  //glPolygonMode (GL_FRONT_AND_BACK,
-  //               cb_data_p->wireframe ? GL_LINE : GL_FILL);
+  glPolygonMode (GL_FRONT_AND_BACK,
+                 cb_data_p->wireframe ? GL_LINE : GL_FILL);
 
   // draw a red x-axis, a green y-axis, and a blue z-axis. Each of the
   // axes are 100 units long
@@ -160,9 +168,7 @@ engine_glut_449_draw (void)
   glColor3f (0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
 
-  static int frame_count_i = 1;
-
-  glTranslatef (ENGINE_GLUT_449_DEFAULT_WIDTH / 128.0f, frame_count_i / 3.0f, 0.0f);
+  glTranslatef (ENGINE_GLUT_449_DEFAULT_WIDTH / 256.0f, frame_count_i / 3.0f, 0.0f);
   glScalef (-1.0f, -0.5f, 1.0f);
   glRotatef (static_cast<float> (M_PI_4) * (180.0f / static_cast<float> (M_PI)), 0.0f, 0.0f, 1.0f);
 
@@ -184,16 +190,18 @@ engine_glut_449_draw (void)
         else
         {
           v = Common_GL_Tools::map (v, vmin, vmax, -0.1f, 1.0f);
-          Common_GL_Color_t color = grad (v, cb_data_p->gradient);
-          glColor4ub (color.r, color.g, color.b, color.a);
-          if ((v * v) * (v / std::abs (v)) >= frame_count_i / 512.0f)
+          if ((v * v) * (v / std::abs (v)) >= frame_count_i / 255.0f)
+          {
+            Common_GL_Color_t color = grad (v, cb_data_p->gradient);
+            glColor4ub (color.r, color.g, color.b, color.a);
             polygon (cx, cy, static_cast<float> (ENGINE_GLUT_449_DEFAULT_HS), 6);
+          } // end IF
         } // end ELSE
       } // end FOR
 
-  glutSwapBuffers ();
-
   ++frame_count_i;
+
+  glutSwapBuffers ();
 }
 
 void
@@ -252,7 +260,7 @@ polygon (float x, float y, float radius, int npoints)
   {
     float sx = x + std::cos (a) * radius;
     float sy = y + std::sin (a) * radius;
-    glVertex3f (sx, sy, 0.0f);
+    glVertex2f (sx, sy);
   } // end FOR
   glEnd ();
 
@@ -263,7 +271,7 @@ polygon (float x, float y, float radius, int npoints)
   {
     float sx = x + std::cos (a) * radius;
     float sy = y + std::sin (a) * radius;
-    glVertex3f (sx, sy, 0.0f);
+    glVertex2f (sx, sy);
   } // end FOR
   glEnd ();
 }
