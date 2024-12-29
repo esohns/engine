@@ -384,9 +384,9 @@ engine_glut_16_draw (void)
                  cb_data_p->wireframe ? GL_LINE : GL_FILL);
   COMMON_GL_ASSERT;
 
-  Common_GL_Color_t color_s = { 255, 255, 255 };
+  Common_GL_Color_t color_s = {255, 255, 255, 255};
   //if (!cb_data_p->color)
-    glColor3ub (color_s.r, color_s.g, color_s.b);
+    glColor4ub (color_s.r, color_s.g, color_s.b, color_s.a);
 
   for (int i = 0; i < cb_data_p->total + 1; ++i)
   {

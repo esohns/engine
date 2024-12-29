@@ -367,24 +367,24 @@ drawVox (int x, int y, int z, float explode, struct Engine_OpenGL_GLUT_253_CBDat
   glTranslatef (w * static_cast<float> (v.dimension.x) * 0.5f, w * static_cast<float> (v.dimension.y) * 0.5f, w * static_cast<float> (v.dimension.z) * 0.5f);
 
   static Common_GL_Color_t internalColors[4] =
-    {Common_GL_Color_t (0x23, 0x93, 0xd9), Common_GL_Color_t (0x3a, 0xc4, 0x35), Common_GL_Color_t (0xed, 0x53, 0x53), Common_GL_Color_t (0xd9, 0xd9, 0x3d)};
+    {Common_GL_Color_t (0x23, 0x93, 0xd9, 0xff), Common_GL_Color_t (0x3a, 0xc4, 0x35, 0xff), Common_GL_Color_t (0xed, 0x53, 0x53, 0xff), Common_GL_Color_t (0xd9, 0xd9, 0x3d, 0xff)};
   static Common_GL_Color_t internalColorsDrk[4] =
-    {Common_GL_Color_t (0x1b, 0x70, 0xa6), Common_GL_Color_t (0x33, 0xa6, 0x2d), Common_GL_Color_t (0xa6, 0x3a, 0x3a), Common_GL_Color_t (0xa6, 0xa6, 0x2e)};
+    {Common_GL_Color_t (0x1b, 0x70, 0xa6, 0xff), Common_GL_Color_t (0x33, 0xa6, 0x2d, 0xff), Common_GL_Color_t (0xa6, 0x3a, 0x3a, 0xff), Common_GL_Color_t (0xa6, 0xa6, 0x2e, 0xff)};
 
-  Common_GL_Color_t rightface = x > 0 ? internalColorsDrk[(i + 1) % 4] : Common_GL_Color_t (0x00, 0xDD, 0x00);
-  Common_GL_Color_t topface   = y > 0 ? internalColors[(i + 2) % 4] : Common_GL_Color_t (0xEE, 0x99, 0x00);
+  Common_GL_Color_t rightface = x > 0 ? internalColorsDrk[(i + 1) % 4] : Common_GL_Color_t (0x00, 0xDD, 0x00, 0xff);
+  Common_GL_Color_t topface   = y > 0 ? internalColors[(i + 2) % 4] : Common_GL_Color_t (0xEE, 0x99, 0x00, 0xff);
   Common_GL_Color_t frontColour = internalColors[(i + 3) % 4];
   bool frontface = z + v.dimension.z >= d.z;
   if (frontface)
   {
     if (x < d.x * 0.5f && y < d.y * 0.5f)
-      frontColour = Common_GL_Color_t (0xFF, 0x22, 0x22); //top right
+      frontColour = Common_GL_Color_t (0xFF, 0x22, 0x22, 0xff); // top right
     if (x < d.x * 0.5f && y >= d.y * 0.5f)
-      frontColour = Common_GL_Color_t (0x44, 0x44, 0xFF); //bottom right
+      frontColour = Common_GL_Color_t (0x44, 0x44, 0xFF, 0xff); // bottom right
     if (x >= d.y * 0.5f && y >= d.y * 0.5f)
-      frontColour = Common_GL_Color_t (0xFF, 0x22, 0x22); //bottom left
+      frontColour = Common_GL_Color_t (0xFF, 0x22, 0x22, 0xff); // bottom left
     if (x >= d.y * 0.5f && y < d.y * 0.5f)
-      frontColour = Common_GL_Color_t (0x44, 0x44, 0xFF); //top left
+      frontColour = Common_GL_Color_t (0x44, 0x44, 0xFF, 0xff); // top left
   } // end IF
 
   drawFaceBox (w * v.dimension.x, w * v.dimension.y, w * v.dimension.z,

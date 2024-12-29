@@ -210,8 +210,8 @@ engine_glut_264_draw (void)
       createVertLoop (cb_data_p->time, cb_data_p->time - 5.8f, ENGINE_GLUT_264_DEFAULT_WIDTH, 35 * (ribbon + 2), 100, 20);
 
     static Common_GL_Color_t colors_a[5] =
-      {Common_GL_Color_t (0x9b, 0x5d, 0xe5), Common_GL_Color_t (0xf1, 0x5b, 0xb5), Common_GL_Color_t (0xfe, 0xe4, 0x40),
-       Common_GL_Color_t (0x00, 0xbb, 0xf9), Common_GL_Color_t (0x00, 0xf5, 0xd4)};
+      {Common_GL_Color_t (0x9b, 0x5d, 0xe5, 0xff), Common_GL_Color_t (0xf1, 0x5b, 0xb5, 0xff), Common_GL_Color_t (0xfe, 0xe4, 0x40, 0xff),
+       Common_GL_Color_t (0x00, 0xbb, 0xf9, 0xff), Common_GL_Color_t (0x00, 0xf5, 0xd4, 0xff)};
     Common_GL_Color_t color = colors_a[ribbon % 5];
     glBegin (GL_POLYGON);
     glColor4f (color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1.0f);

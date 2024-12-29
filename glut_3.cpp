@@ -248,9 +248,9 @@ engine_glut_3_draw (void)
   glEnd ();
   COMMON_GL_ASSERT;
 
-  Common_GL_Color_t color_s = { 255, 255, 255 };
+  Common_GL_Color_t color_s = {255, 255, 255, 255};
   if (!cb_data_p->color)
-    glColor3ub (color_s.r, color_s.g, color_s.b);
+    glColor4ub (color_s.r, color_s.g, color_s.b, color_s.a);
 
   for (int y = 0; y < cb_data_p->rows - 1; ++y)
   {

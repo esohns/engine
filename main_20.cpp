@@ -64,6 +64,8 @@
 #include "glut_445.h"
 #include "glut_446.h"
 #include "pge_447.h"
+#include "glut_448.h"
+#include "glut_449.h"
 
 enum Engine_ModeType
 {
@@ -85,6 +87,8 @@ enum Engine_ModeType
   ENGINE_MODE_445,
   ENGINE_MODE_446,
   ENGINE_MODE_447,
+  ENGINE_MODE_448,
+  ENGINE_MODE_449,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1495,6 +1499,163 @@ do_work (int argc_in,
         example.Start ();
         result = true;
       } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_448:
+    {
+      struct Engine_OpenGL_GLUT_448_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_448_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_448_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_448_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+      cb_data_s.mouseLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 1.0F;
+      cb_data_s.camera.up.z = 0.0F;
+
+      cb_data_s.mouseX = ENGINE_GLUT_448_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_448_DEFAULT_HEIGHT / 2;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_448_DEFAULT_WIDTH, ENGINE_GLUT_448_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 448");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_448_draw);
+      glutReshapeFunc (engine_glut_448_reshape);
+      glutVisibilityFunc (engine_glut_448_visible);
+
+      glutKeyboardFunc (engine_glut_448_key);
+      glutSpecialFunc (engine_glut_448_key_special);
+      glutMouseFunc (engine_glut_448_mouse_button);
+      glutMotionFunc (engine_glut_448_mouse_move);
+      glutPassiveMotionFunc (engine_glut_448_mouse_move);
+      glutTimerFunc (100, engine_glut_448_timer, 0);
+
+      glutCreateMenu (engine_glut_448_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_448.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_448.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.shader.use ();
+
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("u_resolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("u_time"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+      //cb_data_s.mouseLoc =
+      //  glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("u_mouse"));
+      //ACE_ASSERT (cb_data_s.mouseLoc != -1);
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_449:
+    {
+      struct Engine_OpenGL_GLUT_449_CBData cb_data_s;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 400.0f;
+      cb_data_s.camera.position.z = 1500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.mousex = ENGINE_GLUT_449_DEFAULT_WIDTH / 2;
+      cb_data_s.mousey = ENGINE_GLUT_449_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouse_0_ButtonDown = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | /*GLUT_DOUBLE |*/ GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_449_DEFAULT_WIDTH, ENGINE_GLUT_449_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 449");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      //glDisable (GL_DEPTH_TEST);
+
+      glClearColor (0.0f, 1.0f, 1.0f, 1.0f); // 'aqua'
+      glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_449_draw);
+      glutReshapeFunc (engine_glut_449_reshape);
+      glutVisibilityFunc (engine_glut_449_visible);
+
+      glutKeyboardFunc (engine_glut_449_key);
+      glutSpecialFunc (engine_glut_449_key_special);
+      glutMouseFunc (engine_glut_449_mouse_button);
+      glutMotionFunc (engine_glut_449_mouse_move);
+      glutPassiveMotionFunc (engine_glut_449_mouse_move);
+      glutTimerFunc (100, engine_glut_449_timer, 0);
+
+      glutCreateMenu (engine_glut_449_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      cb_data_s.gradient.push_back ({ 0.0f  , 0.0f   , 0.5176f, 0.2078f, 1.0f });
+      cb_data_s.gradient.push_back ({ 0.125f, 0.2f   , 0.8f   , 0.0f   , 1.0f });
+      cb_data_s.gradient.push_back ({ 0.25f , 0.9569f, 0.9412f, 0.4431f, 1.0f });
+      cb_data_s.gradient.push_back ({ 0.5f  , 0.9569f, 0.7412f, 0.2706f, 1.0f });
+      cb_data_s.gradient.push_back ({ 0.75f , 0.6f   , 0.3922f, 0.1686f, 1.0f });
+      cb_data_s.gradient.push_back ({ 1.0f  , 1.0f   , 1.0f   , 1.0f   , 1.0f });
+
+      glutMainLoop ();
+
+      result = true;
 
       break;
     }

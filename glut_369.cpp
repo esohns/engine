@@ -237,7 +237,7 @@ engine_glut_369_draw (void)
   std::vector<float> particles_a;
   std::vector<float> colors_a;
   static Common_GL_Color_t palette_a[ENGINE_GLUT_369_DEFAULT_MAX_COLOR_COUNT] =
-    {Common_GL_Color_t (0xe6, 0xf6, 0x60), Common_GL_Color_t (0xd2, 0x28, 0x43), Common_GL_Color_t (0xad, 0x86, 0x90), Common_GL_Color_t (0xb0, 0x56, 0xbd), Common_GL_Color_t (0x90, 0x67, 0x46)};
+    {Common_GL_Color_t (0xe6, 0xf6, 0x60, 0xff), Common_GL_Color_t (0xd2, 0x28, 0x43, 0xff), Common_GL_Color_t (0xad, 0x86, 0x90, 0xff), Common_GL_Color_t (0xb0, 0x56, 0xbd, 0xff), Common_GL_Color_t (0x90, 0x67, 0x46, 0xff)};
   for (int i = 0; i < cb_data_p->particles.size (); i++)
   {
     particles_a.push_back (Common_GL_Tools::map (static_cast<float> (cb_data_p->particles[i].position_.x), 0.0f, static_cast<float> (ENGINE_GLUT_369_DEFAULT_WIDTH), 0.0f, 1.0f));

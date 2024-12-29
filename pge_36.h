@@ -162,8 +162,8 @@ class PGE_36
     void display (olc::PixelGameEngine* engine_in,
                   bool debug_in)
     {
-      static Common_GL_Color_t green = {0, 255, 0};
-      static Common_GL_Color_t red = {255, 0, 0};
+      static Common_GL_Color_t green = {0, 255, 0, 255};
+      static Common_GL_Color_t red = {255, 0, 0, 255};
       float value_f = (health_ < 0.0f ? 0.0f : health_);
       value_f = (value_f > 1.0f ? 1.0f : value_f);
       Common_GL_Color_t lerped = Common_GL_Tools::lerpRGB (red, green, value_f);

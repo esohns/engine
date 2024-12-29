@@ -51,7 +51,7 @@ class PGE_97
 
       radius_ += 0.1f * (targetR_ - radius_);
       
-      static Common_GL_Color_t color1 = {0, 0, 0}, color2 = {255, 30, 0};
+      static Common_GL_Color_t color1 = {0, 0, 0, 255}, color2 = {255, 30, 0, 255};
       float amount = Common_GL_Tools::map ((radius_ - baseR) / (maxR - baseR), -1.0f, 1.0f, 0.0f, 1.0f);
       Common_GL_Color_t lerped_color =
         Common_GL_Tools::lerpRGB (color1, color2, amount);

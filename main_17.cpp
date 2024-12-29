@@ -1226,9 +1226,9 @@ do_work (int argc_in,
         glGetUniformLocation (cb_data_s.programId, ACE_TEXT_ALWAYS_CHAR ("particleColors"));
       ACE_ASSERT (cb_data_s.particleColorsLoc != -1);
 
-      static Common_GL_Color_t colorScheme1[1] = { Common_GL_Color_t (0x47, 0xCB, 0xB0) };
-      static Common_GL_Color_t colorScheme2[1] = { Common_GL_Color_t (0xFF, 0xA9, 0x10) };
-      static Common_GL_Color_t colorScheme3[1] = { Common_GL_Color_t (0x31, 0x1A, 0xE7) };
+      static Common_GL_Color_t colorScheme1[1] = { Common_GL_Color_t (0x47, 0xCB, 0xB0, 0xff) };
+      static Common_GL_Color_t colorScheme2[1] = { Common_GL_Color_t (0xFF, 0xA9, 0x10, 0xff) };
+      static Common_GL_Color_t colorScheme3[1] = { Common_GL_Color_t (0x31, 0x1A, 0xE7, 0xff) };
 
       int index_i = Common_Tools::getRandomNumber (0, 0);
       Common_GL_Color_t c1 = colorScheme1[index_i];

@@ -54,8 +54,8 @@ class ring_parent
     h_ = (minW / 20.0f) * 0.5f + level_ * (minW / 20.0f) * Common_Tools::getRandomNumber (0.8f, 1.2f);
 
     static Common_GL_Color_t palette_a[6] =
-      { Common_GL_Color_t (0xaf, 0x3e, 0x4d), Common_GL_Color_t (0x2e, 0x86, 0xab), Common_GL_Color_t (0x75, 0x8e, 0x4f),
-        Common_GL_Color_t (0x00, 0x2A, 0x32), Common_GL_Color_t (0xf6, 0xae, 0x2d), Common_GL_Color_t (0xFA, 0xC9, 0xB8) };
+      { Common_GL_Color_t (0xaf, 0x3e, 0x4d, 0xff), Common_GL_Color_t (0x2e, 0x86, 0xab, 0xff), Common_GL_Color_t (0x75, 0x8e, 0x4f, 0xff),
+        Common_GL_Color_t (0x00, 0x2A, 0x32, 0xff), Common_GL_Color_t (0xf6, 0xae, 0x2d, 0xff), Common_GL_Color_t (0xFA, 0xC9, 0xB8, 0xff) };
     int col_index = Common_Tools::getRandomNumber (0, 5);
     color_ = palette_a[col_index];
     while ((color_.r == colParent.r) && (color_.g == colParent.g) && (color_.b == colParent.b))

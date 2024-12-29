@@ -165,8 +165,8 @@ class PGE_38
 
     void display (olc::PixelGameEngine* engine_in)
     {
-      static Common_GL_Color_t green = {0, 255, 0};
-      static Common_GL_Color_t red = {255, 0, 0};
+      static Common_GL_Color_t green = {0, 255, 0, 255};
+      static Common_GL_Color_t red = {255, 0, 0, 255};
       Common_GL_Color_t lerped = Common_GL_Tools::lerpRGB (red, green, fitness_);
 
       olc::vf2d direction = velocity_;

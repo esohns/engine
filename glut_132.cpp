@@ -208,8 +208,8 @@ engine_glut_132_draw (void)
   glEnd ();
   COMMON_GL_ASSERT;
 
-  static Common_GL_Color_t color_s = { 0, 0, 0 };
-  glColor3ub (color_s.r, color_s.g, color_s.b);
+  static Common_GL_Color_t color_s = {0, 0, 0, 255};
+  glColor4ub (color_s.r, color_s.g, color_s.b, color_s.a);
 
   cb_data_p->a = std::sin (cb_data_p->f) * 20.0f + 30.0f;
   cb_data_p->f += 0.005f;
