@@ -1430,6 +1430,8 @@ set (engine_21_EXE_SRCS
      glut_451.h
      pge_452.cpp
      pge_452.h
+     glut_453.cpp
+     glut_453.h
      stdafx.h)
 
 set (EXECUTABLE_21 engine_21)
@@ -2078,6 +2080,8 @@ install (FILES
          "glut_448.frag"
          "glut_451.vert"
          "glut_451.frag"
+         "glut_453.vert"
+         "glut_453.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"

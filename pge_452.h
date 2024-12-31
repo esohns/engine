@@ -43,11 +43,10 @@ class PGE_452
 
       static olc::Pixel palette_a[8] = { olc::Pixel (0xe6, 0x30, 0x2b), olc::Pixel (0xfd, 0x78, 0x00), olc::Pixel (0xfb, 0xd4, 0x00), olc::Pixel (0x51, 0xb7, 0x2d),
                                          olc::Pixel (0x2a, 0xbd, 0xe4), olc::Pixel (0x55, 0x34, 0xeb), olc::Pixel (0xf4, 0x77, 0xc3), olc::Pixel (0xff, 0xff, 0xff) };
-      int index1, index2;
       while (col1 == col2)
       {
-        index1 = Common_Tools::getRandomNumber (0, 7);
-        index2 = Common_Tools::getRandomNumber (0, 7);
+        int index1 = Common_Tools::getRandomNumber (0, 7);
+        int index2 = Common_Tools::getRandomNumber (0, 7);
         col1 = palette_a[index1];
         col2 = palette_a[index2];
       } // end WHILE
@@ -87,14 +86,13 @@ class PGE_452
       {
         t = t0;
 
-        col1 = col2 = olc::BLACK;
         static olc::Pixel palette_a[8] = { olc::Pixel (0xe6, 0x30, 0x2b), olc::Pixel (0xfd, 0x78, 0x00), olc::Pixel (0xfb, 0xd4, 0x00), olc::Pixel (0x51, 0xb7, 0x2d),
                                            olc::Pixel (0x2a, 0xbd, 0xe4), olc::Pixel (0x55, 0x34, 0xeb), olc::Pixel (0xf4, 0x77, 0xc3), olc::Pixel (0xff, 0xff, 0xff) };
-        int index1, index2;
+        col1 = col2 = olc::BLACK;
         while (col1 == col2)
         {
-          index1 = Common_Tools::getRandomNumber (0, 7);
-          index2 = Common_Tools::getRandomNumber (0, 7);
+          int index1 = Common_Tools::getRandomNumber (0, 7);
+          int index2 = Common_Tools::getRandomNumber (0, 7);
           col1 = palette_a[index1];
           col2 = palette_a[index2];
         } // end WHILE
