@@ -46,9 +46,8 @@ class agent
   agent ()
     : positions ()
     , direction (static_cast<enum directions> (Common_Tools::getRandomNumber (0, 3)))
-    , speed (Common_Tools::getRandomNumber (ENGINE_GLUT_454_DEFAULT_MIN_SPEED, ENGINE_GLUT_454_DEFAULT_MAX_SPEED))
-    , wChance (ENGINE_GLUT_454_DEFAULT_W_CHANCE)
-    , width (Common_Tools::getRandomNumber (ENGINE_GLUT_454_DEFAULT_MIN_WIDTH, ENGINE_GLUT_454_DEFAULT_MAX_WIDTH))
+    , speed (Common_Tools::getRandomNumber (static_cast<float> (ENGINE_GLUT_454_DEFAULT_MIN_SPEED), static_cast<float> (ENGINE_GLUT_454_DEFAULT_MAX_SPEED)))
+    , width (Common_Tools::getRandomNumber (static_cast<float> (ENGINE_GLUT_454_DEFAULT_MIN_WIDTH), static_cast<float> (ENGINE_GLUT_454_DEFAULT_MAX_WIDTH)))
   {
     struct position pos;
     pos.pos = {Common_Tools::getRandomNumber (-ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f, ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f),
@@ -121,7 +120,7 @@ class agent
       pos.pos = { -s, lastPos.pos.y };
       pos.side = adjacencies[lastPos.side][1];
       p.positions.push_back (rotatePoint (rotationAngle, pos));
-      pos.pos = { static_cast<float> (speed) + lastPos.pos.x + (2.0f * -s), lastPos.pos.y };
+      pos.pos = { speed + lastPos.pos.x + (2.0f * -s), lastPos.pos.y };
       pos.side = adjacencies[lastPos.side][1];
       p.positions.push_back (rotatePoint (rotationAngle, pos));
       p.isValid = true;
@@ -149,7 +148,7 @@ class agent
       pos.pos = { lastPos.pos.x, -s };
       pos.side = adjacencies[lastPos.side][2];
       p.positions.push_back (rotatePoint (rotationAngle, pos));
-      pos.pos = { lastPos.pos.x, static_cast<float> (speed) + lastPos.pos.y + (2.0f * -s) };
+      pos.pos = { lastPos.pos.x, speed + lastPos.pos.y + (2.0f * -s) };
       pos.side = adjacencies[lastPos.side][2];
       p.positions.push_back (rotatePoint (rotationAngle, pos));
       p.isValid = true;
@@ -162,8 +161,7 @@ class agent
 
   void update ()
   {
-    // Change direction randomly (turn left or right, not in the opposite direction)
-    if (Common_Tools::testRandomProbability (wChance))
+    if (Common_Tools::testRandomProbability (ENGINE_GLUT_454_DEFAULT_W_CHANCE))
     {
       if (Common_Tools::testRandomProbability (0.5f))
         direction = static_cast<enum directions> ((direction + 1) % 4);
@@ -177,18 +175,18 @@ class agent
     {
       case D_UP:
         newPos.pos.x = lastPos.pos.x;
-        newPos.pos.y = lastPos.pos.y - static_cast<float> (speed);
+        newPos.pos.y = lastPos.pos.y - speed;
         break;
       case D_DOWN:
         newPos.pos.x = lastPos.pos.x;
-        newPos.pos.y = lastPos.pos.y + static_cast<float> (speed);
+        newPos.pos.y = lastPos.pos.y + speed;
         break;
       case D_LEFT:
-        newPos.pos.x = lastPos.pos.x - static_cast<float> (speed);
+        newPos.pos.x = lastPos.pos.x - speed;
         newPos.pos.y = lastPos.pos.y;
         break;
       case D_RIGHT:
-        newPos.pos.x = lastPos.pos.x + static_cast<float> (speed);
+        newPos.pos.x = lastPos.pos.x + speed;
         newPos.pos.y = lastPos.pos.y;
         break;
       default:
@@ -212,7 +210,7 @@ class agent
   void show ()
   {
     for (int i = 0; i < static_cast<int> (positions.size ()) - 1; i++)
-      if (positions[i].side == positions[i + 1].side)
+      if (likely (positions[i].side == positions[i + 1].side))
       {
         glPushMatrix ();
         float x1 = positions[i].pos.x;
@@ -230,11 +228,11 @@ class agent
             glRotatef (180.0f, 0.0f, 1.0f, 0.0f);
             break;
           case S_TOP:
-            glTranslatef (0.0f, ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f, 0.0f);
+            glTranslatef (0.0f, -ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f, 0.0f);
             glRotatef (90.0f, 1.0f, 0.0f, 0.0f);
             break;
           case S_BOTTOM:
-            glTranslatef (0.0f, -ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f, 0.0f);
+            glTranslatef (0.0f, ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f, 0.0f);
             glRotatef (-90.0f, 1.0f, 0.0f, 0.0f);
             break;
           case S_RIGHT:
@@ -254,15 +252,15 @@ class agent
         glColor3ub (color, color, color);
         if (x1 == x2)
         {
-          glTranslatef (-static_cast<float> (width), -std::abs (y2 - y1) / 2.0f, 0.0f);
+          glTranslatef (-width / 2.0f, -std::abs (y2 - y1) / 2.0f, 0.0f);
           glRectf ((x1 + x2) / 2.0f, (y1 + y2) / 2.0f,
-                   ((x1 + x2) / 2.0f) + static_cast<float> (width), ((y1 + y2) / 2.0f) + std::abs (y2 - y1));
+                   (x1 + x2) / 2.0f + width, (y1 + y2) / 2.0f + std::abs (y2 - y1));
         } // end IF
         else
         {
-          glTranslatef (-std::abs (x2 - x1) / 2.0f, -static_cast<float> (width), 0.0f);
+          glTranslatef (-std::abs (x2 - x1) / 2.0f, -width / 2.0f, 0.0f);
           glRectf ((x1 + x2) / 2.0f, (y1 + y2) / 2.0f,
-                   ((x1 + x2) / 2.0f) + std::abs (x2 - x1), ((y1 + y2) / 2.0f) + static_cast<float> (width));
+                   (x1 + x2) / 2.0f + std::abs (x2 - x1), (y1 + y2) / 2.0f + width);
         } // end ELSE
         glPopMatrix ();
       } // end IF
@@ -270,9 +268,8 @@ class agent
 
   std::vector<struct position> positions;
   enum directions              direction;
-  int                          speed;
-  float                        wChance;
-  int                          width;
+  float                        speed;
+  float                        width;
 };
 
 //////////////////////////////////////////

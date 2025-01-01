@@ -187,11 +187,11 @@ engine_glut_454_draw (void)
         glRotatef (180.0f, 0.0f, 1.0f, 0.0f);
         break;
       case S_TOP:
-        glTranslatef (0.0f, ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f, 0.0f);
+        glTranslatef (0.0f, -ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f, 0.0f);
         glRotatef (90.0f, 1.0f, 0.0f, 0.0f);
         break;
       case S_BOTTOM:
-        glTranslatef (0.0f, -ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f, 0.0f);
+        glTranslatef (0.0f, ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f, 0.0f);
         glRotatef (-90.0f, 1.0f, 0.0f, 0.0f);
         break;
       case S_RIGHT:
