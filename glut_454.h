@@ -31,8 +31,8 @@
 
 enum sides { S_FRONT = 0, S_BACK, S_TOP, S_BOTTOM, S_LEFT, S_RIGHT };
 enum directions { D_UP = 0, D_RIGHT, D_DOWN, D_LEFT };
-std::map<enum sides, std::vector<enum sides> > adjacencies;
-std::map<enum sides, std::vector<int> >        rotations;
+static std::map<enum sides, std::vector<enum sides> > adjacencies;
+static std::map<enum sides, std::vector<int> >        rotations;
 
 struct position
 {

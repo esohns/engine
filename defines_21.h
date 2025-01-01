@@ -54,4 +54,10 @@
 #define ENGINE_GLUT_454_DEFAULT_MAX_SPEED          20
 #define ENGINE_GLUT_454_DEFAULT_W_CHANCE           0.01f
 
+// pge 135
+#define ENGINE_PGE_455_DEFAULT_HEIGHT           640
+#define ENGINE_PGE_455_DEFAULT_WIDTH            640
+#define ENGINE_PGE_455_DEFAULT_W                640
+#define ENGINE_PGE_455_DEFAULT_BRUSH_RADIUS     20
+
 #endif // DEFINES_21_H

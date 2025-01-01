@@ -51,6 +51,7 @@
 #include "pge_452.h"
 #include "glut_453.h"
 #include "glut_454.h"
+#include "pge_455.h"
 
 enum Engine_ModeType
 {
@@ -59,6 +60,7 @@ enum Engine_ModeType
   ENGINE_MODE_452,
   ENGINE_MODE_453,
   ENGINE_MODE_454,
+  ENGINE_MODE_455,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -589,6 +591,21 @@ do_work (int argc_in,
       glutMainLoop ();
 
       result = true;
+
+      break;
+    }
+    case ENGINE_MODE_455:
+    {
+      PGE_455 example;
+      if (example.Construct (ENGINE_PGE_455_DEFAULT_WIDTH, ENGINE_PGE_455_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
 
       break;
     }
