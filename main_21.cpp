@@ -50,6 +50,7 @@
 #include "glut_451.h"
 #include "pge_452.h"
 #include "glut_453.h"
+#include "glut_454.h"
 
 enum Engine_ModeType
 {
@@ -57,6 +58,7 @@ enum Engine_ModeType
   ENGINE_MODE_451,
   ENGINE_MODE_452,
   ENGINE_MODE_453,
+  ENGINE_MODE_454,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -496,6 +498,93 @@ do_work (int argc_in,
 
       // START TIMING
       cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_454:
+    {
+      struct Engine_OpenGL_GLUT_454_CBData cb_data_s;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 1000.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0f;
+      cb_data_s.camera.up.y = 1.0f;
+      cb_data_s.camera.up.z = 0.0f;
+
+      cb_data_s.mousex = ENGINE_GLUT_454_DEFAULT_WIDTH / 2;
+      cb_data_s.mousey = ENGINE_GLUT_454_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouse_0_ButtonDown = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_454_DEFAULT_WIDTH, ENGINE_GLUT_454_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 454");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      glClearColor (180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
+
+      //glEnable (GL_DEPTH_TEST);
+
+      //glDisable (GL_CULL_FACE);
+      //glFrontFace (GL_CCW);
+
+      //glEnable (GL_LIGHTING);
+      //glEnable (GL_LIGHT0);
+      //glEnable (GL_LIGHT1);
+      //glDisable (GL_COLOR_MATERIAL);
+
+      glEnable (GL_BLEND);
+      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      //glEnable (GL_NORMALIZE);
+
+      glPolygonMode (GL_FRONT_AND_BACK,
+                     GL_FILL);
+
+      glutDisplayFunc (engine_glut_454_draw);
+      glutReshapeFunc (engine_glut_454_reshape);
+      glutVisibilityFunc (engine_glut_454_visible);
+
+      glutKeyboardFunc (engine_glut_454_key);
+      glutSpecialFunc (engine_glut_454_key_special);
+      glutMouseFunc (engine_glut_454_mouse_button);
+      glutMotionFunc (engine_glut_454_mouse_move);
+      glutPassiveMotionFunc (engine_glut_454_mouse_move);
+      glutTimerFunc (100, engine_glut_454_timer, 0);
+
+      glutCreateMenu (engine_glut_454_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      adjacencies[S_FRONT] = { S_TOP, S_RIGHT, S_BOTTOM, S_LEFT };
+      adjacencies[S_RIGHT] = {S_TOP, S_BACK, S_BOTTOM, S_FRONT};
+      adjacencies[S_BACK] = { S_TOP, S_LEFT, S_BOTTOM, S_RIGHT };
+      adjacencies[S_LEFT] = { S_TOP, S_FRONT, S_BOTTOM, S_BACK };
+      adjacencies[S_TOP] = { S_BACK, S_RIGHT, S_FRONT, S_LEFT };
+      adjacencies[S_BOTTOM] = { S_FRONT, S_RIGHT, S_BACK, S_LEFT };
+
+      rotations[S_FRONT] = { 0, 0, 0, 0 };
+      rotations[S_RIGHT] = { 270, 0, 90, 0 };
+      rotations[S_BACK] = { 180, 0, 180, 0 };
+      rotations[S_LEFT] = { 90, 0, 270, 0 };
+      rotations[S_TOP] = { 180, 90, 0, 270 };
+      rotations[S_BOTTOM] = { 0, 270, 180, 90 };
+
+      for (int i = 0; i < ENGINE_GLUT_454_DEFAULT_NUMBER_OF_AGENTS; i++)
+        cb_data_s.agents.push_back (agent ());
 
       glutMainLoop ();
 

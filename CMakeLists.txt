@@ -1432,6 +1432,8 @@ set (engine_21_EXE_SRCS
      pge_452.h
      glut_453.cpp
      glut_453.h
+     glut_454.cpp
+     glut_454.h
      stdafx.h)
 
 set (EXECUTABLE_21 engine_21)
