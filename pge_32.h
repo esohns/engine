@@ -82,7 +82,7 @@ class PGE_32
     bool ReportParticle (const b2ParticleSystem* particleSystem, int32 index)
     {
       if (particleSystem != particleSystem_)
-      return false;
+        return false;
 
       b2Transform xf;
       xf.SetIdentity ();
@@ -91,14 +91,15 @@ class PGE_32
       {
         b2Vec2& v = particleSystem_->GetVelocityBuffer ()[index];
         v = velocity_;
-      }
+      } // end IF
+
       return true;
     }
 
     b2ParticleSystem* particleSystem_;
     const b2Shape* shape_;
     b2Vec2 velocity_;
-};
+  };
 
   Mode              mode_;
 

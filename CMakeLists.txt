@@ -9,7 +9,7 @@ string (SUBSTRING ${BUILD_PATH_SUFFIX} 1 -1 BUILD_PATH_SUFFIX)
 if (UNIX)
  set (Common_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Common/${BUILD_PATH_SUFFIX}/${CMAKE_BUILD_TYPE}")
 endif (UNIX)
-find_package (Common 0.0.2
+find_package (Common
               REQUIRED COMPONENTS lib
               CONFIG
               PATHS ${CMAKE_CURRENT_SOURCE_DIR}/..

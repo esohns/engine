@@ -14,17 +14,17 @@
 #include "engine_common.h"
 
 b2ParticleColor PGE_32::k_ParticleColors[] = {
-  b2ParticleColor(0xff, 0x00, 0x00, 0xff), // red
-  b2ParticleColor(0x00, 0xff, 0x00, 0xff), // green
-  b2ParticleColor(0x00, 0x00, 0xff, 0xff), // blue
-  b2ParticleColor(0xff, 0x8c, 0x00, 0xff), // orange
-  b2ParticleColor(0x00, 0xce, 0xd1, 0xff), // turquoise
-  b2ParticleColor(0xff, 0x00, 0xff, 0xff), // magenta
-  b2ParticleColor(0xff, 0xd7, 0x00, 0xff), // gold
-  b2ParticleColor(0x00, 0xff, 0xff, 0xff), // cyan
+  b2ParticleColor (0xff, 0x00, 0x00, 0xff), // red
+  b2ParticleColor (0x00, 0xff, 0x00, 0xff), // green
+  b2ParticleColor (0x00, 0x00, 0xff, 0xff), // blue
+  b2ParticleColor (0xff, 0x8c, 0x00, 0xff), // orange
+  b2ParticleColor (0x00, 0xce, 0xd1, 0xff), // turquoise
+  b2ParticleColor (0xff, 0x00, 0xff, 0xff), // magenta
+  b2ParticleColor (0xff, 0xd7, 0x00, 0xff), // gold
+  b2ParticleColor (0x00, 0xff, 0xff, 0xff), // cyan
 };
 uint32 PGE_32::k_ParticleColorsCount =
-B2_ARRAY_SIZE(PGE_32::k_ParticleColors);
+B2_ARRAY_SIZE (PGE_32::k_ParticleColors);
 
 //////////////////////////////////////////
 
@@ -70,7 +70,7 @@ PGE_32::~PGE_32 ()
     case MODE_WAVEMACHINE:
     {
       if (joint_ && world_)
-        world_->DestroyJoint(joint_);
+        world_->DestroyJoint (joint_);
       break;
     }
     case MODE_WEB:
@@ -361,8 +361,8 @@ continue_:
   if (joint_)
   {
     if (ENGINE_PGE_32_DEFAULT_HZ > 0.0f)
-      time_ += 1 / ENGINE_PGE_32_DEFAULT_HZ;
-    joint_->SetMotorSpeed (0.05f * cosf (time_) * b2_pi);
+      time_ += 1.0f / ENGINE_PGE_32_DEFAULT_HZ;
+    joint_->SetMotorSpeed (0.05f * std::cos (time_) * b2_pi);
   } // end IF
 
   world_->Step (time_step_f,
