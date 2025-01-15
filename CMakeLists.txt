@@ -32,19 +32,6 @@ include (compiler_init)
 
 cmake_minimum_required (VERSION 2.8)
 
-# build type
-#variable_watch (CMAKE_BUILD_TYPE)
-# *NOTE*: iff the user specifies -DCMAKE_BUILD_TYPE on the command line, take
-#         their definition and dump it in the cache along with proper
-#         documentation, otherwise set CMAKE_BUILD_TYPE to Debug prior to
-#         calling PROJECT()
-set (BUILD_TYPE_CACHE_STRING "choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel.")
-if (DEFINED CMAKE_BUILD_TYPE)
- set (CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING ${BUILD_TYPE_CACHE_STRING})
-elseif (NOT CMAKE_CONFIGURATION_TYPES)
- set (CMAKE_BUILD_TYPE Debug CACHE STRING ${BUILD_TYPE_CACHE_STRING})
-endif ()
-
 project (engine
          LANGUAGES CXX C)
 
@@ -95,6 +82,8 @@ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in
                 @ONLY
                 NEWLINE_STYLE ${NEWLINE_STYLE})
 add_definitions (-DHAVE_CONFIG_H)
+
+include (libraries_init)
 
 configure_file (resource.rc.in
                 resource.rc)
@@ -1440,6 +1429,8 @@ set (engine_21_EXE_SRCS
      glut_456.h
      glut_457.cpp
      glut_457.h
+     glut_458.cpp
+     glut_458.h
      stdafx.h)
 
 set (EXECUTABLE_21 engine_21)
@@ -2094,6 +2085,8 @@ install (FILES
          "glut_456.frag"
          "glut_457.vert"
          "glut_457.frag"
+         "glut_458.vert"
+         "glut_458.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
@@ -2224,6 +2217,7 @@ file (TO_CMAKE_PATH "${GLEW_LIB_DIR}" GLEW_PATH)
 file (TO_CMAKE_PATH ${ACE_LIB_DIR} ACE_PATH)
 file (TO_CMAKE_PATH "${ASSIMP_LIB_DIR}" ASSIMP_PATH)
 file (TO_CMAKE_PATH "${PNG_LIB_DIR}" PNG_PATH)
+message (STATUS "PNG_LIB_DIR: ${PNG_LIB_DIR}")
 if (WIN32)
  # *NOTE*: ffmpeg was built with "vcpkg-libpng" support, so now there is a new dependency to zlib1.dll, liblzma.dll, iconv-2.dll :-(
  file (TO_CMAKE_PATH "$ENV{VCPKG_INSTALLATION_ROOT}/installed/x64-windows/bin" VCPKG_PATH)
