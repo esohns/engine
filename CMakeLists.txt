@@ -2,10 +2,6 @@ include (${CMAKE_CURRENT_SOURCE_DIR}/VersionConfig.cmake)
 
 string (REPLACE ${CMAKE_SOURCE_DIR} "" BUILD_PATH_SUFFIX ${CMAKE_BINARY_DIR})
 string (SUBSTRING ${BUILD_PATH_SUFFIX} 1 -1 BUILD_PATH_SUFFIX)
-#message (STATUS "BUILD_PATH_SUFFIX \"${BUILD_PATH_SUFFIX}\"")
-#string (FIND ${BUILD_PATH_SUFFIX} "/" SLASH_LOCATION REVERSE)
-#string (SUBSTRING ${BUILD_PATH_SUFFIX} 0 ${SLASH_LOCATION} BUILD_PATH_SUFFIX)
-#message (STATUS "BUILD_PATH_SUFFIX \"${BUILD_PATH_SUFFIX}\"")
 if (UNIX)
  set (Common_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Common/${BUILD_PATH_SUFFIX}/${CMAKE_BUILD_TYPE}")
 endif (UNIX)
@@ -23,7 +19,6 @@ if (UNIX)
 elseif (WIN32)
  set (COMMON_ROOT_DIR "${Common_DIR}/../.." )
 endif ()
-#message (STATUS "\"COMMON_ROOT_DIR\": ${COMMON_ROOT_DIR}")
 
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/scripts")
 include (CPU)
@@ -46,9 +41,9 @@ endif ()
 # project options
 if (WIN32)
  if (CMAKE_BUILD_TYPE STREQUAL Debug)
-  add_definitions (-D_ITERATOR_DEBUG_LEVEL=2)
+#  add_definitions (-D_ITERATOR_DEBUG_LEVEL=2)
  else ()
-  add_definitions (-D_ITERATOR_DEBUG_LEVEL=0)
+#  add_definitions (-D_ITERATOR_DEBUG_LEVEL=0)
  endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 endif (WIN32)
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
@@ -129,10 +124,14 @@ set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/src/image/script
 include (png)
 include (stb)
 
+set (PATH_SUFFIX "Release")
+if (DEFINED CMAKE_BUILD_TYPE)
+ set (PATH_SUFFIX ${CMAKE_BUILD_TYPE})
+endif (DEFINED CMAKE_BUILD_TYPE)
 if (UNIX)
  find_library (BOX2D_LIBRARY liquidfun
                PATHS $ENV{LIB_ROOT}/liquidfun/build/gcc/Box2D
-               PATH_SUFFIXES Debug
+               PATH_SUFFIXES ${PATH_SUFFIX}
                DOC "searching for liquidfun"
                NO_DEFAULT_PATH)
  if (NOT BOX2D_LIBRARY)
@@ -148,7 +147,7 @@ if (UNIX)
 elseif (WIN32)
  find_library (BOX2D_LIBRARY liquidfun.lib
                PATHS $ENV{LIB_ROOT}/liquidfun/build/msvc/Box2D
-               PATH_SUFFIXES Debug
+               PATH_SUFFIXES ${PATH_SUFFIX}
                DOC "searching for liquidfun.lib"
                NO_DEFAULT_PATH)
  if (NOT BOX2D_LIBRARY)
@@ -1941,7 +1940,6 @@ install (TARGETS ${EXECUTABLE} ${EXECUTABLE_2} ${EXECUTABLE_3} ${EXECUTABLE_4} $
          DESTINATION bin
          COMPONENT applications)
 install (FILES
-         "peace.dat"
          "800x500.png"
          "2017.png"
          "Apple_Computer_Logo_rainbow.png"
@@ -1950,7 +1948,11 @@ install (FILES
          "bluedark.png"
          "cat.jpg"
          "circle.png"
+         "gameboy.png"
+         "kitty-cat-kitten-pet.jpg"
          "opengl_logo.png"
+         "peace.dat"
+         "tetra2.png"
          "glut_3.gtk2"
          "glut_3.gtk3"
          "glut_16.gtk2"
@@ -2098,20 +2100,22 @@ if (WIN32)
  file (TO_NATIVE_PATH $ENV{LIB_ROOT} LIB_ROOT)
  string (REPLACE "\\" "\\\\" LIB_ROOT ${LIB_ROOT})
  install (FILES
-          ${ACE_LIB_DIR}/ACE.dll
           ${ACE_LIB_DIR}/ACE${LIB_FILE_SUFFIX}.dll
-          ${LIB_ROOT}/assimp/cmake/bin/Debug/assimp-vc143-mtd.dll
+          ${LIB_ROOT}/assimp/cmake/bin/${PATH_SUFFIX}/assimp-vc143-mt${LIB_FILE_SUFFIX}.dll
           ${LIB_ROOT}/freeglut/bin/x64/freeglut.dll
-          ${LIB_ROOT}/glew/bin/Release/x64/glew32.dll
+          ${LIB_ROOT}/glew/bin/${PATH_SUFFIX}/x64/glew32.dll
           ${LIB_ROOT}/libepoxy/bin/epoxy-0.dll
-          ${LIB_ROOT}/libnoise/build/msvc/Release/libnoise.dll
-          ${LIB_ROOT}/zlib/build/Debug/zlibd.dll
-          ${LIB_ROOT}/libpng/build/Debug/libpng16d.dll
-          ${LIB_ROOT}/ffmpeg/build/Debug/avcodec-59.dll
-          ${LIB_ROOT}/ffmpeg/build/Debug/avformat-59.dll
-          ${LIB_ROOT}/ffmpeg/build/Debug/swresample-4.dll
-          ${LIB_ROOT}/ffmpeg/build/Debug/swscale-6.dll
-          ${LIB_ROOT}/ffmpeg/build/Debug/avutil-57.dll
+          ${LIB_ROOT}/libnoise/build/msvc/${PATH_SUFFIX}/libnoise.dll
+          ${LIB_ROOT}/zlib/build/${PATH_SUFFIX}/zlib${LIB_FILE_SUFFIX}.dll
+          ${LIB_ROOT}/libpng/build/${PATH_SUFFIX}/libpng16${LIB_FILE_SUFFIX}.dll
+          ${LIB_ROOT}/vcpkg/installed/x64-windows/bin/iconv-2.dll
+          ${LIB_ROOT}/vcpkg/installed/x64-windows/bin/liblzma.dll
+          ${LIB_ROOT}/vcpkg/installed/x64-windows/bin/bz2.dll
+          ${LIB_ROOT}/ffmpeg/libavcodec/avcodec-61.dll
+          ${LIB_ROOT}/ffmpeg/libavformat/avformat-61.dll
+          ${LIB_ROOT}/ffmpeg/libswresample/swresample-5.dll
+          ${LIB_ROOT}/ffmpeg/libswscale/swscale-8.dll
+          ${LIB_ROOT}/ffmpeg/libavutil/avutil-59.dll
           ${LIB_ROOT}/ImageMagick/CORE_RL_bzlib_.dll
           ${LIB_ROOT}/ImageMagick/CORE_RL_freetype_.dll
           ${LIB_ROOT}/ImageMagick/CORE_RL_fribidi_.dll
