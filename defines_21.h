@@ -75,4 +75,29 @@
 #define ENGINE_GLUT_458_DEFAULT_WIDTH              1112
 #define ENGINE_GLUT_458_DEFAULT_SCALE_FACTOR       30
 
+// glut 459
+#define ENGINE_GLUT_459_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_459_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_459_DEFAULT_SCALE_FACTOR       30
+
+#define ENGINE_GLUT_459_DEFAULT_NOISE_SCALE        1.0f
+#define ENGINE_GLUT_459_DEFAULT_NOISE_OCTAVES      4
+#define ENGINE_GLUT_459_DEFAULT_NOISE_FACTOR       10.0f
+#define ENGINE_GLUT_459_DEFAULT_FREQUENCY          10.0f
+#define ENGINE_GLUT_459_DEFAULT_SHARPNESS          -2.0f
+#define ENGINE_GLUT_459_DEFAULT_PATTERN            0
+
+#if defined (GTK2_USE)
+#define ENGINE_GLUT_459_UI_GTK_DEFINITION_FILE          "glut_459.gtk2"
+#else
+#define ENGINE_GLUT_459_UI_GTK_DEFINITION_FILE          "glut_459.gtk3"
+#endif // GTK2_USE
+
+#define ENGINE_GLUT_459_UI_GTK_SCALE_NOISE_SCALE_NAME   "scale_noise_scale"
+#define ENGINE_GLUT_459_UI_GTK_SCALE_NOISE_OCTAVES_NAME "scale_noise_octaves"
+#define ENGINE_GLUT_459_UI_GTK_SCALE_NOISE_FACTOR_NAME  "scale_noise_factor"
+#define ENGINE_GLUT_459_UI_GTK_SCALE_FREQUENCY_NAME     "scale_frequency"
+#define ENGINE_GLUT_459_UI_GTK_SCALE_SHARPNESS_NAME     "scale_sharpness"
+#define ENGINE_GLUT_459_UI_GTK_SCALE_PATTERN_NAME       "scale_pattern"
+
 #endif // DEFINES_21_H

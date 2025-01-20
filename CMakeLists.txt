@@ -1430,6 +1430,8 @@ set (engine_21_EXE_SRCS
      glut_457.h
      glut_458.cpp
      glut_458.h
+     glut_459.cpp
+     glut_459.h
      stdafx.h)
 
 set (EXECUTABLE_21 engine_21)
@@ -1858,7 +1860,7 @@ target_link_libraries (${EXECUTABLE_21} CommonLog)
 target_link_libraries (${EXECUTABLE_21} CommonOpenGL)
 target_link_libraries (${EXECUTABLE_21} CommonTimer)
 target_link_libraries (${EXECUTABLE_21} CommonUI)
-#target_link_libraries (${EXECUTABLE_21} CommonUI_GTK)
+target_link_libraries (${EXECUTABLE_21} CommonUI_GTK)
 if (UNIX)
  target_link_options (${EXECUTABLE_5} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
  target_link_options (${EXECUTABLE_6} PUBLIC "$<$<CXX_COMPILER_ID:GNU>:-Wl,--allow-multiple-definition>")
@@ -2089,6 +2091,9 @@ install (FILES
          "glut_457.frag"
          "glut_458.vert"
          "glut_458.frag"
+         "glut_459.vert"
+         "glut_459.frag"
+         "glut_459.gtk3"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"

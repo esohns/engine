@@ -55,6 +55,7 @@
 #include "glut_456.h"
 #include "glut_457.h"
 #include "glut_458.h"
+#include "glut_459.h"
 
 enum Engine_ModeType
 {
@@ -67,6 +68,7 @@ enum Engine_ModeType
   ENGINE_MODE_456,
   ENGINE_MODE_457,
   ENGINE_MODE_458,
+  ENGINE_MODE_459,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -913,6 +915,178 @@ do_work (int argc_in,
 
       break;
     }
+    case ENGINE_MODE_459:
+    {
+      struct Engine_OpenGL_GLUT_459_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_458_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_459_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_459_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.phaseLoc = -1;
+      cb_data_s.scaleLoc = -1;
+      cb_data_s.octavesLoc = -1;
+      cb_data_s.frequencyLoc = -1;
+      cb_data_s.noiseFactorLoc = -1;
+      cb_data_s.sharpnessLoc = -1;
+      cb_data_s.timeLoc = -1;
+      cb_data_s.patternLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 1.0F;
+      cb_data_s.camera.up.z = 0.0F;
+
+      cb_data_s.mouseX = ENGINE_GLUT_459_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_459_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      cb_data_s.phase = {0.0f, 0.0f};
+      cb_data_s.scale = ENGINE_GLUT_459_DEFAULT_NOISE_SCALE;
+      cb_data_s.octaves = ENGINE_GLUT_459_DEFAULT_NOISE_OCTAVES;
+      cb_data_s.noiseFactor = ENGINE_GLUT_459_DEFAULT_NOISE_FACTOR;
+      cb_data_s.frequency = ENGINE_GLUT_459_DEFAULT_FREQUENCY;
+      cb_data_s.sharpness = ENGINE_GLUT_459_DEFAULT_SHARPNESS;
+      cb_data_s.pattern = ENGINE_GLUT_459_DEFAULT_PATTERN;
+
+      // initialize GTK
+      Common_UI_GTK_Configuration_t gtk_configuration;
+      struct Engine_UI_GTK_459_CBData ui_cb_data;
+      ui_cb_data.GLUT_CBData = &cb_data_s;
+      Common_UI_GtkBuilderDefinition_t gtk_ui_definition;
+      Common_UI_GTK_Manager_t* gtk_manager_p =
+        COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
+      ACE_ASSERT (gtk_manager_p);
+      Common_UI_GTK_State_t& state_r =
+        const_cast<Common_UI_GTK_State_t&> (gtk_manager_p->getR ());
+
+      gtk_configuration.argc = argc_in;
+      gtk_configuration.argv = argv_in;
+      gtk_configuration.CBData = &ui_cb_data;
+      gtk_configuration.eventHooks.finiHook = idle_finalize_UI_459_cb;
+      gtk_configuration.eventHooks.initHook = idle_initialize_UI_459_cb;
+      gtk_configuration.definition = &gtk_ui_definition;
+
+      ui_cb_data.UIState = &state_r;
+      ui_cb_data.progressData.state = &state_r;
+
+      state_r.builders[ACE_TEXT_ALWAYS_CHAR (COMMON_UI_DEFINITION_DESCRIPTOR_MAIN)] =
+        std::make_pair (UIDefinitionFilePath_in, static_cast<GtkBuilder*> (NULL));
+
+      bool result_2 = gtk_manager_p->initialize (gtk_configuration);
+      if (!result_2)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to Common_UI_GTK_Manager_T::initialize(), aborting\n")));
+        return false;
+      } // end IF
+
+      gtk_manager_p->start ();
+      if (!gtk_manager_p->isRunning ())
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to start GTK event dispatch, aborting\n")));
+        return false;
+      } // end IF
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_459_DEFAULT_WIDTH, ENGINE_GLUT_459_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 459");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_459_draw);
+      glutReshapeFunc (engine_glut_459_reshape);
+      glutVisibilityFunc (engine_glut_459_visible);
+
+      glutKeyboardFunc (engine_glut_459_key);
+      glutSpecialFunc (engine_glut_459_key_special);
+      glutMouseFunc (engine_glut_459_mouse_button);
+      glutMotionFunc (engine_glut_459_mouse_move);
+      glutPassiveMotionFunc (engine_glut_459_mouse_move);
+      glutTimerFunc (100, engine_glut_459_timer, 0);
+
+      glutCreateMenu (engine_glut_459_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_459.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_459.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.shader.use ();
+
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("uResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.phaseLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("uPhase"));
+      ACE_ASSERT (cb_data_s.phaseLoc != -1);
+      cb_data_s.scaleLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("uScale"));
+      ACE_ASSERT (cb_data_s.scaleLoc != -1);
+      cb_data_s.octavesLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("uOctaves"));
+      ACE_ASSERT (cb_data_s.octavesLoc != -1);
+      cb_data_s.frequencyLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("uFreq"));
+      ACE_ASSERT (cb_data_s.frequencyLoc != -1);
+      cb_data_s.noiseFactorLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("uNoiseFactor"));
+      ACE_ASSERT (cb_data_s.noiseFactorLoc != -1);
+      cb_data_s.sharpnessLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("uSharpness"));
+      ACE_ASSERT (cb_data_s.sharpnessLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("uTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+      cb_data_s.patternLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("uPattern"));
+      ACE_ASSERT (cb_data_s.patternLoc != -1);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      gtk_manager_p->stop (true,   // wait ?
+                           false);
+
+      result = true;
+
+      break;
+    }
     default:
     {
       ACE_DEBUG ((LM_ERROR,
@@ -987,6 +1161,14 @@ ACE_TMAIN (int argc_in,
   // *TODO*: clean this up ASAP
   switch (mode_type_e)
   {
+    case ENGINE_MODE_459:
+    {
+      ui_definition_file_path = Common_File_Tools::directory(ui_definition_file_path);
+      ui_definition_file_path += ACE_DIRECTORY_SEPARATOR_CHAR_A;
+      ui_definition_file_path +=
+        ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_459_UI_GTK_DEFINITION_FILE);
+      break;
+    }
     default:
       break;
   } // end SWITCH
