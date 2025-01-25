@@ -1,4 +1,5 @@
-include (${CMAKE_CURRENT_SOURCE_DIR}/VersionConfig.cmake)
+set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+include (VersionConfig)
 
 string (REPLACE ${CMAKE_SOURCE_DIR} "" BUILD_PATH_SUFFIX ${CMAKE_BINARY_DIR})
 string (SUBSTRING ${BUILD_PATH_SUFFIX} 1 -1 BUILD_PATH_SUFFIX)
@@ -91,31 +92,7 @@ include (glut)
 
 #set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/scripts")
 include (ffmpeg)
-if (NOT FFMPEG_SUPPORT)
- message (FATAL_ERROR "could not find ffmpeg, aborting")
-else ()
- message (STATUS "found ffmpeg")
-endif (NOT FFMPEG_SUPPORT)
 include (ImageMagick)
-if (NOT IMAGEMAGICK_SUPPORT)
- message (FATAL_ERROR "could not find ImageMagick, aborting")
-else ()
- message (STATUS "found ImageMagick")
-endif (NOT IMAGEMAGICK_SUPPORT)
-
-include (ACE)
-#if (NOT ACE_LIBRARY)
-# message (FATAL_ERROR "could not find ${ACE_LIB_FILE} (was: \"${ACE_LIBRARY}\"), aborting")
-#else ()
-# message (STATUS "Found ACE library \"${ACE_LIBRARY}\"")
-#endif (NOT ACE_LIBRARY)
-
-if (DEFINED ENV{LIB_ROOT})
- set (PGE_DIR "$ENV{LIB_ROOT}/olcPixelGameEngine" )
-endif (DEFINED ENV{LIB_ROOT})
-find_path (PGE_INCLUDE_DIR
-           olcPixelGameEngine.h
-           HINTS ${PGE_DIR})
 
 #set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/scripts")
 include (libnoise)
@@ -124,43 +101,15 @@ set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/src/image/script
 include (png)
 include (stb)
 
+include (box2d)
+include (pge)
+
+include (ACE)
+
 set (PATH_SUFFIX "Release")
 if (DEFINED CMAKE_BUILD_TYPE)
  set (PATH_SUFFIX ${CMAKE_BUILD_TYPE})
 endif (DEFINED CMAKE_BUILD_TYPE)
-if (UNIX)
- find_library (BOX2D_LIBRARY liquidfun
-               PATHS $ENV{LIB_ROOT}/liquidfun/build/gcc/Box2D
-               PATH_SUFFIXES ${PATH_SUFFIX}
-               DOC "searching for liquidfun"
-               NO_DEFAULT_PATH)
- if (NOT BOX2D_LIBRARY)
-  message (WARNING "could not find libliquidfun.a, continuing")
- endif (NOT BOX2D_LIBRARY)
- if (BOX2D_LIBRARY)
-  message (STATUS "found Box2D")
-  set (BOX2D_FOUND TRUE)
-  set (BOX2D_INCLUDE_DIR "$ENV{LIB_ROOT}/liquidfun/liquidfun/Box2D")
-  set (BOX2D_LIBRARIES ${BOX2D_LIBRARY})
-#  set (BOX2D_LIB_DIR "$ENV{LIB_ROOT}/liquidfun/build/msvc/Box2D/Debug")
- endif (BOX2D_LIBRARY)
-elseif (WIN32)
- find_library (BOX2D_LIBRARY liquidfun.lib
-               PATHS $ENV{LIB_ROOT}/liquidfun/build/msvc/Box2D
-               PATH_SUFFIXES ${PATH_SUFFIX}
-               DOC "searching for liquidfun.lib"
-               NO_DEFAULT_PATH)
- if (NOT BOX2D_LIBRARY)
-  message (WARNING "could not find liquidfun.lib, continuing")
- endif (NOT BOX2D_LIBRARY)
- if (BOX2D_LIBRARY)
-  message (STATUS "found Box2D")
-  set (BOX2D_FOUND TRUE)
-  set (BOX2D_INCLUDE_DIR "$ENV{LIB_ROOT}/liquidfun/liquidfun/Box2D")
-  set (BOX2D_LIBRARIES ${BOX2D_LIBRARY})
-#  set (BOX2D_LIB_DIR "$ENV{LIB_ROOT}/liquidfun/build/msvc/Box2D/Debug")
- endif (BOX2D_LIBRARY)
-endif ()
 
 # user interface
 option (GUI_SUPPORT "enable graphical user interface support" ON)
@@ -178,7 +127,7 @@ endif (GUI_SUPPORT)
 include (glm)
 
 ############## includes ###############
-include_directories (${BOX2D_INCLUDE_DIR})
+include_directories (${BOX2D_INCLUDE_DIRS})
 include_directories (${PGE_INCLUDE_DIR})
 include_directories (${PGE_INCLUDE_DIR}/extensions)
 include_directories (${LIBNOISE_INCLUDE_DIRS})
@@ -2165,11 +2114,11 @@ if (WIN32)
           DESTINATION bin
           COMPONENT binaries)
  if (CMAKE_BUILD_TYPE STREQUAL Debug)
- install (FILES
-          "C:/Windows/System32/msvcp140d.dll"
-          "C:/Windows/System32/vcruntime140d.dll"
-          DESTINATION bin
-          COMPONENT runtime)
+  install (FILES
+           "C:/Windows/System32/msvcp140d.dll"
+           "C:/Windows/System32/vcruntime140d.dll"
+           DESTINATION bin
+           COMPONENT binaries)
  endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 endif (WIN32)
 
@@ -2230,7 +2179,6 @@ file (TO_CMAKE_PATH "${GLEW_LIB_DIR}" GLEW_PATH)
 file (TO_CMAKE_PATH ${ACE_LIB_DIR} ACE_PATH)
 file (TO_CMAKE_PATH "${ASSIMP_LIB_DIR}" ASSIMP_PATH)
 file (TO_CMAKE_PATH "${PNG_LIB_DIR}" PNG_PATH)
-message (STATUS "PNG_LIB_DIR: ${PNG_LIB_DIR}")
 if (WIN32)
  # *NOTE*: ffmpeg was built with "vcpkg-libpng" support, so now there is a new dependency to zlib1.dll, liblzma.dll, iconv-2.dll :-(
  file (TO_CMAKE_PATH "$ENV{VCPKG_INSTALLATION_ROOT}/installed/x64-windows/bin" VCPKG_PATH)
