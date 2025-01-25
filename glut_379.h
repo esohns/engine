@@ -38,6 +38,8 @@ struct Engine_OpenGL_GLUT_379_CBData
   GLuint                            VAO;
   GLuint                            VBO;
 
+  float                             randomVec[2];
+
   // time
   float                             time;
 

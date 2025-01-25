@@ -100,4 +100,16 @@
 #define ENGINE_GLUT_459_UI_GTK_SCALE_SHARPNESS_NAME     "scale_sharpness"
 #define ENGINE_GLUT_459_UI_GTK_SCALE_PATTERN_NAME       "scale_pattern"
 
+// glut 460
+#define ENGINE_GLUT_460_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_460_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_460_DEFAULT_SCALE_FACTOR       30
+#define ENGINE_GLUT_460_DEFAULT_FOV                45.0 // degrees !
+#define ENGINE_GLUT_460_DEFAULT_ZNEAR              0.1
+#define ENGINE_GLUT_460_DEFAULT_ZFAR               -1000.0
+#define ENGINE_GLUT_460_DEFAULT_SCALE              2000.0f
+#define ENGINE_GLUT_460_DEFAULT_X_ADD              0.0f
+#define ENGINE_GLUT_460_DEFAULT_Y_ADD              -500.0f
+#define ENGINE_GLUT_460_DEFAULT_Z_ADD              0.0f
+
 #endif // DEFINES_21_H

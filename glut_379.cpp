@@ -115,6 +115,8 @@ engine_glut_379_mouse_button (int button, int state, int x, int y)
     {
       if (state == GLUT_DOWN)
       {
+        cb_data_p->randomVec[0] = Common_Tools::getRandomNumber (0.0f, 300.0f);
+        cb_data_p->randomVec[1] = Common_Tools::getRandomNumber (0.0f, 300.0f);
       } // end IF
 
       break;
@@ -142,7 +144,9 @@ engine_glut_379_timer (int v)
     static_cast<struct Engine_OpenGL_GLUT_379_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
-  glutTimerFunc (1000 / 30,
+  glutPostRedisplay ();
+
+  glutTimerFunc (1000 / 60,
                  engine_glut_379_timer,
                  v);
 }
@@ -154,11 +158,11 @@ engine_glut_379_draw (void)
     static_cast<struct Engine_OpenGL_GLUT_379_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
-  glClear (GL_COLOR_BUFFER_BIT);
+  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // update uniforms
-  static float randomVec2[2] = { Common_Tools::getRandomNumber (0.0f, 300.0f), Common_Tools::getRandomNumber (0.0f, 300.0f) };
-  glProgramUniform2fv (cb_data_p->programId, cb_data_p->randomVecLoc, 1, static_cast<GLfloat*> (randomVec2));
+  glProgramUniform2fv (cb_data_p->programId, cb_data_p->randomVecLoc,
+                       1, static_cast<GLfloat*> (cb_data_p->randomVec));
   glProgramUniform1f (cb_data_p->programId, cb_data_p->timeLoc,
                       static_cast<GLfloat> (cb_data_p->time));
 
@@ -168,7 +172,7 @@ engine_glut_379_draw (void)
 
   glBindVertexArray (0);
 
-  cb_data_p->time += 0.02f;
+  cb_data_p->time += 0.015f;
 
   glutSwapBuffers ();
 }
@@ -176,7 +180,7 @@ engine_glut_379_draw (void)
 void
 engine_glut_379_idle (void)
 {
-  glutPostRedisplay ();
+  //glutPostRedisplay ();
 }
 
 void

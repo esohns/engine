@@ -62,7 +62,7 @@ struct Engine_GL_Camera
   glm::vec2 old_mouse_position;
   void mouseLook (int mouseX_in, int mouseY_in)
   {
-    glm::vec2 current_mouse_position(mouseX_in, mouseY_in);
+    glm::vec2 current_mouse_position (mouseX_in, mouseY_in);
 
     static bool first_b = true;
     if (first_b)

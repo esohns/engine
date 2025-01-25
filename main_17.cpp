@@ -2341,7 +2341,7 @@ do_work (int argc_in,
       glutMouseFunc (engine_glut_379_mouse_button);
       glutMotionFunc (engine_glut_379_mouse_move);
       glutPassiveMotionFunc (engine_glut_379_mouse_move);
-      //glutTimerFunc (100, engine_glut_379_timer, 0);
+      glutTimerFunc (100, engine_glut_379_timer, 0);
 
       glutCreateMenu (engine_glut_379_menu);
       glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
@@ -2467,7 +2467,6 @@ do_work (int argc_in,
         glGetUniformLocation (cb_data_s.programId, ACE_TEXT_ALWAYS_CHAR ("uTime"));
       ACE_ASSERT (cb_data_s.timeLoc != -1);
 
-
       glGenVertexArrays(1, &cb_data_s.VAO);
       glBindVertexArray (cb_data_s.VAO);
       glGenBuffers (1, &cb_data_s.VBO);
@@ -2488,6 +2487,9 @@ do_work (int argc_in,
       glVertexAttribPointer (cb_data_s.positionLoc, 2, GL_FLOAT, GL_FALSE, 4 * sizeof (float), 0);
       //glEnableVertexAttribArray (cb_data_s.texCoordLoc);
       //glVertexAttribPointer (cb_data_s.texCoordLoc, 2, GL_FLOAT, GL_FALSE, 4 * sizeof (float), (void*)(2 * sizeof (float))); // 2 offset from beginning
+
+      cb_data_s.randomVec[0] = Common_Tools::getRandomNumber (0.0f, 300.0f);
+      cb_data_s.randomVec[1] = Common_Tools::getRandomNumber (0.0f, 300.0f);
 
       glutMainLoop ();
 
