@@ -52,7 +52,8 @@ PGE_461::subdivide (const struct rectangle& rect, bool horizontally)
   } // end IF
   else
   {
-    int h1 = Common_Tools::getRandomNumber (rect.size.y / 4, 3 * rect.size.y / 4), h2 = rect.size.y - h1;
+    int h1 =
+      Common_Tools::getRandomNumber (rect.size.y / 4, 3 * rect.size.y / 4), h2 = rect.size.y - h1;
     rectangle1.position = rect.position;
     rectangle1.size = { rect.size.x, h1 };
     rectangle2.position = { rect.position.x, rect.position.y + h1 };
