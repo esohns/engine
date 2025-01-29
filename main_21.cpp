@@ -60,6 +60,7 @@
 #include "pge_461.h"
 #include "pge_462.h"
 #include "pge_463.h"
+#include "pge_464.h"
 
 enum Engine_ModeType
 {
@@ -77,6 +78,7 @@ enum Engine_ModeType
   ENGINE_MODE_461,
   ENGINE_MODE_462,
   ENGINE_MODE_463,
+  ENGINE_MODE_464,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1279,6 +1281,21 @@ do_work (int argc_in,
     {
       PGE_463 example;
       if (example.Construct (ENGINE_PGE_463_DEFAULT_WIDTH, ENGINE_PGE_463_DEFAULT_HEIGHT,
+                             1, 1,
+                             false,  // fullscreen ?
+                             false,  // vsync ?
+                             false)) // cohesion ?
+      {
+        example.Start ();
+        result = true;
+      } // end IF
+
+      break;
+    }
+    case ENGINE_MODE_464:
+    {
+      PGE_464 example;
+      if (example.Construct (ENGINE_PGE_464_DEFAULT_WIDTH, ENGINE_PGE_464_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
