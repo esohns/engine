@@ -1391,6 +1391,12 @@ set (engine_21_EXE_SRCS
      pge_463.h
      pge_464.cpp
      pge_464.h
+     glut_465.cpp
+     glut_465.h
+     glut_466.cpp
+     glut_466.h
+     glut_467.cpp
+     glut_467.h
      stdafx.h)
 
 set (EXECUTABLE_21 engine_21)
@@ -2055,6 +2061,15 @@ install (FILES
          "glut_459.gtk3"
          "glut_460.vert"
          "glut_460.frag"
+         "glut_465.vert"
+         "glut_465.frag"
+         "glut_466.vert"
+         "glut_466.frag"
+         "glut_467.vert"
+         "glut_467.frag"
+         "glut_467_channel0.png"
+         "glut_467_channel1.png"
+         "glut_467_channel2.png"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
