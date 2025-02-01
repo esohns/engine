@@ -1593,7 +1593,6 @@ do_work (int argc_in,
                     ACE_TEXT ("failed to load texture, aborting\n")));
         break;
       } // end IF
-
       cb_data_s.texture0.bind (0);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -1646,14 +1645,18 @@ do_work (int argc_in,
       cb_data_s.channel1Loc =
         glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
       ACE_ASSERT (cb_data_s.channel1Loc != -1);
-      //cb_data_s.channel2Loc =
-      //  glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel2"));
+      cb_data_s.channel2Loc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel2"));
       //ACE_ASSERT (cb_data_s.channel2Loc != -1);
 
       // START TIMING
       cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
 
       glutMainLoop ();
+
+      cb_data_s.texture0.reset ();
+      cb_data_s.texture1.reset ();
+      cb_data_s.texture2.reset ();
 
       result = true;
 
