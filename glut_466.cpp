@@ -165,8 +165,8 @@ engine_glut_466_draw (void)
 
   // update uniforms
   glProgramUniform2f (cb_data_p->shader.id_, cb_data_p->resolutionLoc,
-                      static_cast<GLfloat> (ENGINE_GLUT_458_DEFAULT_WIDTH),
-                      static_cast<GLfloat> (ENGINE_GLUT_458_DEFAULT_HEIGHT));
+                      static_cast<GLfloat> (ENGINE_GLUT_466_DEFAULT_WIDTH),
+                      static_cast<GLfloat> (ENGINE_GLUT_466_DEFAULT_HEIGHT));
 
   // compute elapsed time
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
