@@ -1428,6 +1428,8 @@ set (engine_22_EXE_SRCS
      glut_474.h
      glut_475.cpp
      glut_475.h
+     glut_476.cpp
+     glut_476.h
      stdafx.h)
 
 set (EXECUTABLE_22 engine_22)
@@ -2141,6 +2143,9 @@ install (FILES
          "glut_474.frag"
          "glut_475.vert"
          "glut_475.frag"
+         "glut_476.vert"
+         "glut_476.frag"
+         "glut_476_channel0.png"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
