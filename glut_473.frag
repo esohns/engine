@@ -6,7 +6,7 @@ uniform float iTime;
 float
 map (vec3 p)
 {
-  vec3 n = vec3 (0.0, 1.0, 0.0);
+  const vec3 n = vec3 (0.0, 1.0, 0.0);
   float k1 = 1.9;
   float k2 = (sin (p.x * k1) + sin (p.z * k1)) * 0.8;
   float k3 = (sin (p.y * k1) + sin (p.z * k1)) * 0.8;
@@ -22,15 +22,16 @@ vec2 rot (vec2 p, float a) { return vec2 (p.x * cos (a) - p.y * sin (a), p.x * s
 void
 main ()
 {
-  float time = iTime;
   vec2 uv = (gl_FragCoord.xy / iResolution.xy) * 2.0 - 1.0;
   uv.x *= iResolution.x /  iResolution.y;
+
   vec3 dir = normalize (vec3 (uv, 1.0));
-  dir.xz = rot (dir.xz, time * 0.23);
+  dir.xz = rot (dir.xz, iTime * 0.23);
   dir = dir.yzx;
-  dir.xz = rot (dir.xz, time * 0.2);
+  dir.xz = rot (dir.xz, iTime * 0.2);
   dir = dir.yzx;
-  vec3 pos = vec3 (0.0, 0.0, time);
+
+  vec3 pos = vec3 (0.0, 0.0, iTime);
   vec3 col = vec3 (0.0);
   float t = 0.0;
   float tt = 0.0;
@@ -41,6 +42,7 @@ main ()
       break;
     t += tt * 0.45;
   }
+
   vec3 ip = pos + dir * t;
   col = vec3 (t * 0.1);
   col = sqrt (col);
