@@ -3,11 +3,8 @@
 uniform vec2 iResolution;
 uniform float iTime;
 
-#define R           iResolution
-#define T           iTime
-
-#define PI         3.14159265359
-#define PI2        6.28318530718
+//#define PI          3.14159265359
+#define PI2         6.28318530718
 
 mat2 rot (float a) { return mat2 (cos (a), sin (a), -sin (a), cos (a)); }
 vec3 hue (float t, float f) { return f + f * cos (PI2 * t * (vec3 (1.0, 0.75, 0.75) + vec3 (0.96, 0.57, 0.12))); }
@@ -20,7 +17,7 @@ vec2
 pattern (vec2 p, float sc)
 {
   vec2 uv = p;
-  vec2 id = floor (p*sc);
+  vec2 id = floor (p * sc);
   p = fract (p * sc) - 0.5;
 
   float rnd = hash21 (id);
@@ -32,7 +29,7 @@ pattern (vec2 p, float sc)
     p *= r90;
   if (rnd > 0.8)
     p *= r90;
-    
+
   rnd = fract (rnd * 47.13);
 
   float tk = 0.075;
@@ -83,18 +80,18 @@ void
 main ()
 {
   vec3 C = vec3 (0.0);
-  vec2 uv = (2.0 * gl_FragCoord.xy - R.xy) / max (R.x, R.y);
+  vec2 uv = (2.0 * gl_FragCoord.xy - iResolution.xy) / max (iResolution.x, iResolution.y);
   r90 = rot (1.5707);
 
-  uv *= rot (T * 0.095);
+  uv *= rot (iTime * 0.095);
   uv = vec2 (log (length (uv)), atan (uv.y, uv.x) * 6.0 / PI2);
-  //uv = vec2 (log (length (uv)), atan (uv.y, uv.x)) * 8.0 / 6.2831853;
+  //uv = vec2 (log (length (uv)), atan (uv.y, uv.x)) * 8.0 / PI2;
 
   float scale = 8.0;
-  for (float i = 0.0; i < 4.0; i++)
+  for (int i = 0; i < 4; i++)
   {
     float ff = (i * 0.05) + 0.2;
-    uv.x += T * ff;
+    uv.x += iTime * ff;
 
     float px = fwidth (uv.x * scale);
     vec2 d = pattern (uv, scale);
