@@ -54,6 +54,7 @@
 #include "glut_475.h"
 #include "glut_476.h"
 #include "glut_477.h"
+#include "glut_478.h"
 
 enum Engine_ModeType
 {
@@ -65,6 +66,7 @@ enum Engine_ModeType
   ENGINE_MODE_475,
   ENGINE_MODE_476,
   ENGINE_MODE_477,
+  ENGINE_MODE_478,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -882,7 +884,7 @@ do_work (int argc_in,
                     ACE_TEXT ("failed to load texture, aborting\n")));
         break;
       } // end IF
-      cb_data_s.texture0.bind (0);
+      cb_data_s.texture0.bind ();
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
       glGenerateMipmap (GL_TEXTURE_2D);
@@ -999,7 +1001,7 @@ do_work (int argc_in,
                     ACE_TEXT ("failed to load texture, aborting\n")));
         break;
       } // end IF
-      cb_data_s.texture0.bind (0);
+      cb_data_s.texture0.bind ();
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
       glGenerateMipmap (GL_TEXTURE_2D);
@@ -1021,6 +1023,266 @@ do_work (int argc_in,
       glutMainLoop ();
 
       cb_data_s.texture0.reset ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_478:
+    {
+      struct Engine_OpenGL_GLUT_478_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_478_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_478_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_478_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.S1resolutionLoc = -1;
+      cb_data_s.S1timeLoc = -1;
+      cb_data_s.S1channel0Loc = -1;
+      cb_data_s.S1channel1Loc = -1;
+      cb_data_s.S1channel2Loc = -1;
+      cb_data_s.S2resolutionLoc = -1;
+      cb_data_s.S2channel0Loc = -1;
+
+      cb_data_s.VAO = 0;
+      cb_data_s.VAO_2 = 0;
+      cb_data_s.VBO = 0;
+      cb_data_s.VBO_2 = 0;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.camera.position.x = 0.0f;
+      cb_data_s.camera.position.y = 0.0f;
+      cb_data_s.camera.position.z = 500.0f;
+      cb_data_s.camera.looking_at.x = 0.0f;
+      cb_data_s.camera.looking_at.y = 0.0f;
+      cb_data_s.camera.looking_at.z = 0.0f;
+      cb_data_s.camera.up.x = 0.0F;
+      cb_data_s.camera.up.y = 1.0F;
+      cb_data_s.camera.up.z = 0.0F;
+
+      cb_data_s.mouseX = ENGINE_GLUT_478_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_478_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_478_DEFAULT_WIDTH, ENGINE_GLUT_478_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 478");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_478_draw);
+      glutReshapeFunc (engine_glut_478_reshape);
+      glutVisibilityFunc (engine_glut_478_visible);
+
+      glutKeyboardFunc (engine_glut_478_key);
+      glutSpecialFunc (engine_glut_478_key_special);
+      glutMouseFunc (engine_glut_478_mouse_button);
+      glutMotionFunc (engine_glut_478_mouse_move);
+      glutPassiveMotionFunc (engine_glut_478_mouse_move);
+      glutTimerFunc (100, engine_glut_478_timer, 0);
+
+      glutCreateMenu (engine_glut_478_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader1.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_478.vert_2"),
+                                           ACE_TEXT_ALWAYS_CHAR ("glut_478.frag_2")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      if (!cb_data_s.shader2.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_478.vert"),
+                                           ACE_TEXT_ALWAYS_CHAR ("glut_478.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+
+      glActiveTexture (GL_TEXTURE0);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      if (!cb_data_s.texture0.load (ACE_TEXT_ALWAYS_CHAR ("glut_478_channel0.png")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load texture, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.texture0.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_2D);
+      cb_data_s.texture0.unbind ();
+
+      glActiveTexture (GL_TEXTURE1);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      if (!cb_data_s.texture1.load (ACE_TEXT_ALWAYS_CHAR ("glut_478_channel1.png")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load texture, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.texture1.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_2D);
+      cb_data_s.texture1.unbind ();
+
+      glActiveTexture (GL_TEXTURE2);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      if (!cb_data_s.texture2.load (ACE_TEXT_ALWAYS_CHAR ("glut_478_channel2.png")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load texture, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.texture2.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_2D);
+      cb_data_s.texture2.unbind ();
+
+      glActiveTexture (GL_TEXTURE3);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      cb_data_s.textureS1.load ();
+      cb_data_s.textureS1.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_2D);
+      cb_data_s.textureS1.unbind ();
+
+      cb_data_s.shader1.use ();
+      cb_data_s.S1resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.S1resolutionLoc != -1);
+      cb_data_s.S1timeLoc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.S1timeLoc != -1);
+      cb_data_s.S1channel0Loc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
+      ACE_ASSERT (cb_data_s.S1channel0Loc != -1);
+      cb_data_s.S1channel1Loc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
+      ACE_ASSERT (cb_data_s.S1channel1Loc != -1);
+      cb_data_s.S1channel2Loc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel2"));
+      ACE_ASSERT (cb_data_s.S1channel2Loc != -1);
+
+      cb_data_s.shader2.use ();
+      cb_data_s.S2resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.S2resolutionLoc != -1);
+      cb_data_s.S2channel0Loc =
+        glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
+      ACE_ASSERT (cb_data_s.S2channel0Loc != -1);
+
+      glGenVertexArrays (1, &cb_data_s.VAO);
+      ACE_ASSERT (cb_data_s.VAO);
+      glGenBuffers (1, &cb_data_s.VBO);
+      ACE_ASSERT (cb_data_s.VBO);
+
+      glBindVertexArray (cb_data_s.VAO);
+      GLfloat vertices_a[] =
+      {
+        // Rectangle vertices (Texture Coordinates: 0,0 = bottom left... 1,1 = top right)
+        //-------------------------
+        -1.0f ,  1.0f, 0.0f,  0.0f, 1.0f, // left top ......... 0
+        -1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......1
+         1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........2
+ 
+         1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........3
+        -1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......4
+         1.0f , -1.0f, 0.0f,  1.0f, 0.0f, // right bottom ......5
+      };
+      glBindBuffer (GL_ARRAY_BUFFER, cb_data_s.VBO);
+      glBufferData (GL_ARRAY_BUFFER, sizeof (vertices_a), vertices_a, GL_STATIC_DRAW);
+
+      // position attribute
+      glEnableVertexAttribArray (0);
+      glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)0);
+      //// color attribute
+      //glVertexAttribPointer (2, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)(3 * sizeof (float)));
+      //glEnableVertexAttribArray (2);
+      // texture coord attribute
+      glEnableVertexAttribArray (1);
+      glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)(3 * sizeof (float)));
+
+      glBindBuffer (GL_ARRAY_BUFFER, 0);
+      glBindVertexArray (0);
+
+      glGenVertexArrays (1, &cb_data_s.VAO_2);
+      ACE_ASSERT (cb_data_s.VAO_2);
+      glGenBuffers (1, &cb_data_s.VBO_2);
+      ACE_ASSERT (cb_data_s.VBO_2);
+
+      glBindVertexArray (cb_data_s.VAO_2);
+      GLfloat vertices_2[] =
+      {
+        // Rectangle vertices (Texture Coordinates: 0,0 = bottom left... 1,1 = top right)
+        //-------------------------
+        -1.0f ,  1.0f, 0.0f,  0.0f, 1.0f, // left top ......... 0
+        -1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......1
+         1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........2
+ 
+         1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........3
+        -1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......4
+         1.0f , -1.0f, 0.0f,  1.0f, 0.0f, // right bottom ......5
+      };
+      glBindBuffer (GL_ARRAY_BUFFER, cb_data_s.VBO_2);
+      glBufferData (GL_ARRAY_BUFFER, sizeof (vertices_2), vertices_2, GL_STATIC_DRAW);
+
+      // position attribute
+      glEnableVertexAttribArray (0);
+      glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)0);
+      //// color attribute
+      //glVertexAttribPointer (2, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)(3 * sizeof (float)));
+      //glEnableVertexAttribArray (2);
+      // texture coord attribute
+      glEnableVertexAttribArray (1);
+      glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)(3 * sizeof (float)));
+
+      glBindBuffer (GL_ARRAY_BUFFER, 0);
+      glBindVertexArray (0);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      glDeleteBuffers (1, &cb_data_s.VBO);
+      glDeleteVertexArrays (1, &cb_data_s.VAO);
+      glDeleteBuffers (1, &cb_data_s.VBO_2);
+      glDeleteVertexArrays (1, &cb_data_s.VAO_2);
+
+      cb_data_s.texture0.reset ();
+      cb_data_s.texture1.reset ();
+      cb_data_s.texture2.reset ();
+      cb_data_s.textureS1.reset ();
 
       result = true;
 

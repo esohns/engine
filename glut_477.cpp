@@ -183,7 +183,7 @@ engine_glut_477_draw (void)
                       static_cast<GLfloat> (d.count () * 0.001f));
 
   glActiveTexture (GL_TEXTURE0);
-  cb_data_p->texture0.bind (0);
+  cb_data_p->texture0.bind ();
   glProgramUniform1i (cb_data_p->shader.id_, cb_data_p->channel0Loc,
                       static_cast<GLint> (0));
 

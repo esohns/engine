@@ -1597,7 +1597,7 @@ do_work (int argc_in,
                     ACE_TEXT ("failed to load texture, aborting\n")));
         break;
       } // end IF
-      cb_data_s.texture0.bind (0);
+      cb_data_s.texture0.bind ();
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
       glGenerateMipmap (GL_TEXTURE_2D);
@@ -1612,7 +1612,7 @@ do_work (int argc_in,
                     ACE_TEXT ("failed to load texture, aborting\n")));
         break;
       } // end IF
-      cb_data_s.texture1.bind (1);
+      cb_data_s.texture1.bind ();
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
       glGenerateMipmap (GL_TEXTURE_2D);
@@ -1628,7 +1628,7 @@ do_work (int argc_in,
                     ACE_TEXT ("failed to load texture, aborting\n")));
         break;
       } // end IF
-      cb_data_s.texture2.bind (2);
+      cb_data_s.texture2.bind ();
       glTexParameteri (GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri (GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
       glGenerateMipmap (GL_TEXTURE_3D);

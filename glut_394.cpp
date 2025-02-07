@@ -173,7 +173,8 @@ engine_glut_394_draw (void)
   glColor3f (0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
 
-  cb_data_p->texture.bind (0);
+  glActiveTexture (GL_TEXTURE0);
+  cb_data_p->texture.bind ();
 
   // update uniforms
   glProgramUniform2f (cb_data_p->shader.id_, cb_data_p->resolutionLoc,

@@ -189,7 +189,7 @@ engine_glut_476_draw (void)
                       0.0f);
 
   glActiveTexture (GL_TEXTURE0);
-  cb_data_p->texture0.bind (0);
+  cb_data_p->texture0.bind ();
   glProgramUniform1i (cb_data_p->shader.id_, cb_data_p->channel0Loc,
                       static_cast<GLint> (0));
 

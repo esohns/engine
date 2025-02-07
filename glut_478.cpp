@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 
-#include "glut_467.h"
+#include "glut_478.h"
 
 #include "GL/glew.h"
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
@@ -16,15 +16,16 @@
 #include "ace/Log_Msg.h"
 
 #include "common_tools.h"
+#include "common_file_tools.h"
 
 #include "common_gl_defines.h"
 #include "common_gl_tools.h"
 
-#include "defines_21.h"
+#include "defines_22.h"
 #include "engine_common.h"
 
 void
-engine_glut_467_reshape (int width_in, int height_in)
+engine_glut_478_reshape (int width_in, int height_in)
 {
   glViewport (0, 0, width_in, height_in);
 
@@ -43,12 +44,12 @@ engine_glut_467_reshape (int width_in, int height_in)
 }
 
 void
-engine_glut_467_key (unsigned char key_in,
+engine_glut_478_key (unsigned char key_in,
                      int x,
                      int y)
 {
-  struct Engine_OpenGL_GLUT_467_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_467_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_478_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_478_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -60,12 +61,12 @@ engine_glut_467_key (unsigned char key_in,
 }
 
 void
-engine_glut_467_key_special (int key_in,
+engine_glut_478_key_special (int key_in,
                              int x,
                              int y)
 {
-  struct Engine_OpenGL_GLUT_467_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_467_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_478_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_478_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -85,10 +86,10 @@ engine_glut_467_key_special (int key_in,
 }
 
 void
-engine_glut_467_menu (int entry_in)
+engine_glut_478_menu (int entry_in)
 {
-  struct Engine_OpenGL_GLUT_467_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_467_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_478_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_478_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (entry_in)
@@ -101,10 +102,10 @@ engine_glut_467_menu (int entry_in)
 }
 
 void
-engine_glut_467_mouse_button (int button, int state, int x, int y)
+engine_glut_478_mouse_button (int button, int state, int x, int y)
 {
-  struct Engine_OpenGL_GLUT_467_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_467_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_478_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_478_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (button)
@@ -123,10 +124,10 @@ engine_glut_467_mouse_button (int button, int state, int x, int y)
 }
 
 void
-engine_glut_467_mouse_move (int x, int y)
+engine_glut_478_mouse_move (int x, int y)
 {
-  struct Engine_OpenGL_GLUT_467_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_467_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_478_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_478_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   cb_data_p->mouseX = x;
@@ -134,24 +135,24 @@ engine_glut_467_mouse_move (int x, int y)
 }
 
 void
-engine_glut_467_timer (int v)
+engine_glut_478_timer (int v)
 {
-  struct Engine_OpenGL_GLUT_467_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_467_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_478_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_478_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   glutPostRedisplay ();
 
   glutTimerFunc (1000 / 60,
-                 engine_glut_467_timer,
+                 engine_glut_478_timer,
                  v);
 }
 
 void
-engine_glut_467_draw (void)
+engine_glut_478_draw (void)
 {
-  struct Engine_OpenGL_GLUT_467_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_467_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_478_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_478_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -162,11 +163,6 @@ engine_glut_467_draw (void)
 
   glPolygonMode (GL_FRONT_AND_BACK,
                  cb_data_p->wireframe ? GL_LINE : GL_FILL);
-
-  // update uniforms
-  glProgramUniform2f (cb_data_p->shader.id_, cb_data_p->resolutionLoc,
-                      static_cast<GLfloat> (ENGINE_GLUT_467_DEFAULT_WIDTH),
-                      static_cast<GLfloat> (ENGINE_GLUT_467_DEFAULT_HEIGHT));
 
   // compute elapsed time
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
@@ -179,58 +175,87 @@ engine_glut_467_draw (void)
   std::chrono::duration<float> elapsed_time = tp2 - cb_data_p->tp1;
   std::chrono::milliseconds d =
     std::chrono::duration_cast<std::chrono::milliseconds> (elapsed_time);
-  glProgramUniform1f (cb_data_p->shader.id_, cb_data_p->timeLoc,
-                      static_cast<GLfloat> (d.count () * 0.001f));
 
-  glProgramUniform4f (cb_data_p->shader.id_, cb_data_p->mouseLoc,
-                      static_cast<GLfloat> (cb_data_p->mouseX),
-                      static_cast<GLfloat> (Common_GL_Tools::map (cb_data_p->mouseY, 0, ENGINE_GLUT_467_DEFAULT_HEIGHT - 1, ENGINE_GLUT_467_DEFAULT_HEIGHT - 1, 0)),
-                      static_cast<GLfloat> (cb_data_p->mouseLMBPressed ? 1.0f : 0.0f),
-                      0.0f);
+  // render pass 1
+  glBindVertexArray (cb_data_p->VAO);
+
+  cb_data_p->shader1.use ();
+
+  // update uniforms
+  glProgramUniform2f (cb_data_p->shader1.id_, cb_data_p->S1resolutionLoc,
+                      static_cast<GLfloat> (ENGINE_GLUT_478_DEFAULT_WIDTH),
+                      static_cast<GLfloat> (ENGINE_GLUT_478_DEFAULT_HEIGHT));
+
+  glProgramUniform1f (cb_data_p->shader1.id_, cb_data_p->S1timeLoc,
+                      static_cast<GLfloat> (d.count () * 0.001f));
 
   glActiveTexture (GL_TEXTURE0);
   cb_data_p->texture0.bind ();
-  glProgramUniform1i (cb_data_p->shader.id_, cb_data_p->channel0Loc,
+  glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1channel0Loc,
                       static_cast<GLint> (0));
   glActiveTexture (GL_TEXTURE1);
   cb_data_p->texture1.bind ();
-  glProgramUniform1i (cb_data_p->shader.id_, cb_data_p->channel1Loc,
+  glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1channel1Loc,
                       static_cast<GLint> (1));
   glActiveTexture (GL_TEXTURE2);
   cb_data_p->texture2.bind ();
-  glProgramUniform1i (cb_data_p->shader.id_, cb_data_p->channel2Loc,
+  glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1channel2Loc,
                       static_cast<GLint> (2));
 
-  glColor3f (1.0f, 1.0f, 1.0f);
-  for (int y = 0; y < cb_data_p->rows - 1; ++y)
-  {
-    glBegin (GL_TRIANGLE_STRIP);
-    for (int x = 0; x < cb_data_p->columns; ++x)
-    {
-      glVertex3f (static_cast<float> (x * cb_data_p->scaleFactor), static_cast<float> (y * cb_data_p->scaleFactor), 0.0f);
-      glVertex3f (static_cast<float> (x * cb_data_p->scaleFactor), static_cast<float> ((y + 1) * cb_data_p->scaleFactor), 0.0f);
-    } // end FOR
-    glEnd ();
-  } // end FOR
+  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
 
-  glutSwapBuffers ();
+  glActiveTexture (GL_TEXTURE3);
+  cb_data_p->textureS1.load (GL_RGBA);
+  //std::string path = Common_File_Tools::getTempDirectory ();
+  //path += ACE_DIRECTORY_SEPARATOR_STR;
+  //path += ACE_TEXT_ALWAYS_CHAR ("glut_478_screen.png");
+  //cb_data_p->textureS1.save (path);
+
+  glBindVertexArray (0);
 
   cb_data_p->texture0.unbind ();
   cb_data_p->texture1.unbind ();
   cb_data_p->texture2.unbind ();
+
+  // render pass 2
+#define RENDER_PASS_2 // *TODO*: doesn't work correctly (yet)
+#if defined (RENDER_PASS_2)
+  glBindVertexArray (cb_data_p->VAO_2);
+
+  cb_data_p->shader2.use ();
+
+  glActiveTexture (GL_TEXTURE3);
+  cb_data_p->textureS1.bind ();
+
+  // update uniforms
+  glProgramUniform2f (cb_data_p->shader2.id_, cb_data_p->S2resolutionLoc,
+                      static_cast<GLfloat> (ENGINE_GLUT_478_DEFAULT_WIDTH),
+                      static_cast<GLfloat> (ENGINE_GLUT_478_DEFAULT_HEIGHT));
+
+  glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel0Loc,
+                      static_cast<GLint> (3));
+
+  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices (see also: above)
+
+  glBindVertexArray (0);
+#endif // RENDER_PASS_2
+
+  cb_data_p->textureS1.unbind ();
+
+  glutSwapBuffers ();
 }
 
 void
-engine_glut_467_idle (void)
+engine_glut_478_idle (void)
 {
   //glutPostRedisplay ();
 }
 
 void
-engine_glut_467_visible (int vis)
+engine_glut_478_visible (int vis)
 {
   if (vis == GLUT_VISIBLE)
-    glutIdleFunc (engine_glut_467_idle);
+    glutIdleFunc (engine_glut_478_idle);
   else
     glutIdleFunc (NULL);
 }
