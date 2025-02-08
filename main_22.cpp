@@ -1044,6 +1044,7 @@ do_work (int argc_in,
       cb_data_s.S2resolutionLoc = -1;
       cb_data_s.S2channel0Loc = -1;
 
+      cb_data_s.FBO = 0;
       cb_data_s.VAO = 0;
       cb_data_s.VAO_2 = 0;
       cb_data_s.VBO = 0;
@@ -1169,10 +1170,16 @@ do_work (int argc_in,
       glActiveTexture (GL_TEXTURE3);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-      cb_data_s.textureS1.load ();
+      glGenTextures (1, &cb_data_s.textureS1.id_);
+      ACE_ASSERT (cb_data_s.textureS1.id_);
       cb_data_s.textureS1.bind ();
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      // *IMPORTANT NOTE*: generate a floating point-format texture to contain
+      //                   the result of shader1
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_478_DEFAULT_WIDTH, ENGINE_GLUT_478_DEFAULT_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+      //cb_data_s.textureS1.load ();
+      //cb_data_s.textureS1.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
       glGenerateMipmap (GL_TEXTURE_2D);
       cb_data_s.textureS1.unbind ();
 
@@ -1200,6 +1207,15 @@ do_work (int argc_in,
       cb_data_s.S2channel0Loc =
         glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
       ACE_ASSERT (cb_data_s.S2channel0Loc != -1);
+
+      glGenFramebuffersEXT(1, &cb_data_s.FBO);
+      ACE_ASSERT (cb_data_s.FBO);
+      cb_data_s.textureS1.bind ();
+      // draw render pass 1 to framebuffer object (--> textureS1)
+      glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_s.FBO);
+      glFramebufferTexture2DEXT (GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, cb_data_s.textureS1.id_, 0);
+      glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
+      cb_data_s.textureS1.unbind ();
 
       glGenVertexArrays (1, &cb_data_s.VAO);
       ACE_ASSERT (cb_data_s.VAO);
@@ -1278,6 +1294,7 @@ do_work (int argc_in,
       glDeleteVertexArrays (1, &cb_data_s.VAO);
       glDeleteBuffers (1, &cb_data_s.VBO_2);
       glDeleteVertexArrays (1, &cb_data_s.VAO_2);
+      glDeleteFramebuffersEXT (1, &cb_data_s.FBO);
 
       cb_data_s.texture0.reset ();
       cb_data_s.texture1.reset ();

@@ -49,6 +49,7 @@ struct Engine_OpenGL_GLUT_478_CBData
   Common_GL_Texture                 texture2;
   Common_GL_Texture                 textureS1;
 
+  GLuint                            FBO;
   GLuint                            VAO;
   GLuint                            VAO_2;
   GLuint                            VBO;

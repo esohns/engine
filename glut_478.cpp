@@ -177,6 +177,10 @@ engine_glut_478_draw (void)
     std::chrono::duration_cast<std::chrono::milliseconds> (elapsed_time);
 
   // render pass 1
+  //glClampColor (GL_CLAMP_READ_COLOR, GL_FALSE);
+  //glClampColor (GL_CLAMP_VERTEX_COLOR, GL_FALSE);
+  //glClampColor (GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+
   glBindVertexArray (cb_data_p->VAO);
 
   cb_data_p->shader1.use ();
@@ -202,10 +206,16 @@ engine_glut_478_draw (void)
   glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1channel2Loc,
                       static_cast<GLint> (2));
 
-  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
-
   glActiveTexture (GL_TEXTURE3);
-  cb_data_p->textureS1.load (GL_RGBA);
+  cb_data_p->textureS1.bind ();
+
+  // draw render pass 1 to framebuffer object (--> textureS1)
+  glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_p->FBO);
+  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+  glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
+
+  //glActiveTexture (GL_TEXTURE3);
+  //cb_data_p->textureS1.load ();
   //std::string path = Common_File_Tools::getTempDirectory ();
   //path += ACE_DIRECTORY_SEPARATOR_STR;
   //path += ACE_TEXT_ALWAYS_CHAR ("glut_478_screen.png");
@@ -218,14 +228,16 @@ engine_glut_478_draw (void)
   cb_data_p->texture2.unbind ();
 
   // render pass 2
-#define RENDER_PASS_2 // *TODO*: doesn't work correctly (yet)
-#if defined (RENDER_PASS_2)
   glBindVertexArray (cb_data_p->VAO_2);
 
   cb_data_p->shader2.use ();
 
   glActiveTexture (GL_TEXTURE3);
   cb_data_p->textureS1.bind ();
+  //std::string path = Common_File_Tools::getTempDirectory ();
+  //path += ACE_DIRECTORY_SEPARATOR_STR;
+  //path += ACE_TEXT_ALWAYS_CHAR ("glut_478_screen.png");
+  //cb_data_p->textureS1.save (path);
 
   // update uniforms
   glProgramUniform2f (cb_data_p->shader2.id_, cb_data_p->S2resolutionLoc,
@@ -238,7 +250,6 @@ engine_glut_478_draw (void)
   glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices (see also: above)
 
   glBindVertexArray (0);
-#endif // RENDER_PASS_2
 
   cb_data_p->textureS1.unbind ();
 
