@@ -1301,6 +1301,9 @@ do_work (int argc_in,
       cb_data_s.texture2.reset ();
       cb_data_s.textureS1.reset ();
 
+      cb_data_s.shader1.reset ();
+      cb_data_s.shader2.reset ();
+
       result = true;
 
       break;
