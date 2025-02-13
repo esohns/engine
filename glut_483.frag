@@ -26,9 +26,9 @@ main ()
     vec4 u = floor (p / 8.0),
          t = mod (p, 8.0) - 4.0,
          ta;
-    // r (t.xy, u.x); r (t.xz, u.y); r (t.yz, 1.0);
+    //r (t.xy, u.x); r (t.xz, u.y); r (t.yz, 1.0);
     u = sin (78.0 * (u + u.yzxw));
-    // t -= u;
+    //t -= u;
     c = p / p * 1.2;
 
     float x1, x2,
@@ -54,10 +54,10 @@ main ()
     x = min (x1, x);
     if (x == x1)
       c = u * 3.0;
-    // else
+    //else
     // c += u * 3.0 * pow (abs ((x - x1)), 0.2) * (0.5 + 0.5 * sin (0.5 * T));
 
-    // gl_FragColor = i * i * c;
+    //gl_FragColor = i * i * c;
     if (x < 0.01)
     {
       gl_FragColor = i * i * c;
