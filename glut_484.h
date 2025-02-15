@@ -77,7 +77,7 @@ struct Engine_OpenGL_GLUT_484_CBData
   bool                              wireframe;
 
   // camera
-  struct Engine_GL_Camera           camera;
+  //struct Engine_GL_Camera           camera;
 
   // mouse / keyboard
   int                               mouseX;

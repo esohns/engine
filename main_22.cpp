@@ -1974,16 +1974,6 @@ do_work (int argc_in,
 
       cb_data_s.wireframe = false;
 
-      cb_data_s.camera.position.x = 0.0f;
-      cb_data_s.camera.position.y = 0.0f;
-      cb_data_s.camera.position.z = 500.0f;
-      cb_data_s.camera.looking_at.x = 0.0f;
-      cb_data_s.camera.looking_at.y = 0.0f;
-      cb_data_s.camera.looking_at.z = 0.0f;
-      cb_data_s.camera.up.x = 0.0F;
-      cb_data_s.camera.up.y = 1.0F;
-      cb_data_s.camera.up.z = 0.0F;
-
       cb_data_s.mouseX = ENGINE_GLUT_484_DEFAULT_WIDTH / 2;
       cb_data_s.mouseY = ENGINE_GLUT_484_DEFAULT_HEIGHT / 2;
       cb_data_s.mouseLMBPressed = false;
@@ -1992,6 +1982,7 @@ do_work (int argc_in,
 
       // initialize GLUT
       glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
       glutInitWindowSize (ENGINE_GLUT_484_DEFAULT_WIDTH, ENGINE_GLUT_484_DEFAULT_HEIGHT);
 
@@ -2085,8 +2076,13 @@ do_work (int argc_in,
       } // end IF
       glBindTexture (GL_TEXTURE_CUBE_MAP, cb_data_s.texture0.id_);
       glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+      glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_CUBE_MAP);
+      //glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+
+      //glClampColor (GL_CLAMP_READ_COLOR, GL_FALSE);
+      //glClampColor (GL_CLAMP_VERTEX_COLOR, GL_FALSE);
+      //glClampColor (GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
 
       glActiveTexture (GL_TEXTURE1);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -2094,13 +2090,14 @@ do_work (int argc_in,
       glGenTextures (1, &cb_data_s.textureS1.id_);
       ACE_ASSERT (cb_data_s.textureS1.id_);
       cb_data_s.textureS1.bind ();
+      std::vector<GLfloat> initial_values_a (ENGINE_GLUT_484_DEFAULT_WIDTH * ENGINE_GLUT_484_DEFAULT_HEIGHT * 4, 0.0f);
       // *IMPORTANT NOTE*: generate a floating point-format texture to contain
       //                   the result of shader1
-      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_484_DEFAULT_WIDTH, ENGINE_GLUT_484_DEFAULT_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_484_DEFAULT_WIDTH, ENGINE_GLUT_484_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
       glGenerateMipmap (GL_TEXTURE_2D);
-      cb_data_s.textureS1.unbind ();
+      //cb_data_s.textureS1.unbind ();
 
       glActiveTexture (GL_TEXTURE2);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -2109,12 +2106,12 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.textureS2.id_);
       cb_data_s.textureS2.bind ();
       // *IMPORTANT NOTE*: generate a floating point-format texture to contain
-      //                   the result of shader1
-      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_484_DEFAULT_WIDTH, ENGINE_GLUT_484_DEFAULT_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+      //                   the result of shader2
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_484_DEFAULT_WIDTH, ENGINE_GLUT_484_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
       glGenerateMipmap (GL_TEXTURE_2D);
-      cb_data_s.textureS2.unbind ();
+      //cb_data_s.textureS2.unbind ();
 
       glActiveTexture (GL_TEXTURE3);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -2123,12 +2120,12 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.textureS3.id_);
       cb_data_s.textureS3.bind ();
       // *IMPORTANT NOTE*: generate a floating point-format texture to contain
-      //                   the result of shader1
-      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_484_DEFAULT_WIDTH, ENGINE_GLUT_484_DEFAULT_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+      //                   the result of shader3
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_484_DEFAULT_WIDTH, ENGINE_GLUT_484_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
       glGenerateMipmap (GL_TEXTURE_2D);
-      cb_data_s.textureS3.unbind ();
+      //cb_data_s.textureS3.unbind ();
 
       cb_data_s.shader1.use ();
       cb_data_s.S1resolutionLoc =
@@ -2191,30 +2188,33 @@ do_work (int argc_in,
 
       glGenFramebuffersEXT (1, &cb_data_s.FBO1);
       ACE_ASSERT (cb_data_s.FBO1);
-      cb_data_s.textureS1.bind ();
+      //glActiveTexture (GL_TEXTURE1);
+      //cb_data_s.textureS1.bind ();
       // draw render pass 1 to framebuffer object (--> textureS1)
       glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_s.FBO1);
       glFramebufferTexture2DEXT (GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, cb_data_s.textureS1.id_, 0);
       glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-      cb_data_s.textureS1.unbind ();
+      //cb_data_s.textureS1.unbind ();
 
       glGenFramebuffersEXT (1, &cb_data_s.FBO2);
       ACE_ASSERT (cb_data_s.FBO2);
-      cb_data_s.textureS2.bind ();
+      //glActiveTexture (GL_TEXTURE2);
+      //cb_data_s.textureS2.bind ();
       // draw render pass 2 to framebuffer object (--> textureS2)
       glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_s.FBO2);
       glFramebufferTexture2DEXT (GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, cb_data_s.textureS2.id_, 0);
       glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-      cb_data_s.textureS2.unbind ();
+      //cb_data_s.textureS2.unbind ();
 
       glGenFramebuffersEXT (1, &cb_data_s.FBO3);
       ACE_ASSERT (cb_data_s.FBO3);
-      cb_data_s.textureS3.bind ();
+      //glActiveTexture (GL_TEXTURE3);
+      //cb_data_s.textureS3.bind ();
       // draw render pass 3 to framebuffer object (--> textureS3)
       glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_s.FBO3);
       glFramebufferTexture2DEXT (GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, cb_data_s.textureS3.id_, 0);
       glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-      cb_data_s.textureS3.unbind ();
+      //cb_data_s.textureS3.unbind ();
 
       glGenVertexArrays (1, &cb_data_s.VAO);
       ACE_ASSERT (cb_data_s.VAO);

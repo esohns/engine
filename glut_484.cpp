@@ -58,7 +58,7 @@ engine_glut_484_key (unsigned char key_in,
       glutLeaveMainLoop ();
       break;
     case 32: /* Space */
-      cb_data_p->spacePressed = true;
+      cb_data_p->spacePressed = !cb_data_p->spacePressed;
       break;
   } // end SWITCH
 }
@@ -75,7 +75,7 @@ engine_glut_484_key_up (unsigned char key_in,
   switch (key_in)
   {
     case 32: /* Space */
-      cb_data_p->spacePressed = false;
+      //cb_data_p->spacePressed = false;
       break;
   } // end SWITCH
 }
@@ -96,7 +96,7 @@ engine_glut_484_key_special (int key_in,
     case GLUT_KEY_RIGHT:
       break;
     case GLUT_KEY_UP:
-      cb_data_p->upPressed = true;
+      cb_data_p->upPressed = !cb_data_p->upPressed;
       break;
   } // end SWITCH
 }
@@ -117,7 +117,7 @@ engine_glut_484_key_special_up (int key_in,
     case GLUT_KEY_RIGHT:
       break;
     case GLUT_KEY_UP:
-      cb_data_p->upPressed = false;
+      //cb_data_p->upPressed = false;
       break;
   } // end SWITCH
 }
@@ -150,10 +150,7 @@ engine_glut_484_mouse_button (int button, int state, int x, int y)
   {
     case GLUT_LEFT_BUTTON:
     {
-      if (state == GLUT_DOWN)
-      {
-      } // end IF
-
+      cb_data_p->mouseLMBPressed = (state == GLUT_DOWN);
       break;
     }
     default:
@@ -214,13 +211,9 @@ engine_glut_484_draw (void)
   std::chrono::milliseconds d =
     std::chrono::duration_cast<std::chrono::milliseconds> (elapsed_time);
 
-  // render pass 1
-  //glClampColor (GL_CLAMP_READ_COLOR, GL_FALSE);
-  //glClampColor (GL_CLAMP_VERTEX_COLOR, GL_FALSE);
-  //glClampColor (GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
-
   glBindVertexArray (cb_data_p->VAO);
 
+  // render pass 1
   cb_data_p->shader1.use ();
 
   // update uniforms
@@ -228,19 +221,19 @@ engine_glut_484_draw (void)
                       static_cast<GLfloat> (ENGINE_GLUT_484_DEFAULT_WIDTH),
                       static_cast<GLfloat> (ENGINE_GLUT_484_DEFAULT_HEIGHT));
 
-  glActiveTexture (GL_TEXTURE3);
-  cb_data_p->textureS3.bind ();
+  //glActiveTexture (GL_TEXTURE3);
+  //cb_data_p->textureS3.bind ();
   glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1channel0Loc,
                       static_cast<GLint> (3));
-  cb_data_p->textureS3.unbind ();
+  //cb_data_p->textureS3.unbind ();
 
   // draw render pass 1 to framebuffer object (--> textureS1)
-  glActiveTexture (GL_TEXTURE1);
-  cb_data_p->textureS1.bind ();
+  //glActiveTexture (GL_TEXTURE1);
+  //cb_data_p->textureS1.bind ();
   glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_p->FBO1);
   glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
   glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-  cb_data_p->textureS1.unbind ();
+  //cb_data_p->textureS1.unbind ();
 
   // render pass 2
   cb_data_p->shader2.use ();
@@ -250,19 +243,19 @@ engine_glut_484_draw (void)
                       static_cast<GLfloat> (ENGINE_GLUT_484_DEFAULT_WIDTH),
                       static_cast<GLfloat> (ENGINE_GLUT_484_DEFAULT_HEIGHT));
 
-  glActiveTexture (GL_TEXTURE1);
-  cb_data_p->textureS1.bind ();
+  //glActiveTexture (GL_TEXTURE1);
+  //cb_data_p->textureS1.bind ();
   glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel0Loc,
                       static_cast<GLint> (1));
-  cb_data_p->textureS1.unbind ();
+  //cb_data_p->textureS1.unbind ();
 
   // draw render pass 2 to framebuffer object (--> textureS2)
-  glActiveTexture (GL_TEXTURE2);
-  cb_data_p->textureS2.bind ();
+  //glActiveTexture (GL_TEXTURE2);
+  //cb_data_p->textureS2.bind ();
   glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_p->FBO2);
   glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
   glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-  cb_data_p->textureS2.unbind ();
+  //cb_data_p->textureS2.unbind ();
 
   // render pass 3
   cb_data_p->shader3.use ();
@@ -282,7 +275,7 @@ engine_glut_484_draw (void)
 
   glProgramUniform4f (cb_data_p->shader3.id_, cb_data_p->S3mouseLoc,
                       static_cast<GLfloat> (cb_data_p->mouseX),
-                      static_cast<GLfloat> (cb_data_p->mouseY),
+                      static_cast<GLfloat> (Common_GL_Tools::map (cb_data_p->mouseY, 0, ENGINE_GLUT_484_DEFAULT_HEIGHT - 1, ENGINE_GLUT_484_DEFAULT_HEIGHT - 1, 0)),
                       static_cast<GLfloat> (cb_data_p->mouseLMBPressed ? 1.0f : 0.0f),
                       0.0f);
 
@@ -290,25 +283,25 @@ engine_glut_484_draw (void)
                       static_cast<GLint> (cb_data_p->spacePressed ? 1 : 0),
                       static_cast<GLint> (cb_data_p->upPressed ? 1 : 0));
 
-  glActiveTexture (GL_TEXTURE1);
-  cb_data_p->textureS1.bind ();
+  //glActiveTexture (GL_TEXTURE1);
+  //cb_data_p->textureS1.bind ();
   glProgramUniform1i (cb_data_p->shader3.id_, cb_data_p->S3channel0Loc,
                       static_cast<GLint> (1));
-  cb_data_p->textureS1.unbind ();
+  //cb_data_p->textureS1.unbind ();
 
-  glActiveTexture (GL_TEXTURE2);
-  cb_data_p->textureS2.bind ();
+  //glActiveTexture (GL_TEXTURE2);
+  //cb_data_p->textureS2.bind ();
   glProgramUniform1i (cb_data_p->shader3.id_, cb_data_p->S3channel1Loc,
                       static_cast<GLint> (2));
-  cb_data_p->textureS2.unbind ();
+  //cb_data_p->textureS2.unbind ();
 
   // draw render pass 3 to framebuffer object (--> textureS3)
-  glActiveTexture (GL_TEXTURE3);
-  cb_data_p->textureS3.bind ();
+  //glActiveTexture (GL_TEXTURE3);
+  //cb_data_p->textureS3.bind ();
   glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_p->FBO3);
   glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
   glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-  cb_data_p->textureS3.unbind ();
+  //cb_data_p->textureS3.unbind ();
 
   // render pass 4
   cb_data_p->shader4.use ();
@@ -320,30 +313,31 @@ engine_glut_484_draw (void)
 
   glProgramUniform4f (cb_data_p->shader4.id_, cb_data_p->S4mouseLoc,
                       static_cast<GLfloat> (cb_data_p->mouseX),
-                      static_cast<GLfloat> (cb_data_p->mouseY),
+                      static_cast<GLfloat> (Common_GL_Tools::map (cb_data_p->mouseY, 0, ENGINE_GLUT_484_DEFAULT_HEIGHT - 1, ENGINE_GLUT_484_DEFAULT_HEIGHT - 1, 0)),
                       static_cast<GLfloat> (cb_data_p->mouseLMBPressed ? 1.0f : 0.0f),
                       0.0f);
 
-  glActiveTexture (GL_TEXTURE1);
-  cb_data_p->textureS1.bind ();
+  //glActiveTexture (GL_TEXTURE1);
+  //cb_data_p->textureS1.bind ();
   glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel0Loc,
                       static_cast<GLint> (1));
-  cb_data_p->textureS1.unbind ();
+  //cb_data_p->textureS1.unbind ();
 
-  glActiveTexture (GL_TEXTURE2);
-  cb_data_p->textureS2.bind ();
+  //glActiveTexture (GL_TEXTURE2);
+  //cb_data_p->textureS2.bind ();
   glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel1Loc,
                       static_cast<GLint> (2));
-  cb_data_p->textureS2.unbind ();
+  //cb_data_p->textureS2.unbind ();
 
-  glActiveTexture (GL_TEXTURE0);
-  glBindTexture (GL_TEXTURE_CUBE_MAP, cb_data_p->texture0.id_);
+  //glActiveTexture (GL_TEXTURE0);
+  //glBindTexture (GL_TEXTURE_CUBE_MAP, cb_data_p->texture0.id_);
   glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel3Loc,
                       static_cast<GLint> (0));
-  glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
 
   // draw render pass 4 to screen
   glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+
+  //glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
 
   glBindVertexArray (0);
 
