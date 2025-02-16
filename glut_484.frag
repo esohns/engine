@@ -415,9 +415,7 @@ main ()
     Particle p0, p1;
     vec4 packed;
 
-/*    if (iFrame >= 10)
-    else */
-    if (iFrame < 10)
+    if (iFrame == 1)
     {
       p0.mass = 0u;
       p1.mass = 0u;

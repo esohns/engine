@@ -226,20 +226,17 @@ engine_glut_484_draw (void)
   glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1frameLoc,
                       static_cast<GLint> (frame_counter_i));
 
-  //glActiveTexture (GL_TEXTURE3);
-  //cb_data_p->textureS3.bind ();
   glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1channel0Loc,
                       static_cast<GLint> (3));
 
   // draw render pass 1 to framebuffer object (--> textureS1)
   glBindFramebuffer (GL_FRAMEBUFFER, cb_data_p->FBO1);
-  //glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
-  glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
+  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+  //glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
   //glActiveTexture (GL_TEXTURE1);
   //cb_data_p->textureS1.load (GL_RGBA32F);
   //cb_data_p->textureS1.bind ();
   glBindFramebuffer (GL_FRAMEBUFFER, 0);
-  //cb_data_p->textureS3.unbind ();
 
   // render pass 2
   cb_data_p->shader2.use ();
@@ -249,20 +246,17 @@ engine_glut_484_draw (void)
                       static_cast<GLfloat> (ENGINE_GLUT_484_DEFAULT_WIDTH),
                       static_cast<GLfloat> (ENGINE_GLUT_484_DEFAULT_HEIGHT));
 
-  //glActiveTexture (GL_TEXTURE1);
-  //cb_data_p->textureS1.bind ();
   glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel0Loc,
                       static_cast<GLint> (1));
 
   // draw render pass 2 to framebuffer object (--> textureS2)
   glBindFramebuffer (GL_FRAMEBUFFER, cb_data_p->FBO2);
-  //glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
-  glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
+  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+  //glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
   //glActiveTexture (GL_TEXTURE2);
   //cb_data_p->textureS2.load (GL_RGBA32F);
   //cb_data_p->textureS2.bind ();
   glBindFramebuffer (GL_FRAMEBUFFER, 0);
-  //cb_data_p->textureS1.unbind ();
 
   // render pass 3
   cb_data_p->shader3.use ();
@@ -288,26 +282,20 @@ engine_glut_484_draw (void)
                       static_cast<GLint> (cb_data_p->spacePressed ? 1 : 0),
                       static_cast<GLint> (cb_data_p->upPressed ? 1 : 0));
 
-  //glActiveTexture (GL_TEXTURE1);
-  //cb_data_p->textureS1.bind ();
   glProgramUniform1i (cb_data_p->shader3.id_, cb_data_p->S3channel0Loc,
                       static_cast<GLint> (1));
 
-  //glActiveTexture (GL_TEXTURE2);
-  //cb_data_p->textureS2.bind ();
   glProgramUniform1i (cb_data_p->shader3.id_, cb_data_p->S3channel1Loc,
                       static_cast<GLint> (2));
 
   // draw render pass 3 to framebuffer object (--> textureS3)
   glBindFramebuffer (GL_FRAMEBUFFER, cb_data_p->FBO3);
-  //glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
-  glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
+  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+  //glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
   //glActiveTexture (GL_TEXTURE3);
   //cb_data_p->textureS3.load (GL_RGBA32F);
   //cb_data_p->textureS3.bind ();
   glBindFramebuffer (GL_FRAMEBUFFER, 0);
-  //cb_data_p->textureS2.unbind ();
-  //cb_data_p->textureS1.unbind ();
 
   // render pass 4
   cb_data_p->shader4.use ();
@@ -323,28 +311,18 @@ engine_glut_484_draw (void)
                       static_cast<GLfloat> (cb_data_p->mouseLMBPressed ? 1.0f : 0.0f),
                       0.0f);
 
-  //glActiveTexture (GL_TEXTURE1);
-  //cb_data_p->textureS1.bind ();
   glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel0Loc,
                       static_cast<GLint> (1));
 
-  //glActiveTexture (GL_TEXTURE2);
-  //cb_data_p->textureS2.bind ();
   glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel1Loc,
                       static_cast<GLint> (2));
 
-  //glActiveTexture (GL_TEXTURE0);
-  //glBindTexture (GL_TEXTURE_CUBE_MAP, cb_data_p->texture0.id_);
   glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel3Loc,
                       static_cast<GLint> (0));
 
   // draw render pass 4 to screen
-  //glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
-  glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
-
-  //glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
-  //cb_data_p->textureS2.unbind ();
-  //cb_data_p->textureS1.unbind ();
+  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+  //glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
 
   glBindVertexArray (0);
 

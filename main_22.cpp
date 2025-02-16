@@ -2259,23 +2259,23 @@ do_work (int argc_in,
       glBindVertexArray (cb_data_s.VAO);
       GLfloat vertices_a[] =
       {
-        //// Triangle vertices (Texture Coordinates: 0,0 = bottom left... 1,1 = top right)
-        ////-------------------------
-        //-1.0f ,  1.0f, 0.0f,  0.0f, 1.0f, // left top ......... 0
-        //-1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......1
-        // 1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........2
+        // Triangle vertices (Texture Coordinates: 0,0 = bottom left... 1,1 = top right)
+        //-------------------------
+        -1.0f ,  1.0f, 0.0f,  0.0f, 1.0f, // left top ......... 0
+        -1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......1
+         1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........2
  
-        // 1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........3
-        //-1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......4
-        // 1.0f , -1.0f, 0.0f,  1.0f, 0.0f, // right bottom ......5
+         1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........3
+        -1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......4
+         1.0f , -1.0f, 0.0f,  1.0f, 0.0f, // right bottom ......5
 
         // *WARNING*: GL_QUADS have been removed from core OpenGL 3.1 and above. see: https://www.khronos.org/opengl/wiki/Primitive#Quads
         // Quad vertices (Texture Coordinates: 0,0 = bottom left... 1,1 = top right)
         //-------------------------
-        -1.0f, -1.0f, 0.0f,     0.0f, 0.0f, // left bottom        0
-         1.0f, -1.0f, 0.0f,     1.0f, 0.0f, // right bottom       1
-         1.0f,  1.0f, 0.0f,     1.0f, 1.0f, // right top          2
-        -1.0f,  1.0f, 0.0f,     0.0f, 1.0f  // left top           4
+        //-1.0f, -1.0f, 0.0f,     0.0f, 0.0f, // left bottom        0
+        // 1.0f, -1.0f, 0.0f,     1.0f, 0.0f, // right bottom       1
+        // 1.0f,  1.0f, 0.0f,     1.0f, 1.0f, // right top          2
+        //-1.0f,  1.0f, 0.0f,     0.0f, 1.0f  // left top           4
       };
       glBindBuffer (GL_ARRAY_BUFFER, cb_data_s.VBO);
       glBufferData (GL_ARRAY_BUFFER, sizeof (vertices_a), vertices_a, GL_STATIC_DRAW);
