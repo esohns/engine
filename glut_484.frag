@@ -1,5 +1,5 @@
 #version 330
-//precision mediump float;
+precision highp float;
 
 //#include "glut_484_common.glsl"
 #define ch0 iChannel0
@@ -402,47 +402,69 @@ vec3 hsv2rgb( in vec3 c )
 //#include "glut_484_common.glsl"
 
 uniform vec2 iResolution;
+uniform int iFrame;
 uniform sampler2D iChannel0;
 
 void
 main ()
 {
-  InitGrid (iResolution.xy);
-  vec2 fragCoord = floor (gl_FragCoord.xy);
-  vec3 pos = dim3from2 (fragCoord);
+    InitGrid(iResolution.xy);
+    vec2 fragCoord = floor(gl_FragCoord.xy);
+    vec3 pos = dim3from2(fragCoord);
+    
+    Particle p0, p1;
+    vec4 packed;
 
-  Particle p0, p1;
-
-  //advect neighbors and accumulate + clusterize density if they fall into this cell
-  range (i, -1, 1) range (j, -1, 1) range (k, -1, 1)
-  {
-    //load the particles 
-    vec3 pos1 = pos + vec3 (i, j, k);
-    if (!all (lessThanEqual (pos1, size3d)) || !all (greaterThanEqual (pos1, vec3 (0.0))))
-      continue;
-
-    Particle p0_, p1_;
-    unpackParticles (LOAD3D (ch0, pos1), pos1, p0_, p1_);
-
-    if (p0_.mass > 0u)
+/*    if (iFrame >= 10)
+    else */
+    if (iFrame < 10)
     {
-      p0_.pos += p0_.vel * dt;
-      Clusterize (p0, p1, p0_, pos);
+      p0.mass = 0u;
+      p1.mass = 0u;
+    }
+/*    else
+    {
+      //load the particles
+      packed = LOAD3D(ch0, pos);
+      unpackParticles(packed, pos, p0, p1);
+    }*/
+
+    //advect neighbors and accumulate + clusterize density if they fall into this cell
+    range(i, -1, 1) range(j, -1, 1) range(k, -1, 1)
+    {
+//        if(i == 0 && j == 0 && k == 0) continue;
+        vec3 pos1 = pos + vec3(i, j, k);
+        if(!all(lessThanEqual(pos1, size3d)) || !all(greaterThanEqual(pos1, vec3(0.0))))
+        {
+            continue;
+        }
+        //load the particles 
+        Particle p0_, p1_;
+        unpackParticles(LOAD3D(ch0, pos1), pos1, p0_, p1_);
+        
+        if(p0_.mass > 0u)
+        {
+            p0_.pos += p0_.vel*dt;
+            Clusterize(p0, p1, p0_, pos);
+        }
+   
+        if(p1_.mass > 0u)
+        {
+            p1_.pos += p1_.vel*dt;
+            Clusterize(p0, p1, p1_, pos);
+        }
+    }
+    
+    if(p1.mass == 0u && p0.mass > 0u)
+    {
+        SplitParticle(p0, p1);
     }
 
-    if (p1_.mass > 0u)
+    if(p0.mass == 0u && p1.mass > 0u)
     {
-      p1_.pos += p1_.vel * dt;
-      Clusterize (p0, p1, p1_, pos);
+        SplitParticle(p1, p0);
     }
-  }
-
-  if (p1.mass == 0u && p0.mass > 0u)
-    SplitParticle (p0, p1);
-
-  if (p0.mass == 0u && p1.mass > 0u)
-    SplitParticle (p1, p0);
-
-  vec4 packed = packParticles (p0, p1, pos);
-  gl_FragColor = packed;
+    
+    packed = packParticles(p0, p1, pos);
+    gl_FragData[0] = packed;
 }

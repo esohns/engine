@@ -29,18 +29,18 @@ engine_glut_484_reshape (int width_in, int height_in)
 {
   glViewport (0, 0, width_in, height_in);
 
-  glMatrixMode (GL_PROJECTION);
+  //glMatrixMode (GL_PROJECTION);
 
-  glLoadIdentity ();
+  //glLoadIdentity ();
 
-  ACE_ASSERT (height_in);
-  gluPerspective (45.0,
-                  width_in / static_cast<GLdouble> (height_in),
-                  0.1, -1000.0);
+  //ACE_ASSERT (height_in);
+  //gluPerspective (45.0,
+  //                width_in / static_cast<GLdouble> (height_in),
+  //                0.1, -1000.0);
   //glOrtho (static_cast<GLdouble> (-width_in / 2.0), static_cast<GLdouble> (width_in / 2.0),
   //         static_cast<GLdouble> (height_in / 2.0), static_cast<GLdouble> (-height_in / 2.0), 150.0, -150.0);
 
-  glMatrixMode (GL_MODELVIEW);
+  //glMatrixMode (GL_MODELVIEW);
 }
 
 void
@@ -186,15 +186,17 @@ engine_glut_484_timer (int v)
 void
 engine_glut_484_draw (void)
 {
+  static int frame_counter_i = 1;
+
   struct Engine_OpenGL_GLUT_484_CBData* cb_data_p =
     static_cast<struct Engine_OpenGL_GLUT_484_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // reset transformations
-  glMatrixMode (GL_MODELVIEW);
-  glLoadIdentity ();
+  //glMatrixMode (GL_MODELVIEW);
+  //glLoadIdentity ();
 
   glPolygonMode (GL_FRONT_AND_BACK,
                  cb_data_p->wireframe ? GL_LINE : GL_FILL);
@@ -221,19 +223,23 @@ engine_glut_484_draw (void)
                       static_cast<GLfloat> (ENGINE_GLUT_484_DEFAULT_WIDTH),
                       static_cast<GLfloat> (ENGINE_GLUT_484_DEFAULT_HEIGHT));
 
+  glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1frameLoc,
+                      static_cast<GLint> (frame_counter_i));
+
   //glActiveTexture (GL_TEXTURE3);
   //cb_data_p->textureS3.bind ();
   glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1channel0Loc,
                       static_cast<GLint> (3));
-  //cb_data_p->textureS3.unbind ();
 
   // draw render pass 1 to framebuffer object (--> textureS1)
+  glBindFramebuffer (GL_FRAMEBUFFER, cb_data_p->FBO1);
+  //glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+  glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
   //glActiveTexture (GL_TEXTURE1);
+  //cb_data_p->textureS1.load (GL_RGBA32F);
   //cb_data_p->textureS1.bind ();
-  glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_p->FBO1);
-  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
-  glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-  //cb_data_p->textureS1.unbind ();
+  glBindFramebuffer (GL_FRAMEBUFFER, 0);
+  //cb_data_p->textureS3.unbind ();
 
   // render pass 2
   cb_data_p->shader2.use ();
@@ -247,15 +253,16 @@ engine_glut_484_draw (void)
   //cb_data_p->textureS1.bind ();
   glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel0Loc,
                       static_cast<GLint> (1));
-  //cb_data_p->textureS1.unbind ();
 
   // draw render pass 2 to framebuffer object (--> textureS2)
+  glBindFramebuffer (GL_FRAMEBUFFER, cb_data_p->FBO2);
+  //glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+  glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
   //glActiveTexture (GL_TEXTURE2);
+  //cb_data_p->textureS2.load (GL_RGBA32F);
   //cb_data_p->textureS2.bind ();
-  glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_p->FBO2);
-  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
-  glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-  //cb_data_p->textureS2.unbind ();
+  glBindFramebuffer (GL_FRAMEBUFFER, 0);
+  //cb_data_p->textureS1.unbind ();
 
   // render pass 3
   cb_data_p->shader3.use ();
@@ -268,10 +275,8 @@ engine_glut_484_draw (void)
   glProgramUniform1f (cb_data_p->shader3.id_, cb_data_p->S3timeLoc,
                       static_cast<GLfloat> (d.count () * 0.001f));
 
-  static int frame_counter_i = 1;
   glProgramUniform1i (cb_data_p->shader3.id_, cb_data_p->S3frameLoc,
                       static_cast<GLint> (frame_counter_i));
-  ++frame_counter_i;
 
   glProgramUniform4f (cb_data_p->shader3.id_, cb_data_p->S3mouseLoc,
                       static_cast<GLfloat> (cb_data_p->mouseX),
@@ -287,21 +292,22 @@ engine_glut_484_draw (void)
   //cb_data_p->textureS1.bind ();
   glProgramUniform1i (cb_data_p->shader3.id_, cb_data_p->S3channel0Loc,
                       static_cast<GLint> (1));
-  //cb_data_p->textureS1.unbind ();
 
   //glActiveTexture (GL_TEXTURE2);
   //cb_data_p->textureS2.bind ();
   glProgramUniform1i (cb_data_p->shader3.id_, cb_data_p->S3channel1Loc,
                       static_cast<GLint> (2));
-  //cb_data_p->textureS2.unbind ();
 
   // draw render pass 3 to framebuffer object (--> textureS3)
+  glBindFramebuffer (GL_FRAMEBUFFER, cb_data_p->FBO3);
+  //glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+  glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
   //glActiveTexture (GL_TEXTURE3);
+  //cb_data_p->textureS3.load (GL_RGBA32F);
   //cb_data_p->textureS3.bind ();
-  glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, cb_data_p->FBO3);
-  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
-  glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-  //cb_data_p->textureS3.unbind ();
+  glBindFramebuffer (GL_FRAMEBUFFER, 0);
+  //cb_data_p->textureS2.unbind ();
+  //cb_data_p->textureS1.unbind ();
 
   // render pass 4
   cb_data_p->shader4.use ();
@@ -321,13 +327,11 @@ engine_glut_484_draw (void)
   //cb_data_p->textureS1.bind ();
   glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel0Loc,
                       static_cast<GLint> (1));
-  //cb_data_p->textureS1.unbind ();
 
   //glActiveTexture (GL_TEXTURE2);
   //cb_data_p->textureS2.bind ();
   glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel1Loc,
                       static_cast<GLint> (2));
-  //cb_data_p->textureS2.unbind ();
 
   //glActiveTexture (GL_TEXTURE0);
   //glBindTexture (GL_TEXTURE_CUBE_MAP, cb_data_p->texture0.id_);
@@ -335,13 +339,18 @@ engine_glut_484_draw (void)
                       static_cast<GLint> (0));
 
   // draw render pass 4 to screen
-  glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+  //glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
+  glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
 
   //glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+  //cb_data_p->textureS2.unbind ();
+  //cb_data_p->textureS1.unbind ();
 
   glBindVertexArray (0);
 
   glutSwapBuffers ();
+
+  ++frame_counter_i;
 }
 
 void

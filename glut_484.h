@@ -37,6 +37,7 @@ struct Engine_OpenGL_GLUT_484_CBData
   Common_GL_Shader                  shader3;
   Common_GL_Shader                  shader4;
   GLint                             S1resolutionLoc;
+  GLint                             S1frameLoc;
   GLint                             S1channel0Loc;
   GLint                             S2resolutionLoc;
   GLint                             S2channel0Loc;

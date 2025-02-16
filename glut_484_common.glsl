@@ -147,14 +147,14 @@ float sdBox( vec3 p, vec3 b )
 
 vec2 hash21(float p)
 {
-  vec3 p3 = fract(vec3(p) * vec3(.1031, .1030, .0973));
-  p3 += dot(p3, p3.yzx + 33.33);
+	vec3 p3 = fract(vec3(p) * vec3(.1031, .1030, .0973));
+	p3 += dot(p3, p3.yzx + 33.33);
     return fract((p3.xx+p3.yz)*p3.zy);
 }
 
 vec2 hash23(vec3 p3)
 {
-  p3 = fract(p3 * vec3(.1031, .1030, .0973));
+	p3 = fract(p3 * vec3(.1031, .1030, .0973));
     p3 += dot(p3, p3.yzx+33.33);
     return fract((p3.xx+p3.yz)*p3.zy);
 }
@@ -351,10 +351,10 @@ vec4 border_grad(vec3 p)
 {
     const float dx = 0.001;
     const vec3 k = vec3(1,-1,0);
-  return  (k.xyyx*distance2border(p + k.xyy*dx) +
-       k.yyxx*distance2border(p + k.yyx*dx) +
-       k.yxyx*distance2border(p + k.yxy*dx) +
-       k.xxxx*distance2border(p + k.xxx*dx))/vec4(4.*dx,4.*dx,4.*dx,4.);
+	return  (k.xyyx*distance2border(p + k.xyy*dx) +
+			 k.yyxx*distance2border(p + k.yyx*dx) +
+			 k.yxyx*distance2border(p + k.yxy*dx) +
+			 k.xxxx*distance2border(p + k.xxx*dx))/vec4(4.*dx,4.*dx,4.*dx,4.);
 }
 
 void IntegrateParticle(inout Particle p, vec3 pos, vec2 iR, vec4 iM, float time)
@@ -391,7 +391,7 @@ vec3 hsv2rgb( in vec3 c )
 {
     vec3 rgb = clamp( abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
 
-  rgb = rgb*rgb*(3.0-2.0*rgb); // cubic smoothing	
+	rgb = rgb*rgb*(3.0-2.0*rgb); // cubic smoothing	
 
-  return c.z * mix( vec3(1.0), rgb, c.y);
+	return c.z * mix( vec3(1.0), rgb, c.y);
 }
