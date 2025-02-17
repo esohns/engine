@@ -405,7 +405,7 @@ uniform vec2 iResolution;
 uniform float iTime;
 uniform int iFrame;
 uniform vec4 iMouse;
-uniform ivec2 iKeys;
+uniform ivec4 iKeys;
 uniform sampler2D iChannel0;
 uniform sampler2D iChannel1;
 
@@ -429,6 +429,10 @@ isKeyPressed (int KEY)
     return iKeys.x != 0;
   else if (KEY == KEY_UP)
     return iKeys.y != 0;
+  else if (KEY == KEY_LEFT)
+    return iKeys.z != 0;
+  else if (KEY == KEY_RIGHT)
+    return iKeys.w != 0;
 //  return texelFetch (iChannel3, ivec2 (KEY,2), 0).x > 0.5;
   return false;
 }

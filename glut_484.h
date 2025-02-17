@@ -87,6 +87,8 @@ struct Engine_OpenGL_GLUT_484_CBData
 
   bool                              spacePressed;
   bool                              upPressed;
+  bool                              leftPressed;
+  bool                              rightPressed;
 };
 
 #endif // GLUT_484_H

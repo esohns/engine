@@ -92,8 +92,10 @@ engine_glut_484_key_special (int key_in,
   switch (key_in)
   {
     case GLUT_KEY_LEFT:
+      cb_data_p->leftPressed = !cb_data_p->leftPressed;
       break;
     case GLUT_KEY_RIGHT:
+      cb_data_p->rightPressed = !cb_data_p->rightPressed;
       break;
     case GLUT_KEY_UP:
       cb_data_p->upPressed = !cb_data_p->upPressed;
@@ -113,8 +115,10 @@ engine_glut_484_key_special_up (int key_in,
   switch (key_in)
   {
     case GLUT_KEY_LEFT:
+      //cb_data_p->leftPressed = false;
       break;
     case GLUT_KEY_RIGHT:
+      //cb_data_p->rightPressed = false;
       break;
     case GLUT_KEY_UP:
       //cb_data_p->upPressed = false;
@@ -278,9 +282,11 @@ engine_glut_484_draw (void)
                       static_cast<GLfloat> (cb_data_p->mouseLMBPressed ? 1.0f : 0.0f),
                       0.0f);
 
-  glProgramUniform2i (cb_data_p->shader3.id_, cb_data_p->S3keysLoc,
+  glProgramUniform4i (cb_data_p->shader3.id_, cb_data_p->S3keysLoc,
                       static_cast<GLint> (cb_data_p->spacePressed ? 1 : 0),
-                      static_cast<GLint> (cb_data_p->upPressed ? 1 : 0));
+                      static_cast<GLint> (cb_data_p->upPressed ? 1 : 0),
+                      static_cast<GLint> (cb_data_p->leftPressed ? 1 : 0),
+                      static_cast<GLint> (cb_data_p->rightPressed ? 1 : 0));
 
   glProgramUniform1i (cb_data_p->shader3.id_, cb_data_p->S3channel0Loc,
                       static_cast<GLint> (1));

@@ -1980,6 +1980,8 @@ do_work (int argc_in,
       cb_data_s.mouseLMBPressed = false;
       cb_data_s.spacePressed = false;
       cb_data_s.upPressed = false;
+      cb_data_s.leftPressed = false;
+      cb_data_s.rightPressed = false;
 
       // initialize GLUT
       glutInit (&argc_in, argv_in);
