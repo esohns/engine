@@ -1,0 +1,22 @@
+#version 330
+precision highp float;
+
+//#include "glut_486_common.glsl"
+#define R iResolution.xy
+
+//a way to sample pixels shorthand 
+#define A(U) texture(iChannel0,(U)/R)
+
+//the time step
+#define dt 0.9
+//#include "glut_486_common.glsl"
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+  vec4 t = 10.0 * A (gl_FragCoord.xy);
+  gl_FragColor.xyz = vec3 (1.0, 0.0, 0.0) * t.x - vec3 (0.0, 0.0, 1.0) * t.x + vec3 (0.0, 0.5, 0.0) * abs (t.x);
+}
