@@ -1,0 +1,106 @@
+// glut_488_common.glsl
+#define pixel(a, p) texture(a, p/vec2(textureSize(a,0)))
+#define texel(a, p) texelFetch(a, ivec2(p-0.5),0)
+#define s2d iResolution.xy
+#define ch0 iChannel0
+#define ch1 iChannel1
+#define ch2 iChannel2
+#define ch3 iChannel3
+
+#define dt 0.5
+
+
+const float scale = .6;
+//fluid 1 density 
+const float a1 = 0.8;
+//fluid 2 density
+const float a2 = 1.;
+
+//set to 0 if you want a gas-like behaviour
+//fluid 1 fluid-like/gas-like regulator 
+const float b1 = 0.99;
+//fluid 2 fluid-like/gas-like regulator 
+const float b2 = 0.99;
+
+//interaction energy cost
+const float ie = 1.5;
+
+//initial conditions for amplitudes
+const float amp = 0.8;
+const vec4 fluid1_Q = amp*vec4(a1,0,0,0);
+const vec4 fluid1_Qv = amp*vec4(0,a1,0,0); //minus for antifluid
+const vec4 fluid2_Q = amp*vec4(0,0,a2,0);
+const vec4 fluid2_Qv = amp*vec4(0,0,0,a2);
+const float mouser = 25.;
+const float initr = 150.;
+
+
+float sq(float x){ return x*x; }
+float cb(float x){ return x*x*x; }
+float sq(vec2 x){ return dot(x,x); }
+
+const float pressure = 0.001;
+
+//wave potential
+float P(vec4 Q, vec2 p)
+{
+    //fluid 1 amplitude
+    float fd1 = 2.*tanh(0.5*length(Q.xy));
+    //fluid 2 amplitude
+    float fd2 = 2.*tanh(0.5*length(Q.zw));
+    
+    //liquifier term 1
+    float liq1 = 1. - b1*exp(-3.*sq(fd1-a1));      
+    //liquifier term 2
+    float liq2 = 1. - b2*exp(-3.*sq(fd2-a2));     
+    float grav = 0.0005*p.y;
+        
+    return scale*(cb(fd1)*liq1 + cb(fd2)*liq2+ ie*sq(fd1)*sq(fd2))+ (sq(fd1)+sq(fd2))*grav;
+}
+
+//force
+#define d 0.001
+vec4 F(vec4 Q, vec2 p)
+{
+    vec3 dx = 0.5*vec3(-d,0.,d);
+    return vec4(P(Q + dx.zyyy, p) - P(Q + dx.xyyy, p),
+                P(Q + dx.yzyy, p) - P(Q + dx.yxyy, p),
+                P(Q + dx.yyzy, p) - P(Q + dx.yyxy, p),
+                P(Q + dx.yyyz, p) - P(Q + dx.yyyx, p))/d;
+}
+
+//Laplacian operator
+vec4 Laplace(sampler2D ch, vec2 p)
+{
+    vec3 dx = vec3(-1,0.,1);
+    return texel(ch, p+dx.xy)+texel(ch, p+dx.yx)+texel(ch, p+dx.zy)+texel(ch, p+dx.yz)-4.*texel(ch, p);
+}
+
+vec2 Grad(sampler2D ch, vec2 p)
+{
+    vec3 dx = vec3(-1,0.,1);
+    return vec2(length(texel(ch, p+dx.zy)),length(texel(ch, p+dx.yz))) - length(texel(ch, p));
+}
+// glut_488_common.glsl
+
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+void
+main ()
+{
+    vec4 Q = pixel(ch0, gl_FragCoord.xy);
+    vec4 Qv = pixel(ch1, gl_FragCoord.xy);
+    
+    
+    vec2 g = 0.04*normalize(Grad(ch0, gl_FragCoord.xy));
+    vec3 v = vec3(g,  sqrt(1.-sq(g)) );
+    //vec3 col = texture(ch2, v).xyz;
+    //fluid 1 amplitude
+    float fd1 = smoothstep(0., 0.7, 1.*dot(Q.xy,Q.xy)/sq(a1)) * ( 1. + 0.004*gl_FragCoord.y);
+    //fluid 2 amplitude
+    float fd2 = smoothstep(0., 0.7, 1.*dot(Q.zw,Q.zw)/sq(a2)) * ( 1. - 0.004*gl_FragCoord.y);
+
+    // Output to screen
+    gl_FragColor.xyz = 0.7*(sin(vec3(1., 1., 0.)*fd1) + sin(vec3(0., 0.3, 1.)*fd2)) + 0.5*vec3(1.0)*dot(Q,Q);
+}

@@ -1,4 +1,4 @@
-#version 330
+#version 150
 
 // glut_487_common.glsl
 #define texel(a, p) texelFetch(a, ivec2(p), 0)
