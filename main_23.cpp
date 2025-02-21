@@ -224,18 +224,9 @@ do_work (int argc_in,
 
       cb_data_s.resolutionLoc = -1;
       cb_data_s.timeLoc = -1;
+      cb_data_s.mouseLoc = -1;
 
       cb_data_s.wireframe = false;
-
-      //cb_data_s.camera.position.x = 0.0f;
-      //cb_data_s.camera.position.y = 0.0f;
-      //cb_data_s.camera.position.z = 500.0f;
-      //cb_data_s.camera.looking_at.x = 0.0f;
-      //cb_data_s.camera.looking_at.y = 0.0f;
-      //cb_data_s.camera.looking_at.z = 0.0f;
-      //cb_data_s.camera.up.x = 0.0F;
-      //cb_data_s.camera.up.y = 1.0F;
-      //cb_data_s.camera.up.z = 0.0F;
 
       cb_data_s.mouseX = ENGINE_GLUT_490_DEFAULT_WIDTH / 2;
       cb_data_s.mouseY = ENGINE_GLUT_490_DEFAULT_HEIGHT / 2;
