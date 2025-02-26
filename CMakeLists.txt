@@ -1477,6 +1477,8 @@ set (engine_23_EXE_SRCS
      glut_491.h
      glut_492.cpp
      glut_492.h
+     glut_493.cpp
+     glut_493.h
      stdafx.h)
 
 set (EXECUTABLE_23 engine_23)
@@ -2283,6 +2285,8 @@ install (FILES
          "glut_491.frag_2"
          "glut_492.vert"
          "glut_492.frag"
+         "glut_493.vert"
+         "glut_493.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
