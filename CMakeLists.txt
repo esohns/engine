@@ -1497,6 +1497,8 @@ set (engine_23_EXE_SRCS
      glut_501.h
      glut_502.cpp
      glut_502.h
+     glut_503.cpp
+     glut_503.h
      stdafx.h)
 
 set (EXECUTABLE_23 engine_23)
@@ -2327,10 +2329,15 @@ install (FILES
          "glut_499_channel0.png"
          "glut_500.vert"
          "glut_500.frag"
+         "glut_500_channel0.png"
          "glut_501.vert"
          "glut_501.frag"
          "glut_502.vert"
          "glut_502.frag"
+         "glut_503.vert"
+         "glut_503.frag"
+         "glut_503_channel0.png"
+         "glut_503_channel1.png"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
