@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 
-#include "glut_504.h"
+#include "glut_505.h"
 
 #include "GL/glew.h"
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
@@ -25,7 +25,7 @@
 #include "engine_common.h"
 
 void
-engine_glut_504_reshape (int width_in, int height_in)
+engine_glut_505_reshape (int width_in, int height_in)
 {
   glViewport (0, 0, width_in, height_in);
 
@@ -44,12 +44,12 @@ engine_glut_504_reshape (int width_in, int height_in)
 }
 
 void
-engine_glut_504_key (unsigned char key_in,
+engine_glut_505_key (unsigned char key_in,
                      int x,
                      int y)
 {
-  struct Engine_OpenGL_GLUT_504_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_504_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_505_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_505_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -61,12 +61,12 @@ engine_glut_504_key (unsigned char key_in,
 }
 
 void
-engine_glut_504_key_up (unsigned char key_in,
+engine_glut_505_key_up (unsigned char key_in,
                         int x,
                         int y)
 {
-  struct Engine_OpenGL_GLUT_504_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_504_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_505_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_505_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -78,12 +78,12 @@ engine_glut_504_key_up (unsigned char key_in,
 }
 
 void
-engine_glut_504_key_special (int key_in,
+engine_glut_505_key_special (int key_in,
                              int x,
                              int y)
 {
-  struct Engine_OpenGL_GLUT_504_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_504_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_505_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_505_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -98,12 +98,12 @@ engine_glut_504_key_special (int key_in,
 }
 
 void
-engine_glut_504_key_special_up (int key_in,
+engine_glut_505_key_special_up (int key_in,
                                 int x,
                                 int y)
 {
-  struct Engine_OpenGL_GLUT_504_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_504_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_505_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_505_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -121,10 +121,10 @@ engine_glut_504_key_special_up (int key_in,
 }
 
 void
-engine_glut_504_menu (int entry_in)
+engine_glut_505_menu (int entry_in)
 {
-  struct Engine_OpenGL_GLUT_504_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_504_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_505_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_505_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (entry_in)
@@ -138,10 +138,10 @@ engine_glut_504_menu (int entry_in)
 }
 
 void
-engine_glut_504_mouse_button (int button, int state, int x, int y)
+engine_glut_505_mouse_button (int button, int state, int x, int y)
 {
-  struct Engine_OpenGL_GLUT_504_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_504_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_505_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_505_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (button)
@@ -157,10 +157,10 @@ engine_glut_504_mouse_button (int button, int state, int x, int y)
 }
 
 void
-engine_glut_504_mouse_move (int x, int y)
+engine_glut_505_mouse_move (int x, int y)
 {
-  struct Engine_OpenGL_GLUT_504_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_504_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_505_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_505_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   cb_data_p->mouseX = x;
@@ -168,26 +168,26 @@ engine_glut_504_mouse_move (int x, int y)
 }
 
 void
-engine_glut_504_timer (int v)
+engine_glut_505_timer (int v)
 {
-  struct Engine_OpenGL_GLUT_504_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_504_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_505_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_505_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   glutPostRedisplay ();
 
   glutTimerFunc (1000 / 60,
-                 engine_glut_504_timer,
+                 engine_glut_505_timer,
                  v);
 }
 
 void
-engine_glut_504_draw (void)
+engine_glut_505_draw (void)
 {
   static int frame_counter_i = 1;
 
-  struct Engine_OpenGL_GLUT_504_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_504_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_505_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_505_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   //glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -218,13 +218,16 @@ engine_glut_504_draw (void)
 
   // update uniforms
   glProgramUniform2f (cb_data_p->shader1.id_, cb_data_p->S1resolutionLoc,
-                      static_cast<GLfloat> (ENGINE_GLUT_504_DEFAULT_WIDTH),
-                      static_cast<GLfloat> (ENGINE_GLUT_504_DEFAULT_HEIGHT));
+                      static_cast<GLfloat> (ENGINE_GLUT_505_DEFAULT_WIDTH),
+                      static_cast<GLfloat> (ENGINE_GLUT_505_DEFAULT_HEIGHT));
 
   glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1frameLoc,
                       static_cast<GLint> (frame_counter_i));
 
-  glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1channel1Loc,
+  glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1channel0Loc,
+                      static_cast<GLint> (1));
+
+  glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S1channel3Loc,
                       static_cast<GLint> (4));
 
   // draw render pass 1 to framebuffer object (--> textureS1)
@@ -238,14 +241,17 @@ engine_glut_504_draw (void)
 
   // update uniforms
   glProgramUniform2f (cb_data_p->shader2.id_, cb_data_p->S2resolutionLoc,
-                      static_cast<GLfloat> (ENGINE_GLUT_504_DEFAULT_WIDTH),
-                      static_cast<GLfloat> (ENGINE_GLUT_504_DEFAULT_HEIGHT));
+                      static_cast<GLfloat> (ENGINE_GLUT_505_DEFAULT_WIDTH),
+                      static_cast<GLfloat> (ENGINE_GLUT_505_DEFAULT_HEIGHT));
 
   glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2frameLoc,
                       static_cast<GLint> (frame_counter_i));
 
-  glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel1Loc,
+  glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel0Loc,
                       static_cast<GLint> (1));
+
+  glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel1Loc,
+                      static_cast<GLint> (2));
 
   // draw render pass 2 to framebuffer object (--> textureS2)
   glBindFramebuffer (GL_FRAMEBUFFER, cb_data_p->FBO2);
@@ -258,8 +264,8 @@ engine_glut_504_draw (void)
 
   // update uniforms
   glProgramUniform2f (cb_data_p->shader3.id_, cb_data_p->S3resolutionLoc,
-                      static_cast<GLfloat> (ENGINE_GLUT_504_DEFAULT_WIDTH),
-                      static_cast<GLfloat> (ENGINE_GLUT_504_DEFAULT_HEIGHT));
+                      static_cast<GLfloat> (ENGINE_GLUT_505_DEFAULT_WIDTH),
+                      static_cast<GLfloat> (ENGINE_GLUT_505_DEFAULT_HEIGHT));
 
   glProgramUniform1i (cb_data_p->shader3.id_, cb_data_p->S3frameLoc,
                       static_cast<GLint> (frame_counter_i));
@@ -278,14 +284,17 @@ engine_glut_504_draw (void)
 
   // update uniforms
   glProgramUniform2f (cb_data_p->shader4.id_, cb_data_p->S4resolutionLoc,
-                      static_cast<GLfloat> (ENGINE_GLUT_504_DEFAULT_WIDTH),
-                      static_cast<GLfloat> (ENGINE_GLUT_504_DEFAULT_HEIGHT));
+                      static_cast<GLfloat> (ENGINE_GLUT_505_DEFAULT_WIDTH),
+                      static_cast<GLfloat> (ENGINE_GLUT_505_DEFAULT_HEIGHT));
 
   glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4frameLoc,
                       static_cast<GLint> (frame_counter_i));
 
-  glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel1Loc,
+  glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel2Loc,
                       static_cast<GLint> (3));
+
+  glProgramUniform1i (cb_data_p->shader4.id_, cb_data_p->S4channel3Loc,
+                      static_cast<GLint> (4));
 
   // draw render pass 4 to framebuffer object (--> textureS4)
   glBindFramebuffer (GL_FRAMEBUFFER, cb_data_p->FBO4);
@@ -298,17 +307,14 @@ engine_glut_504_draw (void)
 
   // update uniforms
   glProgramUniform2f (cb_data_p->shader5.id_, cb_data_p->S5resolutionLoc,
-                      static_cast<GLfloat> (ENGINE_GLUT_504_DEFAULT_WIDTH),
-                      static_cast<GLfloat> (ENGINE_GLUT_504_DEFAULT_HEIGHT));
+                      static_cast<GLfloat> (ENGINE_GLUT_505_DEFAULT_WIDTH),
+                      static_cast<GLfloat> (ENGINE_GLUT_505_DEFAULT_HEIGHT));
 
   glProgramUniform1i (cb_data_p->shader5.id_, cb_data_p->S5frameLoc,
                       static_cast<GLint> (frame_counter_i));
 
-  glProgramUniform1i (cb_data_p->shader5.id_, cb_data_p->S5channel0Loc,
-                      static_cast<GLint> (0));
-
   glProgramUniform1i (cb_data_p->shader5.id_, cb_data_p->S5channel1Loc,
-                      static_cast<GLint> (1));
+                      static_cast<GLint> (2));
 
   // draw render pass 5 to screen
   glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
@@ -322,16 +328,16 @@ engine_glut_504_draw (void)
 }
 
 void
-engine_glut_504_idle (void)
+engine_glut_505_idle (void)
 {
   //glutPostRedisplay ();
 }
 
 void
-engine_glut_504_visible (int vis)
+engine_glut_505_visible (int vis)
 {
   if (vis == GLUT_VISIBLE)
-    glutIdleFunc (engine_glut_504_idle);
+    glutIdleFunc (engine_glut_505_idle);
   else
     glutIdleFunc (NULL);
 }

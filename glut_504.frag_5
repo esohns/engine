@@ -198,8 +198,8 @@ vec4 raytrace_curtain_background_rail(vec3 campos,vec3 camdir)
 void
 main ()
 {
-  mytime = float(iFrame - 1) / 60.0;
-  //mytime = getpos(vec2(0.0,SIZYPHYS)).x;
+  //mytime = float(iFrame - 1) / 60.0;
+  mytime = getpos(vec2(0.0,SIZYPHYS)).x;
 
   float zoom = 1.4;
   float zoomamt = clamp(sin((mytime)/2.0+0.5)*-3.0+1.2,0.0,1.0);
