@@ -1,3 +1,5 @@
+#version 130
+
 // glut_488_common.glsl
 #define pixel(a, p) texture(a, p/vec2(textureSize(a,0)))
 #define texel(a, p) texelFetch(a, ivec2(p-0.5),0)

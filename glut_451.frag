@@ -1,5 +1,3 @@
-//precision mediump float;
-
 uniform vec2 u_resolution;
 uniform float u_mouseX;
 uniform float u_mouseY;
@@ -50,7 +48,7 @@ random2d (vec2 coord)
 void
 main ()
 {
-  vec2 coord = var_vertTexCoord.xy / u_resolution.xy;		
+  vec2 coord = var_vertTexCoord.xy / u_resolution.xy;
   vec2 center = 0.5 - vec2 (coord);
 
   vec3 color = vec3 (0.0, 0.0, 0.0);

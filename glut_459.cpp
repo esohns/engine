@@ -84,6 +84,8 @@ idle_finalize_UI_459_cb (gpointer userData_in)
   ACE_ASSERT (ui_cb_data_p);
   ACE_UNUSED_ARG (ui_cb_data_p);
 
+  gtk_main_quit ();
+
   return G_SOURCE_REMOVE;
 }
 

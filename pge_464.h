@@ -24,7 +24,7 @@ class PGE_464
 
   class spine
   {
-  public:
+   public:
     spine ()
      : n (0)
      , separation (0.0f)
@@ -132,9 +132,9 @@ class PGE_464
 
   struct hair
   {
-    olc::vf2d p;
-    olc::vf2d q;
-    spine     spine;
+    olc::vf2d      p;
+    olc::vf2d      q;
+    PGE_464::spine spine;
   };
 
   void drawArrow (olc::vf2d&, olc::vf2d&, float);

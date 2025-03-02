@@ -173,9 +173,6 @@ engine_glut_394_draw (void)
   glColor3f (0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
 
-  glActiveTexture (GL_TEXTURE0);
-  cb_data_p->texture.bind ();
-
   // update uniforms
   glProgramUniform2f (cb_data_p->shader.id_, cb_data_p->resolutionLoc,
                       static_cast<GLfloat> (ENGINE_GLUT_394_DEFAULT_WIDTH),
@@ -223,8 +220,6 @@ engine_glut_394_draw (void)
   } // end FOR
 
   glutSwapBuffers ();
-
-  cb_data_p->texture.unbind ();
 }
 
 void

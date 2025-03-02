@@ -2105,7 +2105,6 @@ do_work (int argc_in,
       glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       glGenerateMipmap (GL_TEXTURE_CUBE_MAP);
       glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-      //glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
 
       glActiveTexture (GL_TEXTURE1);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2120,7 +2119,6 @@ do_work (int argc_in,
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
       glGenerateMipmap (GL_TEXTURE_2D);
-      //cb_data_s.textureS1.unbind ();
 
       glActiveTexture (GL_TEXTURE2);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2134,7 +2132,6 @@ do_work (int argc_in,
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
       glGenerateMipmap (GL_TEXTURE_2D);
-      //cb_data_s.textureS2.unbind ();
 
       glActiveTexture (GL_TEXTURE3);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2148,7 +2145,6 @@ do_work (int argc_in,
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
       glGenerateMipmap (GL_TEXTURE_2D);
-      //cb_data_s.textureS3.unbind ();
 
       cb_data_s.shader1.use ();
       cb_data_s.S1resolutionLoc =
@@ -2181,7 +2177,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S3frameLoc != -1);
       cb_data_s.S3mouseLoc =
         glGetUniformLocation(cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iMouse"));
-      ACE_ASSERT(cb_data_s.S3mouseLoc != -1);
+      //ACE_ASSERT(cb_data_s.S3mouseLoc != -1);
       cb_data_s.S3keysLoc =
         glGetUniformLocation(cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iKeys"));
       ACE_ASSERT(cb_data_s.S3keysLoc != -1);
@@ -2214,14 +2210,11 @@ do_work (int argc_in,
 
       glGenFramebuffers (1, &cb_data_s.FBO1);
       ACE_ASSERT (cb_data_s.FBO1);
-      //glActiveTexture (GL_TEXTURE1);
-      //cb_data_s.textureS1.bind ();
       // draw render pass 1 to framebuffer object (--> textureS1)
       glBindFramebuffer (GL_FRAMEBUFFER, cb_data_s.FBO1);
       glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cb_data_s.textureS1.id_, 0);
       ACE_ASSERT (glCheckFramebufferStatus (GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
       glBindFramebuffer (GL_FRAMEBUFFER, 0);
-      //cb_data_s.textureS1.unbind ();
 
       //unsigned int rbo;
       //glGenRenderbuffers (1, &rbo);
@@ -2231,14 +2224,11 @@ do_work (int argc_in,
 
       glGenFramebuffers (1, &cb_data_s.FBO2);
       ACE_ASSERT (cb_data_s.FBO2);
-      //glActiveTexture (GL_TEXTURE2);
-      //cb_data_s.textureS2.bind ();
       // draw render pass 2 to framebuffer object (--> textureS2)
       glBindFramebuffer (GL_FRAMEBUFFER, cb_data_s.FBO2);
       glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cb_data_s.textureS2.id_, 0);
       ACE_ASSERT (glCheckFramebufferStatus (GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
       glBindFramebuffer (GL_FRAMEBUFFER, 0);
-      //cb_data_s.textureS2.unbind ();
 
       //unsigned int rbo_2;
       //glGenRenderbuffers (1, &rbo_2);
@@ -2248,14 +2238,11 @@ do_work (int argc_in,
 
       glGenFramebuffers (1, &cb_data_s.FBO3);
       ACE_ASSERT (cb_data_s.FBO3);
-      //glActiveTexture (GL_TEXTURE3);
-      //cb_data_s.textureS3.bind ();
       // draw render pass 3 to framebuffer object (--> textureS3)
       glBindFramebuffer (GL_FRAMEBUFFER, cb_data_s.FBO3);
       glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cb_data_s.textureS3.id_, 0);
       ACE_ASSERT (glCheckFramebufferStatus (GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
       glBindFramebuffer (GL_FRAMEBUFFER, 0);
-      //cb_data_s.textureS3.unbind ();
 
       //unsigned int rbo_3;
       //glGenRenderbuffers (1, &rbo_3);
@@ -2490,19 +2477,19 @@ do_work (int argc_in,
       cb_data_s.shader1.use ();
       cb_data_s.S1resolutionLoc =
         glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
-      ACE_ASSERT (cb_data_s.S1resolutionLoc != -1);
+      //ACE_ASSERT (cb_data_s.S1resolutionLoc != -1);
       cb_data_s.S1timeLoc =
         glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
-      ACE_ASSERT (cb_data_s.S1timeLoc != -1);
+      //ACE_ASSERT (cb_data_s.S1timeLoc != -1);
       cb_data_s.S1frameLoc =
         glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
       ACE_ASSERT (cb_data_s.S1frameLoc != -1);
       cb_data_s.S1mouseLoc =
         glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iMouse"));
-      ACE_ASSERT (cb_data_s.S1mouseLoc != -1);
+      //ACE_ASSERT (cb_data_s.S1mouseLoc != -1);
       cb_data_s.S1channel0Loc =
         glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
-      ACE_ASSERT (cb_data_s.S1channel0Loc != -1);
+      //ACE_ASSERT (cb_data_s.S1channel0Loc != -1);
 
       cb_data_s.shader2.use ();
       cb_data_s.S2resolutionLoc =
@@ -2521,10 +2508,10 @@ do_work (int argc_in,
       cb_data_s.shader3.use ();
       cb_data_s.S3resolutionLoc =
         glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
-      ACE_ASSERT (cb_data_s.S3resolutionLoc != -1);
+      //ACE_ASSERT (cb_data_s.S3resolutionLoc != -1);
       cb_data_s.S3timeLoc =
         glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
-      ACE_ASSERT (cb_data_s.S3timeLoc != -1);
+      //ACE_ASSERT (cb_data_s.S3timeLoc != -1);
       cb_data_s.S3channel0Loc =
         glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
       ACE_ASSERT (cb_data_s.S3channel0Loc != -1);
@@ -2535,10 +2522,10 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S4resolutionLoc != -1);
       cb_data_s.S4timeLoc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
-      ACE_ASSERT (cb_data_s.S4timeLoc != -1);
+      //ACE_ASSERT (cb_data_s.S4timeLoc != -1);
       cb_data_s.S4channel0Loc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
-      ACE_ASSERT (cb_data_s.S4channel0Loc != -1);
+      //ACE_ASSERT (cb_data_s.S4channel0Loc != -1);
       cb_data_s.S4channel1Loc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
       ACE_ASSERT (cb_data_s.S4channel1Loc != -1);
@@ -3054,7 +3041,7 @@ do_work (int argc_in,
       cb_data_s.shader4.use ();
       cb_data_s.S4resolutionLoc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
-      ACE_ASSERT (cb_data_s.S4resolutionLoc != -1);
+      //ACE_ASSERT (cb_data_s.S4resolutionLoc != -1);
       cb_data_s.S4frameLoc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
       //ACE_ASSERT (cb_data_s.S4frameLoc != -1);
@@ -3433,7 +3420,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S5channel0Loc != -1);
       cb_data_s.S5channel1Loc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
-      ACE_ASSERT (cb_data_s.S5channel1Loc != -1);
+      //ACE_ASSERT (cb_data_s.S5channel1Loc != -1);
 
       glGenFramebuffers (1, &cb_data_s.FBO1);
       ACE_ASSERT (cb_data_s.FBO1);

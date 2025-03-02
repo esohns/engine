@@ -1,5 +1,4 @@
 #version 330
-precision highp float;
 
 //#include "glut_484_common.glsl"
 #define ch0 iChannel0
@@ -188,14 +187,14 @@ uint packvec3(vec3 v)
     int exp = clamp(int(ceil(log2(maxv))), -15, 15);
     float scale = exp2(-float(exp));
     uvec3 sv = uvec3(round(clamp(v*scale, -1.0, 1.0) * 255.0) + 255.0);
-    uint packed = uint(exp + 15) | (sv.x << 5) | (sv.y << 14) | (sv.z << 23);
-    return packed;
+    uint packed_ = uint(exp + 15) | (sv.x << 5) | (sv.y << 14) | (sv.z << 23);
+    return packed_;
 }
 
-vec3 unpackvec3(uint packed)
+vec3 unpackvec3(uint packed_)
 {
-    int exp = int(packed & 0x1Fu) - 15;
-    vec3 sv = vec3((packed >> 5) & 0x1FFu, (packed >> 14) & 0x1FFu, (packed >> 23) & 0x1FFu);
+    int exp = int(packed_ & 0x1Fu) - 15;
+    vec3 sv = vec3((packed_ >> 5) & 0x1FFu, (packed_ >> 14) & 0x1FFu, (packed_ >> 23) & 0x1FFu);
     vec3 v = (sv - 255.0) / 255.0;
     v *= exp2(float(exp));
     return v;
@@ -214,10 +213,10 @@ uint packMassPos(uint mass, vec3 pos)
     return data1;
 }
 
-void unpackMassPos(uint packed, out uint mass, out vec3 pos)
+void unpackMassPos(uint packed_, out uint mass, out vec3 pos)
 {
-    mass = packed & 0xFFu;
-    uvec3 pos0 = uvec3((packed >> 8) & 0xFFu, (packed >> 16) & 0xFFu, (packed >> 24) & 0xFFu);
+    mass = packed_ & 0xFFu;
+    uvec3 pos0 = uvec3((packed_ >> 8) & 0xFFu, (packed_ >> 16) & 0xFFu, (packed_ >> 24) & 0xFFu);
     pos = vec3(pos0) / 255.0;
 }
 
@@ -236,9 +235,9 @@ vec4 packParticles(Particle p0, Particle p1, vec3 pos)
     return uintBitsToFloat(data);
 }
 
-void unpackParticles(vec4 packed, vec3 pos, out Particle p0, out Particle p1)
+void unpackParticles(vec4 packed_, vec3 pos, out Particle p0, out Particle p1)
 {
-    uvec4 data = floatBitsToUint(packed);
+    uvec4 data = floatBitsToUint(packed_);
     
     unpackMassPos(data.x, p0.mass, p0.pos);
     unpackMassPos(data.y, p1.mass, p1.pos);
@@ -495,9 +494,9 @@ vec2 iBox( in vec3 ro, in vec3 rd, in vec3 boxSize )
 void TraceCell(inout Ray ray, vec3 p)
 {
     //load the particles 
-    vec4 packed = LOAD3D(ch0, p);
+    vec4 packed_ = LOAD3D(ch0, p);
     Particle p0, p1;
-    unpackParticles(packed, p, p0, p1);
+    unpackParticles(packed_, p, p0, p1);
 
     if(p0.mass > 0u) iSphere(ray, vec4(p0.pos, RADIUS*1.5), vec3(1.000,1.000,1.000));
     if(p1.mass > 0u) iSphere(ray, vec4(p1.pos, RADIUS*1.5), vec3(1.000,1.000,1.000));
@@ -565,9 +564,9 @@ float ParticleDensity(vec3 p)
     //    //load the particles 
     //    vec3 p1 = p0 + vec3(i, j, k);
     //    //load the particles
-    //    vec4 packed = LOAD3D(ch0, p1);
+    //    vec4 packed_ = LOAD3D(ch0, p1);
     //    Particle p0_, p1_;
-    //    unpackParticles(packed, p1, p0_, p1_);
+    //    unpackParticles(packed_, p1, p0_, p1_);
     //    if(p0_.mass > 0u) rho += float(p0_.mass)*GD(length(p0_.pos - p), RADIUS);
     //    if(p1_.mass > 0u) rho += float(p1_.mass)*GD(length(p1_.pos - p), RADIUS);
     //}
@@ -586,10 +585,10 @@ vec3 ParticleGradient(vec3 p)
         vec3 p1 = p0 + vec3(i, j, k);
 
         //load the particles
-        vec4 packed = LOAD3D(ch0, p1);
+        vec4 packed_ = LOAD3D(ch0, p1);
         Particle p0_, p1_;
 
-        unpackParticles(packed, p1, p0_, p1_);
+        unpackParticles(packed_, p1, p0_, p1_);
 
         if(p0_.mass > 0u) grad += float(p0_.mass)*GGRAD(p0_.pos - p, RADIUS);
         if(p1_.mass > 0u) grad += float(p1_.mass)*GGRAD(p1_.pos - p, RADIUS);

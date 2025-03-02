@@ -1,5 +1,3 @@
-precision highp float;
-
 #define PI 3.14159265358979323846
 #define MAX_DEPTH 150.
 #define MAX_STEPS 450

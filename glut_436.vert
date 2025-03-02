@@ -1,5 +1,3 @@
-//precision mediump float;
-
 attribute vec4 aPosition;
 
 varying vec4 v_uv;

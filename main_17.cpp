@@ -45,7 +45,13 @@
 #include "engine_common.h"
 
 #define OLC_PGE_APPLICATION
+#include "olcPixelGameEngine.h"
+#undef OLC_PGE_APPLICATION
+
 #define OPENSIMPLEXNOISE_STATIC_CONSTANTS
+#include "opensimplexnoise.h"
+#undef OPENSIMPLEXNOISE_STATIC_CONSTANTS
+
 #include "glut_360.h"
 #include "pge_361.h"
 #include "pge_362.h"

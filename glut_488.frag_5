@@ -1,3 +1,5 @@
+#version 130
+
 // glut_488_common.glsl
 #define pixel(a, p) texture(a, p/vec2(textureSize(a,0)))
 #define texel(a, p) texelFetch(a, ivec2(p-0.5),0)
@@ -90,7 +92,7 @@ void
 main ()
 {
     vec4 Q = pixel(ch0, gl_FragCoord.xy);
-    vec4 Qv = pixel(ch1, gl_FragCoord.xy);
+    //vec4 Qv = pixel(ch1, gl_FragCoord.xy);
     
     
     vec2 g = 0.04*normalize(Grad(ch0, gl_FragCoord.xy));

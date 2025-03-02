@@ -1,5 +1,3 @@
-//precision mediump float;
-
 uniform sampler2D uSampler;
 uniform float u_time;
 uniform float u_speed;

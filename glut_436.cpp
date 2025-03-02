@@ -169,9 +169,6 @@ engine_glut_436_draw (void)
   glColor3f (0.0f, 0.0f, 1.0f); glVertex3i (0, 0, 0); glVertex3i (0, 0, 100);
   glEnd ();
 
-  glActiveTexture (GL_TEXTURE0);
-  cb_data_p->texture.bind ();
-
   // update uniforms
   glProgramUniform1i (cb_data_p->shader.id_, cb_data_p->samplerLoc,
                       static_cast<GLint> (0));
@@ -196,7 +193,7 @@ engine_glut_436_draw (void)
                       static_cast<GLfloat> (cb_data_p->speed));
 
   glProgramUniform1f (cb_data_p->shader.id_, cb_data_p->tilingLoc,
-                    static_cast<GLfloat> (cb_data_p->tiling + (cb_data_p->mouseY * 0.01f)));
+                      static_cast<GLfloat> (cb_data_p->tiling + (cb_data_p->mouseY * 0.01f)));
 
   glProgramUniform1f (cb_data_p->shader.id_, cb_data_p->strengthLoc,
                       static_cast<GLfloat> (cb_data_p->strength + (cb_data_p->mouseX * 0.01f)));
@@ -219,7 +216,7 @@ engine_glut_436_draw (void)
 
   glutSwapBuffers ();
 
-  cb_data_p->texture.unbind ();
+  // cb_data_p->texture.unbind ();
 }
 
 void

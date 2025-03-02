@@ -1,9 +1,7 @@
-//precision mediump float;
-
 uniform vec2 iResolution;
 uniform float iTime;
 
-varying vec2 vTexCoord;
+//varying vec2 vTexCoord;
 
 // Platimum: 0, Gold: 1, Gold and Blue: 2
 #define COLOR 0

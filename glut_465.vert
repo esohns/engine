@@ -1,9 +1,7 @@
-//precision mediump float;
-
 attribute vec3 aPosition;
 attribute vec2 aTexCoord;
 
-varying vec2 vTexCoord;
+//varying vec2 vTexCoord;
 
 void
 main ()
@@ -17,10 +15,10 @@ main ()
   // Scale and shift to NDC (Normalize Device Coordinate) range [-1, 1]
   positionVec4.xy = positionVec4.xy * 2.0 - 1.0;
 
-  vTexCoord = positionVec4.xy;
-  vTexCoord.y *= -1.0;
-  vTexCoord.x = vTexCoord.x * 0.5 + 0.5;
-  vTexCoord.y = vTexCoord.y * 0.5 + 0.5;
+  //vTexCoord = positionVec4.xy;
+  //vTexCoord.y *= -1.0;
+  //vTexCoord.x = vTexCoord.x * 0.5 + 0.5;
+  //vTexCoord.y = vTexCoord.y * 0.5 + 0.5;
 
   // Set the final position of the vertex
   gl_Position = positionVec4;

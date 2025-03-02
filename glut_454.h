@@ -31,8 +31,6 @@
 
 enum sides { S_FRONT = 0, S_BACK, S_TOP, S_BOTTOM, S_LEFT, S_RIGHT };
 enum directions { D_UP = 0, D_RIGHT, D_DOWN, D_LEFT };
-static std::map<enum sides, std::vector<enum sides> > adjacencies;
-static std::map<enum sides, std::vector<int> >        rotations;
 
 struct position
 {
@@ -91,7 +89,9 @@ class agent
     std::vector<struct position> positions;
     bool                         isValid;
   };
-  struct break_position_result breakPosition (struct position& lastPos, struct position& newPos)
+  struct break_position_result breakPosition (std::map<enum sides, std::vector<enum sides> >& adjacencies,
+                                              std::map<enum sides, std::vector<int> >& rotations,
+                                              struct position& lastPos, struct position& newPos)
   {
     static float s = ENGINE_GLUT_454_DEFAULT_CUBE_SIZE / 2.0f;
     int rotationAngle;
@@ -159,7 +159,8 @@ class agent
     return p;
   }
 
-  void update ()
+  void update (std::map<enum sides, std::vector<enum sides> >& adjacencies,
+               std::map<enum sides, std::vector<int> >& rotations)
   {
     if (Common_Tools::testRandomProbability (ENGINE_GLUT_454_DEFAULT_W_CHANCE))
     {
@@ -194,7 +195,9 @@ class agent
         break;
     } // end SWITCH
     newPos.side = lastPos.side;
-    struct break_position_result breakPositionResult = breakPosition (lastPos, newPos);
+    struct break_position_result breakPositionResult = breakPosition (adjacencies,
+                                                                      rotations,
+                                                                      lastPos, newPos);
     if (breakPositionResult.isValid)
       positions.insert (positions.end (), breakPositionResult.positions.begin (), breakPositionResult.positions.end ());
     else
@@ -291,18 +294,20 @@ void engine_glut_454_visible (int);
 struct Engine_OpenGL_GLUT_454_CBData
 {
   // menu
-  bool                                         wireframe;
+  bool                                           wireframe;
 
   // camera
-  struct Engine_GL_Camera                      camera;
+  struct Engine_GL_Camera                        camera;
 
   // mouse
-  int                                          mousex;
-  int                                          mousey;
-  bool                                         mouse_0_ButtonDown;
+  int                                            mousex;
+  int                                            mousey;
+  bool                                           mouse_0_ButtonDown;
 
   // scene
-  std::vector<agent>                           agents;
+  std::map<enum sides, std::vector<enum sides> > adjacencies;
+  std::map<enum sides, std::vector<int> >        rotations;
+  std::vector<agent>                             agents;
 };
 
 #endif // GLUT_454_H

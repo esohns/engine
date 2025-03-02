@@ -686,6 +686,7 @@ do_work (int argc_in,
 
       // initialize GLUT
       glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
       glutInitWindowSize (ENGINE_GLUT_436_DEFAULT_WIDTH, ENGINE_GLUT_436_DEFAULT_HEIGHT);
 
@@ -750,13 +751,20 @@ do_work (int argc_in,
         glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("u_strength"));
       ACE_ASSERT (cb_data_s.strengthLoc != -1);
 
+      glActiveTexture (GL_TEXTURE0);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       if (!cb_data_s.texture.load (ACE_TEXT_ALWAYS_CHAR ("kitty-cat-kitten-pet.jpg"),
-                                   false)) // don't flip image in this case
+                                   false)) // don't flip image in this case, see the vertex shader
       {
         ACE_DEBUG ((LM_ERROR,
                     ACE_TEXT ("failed to load texture, aborting\n")));
         break;
       } // end IF
+      cb_data_s.texture.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+      glGenerateMipmap (GL_TEXTURE_2D);
 
       // START TIMING
       cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();

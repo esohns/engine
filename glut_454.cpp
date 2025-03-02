@@ -167,7 +167,7 @@ engine_glut_454_draw (void)
        iterator != cb_data_p->agents.end ();
        ++iterator)
   {
-    (*iterator).update ();
+    (*iterator).update (cb_data_p->adjacencies, cb_data_p->rotations);
     (*iterator).show ();
   } // end FOR
 

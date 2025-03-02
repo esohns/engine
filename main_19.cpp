@@ -339,6 +339,9 @@ do_work (int argc_in,
         glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iMouse"));
       ACE_ASSERT (cb_data_s.mouseLoc != -1);
 
+      glActiveTexture (GL_TEXTURE0);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       if (!cb_data_s.texture.load (ACE_TEXT_ALWAYS_CHAR ("cat.jpg"),
                                    false)) // don't flip image in this case
       {
@@ -346,6 +349,10 @@ do_work (int argc_in,
                     ACE_TEXT ("failed to load texture, aborting\n")));
         break;
       } // end IF
+      cb_data_s.texture.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+      glGenerateMipmap (GL_TEXTURE_2D);
 
       glutMainLoop ();
 

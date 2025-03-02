@@ -1,5 +1,3 @@
-//precision mediump float;
-
 uniform vec2 iResolution;
 uniform sampler2D iImage;
 uniform vec2 iMouse;

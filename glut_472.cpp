@@ -171,7 +171,7 @@ engine_glut_472_draw (void)
   std::chrono::duration<float> elapsed_seconds = current_second - last_second;
   if (elapsed_seconds.count () > 1.0f)
   {
-    std::string title_string = ACE_TEXT_ALWAYS_CHAR ("engine GLUT 471 - ");
+    std::string title_string = ACE_TEXT_ALWAYS_CHAR ("engine GLUT 472 - ");
     std::ostringstream converter;
     converter << std::setprecision (2) << std::fixed << last_frame_count_i / elapsed_seconds.count ();
     title_string += converter.str ();
@@ -183,7 +183,7 @@ engine_glut_472_draw (void)
   else
     ++last_frame_count_i;
 
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // reset transformations
   glMatrixMode (GL_MODELVIEW);

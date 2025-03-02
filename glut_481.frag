@@ -1,4 +1,4 @@
-//precision mediump float;
+#version 130
 
 uniform vec2 iResolution;
 uniform sampler2D iChannel0;

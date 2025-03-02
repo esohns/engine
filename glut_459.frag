@@ -1,5 +1,3 @@
-//precision mediump float;
-
 uniform vec2 uResolution;
 uniform vec2 uPhase;
 uniform float uScale;

@@ -599,19 +599,19 @@ do_work (int argc_in,
       glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
       glutAttachMenu (GLUT_RIGHT_BUTTON);
 
-      adjacencies[S_FRONT] = { S_TOP, S_RIGHT, S_BOTTOM, S_LEFT };
-      adjacencies[S_RIGHT] = {S_TOP, S_BACK, S_BOTTOM, S_FRONT};
-      adjacencies[S_BACK] = { S_TOP, S_LEFT, S_BOTTOM, S_RIGHT };
-      adjacencies[S_LEFT] = { S_TOP, S_FRONT, S_BOTTOM, S_BACK };
-      adjacencies[S_TOP] = { S_BACK, S_RIGHT, S_FRONT, S_LEFT };
-      adjacencies[S_BOTTOM] = { S_FRONT, S_RIGHT, S_BACK, S_LEFT };
+      cb_data_s.adjacencies[S_FRONT] = { S_TOP, S_RIGHT, S_BOTTOM, S_LEFT };
+      cb_data_s.adjacencies[S_RIGHT] = {S_TOP, S_BACK, S_BOTTOM, S_FRONT};
+      cb_data_s.adjacencies[S_BACK] = { S_TOP, S_LEFT, S_BOTTOM, S_RIGHT };
+      cb_data_s.adjacencies[S_LEFT] = { S_TOP, S_FRONT, S_BOTTOM, S_BACK };
+      cb_data_s.adjacencies[S_TOP] = { S_BACK, S_RIGHT, S_FRONT, S_LEFT };
+      cb_data_s.adjacencies[S_BOTTOM] = { S_FRONT, S_RIGHT, S_BACK, S_LEFT };
 
-      rotations[S_FRONT] = { 0, 0, 0, 0 };
-      rotations[S_RIGHT] = { 270, 0, 90, 0 };
-      rotations[S_BACK] = { 180, 0, 180, 0 };
-      rotations[S_LEFT] = { 90, 0, 270, 0 };
-      rotations[S_TOP] = { 180, 90, 0, 270 };
-      rotations[S_BOTTOM] = { 0, 270, 180, 90 };
+      cb_data_s.rotations[S_FRONT] = { 0, 0, 0, 0 };
+      cb_data_s.rotations[S_RIGHT] = { 270, 0, 90, 0 };
+      cb_data_s.rotations[S_BACK] = { 180, 0, 180, 0 };
+      cb_data_s.rotations[S_LEFT] = { 90, 0, 270, 0 };
+      cb_data_s.rotations[S_TOP] = { 180, 90, 0, 270 };
+      cb_data_s.rotations[S_BOTTOM] = { 0, 270, 180, 90 };
 
       for (int i = 0; i < ENGINE_GLUT_454_DEFAULT_NUMBER_OF_AGENTS; i++)
         cb_data_s.agents.push_back (agent ());
@@ -1019,6 +1019,7 @@ do_work (int argc_in,
 
       // initialize GLUT
       glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
       glutInitWindowSize (ENGINE_GLUT_459_DEFAULT_WIDTH, ENGINE_GLUT_459_DEFAULT_HEIGHT);
 
@@ -1102,6 +1103,8 @@ do_work (int argc_in,
 
       gtk_manager_p->stop (true,   // wait ?
                            false);
+
+      cb_data_s.shader.reset ();
 
       result = true;
 
