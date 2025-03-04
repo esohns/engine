@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 
-#include "glut_502.h"
+#include "glut_509.h"
 
 #include "GL/glew.h"
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
@@ -25,7 +25,7 @@
 #include "engine_common.h"
 
 void
-engine_glut_502_reshape (int width_in, int height_in)
+engine_glut_509_reshape (int width_in, int height_in)
 {
   glViewport (0, 0, width_in, height_in);
 
@@ -44,12 +44,12 @@ engine_glut_502_reshape (int width_in, int height_in)
 }
 
 void
-engine_glut_502_key (unsigned char key_in,
+engine_glut_509_key (unsigned char key_in,
                      int x,
                      int y)
 {
-  struct Engine_OpenGL_GLUT_502_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_502_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_509_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_509_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -61,12 +61,12 @@ engine_glut_502_key (unsigned char key_in,
 }
 
 void
-engine_glut_502_key_up (unsigned char key_in,
+engine_glut_509_key_up (unsigned char key_in,
                         int x,
                         int y)
 {
-  struct Engine_OpenGL_GLUT_502_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_502_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_509_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_509_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -78,12 +78,12 @@ engine_glut_502_key_up (unsigned char key_in,
 }
 
 void
-engine_glut_502_key_special (int key_in,
+engine_glut_509_key_special (int key_in,
                              int x,
                              int y)
 {
-  struct Engine_OpenGL_GLUT_502_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_502_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_509_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_509_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -98,12 +98,12 @@ engine_glut_502_key_special (int key_in,
 }
 
 void
-engine_glut_502_key_special_up (int key_in,
+engine_glut_509_key_special_up (int key_in,
                                 int x,
                                 int y)
 {
-  struct Engine_OpenGL_GLUT_502_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_502_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_509_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_509_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (key_in)
@@ -121,10 +121,10 @@ engine_glut_502_key_special_up (int key_in,
 }
 
 void
-engine_glut_502_menu (int entry_in)
+engine_glut_509_menu (int entry_in)
 {
-  struct Engine_OpenGL_GLUT_502_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_502_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_509_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_509_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (entry_in)
@@ -138,10 +138,10 @@ engine_glut_502_menu (int entry_in)
 }
 
 void
-engine_glut_502_mouse_button (int button, int state, int x, int y)
+engine_glut_509_mouse_button (int button, int state, int x, int y)
 {
-  struct Engine_OpenGL_GLUT_502_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_502_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_509_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_509_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   switch (button)
@@ -157,10 +157,10 @@ engine_glut_502_mouse_button (int button, int state, int x, int y)
 }
 
 void
-engine_glut_502_mouse_move (int x, int y)
+engine_glut_509_mouse_move (int x, int y)
 {
-  struct Engine_OpenGL_GLUT_502_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_502_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_509_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_509_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   cb_data_p->mouseX = x;
@@ -168,26 +168,26 @@ engine_glut_502_mouse_move (int x, int y)
 }
 
 void
-engine_glut_502_timer (int v)
+engine_glut_509_timer (int v)
 {
-  struct Engine_OpenGL_GLUT_502_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_502_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_509_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_509_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   glutPostRedisplay ();
 
   glutTimerFunc (1000 / 60,
-                 engine_glut_502_timer,
+                 engine_glut_509_timer,
                  v);
 }
 
 void
-engine_glut_502_draw (void)
+engine_glut_509_draw (void)
 {
   static int frame_counter_i = 1;
 
-  struct Engine_OpenGL_GLUT_502_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_502_CBData*> (glutGetWindowData ());
+  struct Engine_OpenGL_GLUT_509_CBData* cb_data_p =
+    static_cast<struct Engine_OpenGL_GLUT_509_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
 
   //glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -215,11 +215,14 @@ engine_glut_502_draw (void)
 
   // update uniforms
   glProgramUniform2f (cb_data_p->shader.id_, cb_data_p->resolutionLoc,
-                      static_cast<GLfloat> (ENGINE_GLUT_502_DEFAULT_WIDTH),
-                      static_cast<GLfloat> (ENGINE_GLUT_502_DEFAULT_HEIGHT));
+                      static_cast<GLfloat> (ENGINE_GLUT_509_DEFAULT_WIDTH),
+                      static_cast<GLfloat> (ENGINE_GLUT_509_DEFAULT_HEIGHT));
 
   glProgramUniform1f (cb_data_p->shader.id_, cb_data_p->timeLoc,
                       static_cast<GLfloat> (d.count () * 0.001f));
+
+  glProgramUniform1i (cb_data_p->shader.id_, cb_data_p->channel0Loc,
+                      static_cast<GLint> (0));
 
   glColor3f (1.0f, 1.0f, 1.0f);
   for (int y = 0; y < cb_data_p->rows - 1; ++y)
@@ -239,16 +242,16 @@ engine_glut_502_draw (void)
 }
 
 void
-engine_glut_502_idle (void)
+engine_glut_509_idle (void)
 {
   //glutPostRedisplay ();
 }
 
 void
-engine_glut_502_visible (int vis)
+engine_glut_509_visible (int vis)
 {
   if (vis == GLUT_VISIBLE)
-    glutIdleFunc (engine_glut_502_idle);
+    glutIdleFunc (engine_glut_509_idle);
   else
     glutIdleFunc (NULL);
 }
