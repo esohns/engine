@@ -48,11 +48,13 @@
 #define OPENSIMPLEXNOISE_STATIC_CONSTANTS
 #include "glut_510.h"
 #include "glut_511.h"
+#include "glut_512.h"
 
 enum Engine_ModeType
 {
   ENGINE_MODE_DEFAULT = 510,
   ENGINE_MODE_511,
+  ENGINE_MODE_512,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -542,6 +544,111 @@ do_work (int argc_in,
 
       break;
     }
+    case ENGINE_MODE_512:
+    {
+      struct Engine_OpenGL_GLUT_512_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_512_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_512_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_512_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.mouseX = ENGINE_GLUT_512_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_512_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_512_DEFAULT_WIDTH, ENGINE_GLUT_512_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 512");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_512_draw);
+      glutReshapeFunc (engine_glut_512_reshape);
+      glutVisibilityFunc (engine_glut_512_visible);
+
+      glutKeyboardFunc (engine_glut_512_key);
+      glutSpecialFunc (engine_glut_512_key_special);
+      glutMouseFunc (engine_glut_512_mouse_button);
+      glutMotionFunc (engine_glut_512_mouse_move);
+      glutPassiveMotionFunc (engine_glut_512_mouse_move);
+      glutTimerFunc (100, engine_glut_512_timer, 0);
+
+      glutCreateMenu (engine_glut_512_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glActiveTexture (GL_TEXTURE0);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      if (!cb_data_s.texture0.load (ACE_TEXT_ALWAYS_CHAR ("glut_512_channel0.png")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load texture, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.texture0.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_2D);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_512.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_512.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.shader.use ();
+
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+      cb_data_s.channel0Loc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
+      ACE_ASSERT (cb_data_s.channel0Loc != -1);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      cb_data_s.shader.reset ();
+
+      cb_data_s.texture0.reset ();
+
+      result = true;
+
+      break;
+    }
     default:
     {
       ACE_DEBUG ((LM_ERROR,
@@ -595,20 +702,20 @@ ACE_TMAIN (int argc_in,
   bool print_version_and_exit = false;
 
   // step1b: parse/process/validate configuration
-  if (!do_process_arguments (argc_in,
-                             argv_in,
-                             ui_definition_file_path,
-                             log_to_file,
-                             mode_type_e,
-                             trace_information,
-                             print_version_and_exit))
+  if (unlikely (!do_process_arguments (argc_in,
+                                       argv_in,
+                                       ui_definition_file_path,
+                                       log_to_file,
+                                       mode_type_e,
+                                       trace_information,
+                                       print_version_and_exit)))
   {
-    do_print_usage (ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0])));
+    do_print_usage (ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0], ACE_DIRECTORY_SEPARATOR_CHAR)));
     goto clean;
   } // end IF
-  if (print_version_and_exit)
+  if (unlikely (print_version_and_exit))
   {
-    do_print_version (ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0])));
+    do_print_version (ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0], ACE_DIRECTORY_SEPARATOR_CHAR)));
     result = EXIT_SUCCESS;
     goto clean;
   } // end IF
@@ -619,11 +726,11 @@ ACE_TMAIN (int argc_in,
     default:
       break;
   } // end SWITCH
-  if (!Common_File_Tools::isReadable (ui_definition_file_path))
+  if (unlikely (!Common_File_Tools::isReadable (ui_definition_file_path)))
   {
     ACE_DEBUG ((LM_ERROR,
                 ACE_TEXT ("invalid argument(s), aborting\n")));
-    do_print_usage (ACE::basename (argv_in[0]));
+    do_print_usage (ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0], ACE_DIRECTORY_SEPARATOR_CHAR)));
     goto clean;
   } // end IF
 
@@ -631,13 +738,13 @@ ACE_TMAIN (int argc_in,
   if (log_to_file)
     log_file_name =
       Common_Log_Tools::getLogFilename (ACE_TEXT_ALWAYS_CHAR (engine_PACKAGE_NAME),
-                                        ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0])));
-  if (!Common_Log_Tools::initialize (ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0])), // program name
-                                     log_file_name,              // log file name
-                                     false,                      // log to syslog ?
-                                     false,                      // trace messages ?
-                                     trace_information,          // debug messages ?
-                                     NULL))                      // logger ?
+                                        ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0], ACE_DIRECTORY_SEPARATOR_CHAR)));
+  if (unlikely (!Common_Log_Tools::initialize (ACE_TEXT_ALWAYS_CHAR (ACE::basename (argv_in[0], ACE_DIRECTORY_SEPARATOR_CHAR)), // program name
+                                               log_file_name,              // log file name
+                                               false,                      // log to syslog ?
+                                               false,                      // trace messages ?
+                                               trace_information,          // debug messages ?
+                                               NULL)))                     // logger ?
   {
     ACE_DEBUG ((LM_ERROR,
                 ACE_TEXT ("failed to Common_Log_Tools::initialize(), aborting\n")));
@@ -651,7 +758,7 @@ ACE_TMAIN (int argc_in,
                       ui_definition_file_path,
                       mode_type_e);
   timer.stop ();
-  if (!result_3)
+  if (unlikely (!result_3))
   {
     ACE_DEBUG ((LM_ERROR,
                 ACE_TEXT ("failed to do_work(), aborting\n")));
@@ -671,7 +778,7 @@ ACE_TMAIN (int argc_in,
   elapsed_time.user_time = 0.0;
   elapsed_time.system_time = 0.0;
   result_2 = process_profile.elapsed_time (elapsed_time);
-  if (result_2 == -1)
+  if (unlikely (result_2 == -1))
   {
     ACE_DEBUG ((LM_ERROR,
                 ACE_TEXT ("failed to ACE_Profile_Timer::elapsed_time: \"%m\", aborting\n")));
@@ -721,7 +828,7 @@ clean:
   // *PORTABILITY*: on Windows, finalize ACE
 #if defined (ACE_WIN32) || defined (ACE_WIN64)
   result = ACE::fini ();
-  if (result == -1)
+  if (unlikely (result == -1))
     ACE_DEBUG ((LM_ERROR,
                 ACE_TEXT ("failed to ACE::fini(): \"%m\", continuing\n")));
 #endif // ACE_WIN32 || ACE_WIN64
