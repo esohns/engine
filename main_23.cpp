@@ -3183,7 +3183,7 @@ do_work (int argc_in,
         glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
       ACE_ASSERT (cb_data_s.S2resolutionLoc != -1);
       cb_data_s.S2timeLoc =
-        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+        glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
       ACE_ASSERT(cb_data_s.S2timeLoc != -1);
       cb_data_s.S2channel0Loc =
         glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));

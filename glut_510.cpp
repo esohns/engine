@@ -184,8 +184,6 @@ engine_glut_510_timer (int v)
 void
 engine_glut_510_draw (void)
 {
-  static int frame_counter_i = 1;
-
   struct Engine_OpenGL_GLUT_510_CBData* cb_data_p =
     static_cast<struct Engine_OpenGL_GLUT_510_CBData*> (glutGetWindowData ());
   ACE_ASSERT (cb_data_p);
@@ -234,8 +232,6 @@ engine_glut_510_draw (void)
   } // end FOR
 
   glutSwapBuffers ();
-
-  ++frame_counter_i;
 }
 
 void
