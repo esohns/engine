@@ -71,7 +71,7 @@ void ballcollis()
 void
 main ()
 {
-  mytime = float(iFrame - 1) / 60.0;
+  mytime = float(iFrame) / 60.0;
   //mytime = getpos(vec2(0.0,SIZY)).x;
 
   gl_FragColor = vec4 (0.0);

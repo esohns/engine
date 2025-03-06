@@ -1999,15 +1999,19 @@ do_work (int argc_in,
       cb_data_s.S1resolutionLoc = -1;
       cb_data_s.S1frameLoc = -1;
       cb_data_s.S1channel1Loc = -1;
+
       cb_data_s.S2resolutionLoc = -1;
       cb_data_s.S2frameLoc = -1;
       cb_data_s.S2channel1Loc = -1;
+
       cb_data_s.S3resolutionLoc = -1;
       cb_data_s.S3frameLoc = -1;
       cb_data_s.S3channel1Loc = -1;
+
       cb_data_s.S4resolutionLoc = -1;
       cb_data_s.S4frameLoc = -1;
       cb_data_s.S4channel1Loc = -1;
+
       cb_data_s.S5resolutionLoc = -1;
       cb_data_s.S5frameLoc = -1;
       cb_data_s.S5channel0Loc = -1;
@@ -2017,6 +2021,7 @@ do_work (int argc_in,
       cb_data_s.FBO2 = 0;
       cb_data_s.FBO3 = 0;
       cb_data_s.FBO4 = 0;
+
       cb_data_s.VAO = 0;
       cb_data_s.VBO = 0;
 
@@ -2121,8 +2126,8 @@ do_work (int argc_in,
       glPixelStorei (GL_PACK_ALIGNMENT, 1);
 
       glActiveTexture (GL_TEXTURE0);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       if (!cb_data_s.texture0.load (ACE_TEXT_ALWAYS_CHAR ("glut_504_channel0.png")))
       {
         ACE_DEBUG ((LM_ERROR,
@@ -2145,8 +2150,8 @@ do_work (int argc_in,
       //                   the result of shader1
       glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_504_DEFAULT_WIDTH, ENGINE_GLUT_504_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      //glGenerateMipmap (GL_TEXTURE_2D);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE2);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2158,8 +2163,8 @@ do_work (int argc_in,
       //                   the result of shader2
       glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_504_DEFAULT_WIDTH, ENGINE_GLUT_504_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      //glGenerateMipmap (GL_TEXTURE_2D);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+      glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE3);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2171,8 +2176,8 @@ do_work (int argc_in,
       //                   the result of shader3
       glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_504_DEFAULT_WIDTH, ENGINE_GLUT_504_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      //glGenerateMipmap (GL_TEXTURE_2D);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+      glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE4);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2184,8 +2189,8 @@ do_work (int argc_in,
       //                   the result of shader4
       glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_504_DEFAULT_WIDTH, ENGINE_GLUT_504_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      //glGenerateMipmap (GL_TEXTURE_2D);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+      glGenerateMipmap (GL_TEXTURE_2D);
 
       cb_data_s.shader1.use ();
       cb_data_s.S1resolutionLoc =
@@ -2204,7 +2209,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S2resolutionLoc != -1);
       cb_data_s.S2frameLoc =
         glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
-      ACE_ASSERT (cb_data_s.S2frameLoc != -1);
+      //ACE_ASSERT (cb_data_s.S2frameLoc != -1);
       cb_data_s.S2channel1Loc =
         glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
       ACE_ASSERT (cb_data_s.S2channel1Loc != -1);
@@ -2215,7 +2220,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S3resolutionLoc != -1);
       cb_data_s.S3frameLoc =
         glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
-      ACE_ASSERT (cb_data_s.S3frameLoc != -1);
+      //ACE_ASSERT (cb_data_s.S3frameLoc != -1);
       cb_data_s.S3channel1Loc =
         glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
       ACE_ASSERT (cb_data_s.S3channel1Loc != -1);
@@ -2226,7 +2231,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S4resolutionLoc != -1);
       cb_data_s.S4frameLoc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
-      ACE_ASSERT (cb_data_s.S4frameLoc != -1);
+      //ACE_ASSERT (cb_data_s.S4frameLoc != -1);
       cb_data_s.S4channel1Loc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
       ACE_ASSERT (cb_data_s.S4channel1Loc != -1);
