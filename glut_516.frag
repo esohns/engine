@@ -1,0 +1,62 @@
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel2;
+
+vec2 R;
+float N;
+
+vec4 T ( vec2 U ) {return texture(iChannel0,U/R);}
+
+float X (vec2 U0, vec2 U, vec2 U1, inout vec4 Q, vec2 r)
+{
+  vec2 V = U + r, u = T(V).xy,
+        V0 = V - u,
+        V1 = V + u;
+  float P = T (V0).z, rr = length(r);
+  Q.xy -= r*(P-Q.z)/rr/N;
+  return (0.5*(length(V0-U0)-length(V1-U1))+P)/N;
+}
+
+float ln (vec2 p, vec2 a, vec2 b)
+{
+  return length(p-a-(b-a)*clamp(dot(p-a,b-a)/dot(b-a,b-a),0.,1.));
+}
+
+void
+main ()
+{
+  vec4 Q;
+  vec2 U = gl_FragCoord.xy;
+  R = iResolution.xy;
+  vec2 U0 = U - T(U).xy,
+       U1 = U + T(U).xy;
+  float P = 0.; Q = T(U0);
+  N = 4.;
+  P += X (U0,U,U1,Q, vec2( 1, 0) );
+  P += X (U0,U,U1,Q, vec2( 0,-1) );
+  P += X (U0,U,U1,Q, vec2(-1, 0) );
+  P += X (U0,U,U1,Q, vec2( 0, 1) );
+  Q.z = P;
+  if (iFrame == 1)
+    Q = vec4(0);
+  if (U.x < 1.||U.y < 1.||R.x-U.x < 1.||R.y-U.y < 1.)
+    Q.xy *= 0.;
+
+  if (length(U-vec2(0.1,0.5)*R) < .03*R.y) 
+    Q.xy= Q.xy*.9+.1*vec2(.5,-.3);
+  if (length(U-vec2(0.7,0.3)*R) < .03*R.y) 
+    Q.xy= Q.xy*.9+.1*vec2(-.6,.3);
+  if (length(U-vec2(0.2,0.2)*R) < .03*R.y) 
+    Q.xy= Q.xy*.9+.1*vec2(.4,.6);
+  if (length(U-vec2(0.7,0.5)*R) < .03*R.y) 
+    Q.xy= Q.xy*.9+.1*vec2(-.1,-.3);
+  if (length(U-vec2(0.5,0.6)*R) < .03*R.y) 
+    Q.xy= Q.xy*.9+.1*vec2(0,-.7);
+
+  vec4 mo = texture(iChannel2,vec2(0));
+  float l = ln(U,mo.xy,mo.zw);
+  if (mo.z > 0. && l < 10.) Q.xyz += vec3((10.-l)*(mo.xy-mo.zw)/R.y,(10.-l)*(length(mo.xy-mo.zw)/R.y)*0.02);
+
+  gl_FragColor = Q;
+}

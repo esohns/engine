@@ -1,0 +1,65 @@
+uniform vec2 iResolution;
+uniform float iTime;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+
+vec2 R;
+float N;
+
+vec4 T ( vec2 U ) {return texture(iChannel0,U/R);}
+
+vec4 P ( vec2 U ) {return texture(iChannel1,U/R);}
+
+void swap (vec2 U, inout vec4 Q, vec2 u)
+{
+  vec4 p = P(U+u);
+  float dl = length(U-Q.xy) - length(U-p.xy);
+  float e = .1;
+  // allows for probabistic reproduction
+  Q = mix(Q,p,0.5+0.5*sign(floor(1e5*dl)));//the value next to dl adjusts the proabability of reproduction
+    
+  //uncomment and comment the line above to make it not self healing 
+  //Q = mix(Q,p,dl>0.?1.:0.);
+}
+
+float ln (vec2 p, vec2 a, vec2 b)
+{
+  return length(p-a-(b-a)*clamp(dot(p-a,b-a)/dot(b-a,b-a),0.,1.));
+}
+
+void
+main ()
+{
+  vec4 Q;
+  vec2 U = gl_FragCoord.xy;
+  R = iResolution.xy;
+  U = U-T(U).xy;
+  Q = P(U);
+  swap(U,Q,vec2(1,0));
+  swap(U,Q,vec2(0,1));
+  swap(U,Q,vec2(0,-1));
+  swap(U,Q,vec2(-1,0));
+
+  if ((length(Q.xy-vec2(0.1,0.5)*R) < .02*R.y))
+    Q.zw = vec2(1,1);
+  if ((length(Q.xy-vec2(0.7,0.3)*R) < .02*R.y))
+    Q.zw = vec2(3,3);
+  if ((length(Q.xy-vec2(0.2,0.2)*R) < .02*R.y))
+    Q.zw = vec2(6,5);
+  if (length(Q.xy-vec2(0.7,0.5)*R) < .02*R.y)
+    Q.zw = vec2(2,7);
+  if (length(Q.xy-vec2(0.5,0.6)*R) < .02*R.y) 
+    Q.zw = vec2(5,4);
+
+  vec4 mo = texture(iChannel2,vec2(0));
+  if (mo.z > 0. && ln(U,mo.xy,mo.zw) < 10.) Q = vec4(U,1,3.*sin(.4*iTime));
+ 
+  // advect this particle with the fluid
+  Q.xy = Q.xy + T(Q.xy).xy;
+  if (iFrame == 1)
+    Q = vec4(floor(U/10.+0.5)*10.,0.2,-.1);
+
+  gl_FragColor = Q;
+}

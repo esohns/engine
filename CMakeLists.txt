@@ -1534,6 +1534,12 @@ set (engine_24_EXE_SRCS
      glut_512.h
      glut_513.cpp
      glut_513.h
+     glut_514.cpp
+     glut_514.h
+     glut_515.cpp
+     glut_515.h
+     glut_516.cpp
+     glut_516.h
      stdafx.h)
 
 set (EXECUTABLE_24 engine_24)
@@ -2434,6 +2440,16 @@ install (FILES
          "glut_512.frag"
          "glut_513.vert"
          "glut_513.frag"
+         "glut_514.vert"
+         "glut_514.frag"
+         "glut_515.vert"
+         "glut_515.frag"
+         "glut_516.vert"
+         "glut_516.frag"
+         "glut_516.frag_2"
+         "glut_516.frag_3"
+         "glut_516.frag_4"
+         "glut_516.frag_5"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
