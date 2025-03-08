@@ -1,3 +1,5 @@
+#version 130
+
 // glut_507_common.glsl
 #define N 30
 #define L .28

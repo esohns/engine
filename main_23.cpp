@@ -2574,7 +2574,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S3resolutionLoc != -1);
       cb_data_s.S3frameLoc =
         glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
-      ACE_ASSERT (cb_data_s.S3frameLoc != -1);
+      //ACE_ASSERT (cb_data_s.S3frameLoc != -1);
       cb_data_s.S3channel1Loc =
         glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
       ACE_ASSERT (cb_data_s.S3channel1Loc != -1);
@@ -2585,7 +2585,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S4resolutionLoc != -1);
       cb_data_s.S4frameLoc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
-      ACE_ASSERT (cb_data_s.S4frameLoc != -1);
+      //ACE_ASSERT (cb_data_s.S4frameLoc != -1);
       cb_data_s.S4channel2Loc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel2"));
       ACE_ASSERT (cb_data_s.S4channel2Loc != -1);
@@ -2599,7 +2599,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S5resolutionLoc != -1);
       cb_data_s.S5frameLoc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
-      ACE_ASSERT (cb_data_s.S5frameLoc != -1);
+      //ACE_ASSERT (cb_data_s.S5frameLoc != -1);
       cb_data_s.S5channel1Loc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
       ACE_ASSERT (cb_data_s.S5channel1Loc != -1);
@@ -2927,7 +2927,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S3resolutionLoc != -1);
       cb_data_s.S3frameLoc =
         glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
-      ACE_ASSERT (cb_data_s.S3frameLoc != -1);
+//      ACE_ASSERT (cb_data_s.S3frameLoc != -1);
       cb_data_s.S3channel1Loc =
         glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
       ACE_ASSERT (cb_data_s.S3channel1Loc != -1);
@@ -2938,7 +2938,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S4resolutionLoc != -1);
       cb_data_s.S4frameLoc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
-      ACE_ASSERT (cb_data_s.S4frameLoc != -1);
+      //ACE_ASSERT (cb_data_s.S4frameLoc != -1);
       cb_data_s.S4channel2Loc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel2"));
       ACE_ASSERT (cb_data_s.S4channel2Loc != -1);
@@ -2952,7 +2952,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S5resolutionLoc != -1);
       cb_data_s.S5frameLoc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
-      ACE_ASSERT (cb_data_s.S5frameLoc != -1);
+      //ACE_ASSERT (cb_data_s.S5frameLoc != -1);
       cb_data_s.S5channel1Loc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
       ACE_ASSERT (cb_data_s.S5channel1Loc != -1);

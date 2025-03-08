@@ -1,3 +1,5 @@
+#version 130
+
 // glut_506_common.glsl
 vec2 R; int I;
 #define A(U) texture(iChannel0,(U)/R)
