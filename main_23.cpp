@@ -2136,7 +2136,7 @@ do_work (int argc_in,
       } // end IF
       cb_data_s.texture0.bind ();
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
       glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE1);
@@ -2149,9 +2149,9 @@ do_work (int argc_in,
       // *IMPORTANT NOTE*: generate a floating point-format texture to contain
       //                   the result of shader1
       glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_504_DEFAULT_WIDTH, ENGINE_GLUT_504_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-      glGenerateMipmap (GL_TEXTURE_2D);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      //glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE2);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2162,9 +2162,9 @@ do_work (int argc_in,
       // *IMPORTANT NOTE*: generate a floating point-format texture to contain
       //                   the result of shader2
       glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_504_DEFAULT_WIDTH, ENGINE_GLUT_504_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-      glGenerateMipmap (GL_TEXTURE_2D);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      //glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE3);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2175,9 +2175,9 @@ do_work (int argc_in,
       // *IMPORTANT NOTE*: generate a floating point-format texture to contain
       //                   the result of shader3
       glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_504_DEFAULT_WIDTH, ENGINE_GLUT_504_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-      glGenerateMipmap (GL_TEXTURE_2D);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      //glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE4);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2188,9 +2188,9 @@ do_work (int argc_in,
       // *IMPORTANT NOTE*: generate a floating point-format texture to contain
       //                   the result of shader4
       glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_504_DEFAULT_WIDTH, ENGINE_GLUT_504_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-      glGenerateMipmap (GL_TEXTURE_2D);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      //glGenerateMipmap (GL_TEXTURE_2D);
 
       cb_data_s.shader1.use ();
       cb_data_s.S1resolutionLoc =
