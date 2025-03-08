@@ -307,12 +307,18 @@ engine_glut_504_draw (void)
   glProgramUniform1i (cb_data_p->shader5.id_, cb_data_p->S5channel0Loc,
                       static_cast<GLint> (0));
 
+  glActiveTexture (GL_TEXTURE1);
+  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
   glProgramUniform1i (cb_data_p->shader5.id_, cb_data_p->S5channel1Loc,
                       static_cast<GLint> (1));
 
   // draw render pass 5 to screen
   glDrawArrays (GL_TRIANGLES, 0, 6); // 2 triangles --> 6 vertices
   //glDrawArrays (GL_QUADS, 0, 4); // 1 quad --> 4 vertices
+
+  glActiveTexture (GL_TEXTURE1);
+  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   glBindVertexArray (0);
 
