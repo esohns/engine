@@ -1993,7 +1993,7 @@ do_work (int argc_in,
       break;
     }
     case ENGINE_MODE_504:
-    { // *TODO*: something is wrong: doesn't look like: https://www.shadertoy.com/view/MldXWX
+    {
       struct Engine_OpenGL_GLUT_504_CBData cb_data_s;
 
       cb_data_s.S1resolutionLoc = -1;
