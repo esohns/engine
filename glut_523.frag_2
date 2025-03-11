@@ -1,0 +1,220 @@
+// glut_523_common.glsl
+#define PI 3.14159265359
+
+float
+iSphere (vec3 ro, vec3 rd, vec4 sph)
+{
+  vec3 oc = ro - sph.xyz;
+  float b = dot( oc, rd );
+  float c = dot( oc, oc ) - sph.w*sph.w;
+  float h = b*b - c;
+  if( h<0.0 ) return -1.0;
+  return -b - sqrt( h );
+}
+
+#define ITERATIONS 4
+
+#define HASHSCALE1 .1031
+#define HASHSCALE3 vec3(.1031, .1030, .0973)
+#define HASHSCALE4 vec4(.1031, .1030, .0973, .1099)
+
+float
+hash11 (float p)
+{
+  vec3 p3 = fract(vec3(p) * HASHSCALE1);
+  p3 += dot(p3, p3.yzx + 19.19);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+float
+hash12 (vec2 p)
+{
+  vec3 p3  = fract(vec3(p.xyx) * HASHSCALE1);
+  p3 += dot(p3, p3.yzx + 19.19);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+float
+hash13 (vec3 p3)
+{
+  p3  = fract(p3 * HASHSCALE1);
+  p3 += dot(p3, p3.yzx + 19.19);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+vec2
+hash21 (float p)
+{
+  vec3 p3 = fract(vec3(p) * HASHSCALE3);
+  p3 += dot(p3, p3.yzx + 19.19);
+  return fract((p3.xx+p3.yz)*p3.zy);
+}
+
+vec2
+hash22 (vec2 p)
+{
+  vec3 p3 = fract(vec3(p.xyx) * HASHSCALE3);
+  p3 += dot(p3, p3.yzx+19.19);
+  return fract((p3.xx+p3.yz)*p3.zy);
+
+}
+
+vec2
+hash23 (vec3 p3)
+{
+  p3 = fract(p3 * HASHSCALE3);
+  p3 += dot(p3, p3.yzx+19.19);
+  return fract((p3.xx+p3.yz)*p3.zy);
+}
+
+vec3
+hash31 (float p)
+{
+  vec3 p3 = fract(vec3(p) * HASHSCALE3);
+  p3 += dot(p3, p3.yzx+19.19);
+  return fract((p3.xxy+p3.yzz)*p3.zyx); 
+}
+
+vec3
+hash32 (vec2 p)
+{
+  vec3 p3 = fract(vec3(p.xyx) * HASHSCALE3);
+  p3 += dot(p3, p3.yxz+19.19);
+  return fract((p3.xxy+p3.yzz)*p3.zyx);
+}
+
+vec3
+hash33 (vec3 p3)
+{
+  p3 = fract(p3 * HASHSCALE3);
+  p3 += dot(p3, p3.yxz+19.19);
+  return fract((p3.xxy + p3.yxx)*p3.zyx);
+}
+
+vec4
+hash41 (float p)
+{
+  vec4 p4 = fract(vec4(p) * HASHSCALE4);
+  p4 += dot(p4, p4.wzxy+19.19);
+  return fract((p4.xxyz+p4.yzzw)*p4.zywx);
+}
+
+vec4
+hash42 (vec2 p)
+{
+  vec4 p4 = fract(vec4(p.xyxy) * HASHSCALE4);
+  p4 += dot(p4, p4.wzxy+19.19);
+  return fract((p4.xxyz+p4.yzzw)*p4.zywx);
+}
+
+vec4
+hash43 (vec3 p)
+{
+  vec4 p4 = fract(vec4(p.xyzx)  * HASHSCALE4);
+  p4 += dot(p4, p4.wzxy+19.19);
+  return fract((p4.xxyz+p4.yzzw)*p4.zywx);
+}
+
+vec4
+hash44 (vec4 p4)
+{
+  p4 = fract(p4  * HASHSCALE4);
+  p4 += dot(p4, p4.wzxy+19.19);
+  return fract((p4.xxyz+p4.yzzw)*p4.zywx);
+}
+
+float
+Noise (vec3 p)
+{
+  vec3 i = floor(p);
+  vec3 f = fract(p); 
+  f *= f * (3.0-2.0*f);
+
+  return mix(mix(mix(hash13(i + vec3(0.,0.,0.)), hash13(i + vec3(1.,0.,0.)),f.x),
+                  mix(hash13(i + vec3(0.,1.,0.)), hash13(i + vec3(1.,1.,0.)),f.x),
+                  f.y),
+              mix(mix(hash13(i + vec3(0.,0.,1.)), hash13(i + vec3(1.,0.,1.)),f.x),
+                  mix(hash13(i + vec3(0.,1.,1.)), hash13(i + vec3(1.,1.,1.)),f.x),
+                  f.y),
+              f.z);
+}
+
+const mat3 m = mat3( 0.00,  0.80,  0.60,
+                    -0.80,  0.36, -0.48,
+                    -0.60, -0.48,  0.64 ) * 1.7;
+
+float
+FBM (vec3 p)
+{
+  float f;
+  f = 0.5000 * Noise(p); p = m*p;
+  f += 0.2500 * Noise(p); p = m*p;
+  f += 0.1250 * Noise(p); p = m*p;
+  f += 0.0625   * Noise(p); p = m*p;
+  f += 0.03125  * Noise(p); p = m*p;
+  f += 0.015625 * Noise(p);
+  return f;
+}
+// glut_523_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+
+#define SCALE 0.95
+
+float
+map (vec3 p)
+{
+  float lat = 90. - acos(p.y / length(p)) * 180./PI;
+  float lon = atan(p.x, p.z) * 180./PI;
+  vec2 uv = vec2(lon/360., lat/180.) + 0.5;
+  return texture(iChannel0, uv).x;
+}
+
+vec3
+normal (vec3 p)
+{
+  vec2 e = vec2(1,0)/1e3;
+  p += 0.01 * vec3(map(p + e.xyy) - map(p - e.xyy),
+                   map(p + e.yxy) - map(p - e.yxy),
+                   map(p + e.yyx) - map(p - e.yyx)) / (2. * length(e));
+  return normalize(p);
+}
+
+void
+main ()
+{
+  vec2 p = (2. * gl_FragCoord.xy - iResolution.xy) / iResolution.y;
+  float lat = 15. * sin(0.1 * iTime);
+  float lon = 7.5 * iTime + 100.;
+  if (iMouse.z > 0.)
+  {
+    lat = 90.  - 180. * iMouse.y/iResolution.y;
+    lon = 180. - 360. * iMouse.x/iResolution.x;
+  }
+  vec3 camPos = 10. * vec3(sin(lon*PI/180.) * cos(lat*PI/180.), sin(lat*PI/180.), cos(lon*PI/180.) * cos(lat*PI/180.));
+  vec3 w = normalize(-camPos);
+  vec3 u = normalize(cross(w, vec3(0,1,0)));
+  vec3 v = normalize(cross(u, w));
+  mat3 camera = mat3(u, v, w);
+
+  vec3 dir = normalize(camera * vec3(p / SCALE, length(camPos)));
+  float dist = iSphere(camPos, dir, vec4(0,0,0,1));
+  
+  gl_FragColor = vec4(0);
+  if (dist > 0.)
+  {
+    vec3 q = camPos + dir * dist;
+    float c = map(q);
+    vec3 n = normal(q);
+    float light = clamp(dot(n, normalize(vec3(-4,1,2))), 0., 1.);
+    float heat = clamp(2. / pow(iTime, 2.), 0., 1.);
+    gl_FragColor = light * mix(vec4(0.58, 0.57, 0.55, 1), vec4(0.15, 0.13, 0.1, 1), smoothstep(0., 3., c));
+    gl_FragColor += 5. * c * heat * vec4(1., 0.15, 0.05, 1.);
+  }
+
+  gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0), smoothstep(SCALE - 4./iResolution.y, SCALE + 1./iResolution.y, length(p)));
+  gl_FragColor.rgb = pow(gl_FragColor.rgb, vec3(1./2.2));
+}
