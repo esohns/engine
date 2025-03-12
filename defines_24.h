@@ -92,4 +92,8 @@
 #define ENGINE_GLUT_524_DEFAULT_WIDTH              1112
 #define ENGINE_GLUT_524_DEFAULT_SCALE_FACTOR       30
 
+// glut 525
+#define ENGINE_GLUT_525_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_525_DEFAULT_WIDTH              1112
+
 #endif // DEFINES_24_H

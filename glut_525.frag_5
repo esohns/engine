@@ -1,0 +1,273 @@
+// glut_525_common.glsl
+#define TURBULENCE_SCALES 11
+#define VORTICITY_SCALES 11
+#define POISSON_SCALES 11
+
+#define RECALCULATE_OFFSET
+#define ADVECTION_STEPS 3
+#define ADVECTION_SCALE 40.0
+#define ADVECTION_TURBULENCE 1.0
+#define VELOCITY_TURBULENCE 0.0000
+#define VELOCITY_CONFINEMENT 0.01
+#define VELOCITY_LAPLACIAN 0.02
+#define ADVECTION_CONFINEMENT 0.6
+#define ADVECTION_DIVERGENCE  0.0
+#define ADVECTION_VELOCITY -0.05
+#define DIVERGENCE_MINIMIZATION 0.1
+#define DIVERGENCE_LOOKAHEAD 1.0
+#define LAPLACIAN_LOOKAHEAD 1.0
+#define DAMPING 0.0001
+#define VELOCITY_SCALE 1.0
+#define UPDATE_SMOOTHING 0.0
+
+#define TURB_ISOTROPY 0.9
+#define CURL_ISOTROPY 0.6
+#define CONF_ISOTROPY 0.25
+#define POIS_ISOTROPY 0.16
+
+#define PREMULTIPLY_CURL
+
+//#define BLUR_TURBULENCE
+//#define BLUR_CONFINEMENT
+//#define BLUR_VELOCITY
+
+//#define TURB_W_FUNCTION 1.0/float(i+1)
+#define TURB_W_FUNCTION 1.0
+//#define TURB_W_FUNCTION float(i+1)
+
+//#define CURL_W_FUNCTION 1.0/float(1 << i)
+#define CURL_W_FUNCTION 1.0/float(i+1)
+//#define CURL_W_FUNCTION 1.0
+
+//#define CONF_W_FUNCTION 1.0/float(i+1)
+#define CONF_W_FUNCTION 1.0
+//#define CONF_W_FUNCTION float(i+1)
+//#define CONF_W_FUNCTION float(1 << i)
+
+//#define POIS_W_FUNCTION 1.0
+#define POIS_W_FUNCTION 1.0/float(i+1)
+//#define POIS_W_FUNCTION 1.0/float(1 << i)
+//#define POIS_W_FUNCTION float(i+1)
+//#define POIS_W_FUNCTION float(1 << i)
+
+//#define USE_PRESSURE_ADVECTION
+#define PRESSURE_ADVECTION 0.0002 // higher values more likely to cause blowup if laplacian > 0.0
+#define PRESSURE_LAPLACIAN 0.1 // [0..0.3] higher values more likely to cause blowup
+#define PRESSURE_UPDATE_SMOOTHING 0.0 // [0..1]
+
+#define MOUSE_AMP 0.05
+#define MOUSE_RADIUS 0.001
+
+//#define CENTER_PUMP
+#define PUMP_SCALE 0.001
+#define PUMP_CYCLE 0.2
+
+vec4
+normz (vec4 x)
+{
+  return x.xyz == vec3(0) ? vec4(0,0,0,x.w) : vec4(normalize(x.xyz),0);
+}
+
+vec3
+normz (vec3 x)
+{
+  return x == vec3(0) ? vec3(0) : normalize(x);
+}
+
+vec2
+normz (vec2 x)
+{
+  return x == vec2(0) ? vec2(0) : normalize(x);
+}
+
+float
+softmax (float a, float b, float k)
+{
+  return log(exp(k*a)+exp(k*b))/k;
+}
+
+float
+softmin (float a, float b, float k)
+{
+  return -log(exp(-k*a)+exp(-k*b))/k;
+}
+
+vec4
+softmax (vec4 a, vec4 b, float k)
+{
+  return log(exp(k*a)+exp(k*b))/k;
+}
+
+vec4
+softmin (vec4 a, vec4 b, float k)
+{
+  return -log(exp(-k*a)+exp(-k*b))/k;
+}
+
+float
+softclamp (float a, float b, float x, float k)
+{
+  return (softmin(b,softmax(a,x,k),k) + softmax(a,softmin(b,x,k),k)) / 2.0;
+}
+
+vec4
+softclamp (vec4 a, vec4 b, vec4 x, float k)
+{
+  return (softmin(b,softmax(a,x,k),k) + softmax(a,softmin(b,x,k),k)) / 2.0;
+}
+
+vec4
+softclamp (float a, float b, vec4 x, float k)
+{
+  return (softmin(vec4(b),softmax(vec4(a),x,k),k) + softmax(vec4(a),softmin(vec4(b),x,k),k)) / 2.0;
+}
+
+float
+G1V (float dnv, float k)
+{
+  return 1.0/(dnv*(1.0-k)+k);
+}
+
+float
+ggx (vec3 n, vec3 v, vec3 l, float rough, float f0)
+{
+  float alpha = rough*rough;
+  vec3 h = normalize(v+l);
+  float dnl = clamp(dot(n,l), 0.0, 1.0);
+  float dnv = clamp(dot(n,v), 0.0, 1.0);
+  float dnh = clamp(dot(n,h), 0.0, 1.0);
+  float dlh = clamp(dot(l,h), 0.0, 1.0);
+  float f, d, vis;
+  float asqr = alpha*alpha;
+  const float pi = 3.14159;
+  float den = dnh*dnh*(asqr-1.0)+1.0;
+  d = asqr/(pi * den * den);
+  dlh = pow(1.0-dlh, 5.0);
+  f = f0 + (1.0-f0)*dlh;
+  float k = alpha/1.0;
+  vis = G1V(dnl, k)*G1V(dnv, k);
+  float spec = dnl * d * f * vis;
+  return spec;
+}
+
+vec3
+light (vec2 uv, float BUMP, float SRC_DIST, vec2 dxy, float time, inout vec3 avd)
+{
+  vec3 sp = vec3(uv-0.5, 0);
+  vec3 light = vec3(cos(time/2.0)*0.5, sin(time/2.0)*0.5, -SRC_DIST);
+  vec3 ld = light - sp;
+  float lDist = max(length(ld), 0.001);
+  ld /= lDist;
+  avd = reflect(normalize(vec3(BUMP*dxy, -1.0)), vec3(0,1,0));
+  return ld;
+}
+
+float
+hash1 (uint n)
+{
+  n = (n << 13U) ^ n;
+  n = n * (n * n * 15731U + 789221U) + 1376312589U;
+  return float( n & uvec3(0x7fffffffU))/float(0x7fffffff);
+}
+
+vec3
+hash3 (uint n)
+{
+  n = (n << 13U) ^ n;
+  n = n * (n * n * 15731U + 789221U) + 1376312589U;
+  uvec3 k = n * uvec3(n,n*16807U,n*48271U);
+  return vec3( k & uvec3(0x7fffffffU))/float(0x7fffffff);
+}
+
+vec4
+rand4 (vec2 fragCoord, vec2 resolution, int frame )
+{
+  uvec2 p = uvec2(fragCoord);
+  uvec2 r = uvec2(resolution);
+  uint c = p.x + r.x*p.y + r.x*r.y*uint(frame);
+  return vec4(hash3(c),hash1(c + 75132895U));
+}
+// glut_525_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+uniform sampler2D iChannel3;
+
+#define BUMP 3200.0
+
+#define D(d) -textureLod(iChannel1, fract(uv+(d+0.0)), mip).w
+
+vec2
+diff (vec2 uv, float mip)
+{
+  vec2 texel = 1.0/iResolution.xy;
+  vec4 t = float(1<<int(mip))*vec4(texel, -texel.y, 0);
+
+  float d =    D( t.ww); float d_n =  D( t.wy); float d_e =  D( t.xw);
+  float d_s =  D( t.wz); float d_w =  D(-t.xw); float d_nw = D(-t.xz);
+  float d_sw = D(-t.xy); float d_ne = D( t.xy); float d_se = D( t.xz);
+
+  return vec2 (0.5 * (d_e - d_w) + 0.25 * (d_ne - d_nw + d_se - d_sw),
+               0.5 * (d_n - d_s) + 0.25 * (d_ne + d_nw - d_se - d_sw));
+}
+
+vec4
+contrast (vec4 col, float x)
+{
+  return x * (col - 0.5) + 0.5;
+}
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy / iResolution.xy;
+
+  vec2 dxy = vec2(0);
+  float occ, mip = 0.0;
+  float d   = D(0.0);
+
+#define STEPS 10.0
+#define ODIST 2.0
+  for (mip = 1.0; mip <= STEPS; mip += 1.0)
+  {
+    dxy += (1.0/pow(2.0,mip)) * diff(uv, mip-1.0);	
+    occ += softclamp(-ODIST, ODIST, d - D(0.0),1.0)/(pow(1.5,mip));
+  }
+  dxy /= float(STEPS);
+
+  occ = pow(max(0.0,softclamp(0.2,0.8,100.0*occ + 0.5,1.0)),0.5);
+
+  vec3 avd;
+  vec3 ld = light(uv, BUMP, 0.5, dxy, iTime, avd);
+
+  float spec = ggx(avd, vec3(0,1,0), ld, 0.1, 0.1);
+
+#define LOG_SPEC 1000.0
+  spec = (log(LOG_SPEC+1.0)/LOG_SPEC)*log(1.0+LOG_SPEC*spec);    
+
+#define VIEW_VELOCITY
+
+#ifdef VIEW_VELOCITY
+  vec4 diffuse = softclamp(0.0,1.0,6.0*vec4(texture(iChannel0,uv).xy,0,0)+0.5,2.0);    
+#elif defined(VIEW_CURL)
+  vec4 diffuse = mix(vec4(1,0,0,0),vec4(0,0,1,0),softclamp(0.0,1.0,0.5+2.0*texture(iChannel2,uv).w,2.0));    
+#elif defined(VIEW_ADVECTION)
+  vec4 diffuse = softclamp(0.0,1.0,0.0004*vec4(texture(iChannel0,uv).zw,0,0)+0.5,2.0); 
+#elif defined(VIEW_GRADIENT)
+  vec4 diffuse = softclamp(0.0,1.0,10.0*vec4(diff(uv,0.0),0,0)+0.5,4.0); 
+#else
+  vec4 diffuse = softclamp(0.0,1.0,4.0*vec4(texture(iChannel3,uv).xy,0,0)+0.5,4.0);
+#endif
+
+  gl_FragColor = (diffuse + 4.0*mix(vec4(spec),1.5*diffuse*spec,0.3));
+  gl_FragColor = mix(1.0,occ,0.7) * (softclamp(0.0,1.0,contrast(gl_FragColor,4.5),3.0));
+
+  //gl_FragColor = vec4(occ);
+  //gl_FragColor = vec4(spec);
+  //gl_FragColor = diffuse;
+  //gl_FragColor = vec4(diffuse+(occ-0.5));
+}

@@ -1,0 +1,319 @@
+// glut_525_common.glsl
+#define TURBULENCE_SCALES 11
+#define VORTICITY_SCALES 11
+#define POISSON_SCALES 11
+
+#define RECALCULATE_OFFSET
+#define ADVECTION_STEPS 3
+#define ADVECTION_SCALE 40.0
+#define ADVECTION_TURBULENCE 1.0
+#define VELOCITY_TURBULENCE 0.0000
+#define VELOCITY_CONFINEMENT 0.01
+#define VELOCITY_LAPLACIAN 0.02
+#define ADVECTION_CONFINEMENT 0.6
+#define ADVECTION_DIVERGENCE  0.0
+#define ADVECTION_VELOCITY -0.05
+#define DIVERGENCE_MINIMIZATION 0.1
+#define DIVERGENCE_LOOKAHEAD 1.0
+#define LAPLACIAN_LOOKAHEAD 1.0
+#define DAMPING 0.0001
+#define VELOCITY_SCALE 1.0
+#define UPDATE_SMOOTHING 0.0
+
+#define TURB_ISOTROPY 0.9
+#define CURL_ISOTROPY 0.6
+#define CONF_ISOTROPY 0.25
+#define POIS_ISOTROPY 0.16
+
+#define PREMULTIPLY_CURL
+
+//#define BLUR_TURBULENCE
+//#define BLUR_CONFINEMENT
+//#define BLUR_VELOCITY
+
+//#define TURB_W_FUNCTION 1.0/float(i+1)
+#define TURB_W_FUNCTION 1.0
+//#define TURB_W_FUNCTION float(i+1)
+
+//#define CURL_W_FUNCTION 1.0/float(1 << i)
+#define CURL_W_FUNCTION 1.0/float(i+1)
+//#define CURL_W_FUNCTION 1.0
+
+//#define CONF_W_FUNCTION 1.0/float(i+1)
+#define CONF_W_FUNCTION 1.0
+//#define CONF_W_FUNCTION float(i+1)
+//#define CONF_W_FUNCTION float(1 << i)
+
+//#define POIS_W_FUNCTION 1.0
+#define POIS_W_FUNCTION 1.0/float(i+1)
+//#define POIS_W_FUNCTION 1.0/float(1 << i)
+//#define POIS_W_FUNCTION float(i+1)
+//#define POIS_W_FUNCTION float(1 << i)
+
+//#define USE_PRESSURE_ADVECTION
+#define PRESSURE_ADVECTION 0.0002 // higher values more likely to cause blowup if laplacian > 0.0
+#define PRESSURE_LAPLACIAN 0.1 // [0..0.3] higher values more likely to cause blowup
+#define PRESSURE_UPDATE_SMOOTHING 0.0 // [0..1]
+
+#define MOUSE_AMP 0.05
+#define MOUSE_RADIUS 0.001
+
+//#define CENTER_PUMP
+#define PUMP_SCALE 0.001
+#define PUMP_CYCLE 0.2
+
+vec4
+normz (vec4 x)
+{
+  return x.xyz == vec3(0) ? vec4(0,0,0,x.w) : vec4(normalize(x.xyz),0);
+}
+
+vec3
+normz (vec3 x)
+{
+  return x == vec3(0) ? vec3(0) : normalize(x);
+}
+
+vec2
+normz (vec2 x)
+{
+  return x == vec2(0) ? vec2(0) : normalize(x);
+}
+
+float
+softmax (float a, float b, float k)
+{
+  return log(exp(k*a)+exp(k*b))/k;
+}
+
+float
+softmin (float a, float b, float k)
+{
+  return -log(exp(-k*a)+exp(-k*b))/k;
+}
+
+vec4
+softmax (vec4 a, vec4 b, float k)
+{
+  return log(exp(k*a)+exp(k*b))/k;
+}
+
+vec4
+softmin (vec4 a, vec4 b, float k)
+{
+  return -log(exp(-k*a)+exp(-k*b))/k;
+}
+
+float
+softclamp (float a, float b, float x, float k)
+{
+  return (softmin(b,softmax(a,x,k),k) + softmax(a,softmin(b,x,k),k)) / 2.0;
+}
+
+vec4
+softclamp (vec4 a, vec4 b, vec4 x, float k)
+{
+  return (softmin(b,softmax(a,x,k),k) + softmax(a,softmin(b,x,k),k)) / 2.0;
+}
+
+vec4
+softclamp (float a, float b, vec4 x, float k)
+{
+  return (softmin(vec4(b),softmax(vec4(a),x,k),k) + softmax(vec4(a),softmin(vec4(b),x,k),k)) / 2.0;
+}
+
+float
+G1V (float dnv, float k)
+{
+  return 1.0/(dnv*(1.0-k)+k);
+}
+
+float
+ggx (vec3 n, vec3 v, vec3 l, float rough, float f0)
+{
+  float alpha = rough*rough;
+  vec3 h = normalize(v+l);
+  float dnl = clamp(dot(n,l), 0.0, 1.0);
+  float dnv = clamp(dot(n,v), 0.0, 1.0);
+  float dnh = clamp(dot(n,h), 0.0, 1.0);
+  float dlh = clamp(dot(l,h), 0.0, 1.0);
+  float f, d, vis;
+  float asqr = alpha*alpha;
+  const float pi = 3.14159;
+  float den = dnh*dnh*(asqr-1.0)+1.0;
+  d = asqr/(pi * den * den);
+  dlh = pow(1.0-dlh, 5.0);
+  f = f0 + (1.0-f0)*dlh;
+  float k = alpha/1.0;
+  vis = G1V(dnl, k)*G1V(dnv, k);
+  float spec = dnl * d * f * vis;
+  return spec;
+}
+
+vec3
+light (vec2 uv, float BUMP, float SRC_DIST, vec2 dxy, float time, inout vec3 avd)
+{
+  vec3 sp = vec3(uv-0.5, 0);
+  vec3 light = vec3(cos(time/2.0)*0.5, sin(time/2.0)*0.5, -SRC_DIST);
+  vec3 ld = light - sp;
+  float lDist = max(length(ld), 0.001);
+  ld /= lDist;
+  avd = reflect(normalize(vec3(BUMP*dxy, -1.0)), vec3(0,1,0));
+  return ld;
+}
+
+float
+hash1 (uint n)
+{
+  n = (n << 13U) ^ n;
+  n = n * (n * n * 15731U + 789221U) + 1376312589U;
+  return float( n & uvec3(0x7fffffffU))/float(0x7fffffff);
+}
+
+vec3
+hash3 (uint n)
+{
+  n = (n << 13U) ^ n;
+  n = n * (n * n * 15731U + 789221U) + 1376312589U;
+  uvec3 k = n * uvec3(n,n*16807U,n*48271U);
+  return vec3( k & uvec3(0x7fffffffU))/float(0x7fffffff);
+}
+
+vec4
+rand4 (vec2 fragCoord, vec2 resolution, int frame )
+{
+  uvec2 p = uvec2(fragCoord);
+  uvec2 r = uvec2(resolution);
+  uint c = p.x + r.x*p.y + r.x*r.y*uint(frame);
+  return vec4(hash3(c),hash1(c + 75132895U));
+}
+// glut_525_common.glsl
+
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+#define VORT_CH xy
+#define VORT_SAMPLER iChannel0
+#define POIS_SAMPLER iChannel1
+#define POIS_CH x
+#define DEGREE POISSON_SCALES
+
+#define D(d) textureLod(VORT_SAMPLER, fract(uv+d), mip).VORT_CH
+#define P(d) textureLod(POIS_SAMPLER, fract(uv+d), mip).POIS_CH
+
+float
+laplacian_poisson (vec2 fragCoord)
+{
+  const float _K0 = -20.0/6.0, _K1 = 4.0/6.0, _K2 = 1.0/6.0;
+  vec2 texel = 1.0/iResolution.xy;
+  vec2 uv = fragCoord * texel;
+  vec4 t = vec4(texel, -texel.y, 0);
+  float mip = 0.0;
+
+  float p =    P( t.ww); float p_n =  P( t.wy); float p_e =  P( t.xw);
+  float p_s =  P( t.wz); float p_w =  P(-t.xw); float p_nw = P(-t.xz);
+  float p_sw = P(-t.xy); float p_ne = P( t.xy); float p_se = P( t.xz);
+    
+  return _K0 * p + _K1 * (p_e + p_w + p_n + p_s) + _K2 * (p_ne + p_nw + p_se + p_sw);
+}
+
+void
+tex (vec2 uv, inout mat3 mx, inout mat3 my, inout mat3 mp, int degree)
+{
+  vec2 texel = 1.0/iResolution.xy;
+  float stride = float(1 << degree);
+  float mip = float(degree);
+  vec4 t = stride * vec4(texel, -texel.y, 0);
+
+  vec2 d =    D( t.ww); vec2 d_n =  D( t.wy); vec2 d_e =  D( t.xw);
+  vec2 d_s =  D( t.wz); vec2 d_w =  D(-t.xw); vec2 d_nw = D(-t.xz);
+  vec2 d_sw = D(-t.xy); vec2 d_ne = D( t.xy); vec2 d_se = D( t.xz);
+    
+  float p =    P( t.ww); float p_n =  P( t.wy); float p_e =  P( t.xw);
+  float p_s =  P( t.wz); float p_w =  P(-t.xw); float p_nw = P(-t.xz);
+  float p_sw = P(-t.xy); float p_ne = P( t.xy); float p_se = P( t.xz);
+    
+  mx =  mat3(d_nw.x, d_n.x, d_ne.x,
+              d_w.x,  d.x,   d_e.x,
+              d_sw.x, d_s.x, d_se.x);
+    
+  my =  mat3(d_nw.y, d_n.y, d_ne.y,
+              d_w.y,  d.y,   d_e.y,
+              d_sw.y, d_s.y, d_se.y);
+    
+  mp =  mat3(p_nw, p_n, p_ne,
+              p_w,  p,   p_e,
+              p_sw, p_s, p_se);
+}
+
+float
+reduce (mat3 a, mat3 b)
+{
+  mat3 p = matrixCompMult(a, b);
+  return p[0][0] + p[0][1] + p[0][2] +
+          p[1][0] + p[1][1] + p[1][2] +
+          p[2][0] + p[2][1] + p[2][2];
+}
+
+vec2
+pois (vec2 fragCoord)
+{
+  vec2 uv = fragCoord.xy / iResolution.xy;
+
+  float k0 = POIS_ISOTROPY;
+  float k1 = 1.0 - 2.0*(POIS_ISOTROPY);
+
+  mat3 pois_x = mat3(
+      k0,  0.0, -k0,
+      k1,  0.0, -k1,
+      k0,  0.0, -k0
+  );
+
+  mat3 pois_y = mat3(
+      -k0,  -k1,  -k0,
+      0.0,  0.0,  0.0,
+      k0,   k1,   k0
+  );
+
+  mat3 gauss = mat3(
+      0.0625, 0.125, 0.0625,  
+      0.125,  0.25,  0.125,
+      0.0625, 0.125, 0.0625
+  );
+
+  mat3 mx, my, mp;
+  vec2 v = vec2(0);
+
+  float wc = 0.0;
+  for (int i = 0; i < DEGREE; i++)
+  {
+    tex(uv, mx, my, mp, i);
+    float w = POIS_W_FUNCTION;
+    wc += w;
+    v += w * vec2(reduce(pois_x, mx) + reduce(pois_y, my), reduce(gauss, mp));
+  }
+
+  return v / wc;
+}
+
+#define V(d) textureLod(VORT_SAMPLER, fract(uv+d), mip).zw
+
+void
+main ()
+{
+  vec2 p = pois(gl_FragCoord.xy);
+#ifdef USE_PRESSURE_ADVECTION
+  float mip = 0.0;
+  vec2 tx = 1.0 / iResolution.xy;
+  vec2 uv = gl_FragCoord.xy * tx;
+  float prev = P(0.0002 * PRESSURE_ADVECTION * tx * V(vec2(0)));
+  gl_FragColor = vec4(mix(p.x + p.y, prev + PRESSURE_LAPLACIAN * laplacian_poisson(fragCoord), PRESSURE_UPDATE_SMOOTHING));
+#else
+  gl_FragColor = vec4(p.x + p.y);
+#endif
+
+  if (iFrame == 1)
+    gl_FragColor = 1e-6 * rand4 (gl_FragCoord.xy, iResolution.xy, iFrame);
+}
