@@ -1,0 +1,269 @@
+uniform vec2 iResolution;
+uniform float iTime;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+uniform sampler2D iChannel3;
+
+#define CUBECOUNT 16
+#define PI 3.141592653
+
+vec4 readTex3(int cx,int cy)
+{
+    return textureLod(iChannel3,vec2((float(cx)+0.1)/iResolution.x,(float(cy)+0.1)/iResolution.y),0.);
+}
+vec4 readTex2(int cx,int cy)
+{
+    return textureLod(iChannel2,vec2((float(cx)+0.1)/iResolution.x,(float(cy)+0.1)/iResolution.y),0.);
+}
+
+vec4 readTex0(int cx,int cy)
+{
+    return textureLod(iChannel0,vec2((float(cx)+0.1)/iResolution.x,(float(cy)+0.1)/iResolution.y),0.);
+}
+
+vec3 getCubePos(int ci)
+{
+    return readTex3(ci,0).xyz;
+}
+vec4 getCubeQuat(int ci)
+{
+    return readTex3(ci,1).xyzw;
+}
+
+vec3 getCollision(int ci,int cj,int k) // for debugging
+{
+    return readTex0(ci*12+k%12,cj*4+k/12).xyz;
+}
+
+
+vec3 rotate(vec4 quat,vec3 v)
+{
+    float sinsqr = (1.0-quat.w*quat.w);
+    if (sinsqr!=0.0)
+    {
+        v=v*quat.w + quat.xyz*((dot(v,quat.xyz)*(1.0-quat.w))*(1.0/sinsqr)) + cross(v,quat.xyz);
+        v=v*quat.w + quat.xyz*((dot(v,quat.xyz)*(1.0-quat.w))*(1.0/sinsqr)) + cross(v,quat.xyz);
+    }
+    return v;
+}
+
+vec3 rotateAxis(vec3 axis,vec3 v)
+{
+    float len = length(axis);
+    if (len!=0.0)
+    {
+        axis = normalize(axis);
+    v = v*cos(len) + axis*((v*axis) * (1.0-cos(len))) + cross(v,axis)*sin(len);
+    }
+    return v;
+}
+
+
+vec4 getCubePlane(int ci,int k)
+{
+    vec3 norm = vec3( k/2%3==0?1.0:0.0, k/2%3==1?1.0:0.0, k/2%3==2?2.0:0.0)*float(k%2*2-1);
+    norm = rotate(getCubeQuat(ci),norm);
+    float offset = 1.0 + dot(getCubePos(ci),norm);
+    return vec4(norm,offset);
+}
+
+
+vec3 cubeTransform(int ci,vec3 lp)
+{
+    return getCubePos(ci) + rotate(getCubeQuat(ci),lp);
+}
+
+vec3 rayPos,rayDir;
+float minDist;
+vec3 minDistNormal;
+float minDistMaterial;
+
+vec3 sunDir = normalize(vec3(0.8,1.0,-0.3));
+
+void renderCube(int ci)
+{
+    float backMin = 1e30;
+    float frontMax = -1e30;
+    vec3 frontNormal = vec3(0.0,0.0,0.0);
+    
+    for(int side=0;side<6;side++)
+    {
+        vec4 plane = getCubePlane(ci,side);
+        
+        float rayTravel = -(dot(rayPos,plane.xyz)-plane.w)/dot(plane.xyz,rayDir);
+        if (  dot(plane.xyz,rayDir)<0.0)
+        {
+            if (frontMax < rayTravel)
+            {
+                frontMax = rayTravel;
+                frontNormal = plane.xyz;
+            }
+        }
+        else
+        {
+            if (backMin > rayTravel)
+            {
+                backMin = rayTravel;
+            }
+        }
+    }
+    if (frontMax<backMin) // cube hit
+    {
+        if (minDist>frontMax && frontMax>0.0) // chose closeset cube
+        {
+            minDist = frontMax;
+            minDistNormal = frontNormal;
+//            minDistMaterial = 1.0-fract(float(ci)/float(CUBECOUNT)*94.);
+            minDistMaterial = fract(float(ci)/3.0)+0.1;
+        }
+    }
+    
+}
+
+
+vec3 backGround(vec3 dir,vec3 pos)
+{
+  float f = max(dir.y,0.0)*0.5+0.5;
+  vec3 color = 1.0-vec3(1,0.85,0.7)*f;
+  color *= dir.x*-0.3+1.0;
+  
+  if (dot(sunDir,dir)>0.0) // sun reflected on cubes
+  {
+   f = max(length(cross(sunDir,dir))*10.0,1.0);
+    
+   color += vec3(1,0.9,0.7)*40.0/(f*f*f*f);
+  }
+  return color;
+}
+
+vec4 debugColor;
+float debugthickness = 0.02;
+void debugline(vec3 pa,vec3 pb)
+{
+    vec3 pl = normalize(cross(cross(pa-pb,rayDir),pa-pb));
+    float d = -dot(pl,rayPos-pa)/dot(pl,rayDir);
+    vec3 p = rayPos+rayDir*d;
+    if (dot(p-pb,pa-pb)>0.0 && dot(p-pb,pa-pb)<dot(pa-pb,pa-pb) && length(cross(p-pa,normalize(pa-pb)))<debugthickness )
+    {
+        debugColor = vec4(0.9,0.8,0.1,1.0);
+    }
+}
+
+void debugdot(vec3 p)
+{
+    float d = pow(length(cross(p-rayPos,rayDir))/debugthickness,4.0);
+    debugColor = mix(debugColor,vec4(0.9,0.8,0.1,1.0),max(1.0-d,0.0));
+}
+
+
+void debugCollision(int ci,int cj)
+{
+    vec4 sep = readTex0(ci+CUBECOUNT*12,cj);
+    for(int k=0;k<48;k++)
+    {
+        vec3 cpos = getCollision(ci,cj,k);
+        debugdot(cpos);
+      debugline(cpos,cpos + readTex2(ci*12+k%12,cj*4+k/12).xyz*10.0 );
+    }
+}
+
+void renderScene()
+{
+    minDistMaterial = 0.0;
+    minDist = 1e30;
+    minDistNormal = vec3(0.0,1.0,0.0);
+    
+    if (rayDir.y<0.0)
+    {
+        minDist = rayPos.y/-rayDir.y;
+    }
+    
+    for(int i=1;i<(CUBECOUNT);i++)
+    {
+        if ( length(cross(getCubePos(i)-rayPos,rayDir))<3.0)
+        {
+        renderCube(i);
+        }
+    }
+}
+
+vec3 getDiffuse()
+{
+        vec3 difColor;
+        if (minDistMaterial==0.) difColor = texture(iChannel1,rayPos.zx/8.0).xyz; // floor
+        else
+        {
+            difColor = vec3(1.0,1.0-minDistMaterial,0.3-0.3*minDistMaterial); // cube colors
+        }
+    return difColor;
+}
+
+void main ()
+{
+  debugColor = vec4(0.0,0.0,0.0,0.0);
+  vec3 campos = vec3(0.0-fract(float(iFrame - 1)/(60.*8.))*4.0,6.4-sin(iTime/4.0)*0.5,-17.0);
+  vec2 uv = gl_FragCoord.xy / iResolution.xy;
+  vec3 pdir = vec3(uv*2.0-1.0,2.);
+  pdir.y /= iResolution.x/iResolution.y; // wide screen
+  pdir = normalize(pdir);
+
+  pdir = rotateAxis( vec3(-0.27,0.,0.), pdir);
+
+  rayPos = campos;
+  rayDir = pdir;
+
+  renderScene();
+//        debugCubeEdges(i);
+//	    debugdot(getCubePos(i));
+//        for(int j=0;j<8;j++) debugdot(getWCubeVert(i,j));
+
+//  debugCollision(1,0);
+//    debugline(getCubePos(1),g    
+
+  if (minDist<1e30)
+  {
+    minDistNormal = normalize(minDistNormal);
+    const vec3 sunColor = vec3(1.0,0.8,0.5)*1.0;
+    const vec3 skyColor = vec3(1.0,1.2,1.5)*0.6;
+    rayPos += rayDir*minDist;
+    vec3 firstHitPos = rayPos;
+    vec3 refdir = reflect(rayDir,minDistNormal);
+    float f = 1.-max(dot(minDistNormal,-rayDir),0.);
+    float fresnel = 0.65*f*f*f*f*f+0.05;
+
+    vec3 difColor =getDiffuse();
+        
+    gl_FragColor = vec4(difColor*skyColor*((minDistNormal).y*0.5+0.5),0.);
+    float suncos = dot((minDistNormal),sunDir);
+    if (suncos>0.0)
+    {
+      // spot sun light pointing on the thrown cube.
+      vec3 v = cross(sunDir,rayPos-getCubePos(CUBECOUNT-1))/20.;
+      suncos *= max(0.,1.0-dot(v,v));
+      rayDir = sunDir;
+      renderScene();
+      if (minDist==1e30) 
+        gl_FragColor.xyz += difColor * suncos * sunColor;
+    }
+
+    rayPos = firstHitPos;
+    rayDir = refdir;
+    renderScene();
+
+    vec3 refColor;
+    if (minDist<1e30)
+    {
+      rayPos += rayDir * minDist;
+      vec3 difColor = getDiffuse();
+      refColor = difColor*(normalize(minDistNormal).y*0.5+0.5);
+    }
+    else
+      refColor = backGround(rayDir,rayPos);
+    gl_FragColor.xyz = mix(gl_FragColor.xyz,refColor,fresnel);
+  }
+  else
+    gl_FragColor = vec4(backGround(pdir,campos),0.0);
+  gl_FragColor.xyz = mix(gl_FragColor.xyz,debugColor.xyz,debugColor.w);
+}

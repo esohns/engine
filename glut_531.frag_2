@@ -1,0 +1,131 @@
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel2;
+uniform sampler2D iChannel3;
+
+#define CUBECOUNT 16u
+#define STATIC_CUBE_COUNT 1u
+
+float gravity = -0.003;
+
+vec4 readTex3(uint cx,uint cy)
+{
+    return textureLod(iChannel3,vec2((float(cx)+0.1)/iResolution.x,(float(cy)+0.1)/iResolution.y),0.);
+}
+vec4 readTex2(uint cx,uint cy)
+{
+    return textureLod(iChannel2,vec2((float(cx)+0.1)/iResolution.x,(float(cy)+0.1)/iResolution.y),0.);
+}
+vec4 readTex0(uint cx,uint cy)
+{
+    return textureLod(iChannel0,vec2((float(cx)+0.1)/iResolution.x,(float(cy)+0.1)/iResolution.y),0.);
+}
+
+vec3 getCubePos(uint ci)
+{
+    return readTex3(ci,0u).xyz;
+}
+vec4 getCubeQuat(uint ci)
+{
+    return readTex3(ci,1u).xyzw;
+}
+vec3 getCubeVel(uint ci)
+{
+    return readTex3(ci,2u).xyz;
+}
+vec3 getCubeRotVel(uint ci)
+{
+    return readTex3(ci,3u).xyz;
+}
+
+uint pixelx,pixely;
+
+vec3 pos;
+vec4 quat;
+vec3 vel;
+vec3 rotvel;
+
+vec4 findbestsepplane()
+{
+    pixelx-=CUBECOUNT;
+    uint cia = pixelx;
+    uint cib = pixely;
+    if (cia>=CUBECOUNT) discard;
+    if (cib>=cia) discard;
+    float best=1e30;
+    vec4 bestsep;
+    for(uint m=0u;m<30u;m++)
+    {
+        vec4 sep = readTex0(cia*6u+m%6u+CUBECOUNT*12u,cib*5u+m/6u);
+        if (length(sep.xyz)<best)
+        {
+            best = length(sep.xyz);
+            bestsep = sep;
+        }
+    }
+    return vec4(normalize(bestsep.xyz),bestsep.w);;
+}
+
+void main ()
+{
+  pixelx = uint(floor(gl_FragCoord+0.01).x);
+  pixely = uint(floor(gl_FragCoord+0.01).y);
+
+  gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+
+  if (pixelx>=(CUBECOUNT)) 
+  {
+    gl_FragColor = findbestsepplane();
+    return;
+  }
+  if (pixely>=4u || pixely<2u)
+    discard;
+  uint cubei = pixelx;
+
+  pos = getCubePos(cubei);
+  quat = getCubeQuat(cubei);
+  vel = getCubeVel(cubei);
+  rotvel = getCubeRotVel(cubei);
+
+  if (cubei>=STATIC_CUBE_COUNT)
+  {
+    // apply forces (just the changes)
+    for(uint i=0u;i<CUBECOUNT-1u;i++)
+    {
+        uint ci,cj;
+        float scaler;
+        if (i<cubei)
+        {
+          ci = cubei;
+          cj = i;
+          scaler  = 1.0;
+          if (cj<STATIC_CUBE_COUNT)
+            scaler = 2.0; 
+        }
+        else
+        {
+          ci = i+1u;
+          cj = cubei;
+          scaler = -1.0; // applying the opposite forces on the cube pair
+        }
+        if (!(length(getCubePos(ci)-getCubePos(cj))>6.0 && cj!=0u))
+          for (uint j = 0u;j < 48u; j++)
+          {
+              vec3 forcepos = readTex0(ci*12u+j%12u,cj*4u+j/12u).xyz;
+              if (forcepos.x!=0.0)
+              {
+                vec3 force = readTex2(ci*12u+j%12u,cj*4u+j/12u).xyz;
+                
+                  const float RotationalImmobilityTensor = 1.8;
+                  force *= scaler;
+                  vel += force;
+                  rotvel -= cross(forcepos-pos,force)/RotationalImmobilityTensor;
+              }
+          }
+    }
+  }
+
+  gl_FragColor = vec4(vel, 0.0);
+  if (pixely==3u)
+    gl_FragColor = vec4(rotvel, 0.0);
+}
