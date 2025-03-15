@@ -1564,6 +1564,8 @@ set (engine_24_EXE_SRCS
      glut_527.h
      glut_528.cpp
      glut_528.h
+     glut_529.cpp
+     glut_529.h
      stdafx.h)
 
 set (EXECUTABLE_24 engine_24)
@@ -2506,6 +2508,8 @@ install (FILES
          "glut_528.frag"
          "glut_528.frag_2"
          "glut_528.frag_3"
+         "glut_529.vert"
+         "glut_529.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
