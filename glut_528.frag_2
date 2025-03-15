@@ -1,0 +1,114 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+vec2
+normz (vec2 x)
+{
+  return x == vec2(0.0, 0.0) ? vec2(0.0, 0.0) : normalize(x);
+}
+
+vec4
+advect (vec2 ab, vec2 vUv, vec2 step, float sc)
+{
+  vec2 aUv = vUv - ab * sc * step;
+
+  const float _G0 = 0.25; // center weight
+  const float _G1 = 0.125; // edge-neighbors
+  const float _G2 = 0.0625; // vertex-neighbors
+
+  float step_x = step.x;
+  float step_y = step.y;
+  vec2 n  = vec2(0.0, step_y);
+  vec2 ne = vec2(step_x, step_y);
+  vec2 e  = vec2(step_x, 0.0);
+  vec2 se = vec2(step_x, -step_y);
+  vec2 s  = vec2(0.0, -step_y);
+  vec2 sw = vec2(-step_x, -step_y);
+  vec2 w  = vec2(-step_x, 0.0);
+  vec2 nw = vec2(-step_x, step_y);
+
+  vec4 uv =    texture(iChannel0, fract(aUv));
+  vec4 uv_n =  texture(iChannel0, fract(aUv+n));
+  vec4 uv_e =  texture(iChannel0, fract(aUv+e));
+  vec4 uv_s =  texture(iChannel0, fract(aUv+s));
+  vec4 uv_w =  texture(iChannel0, fract(aUv+w));
+  vec4 uv_nw = texture(iChannel0, fract(aUv+nw));
+  vec4 uv_sw = texture(iChannel0, fract(aUv+sw));
+  vec4 uv_ne = texture(iChannel0, fract(aUv+ne));
+  vec4 uv_se = texture(iChannel0, fract(aUv+se));
+
+  return _G0*uv + _G1*(uv_n + uv_e + uv_w + uv_s) + _G2*(uv_nw + uv_sw + uv_ne + uv_se);
+}
+
+void
+main ()
+{
+  const float _K0 = -20.0/6.0; // center weight
+  const float _K1 = 4.0/6.0;   // edge-neighbors
+  const float _K2 = 1.0/6.0;   // vertex-neighbors
+  const float cs = -3.0;  // curl scale
+  const float ls = 3.0;  // laplacian scale
+  const float ps = 0.0;  // laplacian of divergence scale
+  const float ds = -12.0; // divergence scale
+  const float dp = -6.0; // divergence update scale
+  const float pl = 0.3;   // divergence smoothing
+  const float ad = 6.0;   // advection distance scale
+  const float pwr = 1.0;  // power when deriving rotation angle from curl
+  const float amp = 1.0;  // self-amplification
+  const float upd = 0.99;  // update smoothing
+  const float sq2 = 0.6;  // diagonal weight
+
+  vec2 vUv = gl_FragCoord.xy / iResolution.xy;
+  vec2 texel = 1. / iResolution.xy;
+    
+  // 3x3 neighborhood coordinates
+  float step_x = texel.x;
+  float step_y = texel.y;
+  vec2 n  = vec2(0.0, step_y);
+  vec2 ne = vec2(step_x, step_y);
+  vec2 e  = vec2(step_x, 0.0);
+  vec2 se = vec2(step_x, -step_y);
+  vec2 s  = vec2(0.0, -step_y);
+  vec2 sw = vec2(-step_x, -step_y);
+  vec2 w  = vec2(-step_x, 0.0);
+  vec2 nw = vec2(-step_x, step_y);
+
+  vec4 uv =    texture(iChannel0, fract(vUv));
+  vec4 uv_n =  texture(iChannel0, fract(vUv+n));
+  vec4 uv_e =  texture(iChannel0, fract(vUv+e));
+  vec4 uv_s =  texture(iChannel0, fract(vUv+s));
+  vec4 uv_w =  texture(iChannel0, fract(vUv+w));
+  vec4 uv_nw = texture(iChannel0, fract(vUv+nw));
+  vec4 uv_sw = texture(iChannel0, fract(vUv+sw));
+  vec4 uv_ne = texture(iChannel0, fract(vUv+ne));
+  vec4 uv_se = texture(iChannel0, fract(vUv+se));
+
+  vec4 lapl  = _K0*uv + _K1*(uv_n + uv_e + uv_w + uv_s) + _K2*(uv_nw + uv_sw + uv_ne + uv_se);
+    
+  float curl = uv_n.x - uv_s.x - uv_e.y + uv_w.y + sq2 * (uv_nw.x + uv_nw.y + uv_ne.x - uv_ne.y + uv_sw.y - uv_sw.x - uv_se.y - uv_se.x);
+  float sc = cs * sign(curl) * pow(abs(curl), pwr);
+    
+  float div  = uv_s.y - uv_n.y - uv_e.x + uv_w.x + sq2 * (uv_nw.x - uv_nw.y - uv_ne.x - uv_ne.y + uv_sw.x + uv_sw.y + uv_se.y - uv_se.x);
+
+  vec2 norm = normz(uv.xy);
+
+  float sdx = uv.z + dp * uv.x * div + pl * lapl.z;
+  float sdy = uv.w + dp * uv.y * div + pl * lapl.w;
+
+  vec2 ab = advect(vec2(uv.x, uv.y), vUv, texel, ad).xy;
+
+  float ta = amp * ab.x + ls * lapl.x + norm.x * ps * lapl.z + ds * sdx;
+  float tb = amp * ab.y + ls * lapl.y + norm.y * ps * lapl.w + ds * sdy;
+
+  float a = ta * cos(sc) - tb * sin(sc);
+  float b = ta * sin(sc) + tb * cos(sc);
+
+  vec4 abd = upd * uv + (1.0 - upd) * vec4(a,b,sdx,sdy);
+
+  gl_FragColor = vec4(abd);
+
+  abd.xy = clamp(length(abd.xy) > 1.0 ? normz(abd.xy) : abd.xy, -1.0, 1.0);
+  gl_FragColor = vec4(abd);
+}
