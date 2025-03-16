@@ -36,8 +36,8 @@ smoothVoronoi (vec2 p, float falloff)
 float
 func2D (vec2 p)
 {
-    float d = smoothVoronoi(p*2., 4.)*.66 + smoothVoronoi(p*6., 4.)*.34;
-    return sqrt(d);
+  float d = smoothVoronoi(p*2., 4.)*.66 + smoothVoronoi(p*6., 4.)*.34;
+  return sqrt(d);
 }
 
 float
