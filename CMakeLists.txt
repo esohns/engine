@@ -1587,6 +1587,10 @@ set (engine_25_EXE_SRCS
      glut_531.h
      glut_532.cpp
      glut_532.h
+     glut_533.cpp
+     glut_533.h
+     glut_534.cpp
+     glut_534.h
      stdafx.h)
 
 set (EXECUTABLE_25 engine_25)
@@ -2510,6 +2514,7 @@ install (FILES
          "glut_511.frag_3"
          "glut_512.vert"
          "glut_512.frag"
+         "glut_512_channel0.png"
          "glut_513.vert"
          "glut_513.frag"
          "glut_514.vert"
@@ -2554,6 +2559,8 @@ install (FILES
          "glut_528.frag"
          "glut_528.frag_2"
          "glut_528.frag_3"
+         "glut_528_bufferA_channel1.png"
+         "glut_528_image_channel1.png"
          "glut_529.vert"
          "glut_529.frag"
          "glut_530.vert"
@@ -2566,6 +2573,14 @@ install (FILES
          "glut_531.frag_5"
          "glut_532.vert"
          "glut_532.frag"
+         "glut_533.vert"
+         "glut_533.frag"
+         "glut_533_channel0.png"
+         "glut_534.vert"
+         "glut_534.frag"
+         "glut_534_channel0.png"
+         "glut_534_channel1.png"
+         "glut_534_channel2.png"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
@@ -2580,7 +2595,7 @@ if (WIN32)
           ${ACE_LIB_DIR}/ACE${LIB_FILE_SUFFIX}.dll
           ${LIB_ROOT}/assimp/cmake/bin/${PATH_SUFFIX}/assimp-vc143-mt${LIB_FILE_SUFFIX}.dll
           ${LIB_ROOT}/freeglut/bin/x64/freeglut.dll
-          ${LIB_ROOT}/glew/bin/${PATH_SUFFIX}/x64/glew32.dll
+          ${LIB_ROOT}/glew/bin/Release/x64/glew32.dll
           ${LIB_ROOT}/libepoxy/bin/epoxy-0.dll
           ${LIB_ROOT}/libnoise/build/msvc/${PATH_SUFFIX}/libnoise.dll
           ${LIB_ROOT}/zlib/build/${PATH_SUFFIX}/zlib${LIB_FILE_SUFFIX}.dll
