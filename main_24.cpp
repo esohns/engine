@@ -588,6 +588,7 @@ do_work (int argc_in,
 
       cb_data_s.resolutionLoc = -1;
       cb_data_s.timeLoc = -1;
+      cb_data_s.channel0Loc = -1;
 
       cb_data_s.wireframe = false;
 
