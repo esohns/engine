@@ -1,0 +1,297 @@
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform vec2 iChannel0Resolution;
+
+float PrCylDf (vec3 p, float r, float h);
+float PrCapsDf (vec3 p, float r, float h);
+float PrTorusDf (vec3 p, float ri, float rc);
+mat3 QtToRMat (vec4 q);
+vec4 Loadv4 (int idVar);
+vec2 Rot2D (vec2 q, float a);
+vec3 HsvToRgb (vec3 c);
+
+#define S_BIG  1  // big/small system - must also change in buffer shaders
+#if S_BIG
+const int nBall = 512;
+#else
+const int nBall = 216;
+#endif
+
+vec3 ltDir, vnBall;
+float dstFar, cylRad, cylLen, cylRot;
+int idObj, idBall;
+const float pi = 3.14159;
+
+#define VAR_ZERO min (iFrame, 0)
+
+#define DMIN(id) if (d < dMin) { dMin = d;  idObj = id; }
+
+float ObjDf (vec3 p)
+{
+  vec3 q;
+  vec2 ss;
+  float dMin, d, tr;
+  dMin = dstFar;
+  tr = 0.12;
+  q = p;
+  q.y = abs (q.y) - cylLen;
+  d = PrTorusDf (q.xzy, tr, cylRad);
+  DMIN (1);
+  q.y -= tr;
+  d = PrCylDf (q.xzy, 0.05 * cylRad, tr);
+  DMIN (2);
+  q = p;
+  q.xz = Rot2D (q.xz, 0.25 * pi);
+  q.xz = (abs (q.x) < abs (q.z)) ? q.xz : q.zx;
+  tr = 0.18;
+  ss = vec2 (cylLen + 0.45, 1.45 * cylRad);
+  d = PrCapsDf (vec3 (q.xy, abs (q.z) - ss.y).xzy, tr, ss.x);
+  DMIN (3);
+  d = PrCapsDf (vec3 (q.xz, abs (q.y) - ss.x).xzy, tr, ss.y);
+  DMIN (4);
+  return dMin;
+}
+
+float ObjRay (vec3 ro, vec3 rd)
+{
+  float dHit, d;
+  dHit = 0.;
+  for (int j = VAR_ZERO; j < 120; j ++) {
+    d = ObjDf (ro + dHit * rd);
+    dHit += d;
+    if (d < 0.0005 || dHit > dstFar) break;
+  }
+  return dHit;
+}
+
+vec3 ObjNf (vec3 p)
+{
+  vec4 v;
+  vec2 e;
+  e = vec2 (0.0001, -0.0001);
+  for (int j = VAR_ZERO; j < 4; j ++) {
+    v[j] = ObjDf (p + ((j < 2) ? ((j == 0) ? e.xxx : e.xyy) : ((j == 2) ? e.yxy : e.yyx)));
+  }
+  v.x = - v.x;
+  return normalize (2. * v.yzw - dot (v, vec4 (1.)));
+}
+
+float BallHit (vec3 ro, vec3 rd)
+{
+  vec4 p;
+  vec3 u;
+  float b, d, w, dMin, rad;
+  dMin = dstFar;
+  for (int n = VAR_ZERO; n < nBall; n ++) {
+    p = Loadv4 (4 + 4 * n);
+    u = ro - p.xyz;
+    rad = 0.46 * p.w;
+    b = dot (rd, u);
+    w = b * b - dot (u, u) + rad * rad;
+    if (w >= 0.) {
+      d = - b - sqrt (w);
+      if (d > 0. && d < dMin) {
+        dMin = d;
+        vnBall = (u + d * rd) / rad;
+        idBall = n;
+      }
+    }
+  }
+  return dMin;
+} 
+
+float BallChqr (int idBall, vec3 vnBall)
+{
+  vec3 u;
+  vec2 a;
+  u = vnBall * QtToRMat (Loadv4 (4 + 4 * idBall + 2));
+  a = mod (floor (8. * vec2 (atan (u.x, u.y), asin (u.z)) / pi), 2.) - 0.5;
+  return step (0., sign (a.x) * sign (a.y));
+}
+
+vec4 CylHit (vec3 ro, vec3 rd, float cylRad, float cylLen)
+{
+  vec3 s, vn;
+  float dMin, d, a, b, w, srdy;
+  dMin = dstFar;
+  a = dot (rd.xz, rd.xz);
+  b = dot (rd.xz, ro.xz);
+  w = b * b - a * (dot (ro.xz, ro.xz) - cylRad * cylRad);
+  if (w > 0.) {
+    srdy = sign (rd.y);
+    if (a > 0.) {
+      d = - b - sqrt (w);
+      if (d > 0.) {
+        d /= a;
+        s = ro + d * rd;
+      } else s.y = cylLen;
+    } else s.y = cylLen;
+    if (abs (s.y) < cylLen) {
+      dMin = d;
+      vn = vec3 (s.xz / cylRad, 0.).xzy;
+    } else if (srdy * ro.y < - cylLen) {
+      d = - (srdy * ro.y + cylLen) / abs (rd.y);
+      if (d > 0.) {
+        s = ro + d * rd;
+        if (length (s.xz) < cylRad) {
+          dMin = d;
+          vn = vec3 (0., 0., - srdy).xzy;
+        }
+      }
+    }
+  }
+  return vec4 (dMin, vn);
+}
+
+vec3 ShowScene (vec3 ro, vec3 rd, vec3 col)
+{
+  vec4 dc4, col4;
+  vec3 vn;
+  float dstBall, dstObj, c, a, nDotL;
+  dstObj = ObjRay (ro, rd);
+  dstBall = dstFar;
+  dc4 = CylHit (ro, rd, cylRad, cylLen);
+  if (dc4.x < dstFar) {
+    dstBall = BallHit (ro, rd);
+    if (dstBall < min (dstObj, dstFar)) {
+      vn = vnBall;
+      c = 33. * float (idBall) / float (nBall);
+      col = HsvToRgb (vec3 (mod (c, 1.), 1. - 0.05 * mod (c, 8.),
+         1. - 0.05 * mod (c, 13.)));
+      c = mod (c + 33./2., 33.);
+      col4 = vec4 (mix (col, HsvToRgb (vec3 (mod (c, 1.), 1. - 0.1 * mod (c, 8.),
+         1. - 0.05 * mod (c, 13.))), BallChqr (idBall, vnBall)), 0.5);
+    }
+  }
+  if (dstObj < min (dstBall, dstFar)) {
+    ro += dstObj * rd;
+    vn = ObjNf (ro);
+    if (idObj == 1 || idObj == 2) {
+      ro.xz = Rot2D (ro.xz, cylRot);
+      a = atan (ro.z, - ro.x);
+      if (idObj == 1) col4 = vec4 (0.8, 0.8, 0.9, 0.2) * (1. - 0.3 * step (0., sin (16. * a)));
+      else col4 = vec4 (0.9, 0.8, 0.8, 0.2) * (1. - 0.3 * step (0.01 * cylRad, length (ro.xz)) *
+         step (0., sin (8. * a)));
+    } else if (idObj == 3) {
+      col4 = vec4 (0.9, 0.8, 0.6, 0.2) * (1. - 0.1 * step (abs (ro.y), cylLen + 0.36) * 
+         step (0., sin (16. * pi * ro.y)));
+    } else if (idObj == 4) {
+      col4 = vec4 (0.9, 0.8, 0.6, 0.2);
+    }
+  }
+  if (min (dstBall, dstObj) < dstFar) {
+    nDotL = max (dot (vn, ltDir), 0.);
+    if (dstObj < dstBall) nDotL *= nDotL;
+    col = col4.rgb * (0.2 + 0.8 * nDotL) + col4.a * pow (max (0.,
+       dot (ltDir, reflect (rd, vn))), 32.);
+  } else if (dc4.x < dstFar) col *= 0.7;
+  if (dc4.x < min (dstObj, dstFar)) col = mix (col, vec3 (0.8, 0.8, 1.),
+     0.1 + 0.8 * pow (1. - abs (dot (dc4.yzw, rd)), 5.));
+  return clamp (col, 0., 1.);
+}
+
+vec3 ShowWg (vec2 uv, vec2 canvas, vec3 col, float slVal)
+{
+  vec4 wgBx;
+  vec3 c1, c2;
+  vec2 ut, ust;
+  float asp;
+  asp = canvas.x / canvas.y;
+  wgBx = vec4 (0.42 * asp, 0., 0.015 * asp, 0.2);
+  c1 = vec3 (0.1, 0.7, 0.1);
+  c2 = vec3 (0.7, 1., 0.5);
+  ut = 0.5 * uv - wgBx.xy;
+  ust = abs (ut) - wgBx.zw * vec2 (0.7, 1.);
+  if (max (ust.x, ust.y) < 0.) {
+    if  (min (abs (ust.x), abs (ust.y)) * canvas.y < 2.) col = c2;
+    else col = (mod (0.5 * ((0.5 * uv.y - wgBx.y) / wgBx.w - 0.99), 0.1) *
+       canvas.y < 5.) ? c2 : vec3 (0.3);
+  }
+  ut.y -= (slVal - 0.5) * 2. * wgBx.w;
+  ut = abs (ut) * vec2 (1., 2.);
+  if (abs (max (ut.x, ut.y) - 0.02) < 0.008) col = c1;
+  return col;
+}
+
+void main ()
+{
+  mat3 vuMatT;
+  vec4 stDat, qtVu;
+  vec3 col, rd, ro;
+  vec2 canvas, uv;
+  float b, slVal, zmFac;
+  canvas = iResolution.xy;
+  uv = 2. * gl_FragCoord.xy / canvas - 1.;
+  uv.x *= canvas.x / canvas.y;
+  stDat = Loadv4 (0);
+  cylRad = stDat.x - 0.4;
+  cylLen = stDat.y - 0.4;
+  cylRot = stDat.w;
+  qtVu = Loadv4 (1);
+  vuMatT = QtToRMat (qtVu);
+  b = max (cylRad, cylLen);
+  dstFar = 20. * b;
+  zmFac = 6.;
+  rd = normalize (vec3 (uv, zmFac)) * vuMatT;
+  ro = vec3 (0., 0., - 8. * b) * vuMatT;
+  ltDir = normalize (vec3 (1., 1., -1.)) * vuMatT;
+  col = vec3 (0., 0., 0.2 + 0.1 * uv.y);
+  col = ShowScene (ro, rd, col);
+  slVal = Loadv4 (3).y;
+  col = ShowWg (uv, canvas, col, slVal);
+  gl_FragColor = vec4 (col, 1.);
+}
+
+float PrCylDf (vec3 p, float r, float h)
+{
+  return max (length (p.xy) - r, abs (p.z) - h);
+}
+
+float PrCapsDf (vec3 p, float r, float h)
+{
+  return length (p - vec3 (0., 0., h * clamp (p.z / h, -1., 1.))) - r;
+}
+
+float PrTorusDf (vec3 p, float ri, float rc)
+{
+  return length (vec2 (length (p.xy) - rc, p.z)) - ri;
+}
+
+mat3 QtToRMat (vec4 q) 
+{
+  mat3 m;
+  float a1, a2, s;
+  q = normalize (q);
+  s = q.w * q.w - 0.5;
+  m[0][0] = q.x * q.x + s;  m[1][1] = q.y * q.y + s;  m[2][2] = q.z * q.z + s;
+  a1 = q.x * q.y;  a2 = q.z * q.w;  m[0][1] = a1 + a2;  m[1][0] = a1 - a2;
+  a1 = q.x * q.z;  a2 = q.y * q.w;  m[2][0] = a1 + a2;  m[0][2] = a1 - a2;
+  a1 = q.y * q.z;  a2 = q.x * q.w;  m[1][2] = a1 + a2;  m[2][1] = a1 - a2;
+  return 2. * m;
+}
+
+vec2 Rot2D (vec2 q, float a)
+{
+  vec2 cs;
+  cs = sin (a + vec2 (0.5 * pi, 0.));
+  return vec2 (dot (q, vec2 (cs.x, - cs.y)), dot (q.yx, cs));
+}
+
+vec3 HsvToRgb (vec3 c)
+{
+  return c.z * mix (vec3 (1.), clamp (abs (fract (c.xxx + vec3 (1., 2./3., 1./3.)) * 6. -
+     3.) - 1., 0., 1.), c.y);
+}
+
+#define txBuf iChannel0
+#define txSize iChannel0Resolution
+
+const float txRow = 128.;
+
+vec4 Loadv4 (int idVar)
+{
+  float fi;
+  fi = float (idVar);
+  return texture (txBuf, (vec2 (mod (fi, txRow), floor (fi / txRow)) + 0.5) / txSize);
+}
