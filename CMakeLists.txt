@@ -1644,6 +1644,8 @@ set (engine_26_EXE_SRCS
      glut_552.h
      glut_553.cpp
      glut_553.h
+     glut_554.cpp
+     glut_554.h
      stdafx.h)
 
 set (EXECUTABLE_26 engine_26)
@@ -2710,6 +2712,10 @@ install (FILES
          "glut_552.frag_5"
          "glut_553.vert"
          "glut_553.frag"
+         "glut_554.vert"
+         "glut_554.frag"
+         "glut_554.frag_2"
+         "glut_554.frag_3"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
