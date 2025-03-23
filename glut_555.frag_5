@@ -1,0 +1,402 @@
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform vec2 iChannel0Resolution;
+
+float PrRoundBoxDf (vec3 p, vec3 b, float r);
+float PrCylDf (vec3 p, float r, float h);
+float PrCapsDf (vec3 p, float r, float h);
+float Minv3 (vec3 p);
+float Maxv3 (vec3 p);
+mat3 QtToRMat (vec4 q);
+vec3 OrAng (vec3 p);
+vec3 OrAngT (vec3 p);
+mat3 StdVuMat (float el, float az);
+vec2 Rot2D (vec2 q, float a);
+float Fbm2 (vec2 p);
+vec4 Loadv4 (int idVar);
+
+const ivec3 nbEdge = ivec3 (20, 2, 16);
+const int nBall = nbEdge.x * nbEdge.y * nbEdge.z;
+
+vec3 ltDir, qHit, vnBall, hbSize, blkAng, vnBlk;
+float dstFar, hbMarg, nBin;
+int idObj, idBall;
+const int txOff = 4;
+const float pi = 3.14159;
+
+#define VAR_ZERO min (iFrame, 0)
+
+#define DMINQ(id) if (d < dMin) { dMin = d;  idObj = id;  qHit = q; }
+
+float ObjDf (vec3 p)
+{
+  vec4 sLen;
+  vec3 q, eWid, ss;
+  float dMin, d, tr, f, b;
+  dMin = dstFar;
+  q = p;
+  q = OrAng (q);
+  sLen = vec4 (hbSize - hbMarg - 0.1, 0.);
+  eWid = vec3 (0.15);
+  q = abs (q);
+  d = min (min (
+     PrRoundBoxDf (q - sLen.wyz, eWid + sLen.xww - 0.1, 0.1),
+     PrRoundBoxDf (q - sLen.xwz, eWid + sLen.wyw - 0.1, 0.1)),
+     PrRoundBoxDf (q - sLen.xyw, eWid + sLen.wwz - 0.1, 0.1));
+  DMINQ (1);
+  q = p;
+  q.y -= - hbSize.x - eWid.x - 0.4;
+  d = PrRoundBoxDf (q, vec3 (hbSize.z + 3., 0.4, hbSize.z + 3.) - 0.05, 0.05);
+  DMINQ (2);
+  return dMin;
+}
+
+float ObjRay (vec3 ro, vec3 rd)
+{
+  float dHit, d;
+  dHit = 0.;
+  for (int j = VAR_ZERO; j < 120; j ++) {
+    d = ObjDf (ro + dHit * rd);
+    dHit += d;
+    if (d < 0.0005 || dHit > dstFar) break;
+  }
+  return dHit;
+}
+
+vec3 ObjNf (vec3 p)
+{
+  vec4 v;
+  vec2 e;
+  e = vec2 (0.0001, -0.0001);
+  for (int j = VAR_ZERO; j < 4; j ++) {
+    v[j] = ObjDf (p + ((j < 2) ? ((j == 0) ? e.xxx : e.xyy) : ((j == 2) ? e.yxy : e.yyx)));
+  }
+  v.x = - v.x;
+  return normalize (2. * v.yzw - dot (v, vec4 (1.)));
+}
+
+float TrObjDf (vec3 p)
+{
+  vec3 q;
+  vec2 cEdge;
+  float dMin, d, cGap, hGap, hHt, vHt, cr, hy;
+  dMin = dstFar;
+  cGap = 2.5;
+  cEdge = vec2 (3.5, 4.5);
+  hGap = 0.2;
+  hHt = 0.5;
+  vHt = 8.;
+  cr = 0.46;
+  hy = hbSize.y - hbMarg - 0.5;
+  p = OrAng (p);
+  q = p;
+  d = max (abs (q.x) - cEdge.x * cGap, abs (q.z) - cEdge.y * cGap);
+  q.z += 0.25 * cGap * sign (mod (floor (q.x / cGap + 0.5), 2.) - 0.5);
+  d = max (d, PrCapsDf (vec3 (mod (q.xz + 0.5 * cGap, cGap) - 0.5 * cGap, q.y), cr, hy));
+  dMin = min (dMin, d);
+  q = p;
+  d = max (abs (q.z) - hbSize.z + hbMarg, - q.x - hbSize.x + hbMarg);
+  if (mod (nBin, 2.) != 0.) q.z += hbSize.z / nBin;
+  q.z = mod (q.z + hbSize.z / nBin, 2. * hbSize.z / nBin) - hbSize.z / nBin;
+  d = max (d, PrRoundBoxDf (vec3 (q.x + hbSize.x, q.yz), vec3 (vHt, hy, 0.01), cr));
+  dMin = min (dMin, d);
+  q = p;
+  q.z = abs (q.z) - hbSize.z;
+  d = q.z + hbMarg;
+  q.x -= hHt * hbSize.x;
+  d = max (d, PrRoundBoxDf (q, vec3 (0.01, hy, (1. - hGap) * hbSize.z), cr));
+  dMin = min (dMin, d);
+  return dMin;
+}
+
+float TrObjRay (vec3 ro, vec3 rd)
+{
+  float dHit, d;
+  dHit = 0.;
+  for (int j = VAR_ZERO; j < 120; j ++) {
+    d = TrObjDf (ro + dHit * rd);
+    dHit += d;
+    if (d < 0.0005 || dHit > dstFar) break;
+  }
+  return dHit;
+}
+
+vec3 TrObjNf (vec3 p)
+{
+  vec4 v;
+  vec2 e;
+  e = vec2 (0.0001, -0.0001);
+  for (int j = VAR_ZERO; j < 4; j ++) {
+    v[j] = TrObjDf (p + ((j < 2) ? ((j == 0) ? e.xxx : e.xyy) : ((j == 2) ? e.yxy : e.yyx)));
+  }
+  v.x = - v.x;
+  return normalize (2. * v.yzw - dot (v, vec4 (1.)));
+}
+
+float BallHit (vec3 ro, vec3 rd)
+{
+  vec4 p;
+  vec3 u;
+  float b, d, w, dMin, rad;
+  dMin = dstFar;
+  for (int n = VAR_ZERO; n < nBall; n ++) {
+    p = Loadv4 (txOff + 4 * n);
+    u = ro - p.xyz;
+    rad = 0.46 * p.w;
+    b = dot (rd, u);
+    w = b * b - dot (u, u) + rad * rad;
+    if (w >= 0.) {
+      d = - b - sqrt (w);
+      if (d > 0. && d < dMin) {
+        dMin = d;
+        vnBall = (u + d * rd) / rad;
+        idBall = n;
+      }
+    }
+  }
+  return dMin;
+} 
+
+float BallChqr (int idBall, vec3 vnBall)
+{
+  vec3 u;
+  u = vnBall * QtToRMat (Loadv4 (txOff + 4 * idBall + 2));
+  return step (0., sign (u.y) * sign (u.z) * atan (u.x, u.y));
+}
+
+float BlkHit (vec3 ro, vec3 rd)
+{
+  vec3 v, tm, tp, u;
+  float dMin, dn, df;
+  dMin = dstFar;
+  v = ro / rd;
+  tp = (hbSize - hbMarg - 0.04) / abs (rd) - v;
+  tm = - tp - 2. * v;
+  dn = Maxv3 (tm);
+  df = Minv3 (tp);
+  if (df > 0. && dn < df) {
+    dMin = dn;
+    vnBlk = - sign (rd) * step (tm.zxy, tm) * step (tm.yzx, tm);
+  }
+  return dMin;
+}
+
+float BlkHitSil (vec3 ro, vec3 rd)
+{
+  vec3 v, tm, tp;
+  float dn, df;
+  v = ro / rd;
+  tp = (hbSize - hbMarg - 0.04) / abs (rd) - v;
+  tm = - tp - 2. * v;
+  dn = Maxv3 (tm);
+  df = Minv3 (tp);
+  return (df > 0. && dn < df) ? dn : dstFar;
+}
+
+vec3 ShowScene (vec3 ro, vec3 rd, vec3 col)
+{
+  vec4 col4;
+  vec3 roo, rdo, vn, colT;
+  float dstBall, dstObj, dstTrObj, db, c, nDotL;
+  hbMarg = 0.4;
+  dstObj = ObjRay (ro, rd);
+  dstTrObj = TrObjRay (ro, rd);
+  dstBall = dstFar;
+  roo = ro;
+  rdo = rd;
+  ro = OrAng (ro);
+  rd = OrAng (rd);
+  db = BlkHitSil (ro, rd);
+  if (db < dstFar) {
+    dstBall = BallHit (ro, rd);
+    if (dstBall < min (dstObj, dstFar)) {
+      vn = OrAngT (vnBall);
+      c = Loadv4 (txOff + 4 * idBall + 1).w;
+      col = vec3 (1., 0.3, 0.3);
+      if (c > 0.) col = (c == 1.) ? col.grg : ((c == 2.) ? col.ggr : ((c == 3.) ? col.rrg :
+         (c == 4.) ? col.rgr : col.grr));
+      col4 = vec4 (col * (0.6 + 0.4 * BallChqr (idBall, vnBall)), 0.3);
+      idObj = -1;
+    }
+  }
+  ro = roo;
+  rd = rdo;
+  if (dstObj < min (dstBall, dstFar)) {
+    ro += dstObj * rd;
+    vn = ObjNf (ro);
+    if (idObj == 1) {
+      col4 = vec4 (0.8, 0.8, 0.9, 0.2);
+    } else if (idObj == 2) {
+       col4 = mix (vec4 (0.7, 0.3, 0.1, 0.1), vec4 (0.4, 0.2, 0.1, 0.1),
+          Fbm2 (qHit.xz * vec2 (0.5, 4.)));
+    }
+  }
+  if (min (dstBall, dstObj) < dstFar) {
+    nDotL = max (dot (vn, ltDir), 0.);
+    if (idObj != 4) nDotL *= nDotL;
+    col = col4.rgb * (0.3 + 0.7 * nDotL) + col4.a * pow (max (0.,
+       dot (ltDir, reflect (rd, vn))), 32.);
+  } else if (db < dstFar) col *= 0.9;
+  if (dstTrObj < min (dstBall, dstObj)) {
+    ro = roo;
+    rd = rdo;
+    ro += dstTrObj * rd;
+    vn = TrObjNf (ro);
+    colT = vec3 (0.8, 0.8, 0.9) * (0.2 + 0.8 * max (dot (vn, ltDir), 0.)) + 0.1 * pow (max (0.,
+       dot (ltDir, reflect (rd, vn))), 32.);
+    col = mix (col, colT, 0.85);
+  }
+  if (BlkHit (OrAng (roo), OrAng (rdo)) < min (dstObj, dstFar)) {
+    vn = OrAngT (vnBlk);
+    col = mix (col, vec3 (0.7, 0.7, 0.75) * (0.2 + 0.8 * max (dot (vn, ltDir), 0.)) +
+       0.1 * pow (max (0., dot (ltDir, reflect (rdo, vn))), 32.),
+       pow (1. - abs (dot (rdo, vn)), 5.));
+  }
+  return clamp (col, 0., 1.);
+}
+
+void main ()
+{
+  mat3 vuMat;
+  vec4 stDat;
+  vec3 col, rd, ro;
+  vec2 canvas, uv;
+  float b, zmFac, el, az;
+  canvas = iResolution.xy;
+  uv = 2. * gl_FragCoord.xy / canvas - 1.;
+  uv.x *= canvas.x / canvas.y;
+  stDat = Loadv4 (0);
+  hbSize = stDat.xyz;
+  stDat = Loadv4 (1);
+  blkAng = stDat.xyz;
+  zmFac = 9.;
+  stDat = Loadv4 (2);
+  nBin = stDat.w;
+  stDat = Loadv4 (3);
+  el = stDat.x;
+  az = stDat.y;
+  vuMat = StdVuMat (el, az);
+  rd = vuMat * normalize (vec3 (uv, zmFac));
+  b = length (hbSize);
+  ro = vuMat * vec3 (0., -0.04, - 8.) * b;
+  dstFar = 20. * b;
+  ltDir = vuMat * normalize (vec3 (1., 1., -1.));
+  col = vec3 (0.3, 0.3, 0.35) * (0.7 + 0.3 * uv.y);
+  col = ShowScene (ro, rd, col);
+  gl_FragColor = vec4 (col, 1.);
+}
+
+float PrRoundBoxDf (vec3 p, vec3 b, float r)
+{
+  return length (max (abs (p) - b, 0.)) - r;
+}
+
+float PrCylDf (vec3 p, float r, float h)
+{
+  return max (length (p.xy) - r, abs (p.z) - h);
+}
+
+float PrCapsDf (vec3 p, float r, float h)
+{
+  return length (p - vec3 (0., 0., h * clamp (p.z / h, -1., 1.))) - r;
+}
+
+float Minv3 (vec3 p)
+{
+  return min (p.x, min (p.y, p.z));
+}
+
+float Maxv3 (vec3 p)
+{
+  return max (p.x, max (p.y, p.z));
+}
+
+mat3 QtToRMat (vec4 q) 
+{
+  mat3 m;
+  float a1, a2, s;
+  q = normalize (q);
+  s = q.w * q.w - 0.5;
+  m[0][0] = q.x * q.x + s;  m[1][1] = q.y * q.y + s;  m[2][2] = q.z * q.z + s;
+  a1 = q.x * q.y;  a2 = q.z * q.w;  m[0][1] = a1 + a2;  m[1][0] = a1 - a2;
+  a1 = q.x * q.z;  a2 = q.y * q.w;  m[2][0] = a1 + a2;  m[0][2] = a1 - a2;
+  a1 = q.y * q.z;  a2 = q.x * q.w;  m[1][2] = a1 + a2;  m[2][1] = a1 - a2;
+  return 2. * m;
+}
+
+vec3 OrAng (vec3 p)
+{
+  p.xz = Rot2D (p.xz, blkAng.y);
+  p.yz = Rot2D (p.yz, blkAng.x);
+  p.xy = Rot2D (p.xy, blkAng.z);
+  return p;
+}
+
+vec3 OrAngT (vec3 p)
+{
+  p.xy = Rot2D (p.xy, - blkAng.z);
+  p.yz = Rot2D (p.yz, - blkAng.x);
+  p.xz = Rot2D (p.xz, - blkAng.y);
+  return p;
+}
+
+mat3 StdVuMat (float el, float az)
+{
+  vec2 ori, ca, sa;
+  ori = vec2 (el, az);
+  ca = cos (ori);
+  sa = sin (ori);
+  return mat3 (ca.y, 0., - sa.y, 0., 1., 0., sa.y, 0., ca.y) *
+         mat3 (1., 0., 0., 0., ca.x, - sa.x, 0., sa.x, ca.x);
+}
+
+vec2 Rot2D (vec2 q, float a)
+{
+  vec2 cs;
+  cs = sin (a + vec2 (0.5 * pi, 0.));
+  return vec2 (dot (q, vec2 (cs.x, - cs.y)), dot (q.yx, cs));
+}
+
+const float cHashM = 43758.54;
+
+vec2 Hashv2v2 (vec2 p)
+{
+  vec2 cHashVA2 = vec2 (37., 39.);
+  return fract (sin (vec2 (dot (p, cHashVA2), dot (p + vec2 (1., 0.), cHashVA2))) * cHashM);
+}
+
+float Noisefv2 (vec2 p)
+{
+  vec2 t, ip, fp;
+  ip = floor (p);  
+  fp = fract (p);
+  fp = fp * fp * (3. - 2. * fp);
+  t = mix (Hashv2v2 (ip), Hashv2v2 (ip + vec2 (0., 1.)), fp.y);
+  return mix (t.x, t.y, fp.x);
+}
+
+float Fbm2 (vec2 p)
+{
+  float f, a;
+  f = 0.;
+  a = 1.;
+  for (int i = 0; i < 5; i ++) {
+    f += a * Noisefv2 (p);
+    a *= 0.5;
+    p *= 2.;
+  }
+  return f * (1. / 1.9375);
+}
+
+#define txBuf iChannel0
+#define txSize iChannel0Resolution
+
+const float txRow = 128.;
+
+vec4 Loadv4 (int idVar)
+{
+  float fi;
+  fi = float (idVar);
+  return texture (txBuf, (vec2 (mod (fi, txRow), floor (fi / txRow)) + 0.5) / txSize);
+}
