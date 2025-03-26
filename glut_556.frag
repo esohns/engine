@@ -1,3 +1,5 @@
+#version 130
+
 uniform float iTime;
 uniform int iFrame;
 uniform vec4 iDate;

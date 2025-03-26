@@ -1963,7 +1963,7 @@ do_work (int argc_in,
       cb_data_s.shader1.use ();
       cb_data_s.S1timeLoc =
         glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
-      ACE_ASSERT (cb_data_s.S1timeLoc != -1);
+      //ACE_ASSERT (cb_data_s.S1timeLoc != -1);
       cb_data_s.S1frameLoc =
         glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
       ACE_ASSERT (cb_data_s.S1frameLoc != -1);
@@ -2201,7 +2201,7 @@ do_work (int argc_in,
       cb_data_s.shader1.use ();
       cb_data_s.S1resolutionLoc =
         glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
-      ACE_ASSERT (cb_data_s.S1resolutionLoc != -1);
+      //ACE_ASSERT (cb_data_s.S1resolutionLoc != -1);
       cb_data_s.S1frameLoc =
         glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
       ACE_ASSERT (cb_data_s.S1frameLoc != -1);
@@ -2215,7 +2215,7 @@ do_work (int argc_in,
       cb_data_s.shader2.use ();
       cb_data_s.S2resolutionLoc =
         glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
-      ACE_ASSERT (cb_data_s.S2resolutionLoc != -1);
+      //ACE_ASSERT (cb_data_s.S2resolutionLoc != -1);
       cb_data_s.S2frameLoc =
         glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
       ACE_ASSERT (cb_data_s.S2frameLoc != -1);
@@ -3538,7 +3538,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.timeLoc != -1);
       cb_data_s.mouseLoc =
         glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iMouse"));
-      ACE_ASSERT (cb_data_s.mouseLoc != -1);
+      //ACE_ASSERT (cb_data_s.mouseLoc != -1);
 
       // START TIMING
       cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();

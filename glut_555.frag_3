@@ -1,3 +1,5 @@
+#version 130
+
 uniform vec2 iResolution;
 uniform int iFrame;
 uniform vec4 iDate;
