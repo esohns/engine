@@ -1,0 +1,115 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+#define FLICKER 1.
+
+#define PI2 6.28318530718
+#define sc (iResolution.x/600.)
+
+vec2 roffs;
+float ramp;
+float rsc;
+
+vec2
+uvSmooth (vec2 uv, vec2 res)
+{
+  return uv+.6*sin(uv*res*PI2)/PI2/res;
+}
+
+vec4
+getRand (vec2 pos)
+{
+  vec2 tres=vec2(textureSize(iChannel1,0));
+  vec2 uv=pos/tres.xy;
+  uv=uvSmooth(uv,tres);
+  return textureLod(iChannel1,uv,0.);
+}
+
+vec4
+getCol (vec2 pos)
+{
+  vec4 r1 = (getRand((pos+roffs)*.05*rsc/sc+iTime*131.*FLICKER)-.5)*10.*ramp;
+  vec2 res0=vec2(textureSize(iChannel0,0));
+  vec2 uv=(pos+r1.xy*sc)/iResolution.xy;
+  vec4 c = texture(iChannel0,uv);
+  vec4 bg= vec4(vec3(clamp(.3+pow(length(uv-.5),2.),0.,1.)),1);
+  bg=vec4(1);
+  float vign=pow(clamp(-.5+length(uv-.5)*2.,0.,1.),3.);
+  return c;
+}
+
+float
+getVal (vec2 pos)
+{
+  return clamp(dot(getCol(pos).xyz,vec3(.333)),0.,1.);
+}
+
+vec2
+getGrad (vec2 pos, float eps)
+{
+  vec2 d=vec2(eps,0);
+  return vec2(getVal(pos+d.xy)-getVal(pos-d.xy),
+              getVal(pos+d.yx)-getVal(pos-d.yx))/eps/2.;
+}
+
+void
+main ()
+{
+  vec4 r = getRand(gl_FragCoord.xy*1.2/sqrt(sc))-getRand(gl_FragCoord.xy*1.2/sqrt(sc)+vec2(1,-1)*1.5);
+  vec4 r2 = getRand(gl_FragCoord.xy*1.2/sqrt(sc));
+
+  float br=0.;
+  roffs = vec2(0.);
+  ramp = .7;
+  rsc=.7;
+  int num=3;
+  for(int i=0;i<num;i++)
+  {
+    float fi=float(i)/float(num-1);
+    float t=.03+.25*fi, w=t*2.;
+    ramp=.15*pow(1.3,fi*5.); rsc=1.7*pow(1.3,-fi*5.);
+    br+=.6*(.5+fi)*smoothstep(t-w/2.,t+w/2.,length(getGrad(gl_FragCoord.xy,.4*sc))*sc);
+    ramp=.3*pow(1.3,fi*5.); rsc=10.7*pow(1.3,-fi*5.);
+    br+=.4*(.2+fi)*smoothstep(t-w/2.,t+w/2.,length(getGrad(gl_FragCoord.xy,.4*sc))*sc);
+  }
+  gl_FragColor.xyz=vec3(1)-.7*br*(.5+.5*r2.z)*3./float(num);
+  gl_FragColor.xyz=clamp(gl_FragColor.xyz,0.,1.);
+
+  ramp=0.;
+  int hnum=5;
+#define N(v) (v.yx*vec2(-1,1))
+#define CS(ang) cos(ang-vec2(0,1.6))
+  float hatch = 0.;
+  float hatch2 = 0.;
+  float sum=0.;
+  for(int i=0;i<hnum;i++)
+  {
+   	float br=getVal(gl_FragCoord.xy+1.5*sc*(getRand(gl_FragCoord.xy*.02+iTime*1120.).xy-.5)*clamp(FLICKER,-1.,1.))*1.7;
+    float ang=-.5-.08*float(i)*float(i);
+    vec2 uvh=mat2(CS(ang),N(CS(ang)))*gl_FragCoord.xy/sqrt(sc)*vec2(.05,1)*1.3;
+    vec4 rh = pow(getRand(uvh+1003.123*iTime*FLICKER+vec2(sin(uvh.y),0)),vec4(1.));
+    hatch += 1.-smoothstep(.5,1.5,(rh.x)+br)-.3*abs(r.z);
+    hatch2 = max(hatch2, 1.-smoothstep(.5,1.5,(rh.x)+br)-.3*abs(r.z));
+    sum+=1.;
+    if( float(i)>(1.-br)*float(hnum) && i>=2 ) break;
+  }
+
+  gl_FragColor.xyz*=1.-clamp(mix(hatch/sum,hatch2,.5),0.,1.);
+
+  gl_FragColor.xyz=1.-((1.-gl_FragColor.xyz)*.7);
+  gl_FragColor.xyz *= .95+.06*r.xxx+.06*r.xyz;
+  gl_FragColor.w = 1.;
+
+  if(true)
+  {
+    vec2 scc=(gl_FragCoord.xy-.5*iResolution.xy)/iResolution.x;
+    float vign = 1.-.3*dot(scc,scc);
+    vign*=1.-.7*exp(-sin(gl_FragCoord.x/iResolution.x*3.1416)*40.);
+    vign*=1.-.7*exp(-sin(gl_FragCoord.y/iResolution.y*3.1416)*20.);
+    gl_FragColor.xyz *= vign;
+  }
+}

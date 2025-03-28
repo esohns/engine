@@ -1,0 +1,15 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+  vec2 p = gl_FragCoord.xy/iResolution.xy;
+
+  vec3 col=texture(iChannel0, p ).xyz;
+  col*=0.5 + 0.5*pow( 16.0*p.x*p.y*(1.0-p.x)*(1.0-p.y), 0.05 );
+
+  gl_FragColor = vec4( col, 1.0 );
+}
