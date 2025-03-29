@@ -1707,6 +1707,16 @@ set (engine_27_EXE_SRCS
      glut_576.h
      glut_577.cpp
      glut_577.h
+     glut_578.cpp
+     glut_578.h
+     glut_579.cpp
+     glut_579.h
+     glut_580.cpp
+     glut_580.h
+     glut_581.cpp
+     glut_581.h
+     glut_582.cpp
+     glut_582.h
      stdafx.h)
 
 set (EXECUTABLE_27 engine_27)
@@ -2867,6 +2877,26 @@ install (FILES
          "glut_576.frag"
          "glut_577.vert"
          "glut_577.frag"
+         "glut_577_channel0.png"
+         "glut_578.vert"
+         "glut_578.frag"
+         "glut_579.vert"
+         "glut_579.frag"
+         "glut_580.vert"
+         "glut_580.frag"
+         "glut_580.frag_2"
+         "glut_580.frag_3"
+         "glut_580.frag_4"
+         "glut_580.frag_5"
+         "glut_580_channel1.png"
+         "glut_581.vert"
+         "glut_581.frag"
+         "glut_581.frag_2"
+         "glut_581.frag_3"
+         "glut_581.frag_4"
+         "glut_581.frag_5"
+         "glut_582.vert"
+         "glut_582.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"

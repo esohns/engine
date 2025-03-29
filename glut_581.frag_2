@@ -1,0 +1,59 @@
+#version 130
+
+// glut_581_common.glsl
+#define R iResolution.xy
+#define A(U) texture(iChannel0, (U)/R)
+#define B(U) texture(iChannel1, (U)/R)
+#define C(U) texture(iChannel2, (U)/R)
+#define D(U) texture(iChannel3, (U)/R)
+
+#define S vec4(2,4,6,8)
+#define M .1*vec4(4,3,2,1)
+#define O .5/S/S
+#define I 12.
+
+vec4
+hash (float p)
+{
+  vec4 p4 = fract(vec4(p) * vec4(.1031, .1030, .0973, .1099));
+  p4 += dot(p4, p4.wzxy+19.19);
+  return fract((p4.xxyz+p4.yzzw)*p4.zywx)*2.-1.;
+}
+// glut_581_common.glsl
+
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform vec4 iDate;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+void
+swap (inout vec4 Q, vec2 U, vec2 r)
+{
+  vec4 n = B(U+r);
+  if (length(U-n.xy)<length(U-Q.xy))
+    Q = n;
+}
+
+void
+main ()
+{
+  gl_FragColor = B(gl_FragCoord.xy);
+  swap(gl_FragColor,gl_FragCoord.xy,vec2(1,0));
+  swap(gl_FragColor,gl_FragCoord.xy,vec2(0,1));
+  swap(gl_FragColor,gl_FragCoord.xy,vec2(-1,0));
+  swap(gl_FragColor,gl_FragCoord.xy,vec2(0,-1));
+  swap(gl_FragColor,gl_FragCoord.xy,vec2(1,1));
+  swap(gl_FragColor,gl_FragCoord.xy,vec2(1,-1));
+  swap(gl_FragColor,gl_FragCoord.xy,vec2(-1,1));
+  swap(gl_FragColor,gl_FragCoord.xy,vec2(-1,-1));
+
+  gl_FragColor.xy += A(mix(gl_FragCoord.xy,gl_FragColor.xy,0.7)).xy;
+
+  if ((iMouse.z>0.&&length(iMouse.xy-gl_FragCoord.xy)<30.)||iFrame < 1)
+  {
+    gl_FragColor = vec4(gl_FragCoord.xy,0,0);
+    gl_FragColor.w = .1*(gl_FragColor.x+R.x*gl_FragColor.y+dot(iDate,vec4(1)));
+  }
+}

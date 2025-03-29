@@ -1,0 +1,37 @@
+#version 130
+
+// glut_581_common.glsl
+#define R iResolution.xy
+#define A(U) texture(iChannel0, (U)/R)
+#define B(U) texture(iChannel1, (U)/R)
+#define C(U) texture(iChannel2, (U)/R)
+#define D(U) texture(iChannel3, (U)/R)
+
+#define S vec4(2,4,6,8)
+#define M .1*vec4(4,3,2,1)
+#define O .5/S/S
+#define I 12.
+
+vec4
+hash (float p)
+{
+  vec4 p4 = fract(vec4(p) * vec4(.1031, .1030, .0973, .1099));
+  p4 += dot(p4, p4.wzxy+19.19);
+  return fract((p4.xxyz+p4.yzzw)*p4.zywx)*2.-1.;
+}
+// glut_581_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel1;
+
+void
+main ()
+{
+  gl_FragColor = vec4(0);
+  for (float i = -I; i <= I; i++)
+  {
+    vec2 x = gl_FragCoord.xy+vec2(i,0);
+    vec4 b = B(x);
+    gl_FragColor += hash(b.w)*M*exp(-i*i*O)*smoothstep(1.,0.,length(b.xy-x));
+  }
+}

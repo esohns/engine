@@ -1,0 +1,273 @@
+#version 130
+
+// glut_580_common.glsl
+const int textureSize = 256;
+const vec3 backgroundColor = vec3(0.2);
+const float transitionTime = 5.0;
+const float transitionPercent = 0.3;
+const int octaves = 7;
+const float attenuation = 0.995;
+const float strenght = 0.25;
+const float minTotalFlow = 0.0001;
+const float initialWaterLevel = 0.05;
+
+mat2
+rot (float ang)
+{
+   return mat2(
+      cos(ang), -sin(ang),
+      sin(ang),  cos(ang));
+}
+
+float
+hash12 (vec2 p)
+{
+  vec3 p3  = fract(vec3(p.xyx) * .1031);
+  p3 += dot(p3, p3.yzx + 33.33);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+float
+hash13 (vec3 p3)
+{
+  p3  = fract(p3 * .1031);
+  p3 += dot(p3, p3.zyx + 31.32);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+vec2
+boxIntersection (vec3 ro, vec3 rd, vec3 rad, out vec3 oN)
+{
+  vec3 m = 1.0 / rd;
+  vec3 n = m * ro;
+  vec3 k = abs(m) * rad;
+  vec3 t1 = -n - k;
+  vec3 t2 = -n + k;
+
+  float tN = max( max( t1.x, t1.y ), t1.z );
+  float tF = min( min( t2.x, t2.y ), t2.z );
+
+  if( tN > tF || tF < 0.0) return vec2(-1.0); // no intersection
+
+  oN = -sign(rd)*step(t1.yzx, t1.xyz) * step(t1.zxy, t1.xyz);
+
+  return vec2( tN, tF );
+}
+
+vec3
+applyFog (vec3 rgb, vec3 fogColor, float distance)
+{
+  float fogAmount = exp( -distance );
+  return mix( fogColor, rgb, fogAmount );
+}
+// glut_580_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+#define AA
+#define GAMMA 1
+
+const vec3 light = vec3(0.,4.,2.);
+const float boxHeight = 0.45;
+
+vec2
+getHeight (vec3 p)
+{
+  p = (p + 1.0) * 0.5;
+  vec2 p2 = p.xz * vec2(float(textureSize)) / iResolution.xy;
+  p2 = min(p2, vec2(float(textureSize) - 0.5) / iResolution.xy);
+  vec2 h = texture(iChannel0, p2).xy;
+  h.y += h.x;
+  return h - boxHeight;
+}
+
+vec3
+getNormal (vec3 p, int comp)
+{
+  float d = 2.0 / float(textureSize);
+  float hMid = getHeight(p)[comp];
+  float hRight = getHeight(p + vec3(d, 0, 0))[comp];
+  float hTop = getHeight(p + vec3(0, 0, d))[comp];
+  return normalize(cross(vec3(0, hTop - hMid, d), vec3(d, hRight - hMid, 0)));
+}
+
+vec3
+terrainColor (vec3 p, vec3 n, out float spec)
+{
+  spec = 0.1;
+  vec3 c = vec3(0.21, 0.50, 0.07);
+  float cliff = smoothstep(0.8, 0.3, n.y);
+  c = mix(c, vec3(0.25), cliff);
+  spec = mix(spec, 0.3, cliff);
+  float snow = smoothstep(0.05, 0.25, p.y) * smoothstep(0.5, 0.7, n.y);
+  c = mix(c, vec3(0.95, 0.95, 0.85), snow);
+  spec = mix(spec, 0.4, snow);
+  vec3 t = texture(iChannel1, p.xz * 5.0).xyz;
+  return mix(c, c * t, 0.75);
+}
+
+vec3
+undergroundColor (float d)
+{
+  vec3 color[4] = vec3[](vec3(0.5, 0.45, 0.5), vec3(0.40, 0.35, 0.25), vec3(0.55, 0.50, 0.4), vec3(0.45, 0.30, 0.20));
+  d *= 6.0;
+  d = min(d, 3.0 - 0.001);
+  float fr = fract(d);
+  float fl = floor(d);
+  return mix(color[int(fl)], color[int(fl) + 1], fr);
+}
+
+vec3
+Render (vec3 ro, vec3 rd)
+{
+  vec3 n;
+  vec2 ret = boxIntersection(ro, rd, vec3(1, boxHeight, 1), n);
+  if(ret.x > 0.0)
+  {
+    vec3 pi = ro + rd * ret.x;
+    // Find Terrain
+    vec3 tc;
+    vec3 tn;
+    float tt = ret.x;
+    vec2 h = getHeight(pi);
+    float spec;
+    if(pi.y < h.x)
+    {
+      tn = n;
+      tc = undergroundColor(h.x - pi.y);
+    }
+    else
+    {
+      for (int i = 0; i < 80; i++)
+      {
+          vec3 p = ro + rd * tt;
+          float h = p.y - getHeight(p).x;
+          if (h < 0.0002 || tt > ret.y)
+              break;
+          tt += h * 0.4;
+      }
+      tn = getNormal(ro + rd * tt, 0);
+      tc = terrainColor(ro + rd * tt, tn, spec);
+    }
+
+    {
+      vec3 lightDir = normalize(light - (ro + rd * tt));
+      tc = tc * (max( 0.0, dot(lightDir, tn)) + 0.3);
+      spec *= pow(max(0., dot(lightDir, reflect(rd, tn))), 10.0);
+      tc += spec;            
+    }
+
+    if(tt > ret.y)
+    {
+      tc = backgroundColor;
+    }
+
+    float wt = ret.x;
+    h = getHeight(pi);
+    vec3 waterNormal;
+    if(pi.y < h.y)
+    {
+      waterNormal = n;
+    }
+    else
+    {
+      for (int i = 0; i < 80; i++)
+      {
+        vec3 p = ro + rd * wt;
+        float h = p.y - getHeight(p).y;
+        if (h < 0.0002 || wt > min(tt, ret.y))
+          break;
+        wt += h * 0.4;
+      }
+      waterNormal = getNormal(ro + rd * wt, 1);
+    }
+
+    if(wt < ret.y)
+    {
+      float dist = (min(tt, ret.y) - wt);
+      vec3 p = waterNormal;
+      vec3 lightDir = normalize(light - (ro + rd * wt));
+                        
+      tc = applyFog( tc, vec3(0,0,0.4), dist * 15.0);
+
+      float spec = pow(max(0., dot(lightDir, reflect(rd, waterNormal))), 20.0);
+      tc += 0.5 * spec * smoothstep(0.0, 0.1, dist);
+    }
+
+    return tc;
+  }
+
+  return backgroundColor;
+}
+
+mat3
+setCamera (vec3 ro, vec3 ta)
+{
+  vec3 cw = normalize(ta-ro);
+  vec3 up = vec3(0, 1, 0);
+  vec3 cu = normalize( cross(cw,up) );
+  vec3 cv = normalize( cross(cu,cw) );
+  return mat3( cu, cv, cw );
+}
+
+vec3
+vignette (vec3 color, vec2 q, float v)
+{
+  color *= 0.3 + 0.8 * pow(16.0 * q.x * q.y * (1.0 - q.x) * (1.0 - q.y), v);
+  return color;
+}
+
+void
+main ()
+{
+  vec3 tot = vec3(0.0);
+
+  vec2 mouse = iMouse.xy;
+  if(length(mouse.xy) < 10.0)
+    mouse = iResolution.xy * 0.5;
+
+#ifdef AA
+  vec2 rook[4];
+  rook[0] = vec2( 1./8., 3./8.);
+  rook[1] = vec2( 3./8.,-1./8.);
+  rook[2] = vec2(-1./8.,-3./8.);
+  rook[3] = vec2(-3./8., 1./8.);
+  for( int n=0; n<4; ++n )
+  {
+    // pixel coordinates
+    vec2 o = rook[n];
+    vec2 p = (-iResolution.xy + 2.0*(gl_FragCoord.xy+o))/iResolution.y;
+#else //AA
+    vec2 p = (-iResolution.xy + 2.0*gl_FragCoord.xy)/iResolution.y;
+#endif //AA
+ 
+    float theta	= radians(360.)*(mouse.x/iResolution.x-0.5) + iTime*.2;
+    float phi	= radians(90.)*(mouse.y/iResolution.y-0.5)-1.;
+    vec3 ro = 2.0 * vec3( sin(phi)*cos(theta),cos(phi),sin(phi)*sin(theta));
+    //vec3 ro = vec3(0.0,.2,4.0);
+    vec3 ta = vec3( 0 );
+    // camera-to-world transformation
+    mat3 ca = setCamera( ro, ta );
+    //vec3 cd = ca[2];    
+        
+    vec3 rd =  ca*normalize(vec3(p,1.5));        
+        
+    vec3 col = Render(ro, rd);
+        
+    tot += col;
+#ifdef AA
+  }
+  tot /= 4.;
+#endif
+
+  tot = vignette(tot, gl_FragCoord.xy / iResolution.xy, 0.6);
+#if GAMMA
+  tot = pow(tot, vec3(1. / 2.2));
+#endif
+
+  gl_FragColor = vec4( tot, 1.0 );
+}
