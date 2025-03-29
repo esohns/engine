@@ -1717,6 +1717,12 @@ set (engine_27_EXE_SRCS
      glut_581.h
      glut_582.cpp
      glut_582.h
+     glut_583.cpp
+     glut_583.h
+     glut_584.cpp
+     glut_584.h
+     glut_585.cpp
+     glut_585.h
      stdafx.h)
 
 set (EXECUTABLE_27 engine_27)
@@ -2897,6 +2903,14 @@ install (FILES
          "glut_581.frag_5"
          "glut_582.vert"
          "glut_582.frag"
+         "glut_583.vert"
+         "glut_583.frag"
+         "glut_584.vert"
+         "glut_584.frag"
+         "glut_585.vert"
+         "glut_585.frag"
+         "glut_585_channel0.png"
+         "glut_585_channel1.png"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
