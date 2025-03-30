@@ -1,0 +1,123 @@
+#version 130
+
+// glut_593_common.glsl
+#define dt .15
+// lower value for vorticity threshold means higher viscosity
+// and vice versa (max .3). Setting it to 0. disables it.
+#define vorticityThreshold .25
+#define velocityThreshold 24.
+// higher this threshold, lower the viscosity (max .8)
+#define viscosityThreshold .64
+
+vec4
+fluidSolver (sampler2D velocityField, vec2 uv, vec2 stepSize, vec4 mouse, vec4 prevMouse)
+{
+  float k = .2, s = k / dt;
+
+  vec4 fluidData = textureLod(velocityField, uv, 0.);
+  vec4 fr = textureLod(velocityField, uv + vec2(stepSize.x, 0.), 0.);
+  vec4 fl = textureLod(velocityField, uv - vec2(stepSize.x, 0.), 0.);
+  vec4 ft = textureLod(velocityField, uv + vec2(0., stepSize.y), 0.);
+  vec4 fd = textureLod(velocityField, uv - vec2(0., stepSize.y), 0.);
+
+  vec3 ddx = (fr - fl).xyz * .5;
+  vec3 ddy = (ft - fd).xyz * .5;
+  float divergence = ddx.x + ddy.y;
+  vec2 densityDiff = vec2(ddx.z, ddy.z);
+
+  // Solving for density
+  fluidData.z -= dt*dot(vec3(densityDiff, divergence), fluidData.xyz);
+
+  // Solving for velocity
+  vec2 laplacian = fr.xy + fl.xy + ft.xy + fd.xy - 4.*fluidData.xy;
+  vec2 viscosityForce = viscosityThreshold * laplacian;
+
+  // Semi-lagrangian advection
+  vec2 densityInvariance = s * densityDiff;
+  vec2 uvHistory = uv - dt * fluidData.xy * stepSize;
+  fluidData.xyw = textureLod(velocityField, uvHistory, 0.).xyw;
+
+  // Calc external force from mouse input
+  vec2 extForce = vec2(0.);
+
+  if (mouse.z > 1. && prevMouse.z > 1.)
+  {
+    vec2 dragDir = clamp((mouse.xy - prevMouse.xy) * stepSize * 600., -10., 10.);
+    vec2 p = uv - mouse.xy*stepSize;
+    // extForce.xy += .0008 / (dot(p, p) + 1e-5) * (.5 - uv);
+    extForce.xy += .001/(dot(p, p)) * dragDir;
+  }
+
+  fluidData.xy += dt*(viscosityForce - densityInvariance + extForce);
+
+  // velocity decay
+  fluidData.xy = max(vec2(0.), abs(fluidData.xy) - 5e-6)*sign(fluidData.xy);
+
+  // Vorticity confinement
+  fluidData.w = (fd.x - ft.x + fr.y - fl.y); // curl stored in the w channel
+  vec2 vorticity = vec2(abs(ft.w) - abs(fd.w), abs(fl.w) - abs(fr.w));
+  vorticity *= vorticityThreshold / (length(vorticity) + 1e-5) * fluidData.w;
+  fluidData.xy += vorticity;
+
+  // Boundary conditions
+  fluidData.y *= smoothstep(.5,.48,abs(uv.y - .5));
+  fluidData.x *= smoothstep(.5,.49,abs(uv.x - .5));
+
+  // density stability
+  fluidData = clamp(fluidData, vec4(vec2(-velocityThreshold), 0.5 , -vorticityThreshold), vec4(vec2(velocityThreshold), 3.0 , vorticityThreshold));
+
+  return fluidData;
+}
+// glut_593_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+float
+hash1 (uint n)
+{
+  n = (n << 13U) ^ n;
+  n = n * (n * n * 15731U + 789221U) + 1376312589U;
+  return float( n & uvec3(0x7fffffffU))/float(0x7fffffff);
+}
+
+vec3
+hsv2rgb (vec3 c)
+{
+  vec3 rgb = clamp(abs(mod(c.x * 6. + vec3(0., 4., 2.),
+                            6.) - 3.) - 1., 0., 1.);
+  rgb = rgb * rgb * (3. - 2. * rgb);
+  return c.z * mix(vec3(1.), rgb, c.y);
+}
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy/iResolution.xy;
+  vec2 stepSize = 1./iResolution.xy;
+  vec4 vel = textureLod(iChannel0, uv, 0.);
+  vec4 col = textureLod(iChannel1, uv - dt * vel.xy * stepSize * 3., 0.);
+  vec2 mo = iMouse.xy / iResolution.xy;
+  vec4 prevMouse = texelFetch(iChannel1, ivec2(0, 0), 0).xyzw;
+
+  if (iMouse.z == 1. && prevMouse.z == 1.)
+  {
+    float hue = hash1(uint(iMouse.z + iResolution.x*abs(iMouse.w) + iTime));
+    vec4 rgb = vec4(hsv2rgb(vec3(hue, 1., 1.)), 1.);
+    float bloom = smoothstep(-.5, .5, (length(mo - prevMouse.xy / iResolution.xy)));
+    col += bloom * 8e-4/pow(length(uv - mo.xy), 1.6) * rgb;
+  }
+
+  col = clamp(col, 0., 5.);
+  col = max(col - (col * 8e-3), 0.);
+
+  if (gl_FragCoord.y < 1. && gl_FragCoord.x < 1.)
+  {
+    col = iMouse;
+  }
+
+  gl_FragColor = col;
+}
