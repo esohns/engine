@@ -1,0 +1,646 @@
+#version 130
+
+// glut_600_common.glsl
+#define PI 3.14159
+#define FOUR_PI 4.0 * PI
+#define GAMMA 2.2
+#define INV_GAMMA (1.0/GAMMA)
+
+const float minDot = 1e-3;
+
+float
+dot_c (vec3 a, vec3 b)
+{
+  return max(dot(a, b), minDot);
+}
+
+vec3
+gamma (vec3 col)
+{
+  return pow(col, vec3(INV_GAMMA));
+}
+
+vec3
+inv_gamma (vec3 col)
+{
+  return pow(col, vec3(GAMMA));
+}
+
+float
+saturate (float x)
+{
+  return clamp(x, 0.0, 1.0);
+}
+// glut_600_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform samplerCube iChannel2;
+
+#define HQ_LIGHT
+#define ZERO (min(iFrame,0))
+#define CUBEMAP
+#define IOR 1.333
+#define ETA 1.0/IOR
+#define ETA_REVERSE IOR
+
+const int MAX_STEPS = 50;
+const float MIN_DIST = 0.01;
+const float MAX_DIST = 5.0;
+const float EPSILON = 1e-4;
+const float DETAIL_EPSILON = 2e-3;
+const float DETAIL_HEIGHT = 0.1;
+const vec3 DETAIL_SCALE = vec3(1.0);
+const vec3 BLENDING_SHARPNESS = vec3(4.0);
+const vec3 sunLightColour = vec3(3.5);
+vec3 waterColour = 0.85 * vec3(0.1, 0.75, 0.9);
+const float CLARITY = 0.75;
+const float DENSITY = 3.5;
+const float DENSITY_POW = 1.0;
+const float sunLocation = -2.0;
+const float sunHeight = 0.9;
+
+vec3
+rayDirection (float fieldOfView, vec2 fragCoord)
+{
+  vec2 xy = fragCoord - iResolution.xy / 2.0;
+  float z = (0.5 * iResolution.y) / tan(radians(fieldOfView) / 2.0);
+  return normalize(vec3(xy, -z));
+}
+
+mat3
+lookAt (vec3 camera, vec3 at, vec3 up)
+{
+  vec3 zaxis = normalize(at-camera);    
+  vec3 xaxis = normalize(cross(zaxis, up));
+  vec3 yaxis = cross(xaxis, zaxis);
+
+  return mat3(xaxis, yaxis, -zaxis);
+}
+
+vec3
+getSkyColour (vec3 rayDir)
+{
+  vec3 col;
+#ifdef CUBEMAP
+  col = inv_gamma(texture(iChannel2, rayDir).rgb);
+  col += 2.0 * pow(col, vec3(2));
+#else 
+  col = 0.5*(0.5+0.5*rayDir);
+#endif
+  return col;
+}
+
+float
+getGlow (float dist, float radius, float intensity)
+{
+  dist = max(dist, 1e-6);
+  return pow(radius/dist, intensity);
+}
+
+vec2
+intersectAABB (vec3 rayOrigin, vec3 rayDir, vec3 boxMin, vec3 boxMax)
+{
+  vec3 tMin = (boxMin - rayOrigin) / rayDir;
+  vec3 tMax = (boxMax - rayOrigin) / rayDir;
+  vec3 t1 = min(tMin, tMax);
+  vec3 t2 = max(tMin, tMax);
+  float tNear = max(max(t1.x, t1.y), t1.z);
+  float tFar = min(min(t2.x, t2.y), t2.z);
+  return vec2(tNear, tFar);
+}
+
+bool
+insideAABB (vec3 p, vec3 boxMin, vec3 boxMax)
+{
+  float eps = 1e-4;
+  return  (p.x > boxMin.x-eps) && (p.y > boxMin.y-eps) && (p.z > boxMin.z-eps) && 
+          (p.x < boxMax.x+eps) && (p.y < boxMax.y+eps) && (p.z < boxMax.z+eps);
+}
+
+bool
+testAABB (vec3 org, vec3 dir, vec3 boxMin, vec3 boxMax)
+{
+  vec2 intersections = intersectAABB(org, dir, boxMin, boxMax);
+
+  if(insideAABB(org, boxMin, boxMax))
+  {
+    intersections.x = 1e-4;
+  }
+
+  return intersections.x > 0.0 && (intersections.x < intersections.y);
+}
+
+vec3
+rotate (vec3 p, vec4 q)
+{
+  return 2.0 * cross(q.xyz, p * q.w + cross(q.xyz, p)) + p;
+}
+
+vec3
+rotateX (vec3 p, float angle)
+{
+  return rotate(p, vec4(sin(angle/2.0), 0.0, 0.0, cos(angle/2.0)));
+}
+
+vec3
+rotateY (vec3 p, float angle)
+{
+  return rotate(p, vec4(0.0, sin(angle/2.0), 0.0, cos(angle/2.0)));
+}
+
+vec3
+rotateZ (vec3 p, float angle)
+{
+  return rotate(p, vec4(0.0, 0.0, sin(angle), cos(angle)));
+}
+
+float
+sphereSDF (vec3 p, float radius)
+{
+  return length(p) - radius;
+}
+
+float
+sdRoundCone (vec3 p, float r1, float r2, float h)
+{
+  vec2 q = vec2( length(p.xz), p.y );
+
+  float b = (r1-r2)/h;
+  float a = sqrt(1.0-b*b);
+  float k = dot(q,vec2(-b,a));
+
+  if( k < 0.0 ) return length(q) - r1;
+  if( k > a*h ) return length(q-vec2(0.0,h)) - r2;
+
+  return dot(q, vec2(a,b) ) - r1;
+}
+
+float
+displacement (vec3 p)
+{
+  return sin(p.x)*sin(p.y)*sin(p.z);
+}
+
+float
+opDisplace (vec3 p)
+{
+  vec3 offset = 0.4*iTime * normalize(vec3(1.0, -1.0, 0.1));
+  return displacement(10.0*(p+offset));
+}
+
+float
+opSmoothSub (float d1, float d2, float k)
+{
+  float h = clamp( 0.5 - 0.5*(d2+d1)/k, 0.0, 1.0 );
+  return mix( d2, -d1, h ) + k*h*(1.0-h);
+}
+
+float
+smoothMin (float a, float b, float k)
+{
+  float h = clamp(0.5+0.5*(b-a)/k, 0.0, 1.0 );
+  return mix( b, a, h ) - k*h*(1.0-h);
+}
+
+float
+getSDF (vec3 p, vec3 dir, float sdfSign)
+{
+  p.y -= 0.4;
+  float dist = 1e5;
+  vec3 q = p;
+
+  if(testAABB(p, dir, vec3(-0.65, -1.0, -1.2), vec3(0.8, 0.6, 1.2)))
+  {
+    dist = sphereSDF(q, 0.5);
+
+    q.y -= 0.25;
+    q.x -= 0.45;
+    q = rotateZ(q, 0.39);
+
+    dist = smoothMin(dist, sdRoundCone(q, 0.25, 0.25, 0.1), 0.25);
+
+    q = p;
+    q.z = abs(q.z);
+    q.y += 0.1;
+    q.z -= 0.15;
+    q = rotateX(q, -1.45);
+
+    dist = smoothMin(dist, sdRoundCone(q, 0.4, 0.35, 0.4), 0.25);
+  }
+
+  if(testAABB(p, dir, vec3(-0.65, -1.5, -0.75), vec3(0.8, 0.5, 0.75)))
+  {
+    q = p;
+    q.y += 0.5;
+    q.x += 0.15;
+    q = rotateZ(q, 1.4);
+
+    dist = smoothMin(dist, sdRoundCone(q, 0.35, 0.25, 0.7), 0.5);
+  }
+    
+  if(testAABB(p, dir, vec3(-1.0, -2.0, -0.75), vec3(0.8, -1.0, 0.75)))
+  {
+    q = p;
+    q.y += 1.4;
+    q.x -= 0.1;
+    q = rotateZ(q, -1.5);
+
+    dist = smoothMin(dist, sdRoundCone(q, 0.24, 2.0, 3.0), 0.25);
+
+    q = p;
+    q.y += 4.75;
+
+    dist = opSmoothSub(sphereSDF(q, 2.8), dist, 0.15);
+  }
+
+  if(testAABB(p, dir, vec3(-1.0, -1.25, -1.2), vec3(0.8, 0.1, -0.5)) ||
+     testAABB(p, dir, vec3(-1.0, -1.25, 0.5), vec3(0.8, 0.1, 1.2)))
+  {
+    q = p;
+    q.z = abs(q.z);
+    q.z -= 0.8;
+    q.y += 0.3;
+    q = rotateZ(q, -1.7);
+    q = rotateX(q, -0.2);
+
+    dist = smoothMin(dist, sdRoundCone(q, 0.22, 0.2, 0.3), 0.15);
+
+    q = p;
+    q.z = abs(q.z);
+    q.z -= 0.9;
+    q.y += 0.8;
+    q.x -= 0.15;
+    q = rotateZ(q, -2.0);
+    q = rotateX(q, 0.15);
+
+    dist = smoothMin(dist, sdRoundCone(q, 0.18, 0.18, 0.3), 0.1);
+
+    q = p;
+    q.z = abs(q.z);
+    q.z -= 0.77;
+    q.y += 0.95;
+    q.x -= 0.55;
+    q = rotateZ(q, PI*0.6);
+
+    dist = smoothMin(dist, sdRoundCone(q, 0.1, 0.1, 0.2), 0.15);
+  }
+
+  float height = p.y+0.4;
+  float strength = mix(0.02, 0.1, smoothstep(-0.6, -1.5, height));
+  if(height < -1.5)
+  {
+    strength = mix(strength, 0.0, smoothstep(-1.5, -1.62, height));
+  }
+  dist += strength * opDisplace(p);
+
+  return sdfSign * dist;
+}
+
+float
+distanceToScene (vec3 cameraPos, vec3 rayDir, float start, float end, float sdfSign)
+{
+  float depth = start;
+
+  float dist;
+
+  for (int i = ZERO; i < MAX_STEPS; i++)
+  {
+    dist = getSDF(cameraPos + depth * rayDir, rayDir, sdfSign);
+
+    if (dist < EPSILON)
+      return depth;
+
+    depth += dist;
+
+    if (depth >= end)
+      return end;
+  }
+
+  return depth;
+}
+
+vec2
+getGradient (vec2 uv)
+{
+  float delta = 1e-1;
+  uv *= 0.3;
+
+  float data = texture(iChannel1, uv).r;
+  float gradX = data - texture(iChannel1, uv-vec2(delta, 0.0)).r;
+  float gradY = data - texture(iChannel1, uv-vec2(0.0, delta)).r;
+
+  return vec2(gradX, gradY);
+}
+
+float
+getDistortedTexture (vec2 uv)
+{
+  float strength = 0.5;
+
+  float time = 0.5 * iTime + texture(iChannel1, 0.25*uv).g;
+
+  float f = fract(time);
+
+  vec2 grad = getGradient(uv);
+  uv *= 1.0;
+  vec2 distortion = strength*vec2(grad.x, grad.y) + vec2(0, -0.3);
+
+  float distort1 = texture(iChannel1, uv + f * distortion).r;
+  float distort2 = texture(iChannel1, uv + fract(time + 0.5) * distortion).r;
+
+  return (1.0-length(grad)) * (mix(distort1, distort2, abs(1.0 - 2.0 * f)));
+}
+
+vec3
+getTriplanar (vec3 position, vec3 normal)
+{
+  vec2 xpos = position.zx;
+  if(abs(position.z) > 0.65)
+  {
+    xpos = mix(xpos, vec2(position.z, -position.x), smoothstep(-0.0, -0.2, position.y));
+  }
+
+  vec3 xaxis = vec3(getDistortedTexture(DETAIL_SCALE.x*(position.zy)));
+  vec3 yaxis = vec3(getDistortedTexture(DETAIL_SCALE.y*(xpos)));
+  vec3 zaxis = vec3(getDistortedTexture(DETAIL_SCALE.z*(position.xy)));
+
+  vec3 blending = abs(normal);
+  blending = normalize(max(blending, 0.00001));
+  blending = pow(blending, BLENDING_SHARPNESS);
+  float b = (blending.x + blending.y + blending.z);
+  blending /= b;
+
+  return	xaxis * blending.x +
+          yaxis * blending.y +
+          zaxis * blending.z;
+}
+
+vec3
+getDetailExtrusion (vec3 p, vec3 normal)
+{
+  float detail = DETAIL_HEIGHT * length(getTriplanar(p, normal));
+
+  float d = 1.0 + smoothstep(0.0, -0.5, p.y);
+  return p + d * detail * normal;
+}
+
+vec3
+getNormal (vec3 p, vec3 dir, float sdfSign)
+{
+  vec3 n = vec3(0.0);
+  int id;
+  for(int i = ZERO; i < 4; i++)
+  {
+    vec3 e = 0.5773*(2.0*vec3((((i+3)>>1)&1),((i>>1)&1),(i&1))-1.0);
+    n += e*getSDF(p+e*EPSILON, dir, sdfSign);
+  }
+  return normalize(n);
+}
+
+void
+pixarONB (vec3 n, out vec3 b1, out vec3 b2)
+{
+  float sign_ = n.z >= 0.0 ? 1.0 : -1.0;
+  float a = -1.0 / (sign_ + n.z);
+  float b = n.x * n.y * a;
+  b1 = vec3(1.0 + sign_ * n.x * n.x * a, sign_ * b, -sign_ * n.x);
+  b2 = vec3(b, sign_ + n.y * n.y * a, -n.y);
+}
+
+vec3
+getDetailNormal (vec3 p, vec3 normal)
+{
+  vec3 tangent;
+  vec3 bitangent;
+
+  pixarONB(normal, tangent, bitangent);
+
+  tangent = normalize(tangent);
+  bitangent = normalize(bitangent);
+
+  vec3 delTangent = vec3(0);
+  vec3 delBitangent = vec3(0);
+
+  for(int i = ZERO; i < 2; i++)
+  {
+    //i to  s
+    //0 ->  1
+    //1 -> -1
+    float s = 1.0 - 2.0 * float(i&1);
+    
+    delTangent += s * getDetailExtrusion(p + s * tangent * DETAIL_EPSILON, normal);
+    delBitangent += s * getDetailExtrusion(p + s * bitangent * DETAIL_EPSILON, normal);
+  }
+
+  return normalize(cross(delTangent, delBitangent));
+}
+
+float
+distribution (vec3 n, vec3 h, float roughness)
+{
+  float a_2 = roughness * roughness;
+  return a_2/(PI * pow(pow(dot_c(n, h), 2.0) * (a_2 - 1.0) + 1.0, 2.0));
+}
+
+float
+geometry (float cosTheta, float k)
+{
+  return (cosTheta) / (cosTheta * (1.0 - k) + k);
+}
+
+float
+smiths (float NdotV, float NdotL, float roughness)
+{
+  float k = pow(roughness + 1.0, 2.0) / 8.0;
+  return geometry(NdotV, k) * geometry(NdotL, k);
+}
+
+vec3
+fresnel (float cosTheta, vec3 F0)
+{
+  return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+} 
+
+vec3
+BRDF (vec3 p, vec3 n, vec3 viewDir, vec3 lightDir, vec3 F0, float roughness)
+{
+  vec3 h = normalize(viewDir + lightDir);
+  float NdotL = dot_c(lightDir, n);
+  float NdotV = dot_c(viewDir, n);
+
+  float cosTheta = dot_c(h, viewDir);
+  float D = distribution(n, h, roughness);
+  vec3 F = fresnel(cosTheta, F0);
+
+  float G = smiths(NdotV, NdotL, roughness);
+
+  vec3 specular =  D * F * G / max(0.0001, (4.0 * NdotV * NdotL));
+
+  return specular;
+}
+
+vec3
+getEnvironment (vec3 org, vec3 rayDir, out vec3 transmittance, out vec3 halfwayPoint)
+{
+  float sdfSign = -1.0;
+
+  float distFar = distanceToScene(org, rayDir, MIN_DIST, MAX_DIST, sdfSign);
+
+  vec3 positionFar = org + rayDir * distFar;
+  halfwayPoint = org + rayDir * distFar * 0.5;
+  vec3 geoNormalFar = getNormal(positionFar, rayDir, sdfSign);
+
+  if(abs(geoNormalFar.z) < 1e-5)
+    geoNormalFar.z = 1e-5;
+
+  vec3 refractedDir = normalize(refract(rayDir, geoNormalFar, ETA_REVERSE));
+
+  // When total internal reflection occurs, reflect the ray off the far side
+  // Critical angle for 1.333 -> 1.0 is 0.8483
+  // cos(0.8483) = 0.66125
+  if(dot(-rayDir, geoNormalFar) <= 0.66125)
+    refractedDir = normalize(reflect(rayDir, geoNormalFar));
+
+  vec3 transmitted = getSkyColour(refractedDir);
+
+  float d = DENSITY*length(org-positionFar);
+
+  if(DENSITY_POW != 1.0)
+    d = pow(d, DENSITY_POW);
+
+  transmittance = exp( -d * (1.0 - waterColour));
+
+  vec3 result = transmitted * transmittance;
+  return result;
+}
+
+float
+getLightDepth (vec3 org, vec3 rayDir)
+{
+  float sdfSign = -1.0;
+  return distanceToScene(org, rayDir, MIN_DIST, MAX_DIST, sdfSign);
+}
+
+float
+HenyeyGreenstein (float g, float costh)
+{
+  return (1.0/(FOUR_PI))  * ((1.0 - g * g) / pow(1.0 + g*g - 2.0*g*costh, 1.5));
+}
+
+vec3
+shadingPBR (vec3 cameraPos, vec3 lightPos, vec3 p, vec3 n, vec3 rayDir, vec3 geoNormal)
+{
+  vec3 I = vec3(0);
+
+  vec3 F0 = vec3(0.02);
+  float roughness = 0.1;
+
+  vec3 vectorToLight = lightPos - p;
+  vec3 lightDir = normalize(vectorToLight);
+  I +=  BRDF(p, n, -rayDir, lightDir, F0, roughness) 
+      * sunLightColour 
+      * dot_c(n, lightDir);
+
+  vec3 transmittance;
+  vec3 halfwayPoint;
+
+  float f = smoothstep(0.0, -0.5, p.y);
+
+  vec3 result = vec3(0);
+
+  result += (1.0-f) * CLARITY * getEnvironment(p+rayDir*2.0*EPSILON,
+                                               refract(rayDir, n, ETA), 
+                                               transmittance,
+                                               halfwayPoint);
+
+  float mu = dot(refract(rayDir, n, ETA), lightDir);
+  float phase = mix(HenyeyGreenstein(-0.3, mu), HenyeyGreenstein(0.85, mu), 0.5);
+
+#ifdef HQ_LIGHT
+  float lightDepth = getLightDepth(p+rayDir*2.0*EPSILON, normalize(lightPos-halfwayPoint));
+  lightDepth = max(1.0, lightDepth);
+
+  vec3 lightTransmittance = exp(-DENSITY*lightDepth * (1.0 - waterColour));
+
+  result += CLARITY * sunLightColour * lightTransmittance * phase;
+#else
+  result += CLARITY * sunLightColour * transmittance * phase;
+#endif
+
+  vec3 reflectedDir = normalize(reflect(rayDir, n));
+  vec3 reflectedCol = getSkyColour(reflectedDir);
+
+  float cosTheta = dot_c(n, -rayDir);
+  vec3 F = fresnel(cosTheta, F0);
+
+  result = mix(result, reflectedCol, F);
+
+  float waveHeight = length(getTriplanar(p, n));
+
+  float e = mix(2.0, 16.0, 1.0-smoothstep(0.2, -1.3, p.y));
+
+  result += f * pow(waveHeight, e);
+
+  return result + I;
+}
+
+vec3
+ACESFilm (vec3 x)
+{
+  return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0);
+}
+
+void
+main ()
+{
+  vec3 col = vec3(0);
+
+  vec3 rayDir = rayDirection(60.0, gl_FragCoord.xy);
+
+  vec3 cameraPos = texelFetch(iChannel0, ivec2(0.5, 1.5), 0).xyz;
+
+  vec3 targetDir = -cameraPos;
+
+  vec3 up = vec3(0.0, 1.0, 0.0);
+
+  mat3 viewMatrix = lookAt(cameraPos, targetDir, up);
+
+  rayDir = normalize(viewMatrix * rayDir);
+
+  vec3 lightPos = 100.0 * normalize(vec3(cos(sunLocation), sunHeight, sin(sunLocation)));
+  vec3 lightDirection = normalize(lightPos);
+
+  float sdfSign = 1.0;
+
+  float dist = distanceToScene(cameraPos, rayDir, MIN_DIST, MAX_DIST, sdfSign);
+
+  if(dist < MAX_DIST)
+  {
+    vec3 position = cameraPos + rayDir * dist;
+        
+    vec3 geoNormal = getNormal(position, rayDir, sdfSign);
+
+    if(abs(geoNormal.z) < 1e-5)
+      geoNormal.z = 1e-5;
+
+    vec3 detailNormal = normalize(getDetailNormal(position, geoNormal));
+
+    col += shadingPBR(cameraPos, lightPos, position, detailNormal, rayDir, geoNormal);
+  }
+  else
+  {
+    col += getSkyColour(rayDir);
+    float mu = dot(rayDir, lightDirection);
+    col += sunLightColour * getGlow(1.0-mu, 0.0005, 1.0);
+  }
+
+  col = ACESFilm(col);
+
+  col = pow(col, vec3(0.4545));
+
+  gl_FragColor = vec4(col, 1.0);
+}

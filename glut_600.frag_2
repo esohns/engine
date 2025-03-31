@@ -1,0 +1,204 @@
+#version 130
+
+// glut_600_common.glsl
+#define PI 3.14159
+#define FOUR_PI 4.0 * PI
+#define GAMMA 2.2
+#define INV_GAMMA (1.0/GAMMA)
+
+const float minDot = 1e-3;
+
+float
+dot_c (vec3 a, vec3 b)
+{
+  return max(dot(a, b), minDot);
+}
+
+vec3
+gamma (vec3 col)
+{
+  return pow(col, vec3(INV_GAMMA));
+}
+
+vec3
+inv_gamma (vec3 col)
+{
+  return pow(col, vec3(GAMMA));
+}
+
+float
+saturate (float x)
+{
+  return clamp(x, 0.0, 1.0);
+}
+// glut_600_common.glsl
+
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+vec4
+taylorInvSqrt (vec4 r)
+{
+  return 1.79284291400159-0.85373472095314*r;
+}
+
+vec4
+mod289 (vec4 x)
+{
+  return x-floor(x*(1.0/289.0))*289.0;
+}
+
+vec4
+permute (vec4 x)
+{
+  return mod289(((x*34.0)+1.0)*x);
+}
+
+vec2
+fade (vec2 t)
+{
+  return (t * t * t) * (t * (t * 6.0 - 15.0) + 10.0);
+}
+
+float
+perlin (vec2 Position, vec2 rep)
+{
+  vec4 Pi = floor(vec4(Position.x, Position.y, Position.x, Position.y)) + vec4(0.0, 0.0, 1.0, 1.0);
+  vec4 Pf = fract(vec4(Position.x, Position.y, Position.x, Position.y)) - vec4(0.0, 0.0, 1.0, 1.0);
+  Pi = mod(Pi, vec4(rep.x, rep.y, rep.x, rep.y));
+  Pi = mod(Pi, vec4(289));
+  vec4 ix = vec4(Pi.x, Pi.z, Pi.x, Pi.z);
+  vec4 iy = vec4(Pi.y, Pi.y, Pi.w, Pi.w);
+  vec4 fx = vec4(Pf.x, Pf.z, Pf.x, Pf.z);
+  vec4 fy = vec4(Pf.y, Pf.y, Pf.w, Pf.w);
+
+  vec4 i = permute(permute(ix) + iy);
+
+  vec4 gx = float(2) * fract(i / float(41)) - float(1);
+  vec4 gy = abs(gx) - float(0.5);
+  vec4 tx = floor(gx + float(0.5));
+  gx = gx - tx;
+
+  vec2 g00 = vec2(gx.x, gy.x);
+  vec2 g10 = vec2(gx.y, gy.y);
+  vec2 g01 = vec2(gx.z, gy.z);
+  vec2 g11 = vec2(gx.w, gy.w);
+
+  vec4 norm = taylorInvSqrt(vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11)));
+  g00 *= norm.x;
+  g01 *= norm.y;
+  g10 *= norm.z;
+  g11 *= norm.w;
+
+  float n00 = dot(g00, vec2(fx.x, fy.x));
+  float n10 = dot(g10, vec2(fx.y, fy.y));
+  float n01 = dot(g01, vec2(fx.z, fy.z));
+  float n11 = dot(g11, vec2(fx.w, fy.w));
+
+  vec2 fade_xy = fade(vec2(Pf.x, Pf.y));
+  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
+  return float(2.3) * n_xy;
+}
+
+float
+hash (float n)
+{
+  return fract(sin(n) * 43758.5453);
+}
+
+float
+noise (vec3 x)
+{
+  vec3 p = floor(x);
+  vec3 f = fract(x);
+
+  f = f*f*(3.0 - 2.0 * f);
+  float n = p.x + p.y*57.0 + 113.0*p.z;
+  return mix(
+    mix(
+        mix(hash(n + 0.0), hash(n + 1.0), f.x),
+    mix(hash(n + 57.0), hash(n + 58.0), f.x),
+    f.y),
+  mix(
+    mix(hash(n + 113.0), hash(n + 114.0), f.x),
+    mix(hash(n + 170.0), hash(n + 171.0), f.x),
+    f.y),
+  f.z);
+}
+
+float TILES = 1.0;
+
+float
+worley (vec3 pos, float numCells)
+{
+  vec3 p = pos * numCells;
+  float d = 1.0e10;
+  for (int x = -1; x <= 1; x++)
+  {
+    for (int y = -1; y <= 1; y++)
+    {
+      for (int z = -1; z <= 1; z++)
+      {
+        vec3 tp = floor(p) + vec3(x, y, z);
+        tp = p - tp - noise(mod(tp, numCells / TILES));
+        d = min(d, dot(tp, tp));
+      }
+    }
+  }
+
+  return 1.0 - clamp(d, 0.0, 1.0);
+}
+
+float
+fbm (vec2 pos, vec2 scale)
+{
+  float res = 0.0;
+  float freq = 1.0;
+  float amp = 1.0;
+  float sum = 0.0;
+
+  int limit = 5;
+
+  for(int i = 0; i < limit; i++)
+  {
+    float offset = float(limit-i);
+    float d = mod(float(i), 2.0) > 0.0 ? 1.0 : -1.0;
+    res += d * (perlin(freq*(pos+offset), freq*scale)) * amp;
+
+    freq *= 2.0;
+    amp *= 0.5;
+  }
+
+  return res/float(limit);
+}
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy/iResolution.xy;
+  vec3 col = vec3(0);
+
+  bool resolutionChanged = texelFetch(iChannel0, ivec2(0.5, 2.5), 0).r > 0.0;
+  if(iFrame == 0 || resolutionChanged)
+  {
+    vec2 scale = vec2(8.0, 15.0);
+
+    // For seamless texture, UV scale has to match rep
+    float noise = perlin(scale*uv, vec2(scale));
+    noise = 0.5+0.5*(fbm(scale*uv, vec2(scale)));
+
+    float s = 2.0;
+    float worley = worley(s * vec3(uv, 0.0), s);
+
+    col = vec3(noise, worley, 0.0);
+  }
+  else
+  {
+    col = texelFetch(iChannel1, ivec2(gl_FragCoord.xy), 0).rgb;
+  }
+
+  gl_FragColor = vec4(col,1.0);
+}
