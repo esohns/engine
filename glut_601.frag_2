@@ -1,0 +1,128 @@
+#version 130
+
+// glut_601_common.glsl
+float gTime;
+
+float
+distLine (vec2 a, vec2 b)
+{
+  b = a - b;
+  float h = clamp(dot(a, b) / dot(b, b), 0., 1.);
+  return length(a - b*h);
+}
+
+vec2
+hash22 (vec2 p, float repScale)
+{
+  p = mod(p, repScale);
+
+  float n = sin(dot(p, vec2(113, 1)));
+
+  return (fract(vec2(262144, 32768)*n) - .5)*2. - 1.;
+}
+
+vec2
+hash22G (vec2 p, float repScale)
+{
+  p = mod(p, repScale);
+
+  float n = sin(dot(p, vec2(113, 1)));
+
+#ifdef STATIC
+  return (fract(vec2(262144, 32768)*n) - .5)*2. - 1.; 
+#else
+  p = fract(vec2(262144, 32768)*n); 
+  return sin( p*6.2831853 + gTime); 
+#endif
+}
+
+float
+gradN2D (vec2 f, float repScale)
+{
+  f *= repScale;
+
+  const vec2 e = vec2(0, 1);
+
+  vec2 p = floor(f);
+  f -= p;
+
+  vec2 w = f*f*(3. - 2.*f);
+
+  float c = mix(mix(dot(hash22G(p + e.xx, repScale), f - e.xx), dot(hash22G(p + e.yx, repScale), f - e.yx), w.x),
+                mix(dot(hash22G(p + e.xy, repScale), f - e.xy), dot(hash22G(p + e.yy, repScale), f - e.yy), w.x), w.y);
+
+  return c*.5 + .5;
+}
+
+float
+fBm (vec2 p, float repScale, float time)
+{
+  gTime = time;
+
+  return gradN2D(p, repScale)*.57 + gradN2D(p, repScale*2.)*.28 + gradN2D(p, repScale*4.)*.15;
+}
+// glut_601_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+  float iResY = min(iResolution.y, 800.);
+  vec2 uv = (gl_FragCoord.xy - iResolution.xy*.5)/iResY;
+
+  float scSizeFactor = pow(iResY/450., .333);
+  float scale = 72.*scSizeFactor;
+
+  vec2 p = uv*scale;
+
+  vec2 ip = floor(p);
+
+  p -= ip + .5;
+
+  vec3 col = vec3(0);
+
+  for(int j = -3; j<=3; j++)
+  {
+    for(int i = -3; i<=3; i++)
+    {
+      vec2 o = vec2(i, j);
+
+      o += hash22(o + ip, 64.)*.25;
+
+      float alpha = 1.;
+
+      vec3 col2 = vec3(0);
+
+      vec2 v = texture(iChannel0, (ip + o)/scale/16.).yz;
+
+      vec3 tx = (.5 + .45*cos(6.2831*v.y*128. - vec3(0, 1, 2)*1.25))*3.;
+
+      const int lNum = 6;
+      for(int n = 0; n<lNum; n++)
+      {
+        float a = texture(iChannel0, ((ip + o)/scale) + .0).x;
+
+        const float rl = 3.5/6.; // 3.5/float(lNum);
+
+        vec2 r = vec2(cos(a), sin(a))*rl;
+
+        float l = distLine(o - p, o + r - p);
+        l = (1. - smoothstep(0., .0045/scSizeFactor, (l - .005)/scale));
+
+        l *= alpha*(1. - alpha)*.8;
+
+        col2 = max(col2, tx*l);
+
+        o += r;
+
+        alpha -= 1./6.; // Hardcoding "1./float(sNum);"
+      }
+
+      col += col2;
+    }
+  }
+
+  gl_FragColor = vec4(sqrt(max(col, 0.)), 1);
+}
