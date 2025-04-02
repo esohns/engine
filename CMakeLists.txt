@@ -1780,6 +1780,8 @@ set (engine_28_EXE_SRCS
      glut_605.h
      glut_606.cpp
      glut_606.h
+     glut_607.cpp
+     glut_607.h
      stdafx.h)
 
 set (EXECUTABLE_28 engine_28)
@@ -3049,6 +3051,9 @@ install (FILES
          "glut_606.vert"
          "glut_606.frag"
          "glut_606.frag_2"
+         "glut_607.vert"
+         "glut_607.frag"
+         "glut_607.frag_2"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
