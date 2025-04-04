@@ -1817,6 +1817,14 @@ set (engine_29_EXE_SRCS
      glut_616.h
      glut_617.cpp
      glut_617.h
+     glut_618.cpp
+     glut_618.h
+     glut_619.cpp
+     glut_619.h
+     glut_620.cpp
+     glut_620.h
+     glut_621.cpp
+     glut_621.h
      stdafx.h)
 
 set (EXECUTABLE_29 engine_29)
@@ -3134,6 +3142,21 @@ install (FILES
          "glut_617.vert"
          "glut_617.frag"
          "glut_617_channel0.png"
+         "glut_618.vert"
+         "glut_618.frag"
+         "glut_618.frag_2"
+         "glut_619.vert"
+         "glut_619.frag"
+         "glut_619.frag_2"
+         "glut_620.vert"
+         "glut_620.frag"
+         "glut_620.frag_2"
+         "glut_620.frag_3"
+         "glut_621.vert"
+         "glut_621.frag"
+         "glut_621.frag_2"
+         "glut_621.frag_3"
+         "glut_621.frag_4"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"

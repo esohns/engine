@@ -1,0 +1,15 @@
+#version 130
+
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+void
+main ()
+{
+  ivec2 u = ivec2(gl_FragCoord.xy);
+  vec4 tex = texelFetch(iChannel0, u, 0);
+
+  if (iFrame % 8 != 0  && tex.w > 0.) u = ivec2(tex.xy);
+  gl_FragColor = texelFetch(iChannel1, u, 0);
+}

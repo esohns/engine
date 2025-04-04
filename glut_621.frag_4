@@ -1,0 +1,116 @@
+#version 130
+
+// glut_621_common.glsl
+mat3
+calcCameraMat (vec3 from, vec3 at)
+{
+  float filmDist = 1.3;
+  vec3 camera_z = normalize(at - from);
+  vec3 camera_x = normalize(cross(vec3(0,1,0), camera_z));
+  vec3 camera_y = cross(camera_z, camera_x);
+  return mat3(
+      camera_x,
+      camera_y,
+      camera_z
+  );
+}
+
+vec2
+rd2uv (vec3 rd, vec3 from, vec3 at, float filmDist, float ar)
+{
+  mat3 camMat = calcCameraMat(from, at);
+  vec3 uv = transpose(camMat) * rd;
+
+  uv /= uv.z;
+  uv *= filmDist;
+  uv.x /= ar;
+  uv = (uv + 1.0) / 2.0;
+  return uv.xy;
+}
+
+float
+radicalInverse (int x, float base)
+{
+  int baseI = int(base);
+  float result = 0.0;
+  float b = 1.0 / base;
+  while (x > 0)
+  {
+    result += float(x % baseI) * b;
+    x /= baseI;
+    b /= base;
+  }
+  return result;
+}
+
+vec2
+halton23 (int index)
+{
+  return vec2(radicalInverse(index, 2.0), radicalInverse(index, 3.0));
+}
+
+vec3
+rgb2yCoCg (vec3 rgb)
+{
+  vec3 yCoCg;
+  yCoCg.x = 0.25 * rgb.r + 0.5 * rgb.g + 0.25 * rgb.b;
+  yCoCg.y = 0.5 * rgb.r - 0.5 * rgb.b;
+  yCoCg.z = -0.25 * rgb.r + 0.5 * rgb.g - 0.25 * rgb.b;
+  return yCoCg;
+}
+
+vec3
+yCoCg2rgb (vec3 yCoCg)
+{
+  vec3 rgb;
+  rgb.x = yCoCg.r + yCoCg.g - yCoCg.b;
+  rgb.y = yCoCg.r + yCoCg.b;
+  rgb.z = yCoCg.r - yCoCg.g - yCoCg.b;
+  return rgb;
+}
+
+vec3
+clipToBox (vec3 p, vec3 box_min, vec3 box_max)
+{
+  float epsilon = 0.000001;
+
+  vec3 box_center = 0.5 * (box_max + box_min);
+  vec3 box_half = 0.5 * (box_max - box_min);
+  vec3 local_p = (p - box_center) / (box_half + epsilon);
+
+  float max_d = max(max(abs(local_p.x), abs(local_p.y)), abs(local_p.z));
+
+  if (max_d < 1.0)
+    return p;
+
+  local_p /= max_d;
+  return local_p * (box_half + epsilon) + box_center;
+}
+// glut_621_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy/iResolution.xy;
+
+#ifdef DISABLE_TAA
+  vec3 result = texelFetch(iChannel1, ivec2(gl_FragCoord.xy), 0).rgb;
+#else
+  vec3 result = vec3(0.0);
+  float sharpness = 0.1;
+  for (int dy = -1; dy <= 1; ++dy)
+  {
+    for (int dx = -1; dx <= 1; ++dx)
+    {
+      float weight = (dx == 0 && dy == 0)? (1.0 + 8.0*sharpness): -sharpness;
+      result += weight * texelFetch(iChannel0, ivec2(gl_FragCoord.xy)+ivec2(dx,dy), 0).rgb;
+    }
+  }
+#endif
+
+  gl_FragColor = vec4(result, 1.0);
+}
