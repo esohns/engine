@@ -1,0 +1,24 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+const float blurSize = 1.0/512.0;
+const float blurIntensity = 0.2;
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy/iResolution.xy;
+  vec4 sum = vec4(0);
+  sum += texture(iChannel0, vec2(uv.x - blurSize, uv.y)) * 0.5;
+  sum += texture(iChannel0, vec2(uv.x + blurSize, uv.y)) * 0.5;
+  sum += texture(iChannel0, vec2(uv.x, uv.y - blurSize)) * 0.5;
+  sum += texture(iChannel0, vec2(uv.x, uv.y + blurSize)) * 0.5;
+  sum += texture(iChannel0, vec2(uv.x - blurSize, uv.y - blurSize)) * 0.3;
+  sum += texture(iChannel0, vec2(uv.x + blurSize, uv.y - blurSize)) * 0.3;
+  sum += texture(iChannel0, vec2(uv.x - blurSize, uv.y + blurSize)) * 0.3;
+  sum += texture(iChannel0, vec2(uv.x + blurSize, uv.y + blurSize)) * 0.3;
+
+  gl_FragColor = blurIntensity*sum + texture(iChannel0, uv);
+}
