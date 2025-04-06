@@ -1,0 +1,74 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+
+// scene data
+#define HOSE vec2(.5,.5)/iResolution.xy
+#define ATTRACTOR vec2(1.5,0.5)/iResolution.xy
+#define COL0 vec2(2.5,0.5)/iResolution.xy
+#define COL1 vec2(3.5,0.5)/iResolution.xy
+#define COL2 vec2(4.5,0.5)/iResolution.xy
+#define HOSE_TARGET vec2(5.5,0.5)/iResolution.xy
+
+void
+main ()
+{
+  vec4 fragColor;
+  vec2 fragCoord = gl_FragCoord.xy;
+
+    // bg
+    fragColor = vec4(.22);
+    float period = 60.;
+    vec2 gridLocal = mod( fragCoord, period );
+    gridLocal.x = min( gridLocal.x, period - gridLocal.x );
+    gridLocal.y = min( gridLocal.y, period - gridLocal.y );
+    if( gridLocal.x < 2. && gridLocal.y < 8. ||
+        gridLocal.x < 8. && gridLocal.y < 2. ) fragColor += .07;
+    
+    vec2 uv = fragCoord.xy / iResolution.xy;
+    
+    vec2 col0Pos = texture(iChannel2, COL0).xy;
+    vec2 col1Pos = texture(iChannel2, COL1).xy;
+    vec2 col2Pos = texture(iChannel2, COL2).xy;
+
+    // draw colliders
+    vec2 off; float loff2;
+    off = fragCoord - col0Pos; loff2 = dot(off,off);
+    if( loff2 < 50.*50. ) fragColor = mix( fragColor, vec4(.5,.8,0.5,0.)*(.44 + .1*sign(off.x*off.y)),  smoothstep( 2500., 2400., loff2 ) );
+    off = fragCoord - col1Pos; loff2 = dot(off,off);
+    if( loff2 < 50.*50. ) fragColor = mix( fragColor, vec4(.5,.8,0.5,0.)*(.44 + .1*sign(off.x*off.y)),  smoothstep( 2500., 2400., loff2 ) );
+    off = fragCoord - col2Pos; loff2 = dot(off,off);
+    if( loff2 < 50.*50. ) fragColor = mix( fragColor, vec4(.5,.8,0.5,0.)*(.44 + .1*sign(off.x*off.y)),  smoothstep( 2500., 2400., loff2 ) );
+
+    // no reason for the max except it makes the result a little less pixel-y!
+    fragColor += max(abs(texture( iChannel1, uv )),abs(texture( iChannel1, uv+1./iResolution.xy )));
+
+    vec2 hoseCoord = texture(iChannel2, HOSE).xy;
+    vec2 hoseOff = fragCoord.xy - hoseCoord;
+    if( length(hoseOff) < 11. )
+    {
+        vec2 target = texture(iChannel2, HOSE_TARGET).xy;
+        vec2 dir = 2.8*normalize(target-fragCoord.xy);
+        dir += .15*sin(15.*iTime)*vec2(-dir.y,dir.x);
+        if( dot( hoseOff, dir ) < 0. )
+            fragColor = .5*vec4(.5,.8,0.5,0.);
+    }
+    
+    vec2 attractCoord = texture(iChannel2, ATTRACTOR).xy;
+    vec2 attractOff = fragCoord - attractCoord;
+    float attractDist = dot( attractOff, attractOff );
+    if( attractDist < 6.*6. )
+    {
+        fragColor.xyz = .2*fragColor.xyz + vec3(0.2,.5,0.2);
+    }
+    else if( abs(attractDist-50.*50.) < 200. )
+    {
+        float stroke = fract(2.*atan(attractOff.y,attractOff.x) + 3.142)<.5 ? 1. : 0.;
+        fragColor.xyz = mix( fragColor.xyz, .2*fragColor.xyz + vec3(0.2,.5,0.2), stroke );
+    }
+
+  gl_FragColor = fragColor;
+}
