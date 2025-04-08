@@ -1,0 +1,38 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+void
+main ()
+{
+  vec2 C = gl_FragCoord.xy;
+  vec2 r = iResolution.xy;
+  float pl = texelFetch(iChannel0,clamp(ivec2(C)-ivec2(-1,0), ivec2(0), ivec2(iResolution.xy)-1),0).x;
+  float pr = texelFetch(iChannel0,clamp(ivec2(C)-ivec2( 1,0), ivec2(0), ivec2(iResolution.xy)-1),0).x;
+  float pt = texelFetch(iChannel0,clamp(ivec2(C)-ivec2(0,-1), ivec2(0), ivec2(iResolution.xy)-1),0).x;
+  float pb = texelFetch(iChannel0,clamp(ivec2(C)-ivec2(0, 1), ivec2(0), ivec2(iResolution.xy)-1),0).x;
+
+  vec2 grad = vec2(pr-pl,pb-pt)/2.;
+  float pres = texture(iChannel0,C/r).x;
+
+  vec4 bufOld = texture(iChannel1,C/r);
+  float d = bufOld.z;
+  vec2 v = bufOld.xy;
+
+  vec2 g = vec2(0.0, d)*0.01;
+
+  v = v-grad-g;
+
+  if(C.x<1.||C.x>r.x-1.)
+  {
+    v.x = .0;
+  }
+  if(r.y-1.<C.y||C.y<1.)
+  {
+    v.y = .0;
+  }
+
+  gl_FragColor = vec4(v, d, 1.);
+}

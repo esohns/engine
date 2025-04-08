@@ -1,0 +1,17 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+  vec2 C = gl_FragCoord.xy;
+  vec2 r = iResolution.xy;
+  float vxl = texelFetch(iChannel0,clamp(ivec2(C)-ivec2(-1,0), ivec2(0), ivec2(iResolution.xy)-1),0).x;
+  float vxr = texelFetch(iChannel0,clamp(ivec2(C)-ivec2( 1,0), ivec2(0), ivec2(iResolution.xy)-1),0).x;
+  float vyt = texelFetch(iChannel0,clamp(ivec2(C)-ivec2(0,-1), ivec2(0), ivec2(iResolution.xy)-1),0).y;
+  float vyb = texelFetch(iChannel0,clamp(ivec2(C)-ivec2(0, 1), ivec2(0), ivec2(iResolution.xy)-1),0).y;
+  float div = (vxl-vxr+vyt-vyb)/2.;
+  gl_FragColor = vec4(div,0,0,1);
+}

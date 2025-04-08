@@ -1,0 +1,80 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform vec4 iMouse;
+uniform bvec2 iKeyboard; // space,ctrl
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel3;
+
+vec3
+hsv2rgb_smooth (vec3 c)
+{
+  vec3 rgb = clamp( abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
+
+  rgb = rgb*rgb*(3.0-2.0*rgb);
+
+  return c.z * mix( vec3(1.0), rgb, c.y);
+}
+
+void
+main ()
+{
+  vec2 C = gl_FragCoord.xy;
+  vec2 r = iResolution.xy;
+  vec2 uv = (C-r*0.5)/r.y;
+  vec2 m = (iMouse.xy-r*0.5)/r.y;
+  if(length(iMouse)<0.01)
+    m = vec2(-0.5,0.);
+
+  float concentration = texture(iChannel0,C/r).z;
+  float pressure = texture(iChannel3,C/r).x;
+  float amplitude = length(texture(iChannel0,C/r).xy);
+  float phase = atan(texture(iChannel0,C/r).y,texture(iChannel0,C/r).x)/2./3.1415972;
+
+  vec3 col;
+  if(!iKeyboard.x)
+  {
+    if(iKeyboard.y)
+    {
+      //----------------------------
+      // visualize concentration
+      col = vec3(concentration);
+    }
+    else
+    {
+      //----------------------------
+      // visualize concentration (shaded)
+      float pl = texture(iChannel0,(C-vec2(-1, 0))/r).z;
+      float pr = texture(iChannel0,(C-vec2( 1, 0))/r).z;
+      float pt = texture(iChannel0,(C-vec2( 0,-1))/r).z;
+      float pb = texture(iChannel0,(C-vec2( 0, 1))/r).z;
+      vec2 grad = vec2(pr-pl,pb-pt);
+      //grad = vec2(dFdx(concentration), dFdy(concentration));
+      col = clamp(concentration, 0.0, 1.0)*vec3(0.2+0.8*max(dot(normalize(vec3(0.0, 1.0, 1.0)), normalize(vec3(grad.x, .05, grad.y))), 0.0));
+    }
+  }
+  else
+  {
+    if(iKeyboard.y)
+    {
+      //----------------------------
+      // visualize pressure
+      //col = 0.1*vec3(pressure,-pressure, 0.0);
+      float pl = texture(iChannel3,(C-vec2(-1, 0))/r).x;
+      float pr = texture(iChannel3,(C-vec2( 1, 0))/r).x;
+      float pt = texture(iChannel3,(C-vec2( 0,-1))/r).x;
+      float pb = texture(iChannel3,(C-vec2( 0, 1))/r).x;
+      vec2 grad = vec2(pr-pl,pb-pt);
+      //grad = vec2(dFdx(pressure), dFdy(pressure));
+      col = vec3(0.2+0.8*max(dot(normalize(vec3(0.0, 1.0, 1.0)), normalize(vec3(grad.x, .4, grad.y))), 0.0));
+    }
+    else
+    {
+      //----------------------------
+      // visualize speed
+      col = hsv2rgb_smooth(vec3(phase, 0.5, 1.0-exp(-amplitude)));
+    }
+  }
+
+  gl_FragColor = vec4(col, 1.0);
+}

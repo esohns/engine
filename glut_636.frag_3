@@ -1,0 +1,23 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+vec3
+blendSoftLight (vec3 base, vec3 blend)
+{
+  vec3 s = step(0.5,blend);
+  return s * (sqrt(base)*(2.0*blend-1.0)+2.0*base*(1.0-blend)) + (1.-s)*(2.*base*blend+base*base*(1.0-2.0*blend));
+}
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy / iResolution.xy;
+  vec3 base = texture(iChannel0, uv).rgb;
+  vec3 overlay = texture(iChannel1, uv).rgb;
+  vec4 col = vec4(base +(blendSoftLight(base, overlay*2.)), 1.0);
+
+  gl_FragColor = col;
+}
