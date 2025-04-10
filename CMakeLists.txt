@@ -1872,6 +1872,14 @@ set (engine_30_EXE_SRCS
      glut_636.h
      glut_637.cpp
      glut_637.h
+     glut_638.cpp
+     glut_638.h
+     glut_639.cpp
+     glut_639.h
+     glut_640.cpp
+     glut_640.h
+     glut_641.cpp
+     glut_641.h
      stdafx.h)
 
 set (EXECUTABLE_30 engine_30)
@@ -3283,6 +3291,15 @@ install (FILES
          "glut_637.frag_3"
          "glut_637.frag_4"
          "glut_637.frag_5"
+         "glut_638.vert"
+         "glut_638.frag"
+         "glut_639.vert"
+         "glut_639.frag"
+         "glut_640.vert"
+         "glut_640.frag"
+         "glut_641.vert"
+         "glut_641.frag"
+         "glut_641_channel0.png"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
