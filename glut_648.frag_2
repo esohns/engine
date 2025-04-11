@@ -1,0 +1,16 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+#define R    iResolution.xy
+#define T(d) texelFetch(iChannel0, ivec2(d+U)%ivec2(R),0)
+
+void
+main ()
+{
+  vec2 U = gl_FragCoord.xy;
+  vec4 O = .5 + normalize(T(vec2(0, 0))).zzzz;
+
+  gl_FragColor = O;
+}
