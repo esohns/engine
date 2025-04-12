@@ -1,0 +1,21 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+const float BLUR = 0.012;
+const vec3  GAMMA = vec3(1./2.2);
+
+vec4 gamma (vec4 i) { return vec4(pow(i.xyz, GAMMA), i.w); }
+vec4 img (vec2 d) { return textureLod(iChannel0, d/iResolution.xy, 0.); }
+
+void
+main ()
+{
+  vec4 col = img(gl_FragCoord.xy);
+  vec2 b = vec2(col.w * BLUR * iResolution.x, 0);
+  gl_FragColor = gamma((col + img(gl_FragCoord.xy+b.xy) 
+                            + img(gl_FragCoord.xy-b.xy)
+                            + img(gl_FragCoord.xy+b.yx)
+                            + img(gl_FragCoord.xy-b.yx))/5.);
+}
