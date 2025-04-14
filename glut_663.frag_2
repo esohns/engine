@@ -1,0 +1,60 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+//#define PINK
+
+vec3 tx2D (vec2 p) { return texture(iChannel0, p).xyz; }
+
+float getHeight (vec2 p) { return dot(tx2D(p), vec3(.299, .587, .114)); }
+
+void
+main ()
+{
+  vec2 iR = iResolution.xy;
+  vec2 uv = gl_FragCoord.xy/iR;
+
+  vec3 col = tx2D(uv);
+
+  float height = dot(col, vec3(.299, .587, .114));
+  float height2 = getHeight(uv - normalize(vec2(1, 2))*.001*vec2(iR.x/iR.y, 1));
+
+  ivec2 sTx = textureSize (iChannel1,0);
+  vec2 fsTx = vec2 (float (sTx.x), float (sTx.y));
+  vec3 nTx = texture(iChannel1, uv * fsTx).xyz;
+  vec2 e = vec2((pow(dot(nTx, vec3(.299, .587, .114)), 3.)*.5 + .5)*.007, 0);
+  //e = vec2(.0045, 0);
+
+  vec4 t4 = vec4(getHeight(uv - e.xy), getHeight(uv + e.xy),
+                 getHeight(uv - e.yx), getHeight(uv + e.yx));
+
+  vec3 vx = vec3(e.x*2., 0, t4.x - t4.y);
+  vec3 vy = vec3(0, -e.x*2., t4.w - t4.z);
+  vec3 sn = normalize(cross(vx, vy));
+
+  float amp = .7;
+  float curv = clamp((height*4. - dot(t4, vec4(1)))/e.x/2.*amp + .5, 0., 1.);
+
+  vec3 ld = normalize(vec3(-.5, 1, -1));
+
+  float b = max(height2 - height, 0.)/.001;
+  float b2 = max(height - height2, 0.)/.001;
+
+  vec3 hiCol = vec3(.02, .2, 1)*b*.8 + vec3(1, .2, .1)*b2*.3;
+
+#ifdef PINK
+  col = mix(col.xzy, col, max(dot(sn, ld), 0.));
+#endif
+
+  /*vec3 rd = normalize(vec3(uv, 1));
+  float spe = pow(max(dot(reflect(ld, sn), rd), 0.), 16.);
+  hiCol += spe*2.;*/
+
+  col *= max(dot(sn, ld), 0.) + hiCol + .4;
+
+  col *= curv + .2; 
+
+  gl_FragColor = vec4(sqrt(max(col, 0.)), 1);
+}

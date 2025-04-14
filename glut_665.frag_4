@@ -1,0 +1,55 @@
+#version 130
+
+// glut_665_common.glsl
+#define SAMPLES 64.0
+#define TINT vec4(1.5, 1.2, 1, 1)
+
+vec2 hash2 (vec2 p) { return normalize(fract(cos(p*mat2(95,74,86,83))*3742.0)-0.5); }
+
+vec4
+fibonacci_blur (sampler2D tex, vec2 uv, vec2 texel, float radius)
+{
+  vec4 blur = vec4(0.0);
+  float total = 0.0;
+
+  float scale = radius/sqrt(SAMPLES);
+  vec2 point = hash2(uv)*scale;
+
+  float rad = 1.0;
+  mat2 ang = mat2(-0.7373688, -0.6754904, 0.6754904,  -0.7373688);
+
+  for(float i = 0.0; i<SAMPLES; i++)
+  {
+    point *= ang;
+    rad += 1.0/rad;
+
+    vec2 coord = uv + point*(rad-1.0)*texel;
+    float weight = 1.0/(1.0+i);
+    vec4 samp = texture(tex, coord);
+
+    blur += samp * weight;
+    total += weight;
+  }
+  blur /= total;
+
+  return blur;
+}
+// glut_665_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+
+void
+main ()
+{
+  vec2 texel = 1.0 / iResolution.xy;
+  vec2 uv = gl_FragCoord.xy * texel;
+  vec4 blur = fibonacci_blur(iChannel2, uv, texel, 216.0);
+  vec4 tex0 = texture(iChannel0,uv)*0.5;
+  vec4 tex1 = texture(iChannel1,uv)*0.8;
+  vec4 tex2 = texture(iChannel2,uv);
+
+  gl_FragColor = blur * TINT + tex0 + tex1 + tex2;
+}
