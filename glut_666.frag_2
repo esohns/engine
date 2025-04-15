@@ -1,0 +1,122 @@
+#version 130
+
+// glut_666_common.glsl
+#define res   iResolution.xy
+#define ires  ivec2(res)
+#define tau   6.283185
+#define l2(v) dot(v,v)
+#define T(U)  texelFetch(iChannel0, ivec2(U), 0)
+
+#define       speed .2
+#define    posscale 2e-3
+#define   timescale .1
+//particle creation
+#define npartchance .01
+#define     mindist 7.
+//voronoi tracking
+#define checkradius 2
+
+#define swap(state, p, offs) \
+if(!any(bvec4(greaterThanEqual(p+offs, ires), lessThan(p+offs, ivec2(0)))))\
+{ vec4 n = T(p+offs);        \
+  if ( l2(n.xy - vec2(p)-1.) < l2(state.xy - vec2(p)-1.) ) state = n;      \
+}
+
+#define swapN(_pos,col)                     \
+    ivec2 pos = ivec2(_pos);                \
+    col = T(pos);                           \
+    for(int i = 1; i <= checkradius; i++) { \
+        swap(col, pos, ivec2( i, 0));       \
+        swap(col, pos, ivec2( 0, i));       \
+        swap(col, pos, ivec2(-i, 0));       \
+        swap(col, pos, ivec2( 0,-i));       \
+    }
+
+uint
+hash (uint x)
+{
+  x ^= x >> 16;
+  x *= 0x7feb352dU;
+  x ^= x >> 15;
+  x *= 0x846ca68bU;
+  x ^= x >> 16;
+  return x;
+}
+
+float
+hash3i1f (uvec3 p)
+{
+  return float(hash(hash(hash(p.x) ^ p.y) ^ p.z) >> 8) / 16777216.;
+}
+
+vec2
+noise (vec3 p)
+{
+  uvec3 i = uvec3(ivec3(floor(p)));
+   vec3 f =             fract(p)  ,
+        u = f*f*f*(f*(f*6.-15.)+10.),
+        du = 30.*f*f*(f*(f-2.)+1.);
+
+#define g(x,y,z) sin( tau* ( hash3i1f(i+uvec3(x,y,z)) + vec2(0,.25) ) ) // SC(rand angle)
+  vec2 ga = g(0,0,0),
+        gb = g(1,0,0),
+        gc = g(0,1,0),
+        gd = g(1,1,0),
+        ge = g(0,0,1),
+        gf = g(1,0,1),
+        gg = g(0,1,1),
+        gh = g(1,1,1);
+
+#define v(g,i,j)  dot(g, f.xy - vec2(i,j))
+  float va = v(ga,0,0),
+        vb = v(gb,1,0),
+        vc = v(gc,0,1),
+        vd = v(gd,1,1),
+        ve = v(ge,0,0),
+        vf = v(gf,1,0),
+        vg = v(gg,0,1),
+        vh = v(gh,1,1);
+
+  return mix(mix(mix(ga, gb, u.x), mix(gc, gd, u.x), u.y),
+              mix(mix(ge, gf, u.x), mix(gg, gh, u.x), u.y), u.z)
+        + du.xy * mix(u.yx*(va-vb-vc+vd) + vec2(vb,vc) - va,
+                      u.yx*(ve-vf-vg+vh) + vec2(vf,vg) - ve, u.z);
+}
+
+vec2
+fluidnoise (vec3 p)
+{
+  vec2 total = vec2(0);
+  float amp = 1.;
+  for(int i = 0; i < 5; i++)
+  {
+    total += noise(p) * amp;
+    p = p*2. + 4.3; amp *= 1.5;
+  }
+  return total.yx * vec2(-1,1);
+}
+
+#define fluidStep(P) { \
+    vec2 tmp = P + fluidnoise(vec3( P  * posscale , iTime * timescale)) * .5 * speed; \
+              P += fluidnoise(vec3(tmp * posscale, (iTime+iTimeDelta*.5) * timescale)) * speed;\
+}
+// glut_666_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform float iTimeDelta;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+  swapN(gl_FragCoord.xy,gl_FragColor);
+
+  fluidStep(gl_FragColor.xy);
+
+  if (fract(hash3i1f(uvec3(pos,iFrame))) < npartchance
+      && mindist < length(gl_FragColor.xy - gl_FragCoord.xy - 1.) 
+     )
+    gl_FragColor = vec4(gl_FragCoord.xy, hash3i1f(uvec3(pos,iFrame+1000)), 0);
+}
