@@ -1945,6 +1945,10 @@ set (engine_31_EXE_SRCS
      glut_665.h
      glut_666.cpp
      glut_666.h
+     glut_667.cpp
+     glut_667.h
+     glut_668.cpp
+     glut_668.h
      stdafx.h)
 
 set (EXECUTABLE_31 engine_31)
@@ -3465,6 +3469,12 @@ install (FILES
          "glut_666.frag_3"
          "glut_666.frag_4"
          "glut_666.frag_5"
+         "glut_667.vert"
+         "glut_667.frag"
+         "glut_667.frag_2"
+         "glut_668.vert"
+         "glut_668.frag"
+         "glut_668.frag_2"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
