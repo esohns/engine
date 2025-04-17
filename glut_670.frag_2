@@ -1,0 +1,156 @@
+#version 130
+
+// glut_670_common.glsl
+const float pi = radians(180.0);
+const float twoPi = radians(360.0);
+
+mat2
+rotate (float theta)
+{
+  vec2 cs = vec2(cos(theta), sin(theta));
+  return mat2(cs.x, cs.y, -cs.y, cs.x);
+}
+
+mat3
+xyRotate (float theta)
+{
+  vec2 cs = vec2(cos(theta), sin(theta));
+  return mat3(
+      cs.x, cs.y, 0,
+      -cs.y, cs.x, 0,
+      0, 0, 1);
+}
+
+mat3
+yzRotate (float theta)
+{
+  vec2 cs = vec2(cos(theta), sin(theta));
+  return mat3(
+      1, 0, 0,
+      0, cs.x, cs.y,
+      0, -cs.y, cs.x);
+}
+
+mat3
+xzRotate (float theta)
+{
+  vec2 cs = vec2(cos(theta), sin(theta));
+  return mat3(
+      cs.x, 0, cs.y,
+      0, 1, 0,
+      -cs.y, 0, cs.x);
+}
+// glut_670_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+uniform samplerCube iChannel1;
+
+#define DISPERSE
+#define FRESNEL
+
+const float refractiveIndex = 1.52;
+const float disperseIntensity = 0.02;
+
+const float normalZScale = 5.0;
+
+const float fov = radians(70.0);
+
+float
+convertHeight (vec2 rawHeight)
+{
+  return rawHeight.x + rawHeight.y / 1024.0;
+}
+
+vec3
+getNormal (vec2 fragCoord, float height)
+{
+  float xSign = 2.0 * float(fragCoord.x < iResolution.x - 1.0) - 1.0;
+  float ySign = 2.0 * float(fragCoord.y < iResolution.y - 1.0) - 1.0;
+  float heightX = convertHeight(texelFetch(iChannel0, ivec2(fragCoord + vec2(xSign, 0)), 0).xy);
+  float heightY = convertHeight(texelFetch(iChannel0, ivec2(fragCoord + vec2(0, ySign)), 0).xy);
+    
+  float dx = xSign * (heightX - height);
+  float dy = ySign * (heightY - height);
+  return normalize(vec3(-dx, -dy, normalZScale / min(iResolution.x, iResolution.y))); // Correct against resolution
+}
+
+void
+main ()
+{
+  vec2 uv = (2.0 * gl_FragCoord.xy - iResolution.xy) / min(iResolution.x, iResolution.y);
+  float height = convertHeight(texelFetch(iChannel0, ivec2(gl_FragCoord.xy), 0).xy);
+  vec3 normal = getNormal(gl_FragCoord.xy, height);
+
+  float effectMix = smoothstep(0.0, 3.0, iTime);
+  float index = 1.0 + (refractiveIndex - 1.0) * effectMix;
+
+  vec3 rayDir = normalize(vec3(uv * tan(fov / 2.0), -1.0));
+  vec3 refracted = refract(rayDir, normal, 1.0 / index);
+
+  float xyTheta;
+  float yzTheta;
+  float xzTheta;
+  if (iMouse.z > 0.0)
+  {
+    xyTheta = 0.0;
+    yzTheta = (iMouse.y / iResolution.y - 0.5) * pi;
+    xzTheta = (2.0 * iMouse.x / iResolution.x - 1.0) * pi;
+  }
+  else
+  {
+    xyTheta = -0.031 * iTime;
+    yzTheta = 0.45 - 0.05 * cos(0.11 * iTime);
+    xzTheta = -0.04 * iTime;
+  }
+  mat3 rayMat = xyRotate(xyTheta);
+  rayMat = yzRotate(yzTheta) * rayMat;
+  rayMat = xzRotate(xzTheta) * rayMat;
+
+#ifdef DISPERSE
+  vec3 refractedG = refract(rayDir, normal, 1.0 / (index + effectMix * disperseIntensity));
+  vec3 refractedB = refract(rayDir, normal, 1.0 / (index + 2.0 * effectMix * disperseIntensity));
+#endif
+
+#ifdef FRESNEL
+  float cosIncident = abs(dot(rayDir, normal));
+  float cosRefracted = abs(dot(refracted, normal));
+  float reflectance = (cosIncident / index - cosRefracted) / (cosIncident / index + cosRefracted);
+  reflectance = pow(abs(reflectance), 1.7);
+#endif
+
+  refracted = rayMat * refracted;
+
+#ifdef DISPERSE
+  refractedG = rayMat * refractedG;
+  refractedB = rayMat * refractedB;
+#endif
+
+#ifdef FRESNEL
+#ifdef DISPERSE
+  vec3 transmitColor = vec3(
+    texture(iChannel1, refracted).r,
+    texture(iChannel1, refractedG).g,
+    texture(iChannel1, refractedB).b);
+#else
+  vec3 transmitColor = texture(iChannel1, refracted).rgb;
+#endif
+
+  vec3 reflected = rayMat * reflect(rayDir, normal);
+  vec3 reflectColor = texture(iChannel1, reflected).rgb;
+  vec3 color = mix(transmitColor, reflectColor, reflectance);
+#else
+#ifdef DISPERSE
+  vec3 color = vec3(
+    texture(iChannel1, refracted).r,
+    texture(iChannel1, refractedG).g,
+    texture(iChannel1, refractedB).b);
+#else
+  vec3 color = texture(iChannel1, refracted).rgb;
+#endif
+#endif
+
+  gl_FragColor = vec4(color, 1.0);
+}
