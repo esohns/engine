@@ -1,0 +1,50 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+vec4
+loadState (vec2 id)
+{
+  vec2 uv = (id + 0.5) / vec2 (textureSize(iChannel0, 0));
+  return texture(iChannel0, uv);
+}
+
+vec3
+hsv2rgb (vec3 c)
+{
+  vec3 rgb = clamp(abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0);
+  rgb = rgb*rgb*(3.0-2.0*rgb);
+  return c.z * mix( vec3(1.0), rgb, c.y);
+}
+
+void
+main ()
+{
+  vec2 c = vec2(0.0);
+  for (int i = 0; i < 10; ++i)
+    for (int j = 0; j < 10; ++j)
+      c += loadState(vec2(i, j)).xy;
+
+  vec2 uv = 6.0 * (-iResolution.xy + 2.0*gl_FragCoord.xy) / iResolution.y + c/100.0;
+
+  float dist = 1e10; int id = 0;
+  for (int i = 0; i < 10; ++i)
+    for (int j = 0; j < 10; ++j)
+    {
+      float d = length(uv - loadState(vec2(i, j)).xy);
+      if (d < dist)
+      {
+        dist = d;
+        id = 10*i+j;
+      }
+    }
+  dist = smoothstep(0.1, 0.2, dist);    
+    
+  int TEAMS = int(loadState(vec2(10.0)).x), RPT = 100 / TEAMS;
+  vec3 col = (1.0 - dist) * hsv2rgb(vec3(float(id/RPT)/float(TEAMS), 1.0, 1.0)) + 0.1;
+
+  col = smoothstep(0.0, 1.0, col);
+  col = pow(col, vec3(0.4545));
+  gl_FragColor = vec4(col, 1.0);
+}
