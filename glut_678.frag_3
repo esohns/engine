@@ -1,0 +1,19 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+vec2
+screen2uv (vec2 fragCoord)
+{
+  return fragCoord / iResolution.xy;
+}
+
+void
+main ()
+{
+  vec2 uv = screen2uv(gl_FragCoord.xy);
+  gl_FragColor = texture(iChannel0,  uv);
+  //gl_FragColor = abs(texture(iChannel1,  uv)*100.0);
+}

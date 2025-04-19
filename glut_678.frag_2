@@ -1,0 +1,246 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform float iTime;
+
+mat3 m = mat3( 0.00,  0.90,  0.60,
+              -0.90,  0.36, -0.48,
+              -0.60, -0.48,  0.34 );
+
+float
+hash21 (vec2 p)
+{
+  float h = dot(p,vec2(127.1,311.7));
+  return -1.0 + 2.0*fract(sin(h)*43758.5453123);
+}
+
+vec2
+hash22 (vec2 p)
+{
+  p = vec2( dot(p,vec2(127.1,311.7)),
+            dot(p,vec2(269.5,183.3)));
+  return -1.0 + 2.0 * fract(sin(p)*43758.5453123);
+}
+
+vec3
+hash33 (vec3 p)
+{	
+#if 0
+  p = vec3( dot(p,vec3(127.1,311.7, 74.7)),
+            dot(p,vec3(269.5,183.3,246.1)),
+            dot(p,vec3(113.5,271.9,124.6)));
+#else
+  p = m*p;
+#endif
+  return -1.+2.*fract(sin(p)*43758.5453123);
+}
+
+float
+hash31 (vec3 p)
+{
+#if 0
+  p = m*p;
+#endif
+  float h =  dot(p,vec3(127.1,311.7, 74.7));
+  return -1.+2.*fract(sin(h)*43758.5453123);
+}
+
+float
+noise_perlin (vec2 p)
+{
+  vec2 ni = floor(p);
+  vec2 nf = fract(p);
+
+  vec2 w = nf*nf*(3.-2.*nf);
+
+  float f1 = dot(hash22(ni),nf);
+  float f2 = dot(hash22(ni+vec2(1.,0.)),nf-vec2(1.,0.));
+  float f3 = dot(hash22(ni+vec2(1.,1.)),nf-vec2(1.,1.));
+  float f4 = dot(hash22(ni+vec2(0.,1.)),nf-vec2(0.,1.));
+
+  float f12 = mix(f1,f2,w.x);
+
+  float f34 = mix(f4,f3,w.x);
+
+  float f=mix(f12,f34,w.y);
+
+  return f;
+}
+
+float
+noise_perlin1 (vec3 p)
+{
+  vec3 i = floor( p );
+  vec3 f = fract( p );
+
+  vec3 u = f*f*(3.0-2.0*f);
+
+  vec2 zo = vec2(0.,1.);
+  float f000 = dot(hash33(i),f-zo.xxx);
+  float f010 = dot(hash33(i+zo.yxx),f-zo.yxx);
+  float f001 = dot(hash33(i+zo.xyx),f-zo.xyx);
+  float f011 = dot(hash33(i+zo.yyx),f-zo.yyx);
+
+  float hx1 = mix(f000,f010,u.x);
+  float hx2 = mix(f001,f011,u.x);
+  float hy1 = mix(hx1,hx2,u.y);
+
+  float f100 = dot(hash33(i+zo.xxy),f-zo.xxy);
+  float f110 = dot(hash33(i+zo.yxy),f-zo.yxy);
+  float f101 = dot(hash33(i+zo.xyy),f-zo.xyy);
+  float f111 = dot(hash33(i+zo.yyy),f-zo.yyy);
+
+  hx1 = mix(f100,f110,u.x);
+  hx2 = mix(f101,f111,u.x);
+  float hy2 = mix(hx1,hx2,u.y);
+
+  float h = mix(hy1,hy2,u.z);
+
+  return h;
+}
+
+float
+noise_value (vec2 p)
+{
+  vec2 i = floor( p );
+  vec2 f = fract( p );
+
+  vec2 u = f*f*(3.0-2.0*f);
+
+  return mix( mix( hash21( i + vec2(0.0,0.0) ), 
+                    hash21( i + vec2(1.0,0.0) ), u.x),
+              mix( hash21( i + vec2(0.0,1.0) ), 
+                    hash21( i + vec2(1.0,1.0) ), u.x), u.y);
+}
+
+float
+noise_value1 (vec3 p)
+{
+  vec3 i = floor( p );
+  vec3 f = fract( p );
+
+  vec3 u = f*f*(3.0-2.0*f);
+
+  vec2 zo = vec2(0.,1.);
+  float f000 = hash31(i);
+  float f010 = hash31(i+zo.yxx);
+  float f001 = hash31(i+zo.xyx);
+  float f011 = hash31(i+zo.yyx);
+
+  float hx1 = mix(f000,f010,u.x);
+  float hx2 = mix(f001,f011,u.x);
+  float hy1 = mix(hx1,hx2,u.y);
+
+  float f100 = hash31(i+zo.xxy);
+  float f110 = hash31(i+zo.yxy);
+  float f101 = hash31(i+zo.xyy);
+  float f111 = hash31(i+zo.yyy);
+
+  hx1 = mix(f100,f110,u.x);
+  hx2 = mix(f101,f111,u.x);
+  float hy2 = mix(hx1,hx2,u.y);
+
+  float h = mix(hy1,hy2,u.z);
+
+  return h;
+}
+
+/*float
+noise (vec3 x)
+{
+  vec3 p = floor(x);
+  vec3 f = fract(x);
+  f = f*f*(3.0-2.0*f);
+
+  vec2 uv = (p.xy+vec2(37.0,17.0)*p.z) + f.xy;
+  vec2 rg = texture( iChannel0, (uv+ 0.5)/256.0).yx;
+  return mix( rg.x, rg.y, f.z )*2.-1.;
+}*/
+
+float
+map5_perlin (vec2 p)
+{	
+  float r = 0.;
+  float s = 1.;
+  float f = 1.;
+
+  float w = 0.;
+  for(int i = 0;i < 5;i++)
+  {
+    r += s*noise_perlin(p*f); w += s;
+    s /= 2.;
+    f *= 2.;
+  }
+  return r/w;
+}
+
+float
+map5_perlin1 (vec3 p)
+{
+  float r = 0.;
+  float s = 1.;
+  float f = 1.;
+
+  float w = 0.;
+  for(int i = 0;i < 5;i++)
+  {
+    r += s*noise_perlin1(p*f); w += s;
+    s /= 2.;
+    f *= 2.;
+  }
+  return r/w;
+}
+
+float
+map5_value (vec2 p)
+{
+  float r = 0.;
+  float s = 1.;
+  float f = 1.;
+    
+  float w = 0.;
+  for(int i = 0;i < 5;i++)
+  {
+    r += s*noise_value(p*f); w += s;
+    s /= 2.;
+    f *= 2.;
+  }
+  return r/w;
+}
+
+float
+map5_value1 (vec3 p)
+{
+  float r = 0.;
+  float s = 1.;
+  float f = 1.;
+
+  float w = 0.;
+  for(int i = 0;i < 5;i++)
+  {
+    r += s*noise_value1(p*f); w += s;
+    s /= 2.;
+    f *= 2.;
+  }
+  return r/w;
+}
+
+vec2
+screen2world (vec2 fragCoord)
+{
+  return (2.0*fragCoord.xy - iResolution.xy)/iResolution.y;
+}
+
+vec2
+fractalNoise2d (vec2 p, float t, float scale)
+{
+  return vec2(map5_value1(vec3(p*scale, t)), 
+              map5_value1(vec3(p*scale+ vec2(100.0*scale), t)));   
+}
+
+void
+main ()
+{
+  vec2 pos = screen2world(gl_FragCoord.xy);
+  gl_FragColor = -vec4(fractalNoise2d(pos, iTime, 10.0)*0.01, 0.0, 0.0);
+}

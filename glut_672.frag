@@ -11,9 +11,9 @@ uniform float iTime;
 #define PCOS(a)     0.5*(cos(a)+1.0)
 
 const float planeDist = 1.0-0.80;
-const int   furthest  = 16;
-const int   fadeFrom  = max(furthest-4, 0);
-const float fadeDist  = planeDist*float(furthest - fadeFrom);
+#define     furthest 16
+#define     fadeFrom max(furthest-4, 0)
+#define     fadeDist planeDist*float(furthest - fadeFrom)
 
 const float overSample  = 4.0;
 const float ringDistance= 0.075*overSample/4.0;

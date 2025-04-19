@@ -65,7 +65,7 @@ main ()
   if (iMouse.z > 0.0)
   {
     float mLen = length(iMouse.xy - gl_FragCoord.xy);
-    a += exp(-mLen * mLen / 100.0);
+    a += exp(-mLen * mLen / 1000.0);
   }
 
   if (iFrame<10)

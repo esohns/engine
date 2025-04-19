@@ -1423,7 +1423,7 @@ do_work (int argc_in,
       ACE_ASSERT (cb_data_s.S5resolutionLoc != -1);
       cb_data_s.S5mouseLoc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iMouse"));
-      ACE_ASSERT (cb_data_s.S5mouseLoc != -1);
+      //ACE_ASSERT (cb_data_s.S5mouseLoc != -1);
       cb_data_s.S5keysLoc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iKeyboard"));
       ACE_ASSERT (cb_data_s.S5keysLoc != -1);
