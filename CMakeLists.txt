@@ -1996,6 +1996,10 @@ set (engine_32_EXE_SRCS
      glut_683.h
      glut_684.cpp
      glut_684.h
+     glut_685.cpp
+     glut_685.h
+     glut_686.cpp
+     glut_686.h
      stdafx.h)
 
 set (EXECUTABLE_32 engine_32)
@@ -3590,6 +3594,13 @@ install (FILES
          "glut_684.frag"
          "glut_684.frag_2"
          "glut_684.frag_3"
+         "glut_685.vert"
+         "glut_685.frag"
+         "glut_685_channel0.png"
+         "glut_685_channel1.png"
+         "glut_686.vert"
+         "glut_686.frag"
+         "glut_686_channel0.png"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
