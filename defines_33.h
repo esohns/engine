@@ -25,4 +25,13 @@
 #define ENGINE_GLUT_690_DEFAULT_HEIGHT             834
 #define ENGINE_GLUT_690_DEFAULT_WIDTH              1112
 
+// glut 691
+#define ENGINE_GLUT_691_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_691_DEFAULT_WIDTH              1112
+
+// glut 692
+#define ENGINE_GLUT_692_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_692_DEFAULT_WIDTH              1112
+#define ENGINE_GLUT_692_DEFAULT_SCALE_FACTOR       30
+
 #endif // DEFINES_33_H
