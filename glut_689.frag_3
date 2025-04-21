@@ -1,0 +1,86 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+#define PI 3.14159265359
+#define STYLIZED false
+
+vec4
+angle2hue (float angle)
+{
+  vec4 color = vec4(0, 0, 0, 0);
+
+  vec4 red = vec4(1.0, 0.0, 0.0, 1.0);
+  vec4 yel = vec4(1.0, 1.0, 0.0, 1.0);
+  vec4 gre = vec4(0.0, 1.0, 0.0, 1.0);
+  vec4 cya = vec4(0.0, 1.0, 1.0, 1.0);
+  vec4 blu = vec4(0.0, 0.0, 1.0, 1.0);
+  vec4 mag = vec4(1.0, 0.0, 1.0, 1.0);
+
+  int slice = int(angle / (PI / 3.0));
+  float rem = mod(angle, PI / 3.0);
+
+  color = slice == 0 ? mix(red, yel, rem) : color;
+  color = slice == 1 ? mix(yel, gre, rem) : color;
+  color = slice == 2 ? mix(gre, cya, rem) : color;
+  color = slice == 3 ? mix(cya, blu, rem) : color;
+  color = slice == 4 ? mix(blu, mag, rem) : color;
+  color = slice == 5 ? mix(mag, red, rem) : color;
+
+  return color;
+}
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy / iResolution.xy;
+
+  if(STYLIZED)
+  {
+    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);  
+
+    float minDistSqr = 10000.0;
+    vec2 vel = vec2(0, 0);
+
+    for(int i = -4; i <= 4; i++)
+      for(int j = -4; j <= 4; j++)
+      {
+        vec2 coord = gl_FragCoord.xy + vec2(float(i), float(j));
+        vec2 uv = coord / iResolution.xy;
+        vec4 data = texture(iChannel0, uv);
+        vec2 pos = data.xy;
+
+        if(data.x > 0.001)
+        {
+          vel += data.zw;
+
+          vec2 delta = pos - gl_FragCoord.xy;
+          float distSqr = dot(delta, delta);
+          if(distSqr < minDistSqr)
+            minDistSqr = distSqr;
+        }
+      }
+
+    if(minDistSqr < 9.0)
+    {
+      float angle = atan(vel.y, vel.x) + PI;
+      gl_FragColor = angle2hue(angle);
+    }
+    else if(minDistSqr < 16.0)
+      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+  }
+  else 
+  {  
+    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+
+    vec4 data = vec4(texture(iChannel0, uv));
+
+    if(data.x > 0.001)
+    {
+      vec2 vel = data.zw;
+      float angle = atan(vel.y, vel.x) + PI;
+      gl_FragColor = angle2hue(angle);
+    }
+  }
+}

@@ -2979,7 +2979,7 @@ do_work (int argc_in,
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
       ACE_ASSERT (cb_data_s.S4timeLoc != -1);
       cb_data_s.S4timeDeltaLoc =
-        glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iTimeDelta"));
+        glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iTimeDelta"));
       ACE_ASSERT (cb_data_s.S4timeDeltaLoc != -1);
       cb_data_s.S4channel0Loc =
         glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
