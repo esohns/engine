@@ -97,9 +97,9 @@ PGE_12::drawEpicycle (olc::vf2d origin_in, float rotation_in, const std::vector<
     {
       olc::vf2d pre_orig = origin_in;
 
-      origin_in +=
-        {vF.fAmp * std::cos (vF.nFreq * fDelta + vF.fPhase + rotation_in),
-         vF.fAmp * std::sin (vF.nFreq * fDelta + vF.fPhase + rotation_in)};
+      origin_in += olc::vf2d (
+        vF.fAmp * std::cos (vF.nFreq * fDelta + vF.fPhase + rotation_in),
+        vF.fAmp * std::sin (vF.nFreq * fDelta + vF.fPhase + rotation_in));
 
       DrawCircle (pre_orig, static_cast<int32_t> (std::fabs (vF.fAmp)), olc::VERY_DARK_GREY);
 

@@ -87,7 +87,7 @@ class PGE_303
   float sdBox (olc::vf2d& p, float w, float h)
   { // sample pvector, b.x = width, b.y = height  - centered on origin
     olc::vf2d d (std::abs (p.x), std::abs (p.y));
-    d -= {w, h};
+    d -= olc::vf2d (w, h);
     olc::vf2d d1 (std::max (d.x, 0.0f), std::max (d.y, 0.0f));
     return d1.mag () + std::min (std::max (d.x, d.y), 0.0f);
   }

@@ -147,7 +147,7 @@ class PGE_112
         otherSize = boids[i]->radius_;
 
         float distance = position_.dist (other);
-        if (distance > 0.0f && distance < 70.0f) //align + cohesion
+        if (distance > 0.0f && distance < 70.0f)
         {
           cohesionSum += other;
           cohesionCount++;
@@ -157,14 +157,15 @@ class PGE_112
           alignCount++;
         } // end IF
 
-        if (distance > 0.0f && distance < (radius_ + otherSize) * 1.2f) // seperate bei collision
+        if (distance > 0.0f && distance < (radius_ + otherSize) * 1.2f)
         {
           float angle = std::atan2 (position_.y - other.y, position_.x - other.x);
-          seperationSum += {std::cos (angle), std::sin (angle)};
+          seperationSum += olc::vf2d (std::cos (angle), std::sin (angle));
           seperationCount++;
         } // end IF
 
-        if (alignCount > 8 && seperationCount > 12) break;
+        if (alignCount > 8 && seperationCount > 12)
+          break;
       } // end FOR
 
       if (cohesionCount > 0)

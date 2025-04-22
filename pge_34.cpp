@@ -42,9 +42,9 @@ PGE_34::OnUserUpdate (float fElapsedTime)
   for (int i = 0; i < ENGINE_PGE_34_DEFAULT_TOTAL; i++)
   {
     a = getVector (i, ENGINE_PGE_34_DEFAULT_TOTAL);
-    a += {static_cast<float> (half_w), static_cast<float> (half_h)};
+    a += olc::vf2d (static_cast<float> (half_w), static_cast<float> (half_h));
     b = getVector (static_cast<int> (i * factor_), ENGINE_PGE_34_DEFAULT_TOTAL);
-    b += {static_cast<float> (half_w), static_cast<float> (half_h)};
+    b += olc::vf2d (static_cast<float> (half_w), static_cast<float> (half_h));
     olc::PixelGameEngine::DrawLine (a, b, olc::WHITE, 0xFFFFFFFF);
   } // end FOR
 
@@ -56,7 +56,7 @@ PGE_34::getVector (int index_in, int total_in)
 {
   float angle_f =
     Common_GL_Tools::map (static_cast<float> (index_in % total_in), 0.0f, static_cast<float> (total_in), 0.0f, static_cast<float> (M_PI) * 2.0f);
-  olc::vf2d v = {cos (angle_f), sin (angle_f)};
+  olc::vf2d v (cos (angle_f), sin (angle_f));
   v *= r_;
   return v;
 }

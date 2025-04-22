@@ -26,7 +26,7 @@ PGE_45::OnUserCreate ()
     path_.push_back (hilbert (i));
     int len = olc::PixelGameEngine::ScreenWidth () / N;
     path_[i] *= static_cast<float> (len);
-    path_[i] += {len / 2.0f, len / 2.0f};
+    path_[i] += olc::vf2d (len / 2.0f, len / 2.0f);
   } // end FOR
 
   return true;

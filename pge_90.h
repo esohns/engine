@@ -56,7 +56,7 @@ class PGE_90
       float dy = get_delta (1);
 
       olc::vf2d position_s = position_;
-      position_s += {dx * step_, dy * step_};
+      position_s += olc::vf2d (dx * step_, dy * step_);
       return position_s;
     }
 
