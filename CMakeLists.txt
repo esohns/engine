@@ -2027,6 +2027,14 @@ set (engine_33_EXE_SRCS
      glut_691.h
      glut_692.cpp
      glut_692.h
+     glut_693.cpp
+     glut_693.h
+     glut_694.cpp
+     glut_694.h
+     glut_695.cpp
+     glut_695.h
+     glut_696.cpp
+     glut_696.h
      stdafx.h)
 
 set (EXECUTABLE_33 engine_33)
@@ -3679,6 +3687,18 @@ install (FILES
          "glut_692.frag"
          "glut_692_channel0.png"
          "glut_692_channel1.png"
+         "glut_693.vert"
+         "glut_693.frag"
+         "glut_693.frag_2"
+         "glut_693.frag_3"
+         "glut_694.vert"
+         "glut_694.frag"
+         "glut_694_channel0.png"
+         "glut_694_channel1.png"
+         "glut_695.vert"
+         "glut_695.frag"
+         "glut_696.vert"
+         "glut_696.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"

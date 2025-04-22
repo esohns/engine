@@ -1,0 +1,45 @@
+#version 130
+
+// glut_693_common.glsl
+#define ZOOM .25
+#define EMPTY 1024.
+#define FTOV .125
+#define VTOP (FTOV*2.)
+#define FRC1 4.
+#define FRC2 1.
+
+vec4
+rand (vec2 u)
+{
+  return fract(sin(vec4(dot(u,vec2(23.123,87.987)),
+                        dot(u,vec2(34.234,96.876)),
+                        dot(u,vec2(45.345,15.765)),
+                        dot(u,vec2(56.456,24.654))))*45678.7654);
+}
+// glut_693_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+  vec2 r = 1./iResolution.xy;
+  vec2 u = gl_FragCoord.xy*ZOOM;
+  vec4 t = vec4(fract(u)*2.-1.,0.,0.);
+  vec4 s = step(vec4(0.),t)*vec4(1.,1.,0.,0.)-vec4(1.,1.,0.,0.);
+  u = (floor(u)+s.xy)*2.;
+  s*= 2.;
+  vec4 v = vec4(.6);
+  for(float i = .5; i < 4.; ++i)
+    for(float j = .5; j < 4.; ++j)
+    {
+      vec4 m = vec4(j,i,0.,0.);
+      vec4 t2 = texture(iChannel0,(u+m.xy)*r).xyzw;
+      vec4 p = t-t2-s-2.*floor(m*.5);
+      if(t2.x != EMPTY && dot(p.xy,p.xy)<1.)
+        v = t2;
+    }
+
+  gl_FragColor = .5+.5*cos(6.28*(.5+length(v.zw)+vec4(.0,.1,.2,.0)));
+}
