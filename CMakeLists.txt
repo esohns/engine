@@ -2045,6 +2045,8 @@ set (engine_33_EXE_SRCS
      glut_700.h
      glut_701.cpp
      glut_701.h
+     glut_702.cpp
+     glut_702.h
      stdafx.h)
 
 set (EXECUTABLE_33 engine_33)
@@ -3719,6 +3721,10 @@ install (FILES
          "glut_700.frag"
          "glut_701.vert"
          "glut_701.frag"
+         "glut_702.vert"
+         "glut_702.frag"
+         "glut_702.frag_2"
+         "glut_702.frag_3"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
