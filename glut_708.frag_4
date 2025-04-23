@@ -1,0 +1,39 @@
+#version 130
+
+// glut_708_common.glsl
+#define FORCE_RANGE vec4(   25, 2.5,     0,0)
+#define BLUR_DEPTH 40.
+#define SPEED 2.
+#define SEPARATION 50.
+// glut_708_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel2;
+uniform sampler2D iChannel3;
+
+vec2 R;
+vec4 A (vec2 U) {return texture(iChannel0,U/R);}
+//vec4 B (vec2 U) {return texture(iChannel1,U/R);}
+vec4 C (vec2 U) {return texture(iChannel2,U/R);}
+vec4 D (vec2 U) {return texture(iChannel3,U/R);}
+
+void
+main ()
+{
+  vec4 Q;
+  vec2 U = gl_FragCoord.xy;
+
+  R = iResolution.xy;
+  vec4 a = A(U);
+  float r=smoothstep(4.,1.,length(U-a.xy));
+  Q = r*vec4(a.w,abs(a.w),-a.w,1);
+  Q = max(Q,D(U));
+  float n = C(U+vec2(0,1)).x,
+        e = C(U+vec2(1,0)).x,
+        s = C(U+vec2(0,-1)).x,
+        w = C(U+vec2(-1,0)).x;
+  Q.zw = vec2(e-w,n-s);
+
+  gl_FragColor = Q;
+}

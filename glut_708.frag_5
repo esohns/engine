@@ -1,0 +1,64 @@
+#version 130
+
+// glut_708_common.glsl
+#define FORCE_RANGE vec4(   25, 2.5,     0,0)
+#define BLUR_DEPTH 40.
+#define SPEED 2.
+#define SEPARATION 50.
+// glut_708_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel2;
+uniform sampler2D iChannel3;
+
+#define N 2
+
+vec2 R;
+float ln (vec3 p, vec3 a, vec3 b) { return length(p-a-(b-a)*dot(p-a,b-a)/dot(b-a,b-a)); }
+
+vec4 A (vec2 U) {return texture(iChannel0,U/R);}
+//vec4 B (vec2 U) {return texture(iChannel1,U/R);}
+vec4 C (vec2 U) {return texture(iChannel2,U/R);}
+vec4 D (vec2 U) {return texture(iChannel3,U/R);}
+
+float
+dI (vec2 U, vec3 me, vec3 light, float mu)
+{
+  vec3 r = vec3(U,100);
+  vec3 n = normalize(vec3(D(r.xy).zw,mu));
+  vec3 li = reflect((r-light),n);
+  float len = ln(me,r,li);
+  return 5.e-1*exp(-len);
+}
+
+float
+I (vec2 U, vec3 me, vec3 light, float mu)
+{
+  float intensity = 0.;
+  for (int x = -N; x <= N; x++)
+    for (int y = -N; y <= N; y++)
+    {
+      float i = dI(U+vec2(x,y),me,light,10.*mu);
+      intensity += i*i;
+    }
+  return intensity;
+}
+
+void
+main ()
+{
+  vec4 Q;
+  vec2 U = gl_FragCoord.xy;
+
+  R = iResolution.xy;
+  vec3 light = vec3(0.5*R,1e5);
+  vec3 me    = vec3(U,0);
+  vec4 a = A(U);
+  vec4 c = C(U);
+  float l = I(U,me,light,1.);
+  float r = smoothstep(2.+0.05*abs(a.w),.5,length(U-a.xy));
+  Q = l+r*vec4(abs(sign(a.w)),-sign(a.w),-sign(a.w),1);
+
+  gl_FragColor = Q;
+}
