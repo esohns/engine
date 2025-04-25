@@ -1,0 +1,72 @@
+#version 130
+
+// glut_717_common.glsl
+// #define USE_CINEMATIC_MODE
+// #define USE_BUMPY_STREAMS_MODE
+// #define USE_GENERATION_SEED 123
+
+const int nParticles = 20;
+const float particlesSize = 8.0;
+const float collisionDamping = 0.5;
+const float streamsFadingExp = 0.001;
+const float gravityStrength = 1.6 / particlesSize;
+
+const vec3 ambientLightDir = normalize(vec3(1.0, 2.0, 0.0));
+const vec3 ambientLightCol = vec3(1.1, 1.0, 0.9);
+const vec3 backgroundColor = vec3(0.65);
+const float streamsGlossExp = 120.0;
+const float spotlightsGlare = 0.0;
+
+#ifdef USE_BUMPY_STREAMS_MODE
+#define particlesSize mix(particlesSize, particlesSize * 0.5, (1.0 + sin(1.85 + iTime * 11.93805208)) * 0.5)
+#endif
+
+#ifdef USE_GENERATION_SEED
+#define generationSeed float(USE_GENERATION_SEED) // a fixed seed will generate the same output (in respect of the viewport size)
+#else
+#define generationSeed iDate.w // if no custom seed is provided, POSIX time is used instead (producing different results every time)
+#endif
+
+const ivec2 cameraVelocity =
+#ifdef USE_CINEMATIC_MODE
+ivec2(1, 0);
+#else
+ivec2(0);
+#endif
+// glut_717_common.glsl
+
+uniform float iTime;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+
+vec2
+getParticlePosition (int particleID)
+{
+  int iChannel0_width = textureSize (iChannel0, 0).x;
+  ivec2 particleCoord = ivec2(particleID % iChannel0_width, particleID / iChannel0_width);
+
+  return texelFetch(iChannel0, particleCoord, 0).xy;
+}
+
+vec3
+getParticleColor (vec2 p)
+{
+  return normalize(vec3(0.1) + texture(iChannel2, p * 0.0001 + iTime * 0.005).rgb);
+}
+
+void
+main ()
+{ 
+  gl_FragColor = texelFetch(iChannel1, ivec2(gl_FragCoord.xy) + cameraVelocity, 0);
+  gl_FragColor.a *= (1.0 - streamsFadingExp);
+
+  for(int i = 0; i < nParticles; ++i)
+  {
+    vec2 particlePos = getParticlePosition(i);
+    vec3 particleCol = getParticleColor(particlePos);
+
+    float alpha = smoothstep(particlesSize, particlesSize * 0.5, distance(gl_FragCoord.xy, particlePos));
+    gl_FragColor = mix(gl_FragColor, vec4(particleCol , 1.0), alpha);
+  }
+}
