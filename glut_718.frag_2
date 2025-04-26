@@ -1,0 +1,148 @@
+#version 330
+
+// glut_718_common.glsl
+#define Bf(p) p
+#define Bi(p) ivec2(p)
+#define texel(a, p) texelFetch(a, Bi(p), 0)
+#define pixel(a, p) texture(a, (p)/R)
+#define ch0 iChannel0
+#define ch1 iChannel1
+#define ch2 iChannel2
+#define ch3 iChannel3
+
+#define PI 3.14159265
+
+#define loop(i,x) for(int i = 0; i < x; i++)
+#define range(i,a,b) for(int i = a; i <= b; i++)
+
+#define dt 1.
+
+#define border_h 5.
+vec2 R;
+float time;
+
+mat2
+Rot (float ang)
+{
+  return mat2(cos(ang), -sin(ang), sin(ang), cos(ang)); 
+}
+
+vec2
+Dir (float ang)
+{
+  return vec2(cos(ang), sin(ang));
+}
+
+float
+sdBox (vec2 p, vec2 b)
+{
+  vec2 d = abs(p)-b;
+  return length(max(d,0.0)) + min(max(d.x,d.y),0.0);
+}
+
+float
+sdSph (vec2 p, float r)
+{
+  return length(p) - r; 
+}
+
+float
+border (vec2 p)
+{
+  float bound = -sdBox(p - R*0.5, R*vec2(0.52, 0.5)); 
+    
+  float box = sdSph(p - R*vec2(0.2, 0.3), R.x*0.05);
+  box =min(box, sdSph(p - R*vec2(0.2, 0.7), R.x*0.05));
+  float drain = -sdBox(p - R*vec2(0.9, 0.05), vec2(0));
+  return max(drain,min(bound, box));
+}
+
+#define h 0.1
+vec3
+bN (vec2 p)
+{
+  vec3 dx = vec3(-h,0,h);
+  vec4 idx = vec4(-1./h, 0., 1./h, 0.25);
+  vec3 r = idx.zyw*border(p + dx.zy)
+           + idx.xyw*border(p + dx.xy)
+           + idx.yzw*border(p + dx.yz)
+           + idx.yxw*border(p + dx.yx);
+  return vec3(normalize(r.xy), r.z);
+}
+
+uint
+pack (vec2 x)
+{
+  x = 65534.0*clamp(0.5*x+0.5, 0., 1.);
+  return uint(x.x) + 65535u*uint(x.y);
+}
+
+vec2
+unpack (uint a)
+{
+  vec2 x = vec2(a%65535u, a/65535u);
+  return clamp(x/65534.0, 0.,1.)*2.0 - 1.0;
+}
+
+vec4
+decode (vec2 x)
+{
+  uint v = floatBitsToUint(x.x);
+  return vec4(unpack(v),x.yy); 
+}
+
+vec2
+encode (vec4 x)
+{
+  uint v = pack(x.xy);
+  return vec2(uintBitsToFloat(v),x.z); 
+}
+
+vec3
+hash32 (vec2 p)
+{
+  vec3 p3 = fract(vec3(p.xyx) * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yxz+33.33);
+  return fract((p3.xxy+p3.yzz)*p3.zyx);
+}
+
+float
+G (vec2 x)
+{
+  return exp(-dot(x,x));
+}
+
+float
+G0 (vec2 x)
+{
+  return exp(-length(x));
+}
+// glut_718_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+void
+main ()
+{
+  vec4 U;
+  vec2 pos = gl_FragCoord.xy;
+
+  R = iResolution.xy; time = iTime;
+
+  U = texel(ch1, pos);
+  vec4 av = vec4(0.); float s = 0.0001;
+  range(i, -3, 3) range(j, -3, 3)
+  {
+    vec2 dx = vec2(i,j);
+    vec4 dc = decode(texel(ch0, pos + dx).zw);
+    float k = dc.z*G(dx/1.);
+    s += k;
+    av += k*dc.xyzz;
+  }
+  U = av/s; 
+
+  gl_FragColor = U;
+}

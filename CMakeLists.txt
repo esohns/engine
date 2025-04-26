@@ -2092,6 +2092,8 @@ set (engine_34_EXE_SRCS
      glut_716.h
      glut_717.cpp
      glut_717.h
+     glut_718.cpp
+     glut_718.h
      stdafx.h)
 
 set (EXECUTABLE_34 engine_34)
@@ -3843,6 +3845,12 @@ install (FILES
          "glut_717.frag_3"
          "glut_717.frag_4"
          "glut_717_S2channel2.png"
+         "glut_718.vert"
+         "glut_718.frag"
+         "glut_718.frag_2"
+         "glut_718.frag_3"
+         "glut_718.frag_4"
+         "glut_718.frag_5"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
