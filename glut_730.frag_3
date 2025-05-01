@@ -1,0 +1,25 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform vec4 iMouse;
+uniform sampler2D iChannel2;
+
+void
+main ()
+{
+  vec4 Q;
+  vec2 U = gl_FragCoord.xy;
+  
+  vec4 p = texture(iChannel2, U / iResolution.xy);
+  if (iMouse.z > 0.)
+  {
+    if (p.z > 0.)
+      Q = vec4(iMouse.xy, p.xy);
+    else
+      Q = vec4(iMouse.xy, iMouse.xy);
+  }
+  else
+    Q = vec4(-iResolution.xy, -iResolution.xy);
+
+  gl_FragColor = Q;
+}

@@ -1,0 +1,47 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+#define A(u) texture(iChannel0,(u)/iResolution.xy)
+#define B(u) texture(iChannel1,(u)/iResolution.xy)
+
+void
+main ()
+{
+  vec2 u = gl_FragColor.xy;
+  
+  vec4 o = vec4(0);
+  float z = 4.;
+  for (float i = -z; i <= z; ++i)
+    for (float j = -z; j <= z; ++j)
+    {
+      vec4 a = A(u+vec2(i,j));
+      vec4 b = B(u+vec2(i,j));
+      vec2 c = -b.xy - vec2(i, j);
+      float s = a.z * exp(-dot(c, c)) * b.z;
+      vec2 e = c * (a.z - .8);
+      o.xy += s * (b.xy + e);
+      o.z += s;
+    }
+  float tz = 1. / o.z;
+  if (o.z == 0.) tz = 0.;
+  o.xy *= tz;
+
+  if (iMouse.z > 0.)
+  {
+    vec2 m = 8. * (u - iMouse.xy) / iResolution.y;
+    o += vec4(m, 0, 0) * .1 * exp(-dot(m, m));
+  }
+
+  if (iFrame == 0)
+  {
+    vec2 m = 3. * (u - iResolution.xy * .5) / iResolution.y;
+    o = vec4(0, 0, 1, 1) * exp(-dot(m, m));
+  }
+
+  gl_FragColor = o;
+}
