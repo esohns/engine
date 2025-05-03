@@ -1,0 +1,28 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+#define _BufferA iChannel0
+
+void
+main ()
+{
+  vec4 C;
+  vec2 U = gl_FragCoord.xy;
+
+  vec2 q = U / iResolution.xy;
+  vec3 e = vec3(1. / iResolution.xy, 0.0);
+  float p10 = texture(_BufferA, q - e.zy).x;
+  float p01 = texture(_BufferA, q - e.xz).x;
+  float p21 = texture(_BufferA, q + e.xz).x;
+  float p12 = texture(_BufferA, q + e.zy).x;
+
+  vec3 grad = normalize(vec3(p21 - p01, p12 - p10, 1.));
+
+  //C = (grad.xyzz + 1.) / 2.;
+  C = texture(iChannel1, q + grad.xy);
+  
+  gl_FragColor = C;
+}

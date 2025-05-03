@@ -1,0 +1,27 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+#define PixelCount iResolution.xy
+
+vec3
+GammaEncode (vec3 x)
+{
+  return pow(x, vec3(1.0 / 2.2));
+}
+
+void
+main ()
+{
+  vec2 tex = gl_FragCoord.xy / PixelCount;
+
+  vec3 col = textureLod(iChannel0, tex, 0.0).rgb;
+
+  float vig = tex.x * tex.y * (1.0 - tex.x) * (1.0 - tex.y) * 16.0;
+  vig = sqrt(vig);
+  vig = mix(0.6, 1.0, vig);
+  col *= vec3(vig);
+
+  gl_FragColor = vec4(GammaEncode(col), 0.0);
+}
