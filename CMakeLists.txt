@@ -2145,6 +2145,16 @@ set (engine_35_EXE_SRCS
      glut_735.h
      glut_736.cpp
      glut_736.h
+     glut_737.cpp
+     glut_737.h
+     glut_738.cpp
+     glut_738.h
+     glut_739.cpp
+     glut_739.h
+     glut_740.cpp
+     glut_740.h
+     glut_741.cpp
+     glut_741.h
      stdafx.h)
 
 set (EXECUTABLE_35 engine_35)
@@ -3977,11 +3987,22 @@ install (FILES
          "glut_735.vert"
          "glut_735.frag"
          "glut_735.frag_2"
-         "glut_735.S2channel1.png"
+         "glut_735_S2channel1.png"
          "glut_736.vert"
          "glut_736.frag"
          "glut_736.frag_2"
-         "glut_736.S1channel0.png"
+         "glut_736_S1channel0.png"
+         "glut_737.vert"
+         "glut_737.frag"
+         "glut_737_channel0.png"
+         "glut_738.vert"
+         "glut_738.frag"
+         "glut_739.vert"
+         "glut_739.frag"
+         "glut_740.vert"
+         "glut_740.frag"
+         "glut_741.vert"
+         "glut_741.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
