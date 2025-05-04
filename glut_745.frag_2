@@ -1,0 +1,57 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+vec2 R;
+float N;
+
+vec4
+T (vec2 U)
+{
+  return texture(iChannel0, U / R);
+}
+
+vec4
+P (vec2 U)
+{
+  return texture(iChannel1, U / R);
+}
+
+void
+swap (vec2 U, inout vec4 Q, vec2 u)
+{
+  vec4 p = P(U + u);
+  float dl = length(U - Q.xy) - length(U - p.xy);
+  float e = .1;
+  Q = mix(Q, p, 0.5 + 0.5 * sign(floor(1e2 * dl + 0.5)));
+}
+
+void
+main ()
+{
+  vec4 Q;
+  vec2 U = gl_FragCoord.xy;
+  
+  R = iResolution.xy;
+  U = U - T(U).xy;
+  Q = P(U);
+  swap(U, Q, vec2(1, 0));
+  swap(U, Q, vec2(0, 1));
+  swap(U, Q, vec2(0, -1));
+  swap(U, Q, vec2(-1, 0));
+ 	
+  if ((length(U - vec2(0.1, 0.5) * R) < 4.))
+    Q.zw = vec2(0, 3);
+  if ((length(U - vec2(0.7, 0.3) * R) < 4.))
+    Q.zw = vec2(-2, 2);
+ 
+  Q.xy = Q.xy + T(Q.xy).xy;
+
+  if (iFrame < 1)
+    Q = vec4(U, 0, 0);
+
+  gl_FragColor = Q;
+}

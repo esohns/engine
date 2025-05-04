@@ -1,0 +1,45 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform sampler2D iChannel1;
+
+vec2 R;
+
+/*vec4
+T (vec2 U)
+{
+  return texture(iChannel0, U / R);
+}*/
+
+vec4
+P (vec2 U)
+{
+  return texture(iChannel1, U / R);
+}
+
+void
+main ()
+{
+  vec4 C;
+  vec2 U = gl_FragCoord.xy;
+  
+  R = iResolution.xy;
+  C = P(U);
+  vec2 n = P(U + vec2(0, 1)).xy,
+       e = P(U + vec2(1, 0)).xy,
+       s = P(U - vec2(0, 1)).xy,
+       w = P(U - vec2(1, 0)).xy;
+
+  C = vec4(0.1 + 0.5 * (sin(.4 * C.z * vec3(2) + .6 * C.w * vec3(1, 2, 3))) * smoothstep(2., 0., length(C.xy - U)),
+       (length(n - C.xy) - 1. +
+        length(e - C.xy) - 1. +
+        length(s - C.xy) - 1. +
+        length(w - C.xy) - 1.) / R.y * 10.
+            );
+
+  if (iFrame < 1)
+    C = vec4(0);
+
+  gl_FragColor = C;
+}

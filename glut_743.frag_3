@@ -1,0 +1,92 @@
+#version 330
+
+// glut_743_common.glsl
+#define T(p) texelFetch(iChannel0, ivec2(mod(p,R)), 0)
+#define P(p) texture(iChannel0, mod(p,R)/R)
+#define C(p) texture(iChannel1, mod(p,R)/R)
+#define D(p) texture(iChannel2, mod(p,R)/R)
+
+#define PI 3.14159265
+#define dt 1.
+#define R iResolution.xy
+
+const vec2 dx = vec2(0, 1);
+
+float
+hash11(float p)
+{
+  p = fract(p * .1031);
+  p *= p + 33.33;
+  p *= p + p;
+  return fract(p);
+}
+
+#define rand_interval 250
+#define random_gen(a, b, seed) ((a) + ((b)-(a))*hash11(seed + float(iFrame/rand_interval)))
+
+#define distribution_size 1.4
+
+#define sense_num 2
+#define sense_ang (0.15 + 0.13*sin(iTime))
+#define sense_dis 200.
+#define sense_oscil 0.0
+#define oscil_scale 1.
+#define oscil_pow 1.
+#define sense_force 0.5
+#define distance_scale 2.
+#define force_scale 0.5
+#define trailing 0.
+#define acceleration 0.0
+
+#define GS(x) exp(-dot(x,x))
+#define GSS(x) exp(-dot(x,x))
+#define GS0(x) exp(-length(x))
+#define Dir(ang) vec2(cos(ang), sin(ang))
+#define Rot(ang) mat2(cos(ang), sin(ang), -sin(ang), cos(ang))
+#define loop(i,x) for(int i = 0; i < x; i++)
+#define range(i,a,b) for(int i = a; i <= b; i++)
+
+#define Pressure(rho) 0.0*rho.z
+#define fluid_rho 0.2
+
+#define PACK(X) ( uint(round(65534.0*clamp(0.5*X.x+0.5, 0., 1.))) + \
+           65535u*uint(round(65534.0*clamp(0.5*X.y+0.5, 0., 1.))) )   
+               
+#define UNPACK(X) (clamp(vec2(X%65535u, X/65535u)/65534.0, 0.,1.)*2.0 - 1.0)              
+
+#define DECODE(X) UNPACK(floatBitsToUint(X))
+#define ENCODE(X) uintBitsToFloat(PACK(X))
+// glut_743_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+#define radius 2.0
+
+void
+main ()
+{
+  vec2 pos = gl_FragCoord.xy;
+  
+  float rho = 0.001;
+  vec2 vel = vec2(0., 0.);
+
+  range(i, -2, 2) range(j, -2, 2)
+  {
+    vec2 tpos = pos + vec2(i, j);
+    vec4 data = T(tpos);
+
+    vec2 X0 = DECODE(data.x) + tpos;
+    vec2 V0 = DECODE(data.y);
+    float M0 = data.z;
+    vec2 dx = X0 - pos;
+
+    float K = GS(dx/radius) / (radius);
+    rho += M0 * K;
+    vel += M0 * K * V0;
+  }
+
+  vel /= rho;
+
+  gl_FragColor = vec4(vel, rho, 1.0);
+}

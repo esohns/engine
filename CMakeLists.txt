@@ -2155,6 +2155,14 @@ set (engine_35_EXE_SRCS
      glut_740.h
      glut_741.cpp
      glut_741.h
+     glut_742.cpp
+     glut_742.h
+     glut_743.cpp
+     glut_743.h
+     glut_744.cpp
+     glut_744.h
+     glut_745.cpp
+     glut_745.h
      stdafx.h)
 
 set (EXECUTABLE_35 engine_35)
@@ -4003,6 +4011,22 @@ install (FILES
          "glut_740.frag"
          "glut_741.vert"
          "glut_741.frag"
+         "glut_742.vert"
+         "glut_742.frag"
+         "glut_743.vert"
+         "glut_743.frag"
+         "glut_743.frag_2"
+         "glut_743.frag_3"
+         "glut_743.frag_4"
+         "glut_743.frag_5"
+         "glut_744.vert"
+         "glut_744.frag"
+         "glut_744.frag_2"
+         "glut_744.frag_3"
+         "glut_745.vert"
+         "glut_745.frag"
+         "glut_745.frag_2"
+         "glut_745.frag_3"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
