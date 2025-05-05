@@ -2165,6 +2165,8 @@ set (engine_35_EXE_SRCS
      glut_745.h
      glut_746.cpp
      glut_746.h
+     glut_747.cpp
+     glut_747.h
      stdafx.h)
 
 set (EXECUTABLE_35 engine_35)
@@ -4033,6 +4035,9 @@ install (FILES
          "glut_746.frag"
          "glut_746.frag_2"
          "glut_746_S1channel0.png"
+         "glut_747.vert"
+         "glut_747.frag"
+         "glut_747_channel0.png"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
