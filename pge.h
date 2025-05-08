@@ -26,7 +26,7 @@ class PGE
     void setRandom (int32_t frameCount_in)
     {
       if ((frameCount_in % switchInterval) == 0)
-      //value = 0x30A0 + (rand () % 97);
+        //value = 0x30A0 + (rand () % 97);
         value = 33 + (rand () % 94); // 'printable' characters
     }
 
@@ -52,6 +52,13 @@ class PGE
     {
       numberOfSymbols = Common_Tools::getRandomNumber (5, 30);
       speed = Common_Tools::getRandomNumber (3, 10);
+    }
+    ~stream ()
+    {
+      for (std::vector<PGE::symbol*>::iterator iterator = symbols.begin ();
+           iterator != symbols.end ();
+           ++iterator)
+        delete *iterator;
     }
 
     void make (int32_t x_in,

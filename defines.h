@@ -32,20 +32,24 @@
   variable += ACE_TEXT_ALWAYS_CHAR (" , Common "); variable += ACE_TEXT_ALWAYS_CHAR (Common_PACKAGE_VERSION_FULL);       \
 } while (0)
 
+// pge
+#define ENGINE_PGE_DEFAULT_HEIGHT               1080
+#define ENGINE_PGE_DEFAULT_WIDTH                1920
+
 // pge 2
 //#define IX(i, j) i + j * resolution_
 //#define SWAP(x0, x) {float* tmp=x0;x0=x;x=tmp;}
 #define ENGINE_PGE_2_DEFAULT_SIZE               320
 
-#define ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS    16
-#define ENGINE_PGE_2_DEFAULT_DT                1.0f
-#define ENGINE_PGE_2_DEFAULT_DIFFUSION         0.00000001f
-#define ENGINE_PGE_2_DEFAULT_VISCOSITY         0.00000001f
+#define ENGINE_PGE_2_DEFAULT_NUM_ITERATIONS     16
+#define ENGINE_PGE_2_DEFAULT_DT                 1.0f
+#define ENGINE_PGE_2_DEFAULT_DIFFUSION          0.00000001f
+#define ENGINE_PGE_2_DEFAULT_VISCOSITY          0.00000001f
 
 #if defined (GTK2_USE)
-#define ENGINE_PGE_2_UI_DEFINITION_FILE        "pge_2.gtk2"
+#define ENGINE_PGE_2_UI_DEFINITION_FILE         "pge_2.gtk2"
 #else
-#define ENGINE_PGE_2_UI_DEFINITION_FILE        "pge_2.gtk3"
+#define ENGINE_PGE_2_UI_DEFINITION_FILE         "pge_2.gtk3"
 #endif // GTK2_USE
 
 #define ENGINE_UI_GTK_SCALE_ITERATIONS_NAME     "scale_iterations"

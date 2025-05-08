@@ -296,9 +296,10 @@ sdCone (vec3 p, vec3 c)
 #endif
 }
 
-const float h = (1. + sqrt(5.)) / 2.;
 float pipeDodecahedron(vec3 p, float scale, float pipeRadius)
 {
+  float h = (1. + sqrt(5.)) / 2.;
+
   vec3 a = vec3(0, 1. - h, h),
        m = normalize(vec3(-1, h - 2., h - 1.)),
        n = normalize(a - 1.);
@@ -317,8 +318,8 @@ float pipeDodecahedron(vec3 p, float scale, float pipeRadius)
 float
 sdDodecahedron (vec3 p, float radius)
 {
-  const float phi = 1.61803398875;
-  const vec3 n = normalize(vec3(phi, 1, 0));
+  float phi = 1.61803398875;
+  vec3 n = normalize(vec3(phi, 1, 0));
 
   p = abs(p / radius);
   float a = dot(p, n.xyz);
@@ -331,7 +332,7 @@ float
 sdIcosahedron (vec3 p, float radius)
 {
   const float q = 2.61803398875;
-  const vec3 n1 = normalize(vec3(q, 1, 0));
+  vec3 n1 = normalize(vec3(q, 1, 0));
   const vec3 n2 = vec3(0.57735026919);
 
   p = abs(p / radius);

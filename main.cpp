@@ -272,7 +272,7 @@ do_work (int argc_in,
     case ENGINE_MODE_DEFAULT:
     {
       PGE example;
-      if (example.Construct (640, 480,
+      if (example.Construct (ENGINE_PGE_DEFAULT_WIDTH, ENGINE_PGE_DEFAULT_HEIGHT,
                              1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
