@@ -2204,6 +2204,16 @@ set (engine_36_EXE_SRCS
      glut_757.h
      glut_758.cpp
      glut_758.h
+     glut_759.cpp
+     glut_759.h
+     glut_760.cpp
+     glut_760.h
+     glut_761.cpp
+     glut_761.h
+     glut_762.cpp
+     glut_762.h
+     glut_763.cpp
+     glut_763.h
      stdafx.h)
 
 set (EXECUTABLE_36 engine_36)
@@ -4131,6 +4141,19 @@ install (FILES
          "glut_758.vert"
          "glut_758.frag"
          "glut_758.frag_2"
+         "glut_759.vert"
+         "glut_759.frag"
+         "glut_759.frag_2"
+         "glut_759_S2channel1.png"
+         "glut_760.vert"
+         "glut_760.frag"
+         "glut_760.frag_2"
+         "glut_761.vert"
+         "glut_761.frag"
+         "glut_762.vert"
+         "glut_762.frag"
+         "glut_763.vert"
+         "glut_763.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
