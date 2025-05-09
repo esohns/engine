@@ -1,0 +1,188 @@
+#version 130
+
+// glut_765_common.glsl
+const float PI05 = 1.5707963267948966192313216916398;
+const float PI = 3.1415926535897932384626433832795;
+const float PI2 = 6.283185307179586476925286766559;
+const float PIRECIP = 0.31830988618379067153776752674503;
+const float PIPER180 = 0.01745329251994329576923690768489;
+const float SQRT2 = 1.4142135623730950488016887242097;
+const float E_NUMBER = 2.7182818284590452353602874713527;
+const float LN2 = 0.69314718055994530941723212145817658;
+
+#define EPS 0.0001
+
+const float g_fGridSizeInMeter = 5.0;
+const float g_fElapsedTimeInSec = 1.0;
+const float g_fAdvectSpeed = -1.0;
+const float g_fG = 10.0;
+const float g_fHackBlurDepth = 1.0;
+
+#define UI0 1597334673U
+#define UI1 3812015801U
+#define UI2 uvec2(UI0, UI1)
+#define UI3 uvec3(UI0, UI1, 2798796415U)
+#define UI4 uvec4(UI3, 1979697957U)
+#define UIF (1.0 / float(0xffffffffU))
+
+float
+hash12(vec2 p)
+{
+  uvec2 q = uvec2(ivec2(p)) * UI2;
+  uint n = (q.x ^ q.y) * UI0;
+  return float(n) * UIF;
+}
+
+vec2
+hash(vec2 p)
+{
+  p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+  return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+}
+
+float
+noise(vec2 p)
+{
+  const float K1 = 0.366025404;
+  const float K2 = 0.211324865;
+
+  vec2 i = floor(p + (p.x + p.y) * K1);
+  vec2 a = p - i + (i.x + i.y) * K2;
+  float m = step(a.y, a.x);
+  vec2 o = vec2(m, 1.0 - m);
+  vec2 b = a - o + K2;
+  vec2 c = a - 1.0 + 2.0 * K2;
+  vec3 h = max(0.5 - vec3(dot(a, a), dot(b, b), dot(c, c)), 0.0);
+  vec3 n = h * h * h * h * vec3(dot(a, hash(i + 0.0)), dot(b, hash(i + o)), dot(c, hash(i + 1.0)));
+  return dot(n, vec3(70.0));
+}
+
+float
+SampleDepth(sampler2D sampler, vec2 uv, vec2 vRes)
+{
+  float fRet = 0.0;
+    
+  vec2 vUV = uv * vRes.x / vRes.y * 3.0 + 1.0;
+  vUV += vec2(noise(vUV + 2.0), noise(vUV + 1.0)) * 0.2;
+  mat2 m = mat2(2.0, 1.2, -1.2, 2.0);
+  fRet = 0.5000 * noise(vUV) * 2.0;
+  vUV = m * vUV;
+  fRet += 0.2500 * noise(vUV) * 1.0;
+  vUV = m * vUV;
+  vUV += vec2(noise(vUV + 0.5), noise(vUV + 2.5)) * 0.2;
+  fRet += 0.1250 * noise(vUV) * 1.0;
+  vUV = m * vUV;
+  fRet += 0.0625 * noise(vUV) * 1.0;
+  vUV = m * vUV;
+  fRet += 0.0312 * noise(vUV) * 1.0;
+  vUV = m * vUV;
+
+  fRet = fRet * 0.6 - 0.4;
+  fRet -= (uv.x - 0.6) * 3.0;
+
+  return fRet;
+}
+
+float
+SampleColor(sampler2D sampler, vec2 uv, vec2 vRes)
+{
+  float fRet = 0.0;
+
+  vec2 vUV = uv * vRes.x / vRes.y * 3.0 + 1.0;
+  vUV += vec2(noise(vUV + 2.0), noise(vUV + 1.0)) * 0.2;
+  mat2 m = mat2(2.0, 1.2, -1.2, 2.0);
+  fRet = 0.0;
+  vUV = m * vUV;
+  fRet += 0.0;
+  vUV = m * vUV;
+  vUV += vec2(noise(vUV + 0.5), noise(vUV + 2.5)) * 0.2;
+  fRet += 0.1250 * noise(vUV) * 0.5;
+  vUV = m * vUV;
+  fRet += 0.0625 * noise(vUV) * 0.4;
+  vUV = m * vUV;
+  fRet += 0.0312 * noise(vUV) * 0.4;
+  vUV = m * vUV;
+
+  return -fRet * 4.0;
+}
+
+#define Gamma( v ) pow( v, vec3( 2.2, 2.2, 2.2 ) )
+#define DeGamma( v ) pow( v, vec3( 1.0/2.2, 1.0/2.2, 1.0/2.2 ) )
+// glut_765_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+const vec3 vWaterFogColor = Gamma(vec3( 0.9, 0.4, 0.3 )) * 16.0;
+const vec3 vFoamColor = Gamma(vec3( 0.9, 0.9, 0.85 ));
+const vec3 vSkyColor = Gamma(vec3( 0.01, 0.4, 0.8 ));
+const vec3 vSunColor = Gamma(vec3( 1.0, 0.8, 0.5 ));
+const vec3 vTerrainColor0 = Gamma(vec3(1.0,0.88,0.7)*0.8);
+const vec3 vTerrainColor1 = Gamma(vec3(0.9,0.9,0.8)*0.9);
+#define vLightDir normalize( vec3( 0.0, 0.21, -1.0 ) )
+const vec3 vLookDir = vec3(0.0, 0.0, -1.0);
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy / iResolution.xy;
+
+  vec4 vTexC = textureLod(iChannel0, uv, 0.0);
+    
+  vec4 vTexL = textureLodOffset(iChannel0, uv, 0.0, ivec2(-1, 0));
+  vec4 vTexR = textureLodOffset(iChannel0, uv, 0.0, ivec2(1, 0));
+  vec4 vTexT = textureLodOffset(iChannel0, uv, 0.0, ivec2(0, -1));
+  vec4 vTexB = textureLodOffset(iChannel0, uv, 0.0, ivec2(0, 1));
+
+  float hC = vTexC.z + vTexC.w;
+  float hL = vTexL.z + vTexL.w;
+  float hR = vTexR.z + vTexR.w;
+  float hT = vTexT.z + vTexT.w;
+  float hB = vTexB.z + vTexB.w;
+
+  float fMinZ = min(min(min(min(vTexC.z, vTexL.z), vTexR.z), vTexT.z), vTexB.z);
+  float fMaxZ = max(max(max(max(vTexC.z, vTexL.z), vTexR.z), vTexT.z), vTexB.z);
+
+  float fAlpha = min(1.0, vTexC.z * 130.0);
+
+  vec3 vNormal = vec3((hR - hL) * g_fGridSizeInMeter, (hB - hT) * g_fGridSizeInMeter, 2.0);
+  vNormal = normalize(vNormal);
+  vec2 vTerrainUV = uv;
+  vec2 vRefractUV = vTerrainUV - vNormal.xy * vTexC.z * 6.0;
+
+  vec3 vTerrainColor = mix(vTerrainColor0, vTerrainColor1, SampleColor(iChannel1, vRefractUV, iResolution.xy));
+  vTerrainColor *= 1.0 - min(1.0, fMaxZ * 80.0) * 0.2;
+  vec3 vRefract = vTerrainColor;
+  vec4 vTexCRefract = textureLod(iChannel0, vRefractUV, 0.0);
+  vTexCRefract = mix(vTexC, textureLod(iChannel0, vRefractUV, 0.0), min(vTexCRefract.z * 1.0, 1.0));
+  vec3 vFog = 1.0 - exp(-vTexCRefract.zzz / (vNormal.z * 0.9999) * vWaterFogColor);
+  vRefract *= (1.0 - vFog);
+
+  vec3 vReflect = (pow((1.0 - pow(vNormal.z * 0.9999999, 100.0)), 0.4)) * 1.1 * vSkyColor;
+    //vec3 vReflect = ( 1.0-pow( ( 1.0 - pow( vNormal.z*0.9999999, 1000.0 ) ), 0.1 ) )* 0.3 * vSkyColor;
+  vec3 vHalfVec = normalize(vLookDir + vLightDir);
+  float fHdotN = max(0.0, dot(-vHalfVec, vNormal));
+  vReflect += pow(fHdotN, 1200.0) * 20.0 * vSunColor;
+  vReflect += pow(fHdotN, 180.0) * 0.5 * vSkyColor;
+
+  float fLight = pow(max(dot(vNormal, -vLightDir), 0.0), 10.0);
+
+  float fFoam = max(0.0, 1.0 - fMinZ * 8.0) * 0.3;
+
+  vec3 vWater = mix(vRefract * fLight + vReflect, vFoamColor, vec3(fFoam, fFoam, fFoam));
+
+  vec3 vOut = mix(vTerrainColor * fLight, vWater, vec3(fAlpha));
+
+  /*if ( iResolution.x > 1180.0 )
+  {
+      if ( uv.y < 0.3 ) vOut = mix( vec3(vTexC.w*0.1), vec3( vTexC.xy+0.5, 0.0 ), vec3(fAlpha) );
+      vOut *= smoothstep( 0.0, 0.004, abs(uv.y-0.3) );
+  }*/
+
+  if (gl_FragCoord.x < 40.0 && gl_FragCoord.y < 40.0)
+    vOut = mod(iTime, 1.0) < 0.5 ? vec3(0.4, 0.2, 0.2) : vec3(0.3, 0.2, 0.1);
+
+  gl_FragColor = vec4(DeGamma(vOut), 1.0);
+}

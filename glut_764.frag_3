@@ -1,0 +1,98 @@
+#version 130
+
+// glut_764_common.glsl
+#define R iResolution
+
+int
+IHash(int a)
+{
+  a = (a ^ 61) ^ (a >> 16);
+  a = a + (a << 3);
+  a = a ^ (a >> 4);
+  a = a * 0x27d4eb2d;
+  a = a ^ (a >> 15);
+  return a;
+}
+
+float
+Hash(int a)
+{
+  return float(IHash(a)) / float(0x7FFFFFFF);
+}
+
+vec4
+rand4(int seed)
+{
+  return vec4(Hash(seed ^ 0x34F85A93),
+              Hash(seed ^ 0x85FB93D5),
+              Hash(seed ^ 0x6253DF84),
+              Hash(seed ^ 0x25FC3625));
+}
+
+vec3
+rand3(int seed)
+{
+  return vec3(Hash(seed ^ 0x348CD593),
+              Hash(seed ^ 0x8593FD5),
+              Hash(seed ^ 0x62A5D384));
+}
+
+vec2
+rand2(int seed)
+{
+  return vec2(Hash(seed ^ 0x348C5F93),
+              Hash(seed ^ 0x8593D5BB));
+}
+
+vec2
+randn(vec2 randuniform)
+{
+  vec2 r = randuniform;
+  r.x = sqrt(-2. * log(1e-9 + abs(r.x)));
+  r.y *= 6.28318;
+  r = r.x * vec2(cos(r.y), sin(r.y));
+  return r;
+}
+
+float
+dot2(vec2 x)
+{
+  return dot(x, x);
+}
+
+int
+cvt(float x)
+{
+  return int(x);
+}
+
+float
+cvt(int x)
+{
+  return float(x);
+}
+// glut_764_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+
+vec4
+A (int i)
+{
+  return texture(iChannel0, (vec2((i - 1) % int(R.x), (i - 1) / int(R.x)) + .5) / R.xy);
+}
+
+void
+main ()
+{
+  vec2 I = gl_FragCoord.xy;
+  vec4 O = vec4(0);
+  vec4 a = texture(iChannel1, I / R.xy);
+  for (int i = 0; i < 4; i++)
+    O += .4 * exp(-.5 * dot2(I - A(cvt(a[i])).xy));
+  O = mix(O, texture(iChannel2, I / R.xy), .9);
+
+  gl_FragColor = O;
+}

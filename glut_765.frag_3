@@ -1,0 +1,204 @@
+#version 130
+
+// glut_765_common.glsl
+const float PI05 = 1.5707963267948966192313216916398;
+const float PI = 3.1415926535897932384626433832795;
+const float PI2 = 6.283185307179586476925286766559;
+const float PIRECIP = 0.31830988618379067153776752674503;
+const float PIPER180 = 0.01745329251994329576923690768489;
+const float SQRT2 = 1.4142135623730950488016887242097;
+const float E_NUMBER = 2.7182818284590452353602874713527;
+const float LN2 = 0.69314718055994530941723212145817658;
+
+#define EPS 0.0001
+
+const float g_fGridSizeInMeter = 5.0;
+const float g_fElapsedTimeInSec = 1.0;
+const float g_fAdvectSpeed = -1.0;
+const float g_fG = 10.0;
+const float g_fHackBlurDepth = 1.0;
+
+#define UI0 1597334673U
+#define UI1 3812015801U
+#define UI2 uvec2(UI0, UI1)
+#define UI3 uvec3(UI0, UI1, 2798796415U)
+#define UI4 uvec4(UI3, 1979697957U)
+#define UIF (1.0 / float(0xffffffffU))
+
+float
+hash12(vec2 p)
+{
+  uvec2 q = uvec2(ivec2(p)) * UI2;
+  uint n = (q.x ^ q.y) * UI0;
+  return float(n) * UIF;
+}
+
+vec2
+hash(vec2 p)
+{
+  p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+  return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+}
+
+float
+noise(vec2 p)
+{
+  const float K1 = 0.366025404;
+  const float K2 = 0.211324865;
+
+  vec2 i = floor(p + (p.x + p.y) * K1);
+  vec2 a = p - i + (i.x + i.y) * K2;
+  float m = step(a.y, a.x);
+  vec2 o = vec2(m, 1.0 - m);
+  vec2 b = a - o + K2;
+  vec2 c = a - 1.0 + 2.0 * K2;
+  vec3 h = max(0.5 - vec3(dot(a, a), dot(b, b), dot(c, c)), 0.0);
+  vec3 n = h * h * h * h * vec3(dot(a, hash(i + 0.0)), dot(b, hash(i + o)), dot(c, hash(i + 1.0)));
+  return dot(n, vec3(70.0));
+}
+
+float
+SampleDepth(sampler2D sampler, vec2 uv, vec2 vRes)
+{
+  float fRet = 0.0;
+    
+  vec2 vUV = uv * vRes.x / vRes.y * 3.0 + 1.0;
+  vUV += vec2(noise(vUV + 2.0), noise(vUV + 1.0)) * 0.2;
+  mat2 m = mat2(2.0, 1.2, -1.2, 2.0);
+  fRet = 0.5000 * noise(vUV) * 2.0;
+  vUV = m * vUV;
+  fRet += 0.2500 * noise(vUV) * 1.0;
+  vUV = m * vUV;
+  vUV += vec2(noise(vUV + 0.5), noise(vUV + 2.5)) * 0.2;
+  fRet += 0.1250 * noise(vUV) * 1.0;
+  vUV = m * vUV;
+  fRet += 0.0625 * noise(vUV) * 1.0;
+  vUV = m * vUV;
+  fRet += 0.0312 * noise(vUV) * 1.0;
+  vUV = m * vUV;
+
+  fRet = fRet * 0.6 - 0.4;
+  fRet -= (uv.x - 0.6) * 3.0;
+
+  return fRet;
+}
+
+float
+SampleColor(sampler2D sampler, vec2 uv, vec2 vRes)
+{
+  float fRet = 0.0;
+
+  vec2 vUV = uv * vRes.x / vRes.y * 3.0 + 1.0;
+  vUV += vec2(noise(vUV + 2.0), noise(vUV + 1.0)) * 0.2;
+  mat2 m = mat2(2.0, 1.2, -1.2, 2.0);
+  fRet = 0.0;
+  vUV = m * vUV;
+  fRet += 0.0;
+  vUV = m * vUV;
+  vUV += vec2(noise(vUV + 0.5), noise(vUV + 2.5)) * 0.2;
+  fRet += 0.1250 * noise(vUV) * 0.5;
+  vUV = m * vUV;
+  fRet += 0.0625 * noise(vUV) * 0.4;
+  vUV = m * vUV;
+  fRet += 0.0312 * noise(vUV) * 0.4;
+  vUV = m * vUV;
+
+  return -fRet * 4.0;
+}
+
+#define Gamma( v ) pow( v, vec3( 2.2, 2.2, 2.2 ) )
+#define DeGamma( v ) pow( v, vec3( 1.0/2.2, 1.0/2.2, 1.0/2.2 ) )
+// glut_765_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform int iFrame;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+void
+main ()
+{
+  ivec2 tc = ivec2(gl_FragCoord.xy);
+  vec4 vTexC = texelFetch(iChannel0, tc, 0);
+//vec4 vTexL = ( tc.x > 0 ) ?                    texelFetchOffset(iChannel0,tc, 0, ivec2(-1,0)) : vTexC*vec4(0.0,0.0,1.0,1.0);
+  vec4 vTexR = (tc.x < int(iResolution.x) - 1) ? texelFetchOffset(iChannel0, tc, 0, ivec2(1, 0)) : vTexC * vec4(0.0, 0.0, 1.0, 1.0);
+//vec4 vTexT = ( tc.y > 0 ) ?                    texelFetchOffset(iChannel0,tc, 0, ivec2(0,-1)) : vTexC*vec4(0.0,0.0,1.0,1.0);
+  vec4 vTexB = (tc.y < int(iResolution.y) - 1) ? texelFetchOffset(iChannel0, tc, 0, ivec2(0, 1)) : vTexC * vec4(0.0, 0.0, 1.0, 1.0);
+
+  float zC = vTexC.z + vTexC.w;
+  //float zL = vTexL.z+vTexL.w;
+  float zR = vTexR.z + vTexR.w;
+  //float zT = vTexT.z+vTexT.w;
+  float zB = vTexB.z + vTexB.w;
+
+  vec2 vV;
+  vV.x = -g_fG / g_fGridSizeInMeter * (zR - zC);
+  vV.y = -g_fG / g_fGridSizeInMeter * (zB - zC);
+  vTexC.xy += vV * g_fElapsedTimeInSec;
+    
+  if (((vTexC.z <= EPS * g_fGridSizeInMeter) && (vTexC.w > zR)) ||
+      ((vTexR.z <= EPS * g_fGridSizeInMeter) && (vTexR.w > zC)))
+    vTexC.x = 0.0;
+
+  if (((vTexC.z <= EPS * g_fGridSizeInMeter) && (vTexC.w > zB)) ||
+      ((vTexB.z <= EPS * g_fGridSizeInMeter) && (vTexB.w > zC)))
+    vTexC.y = 0.0;
+
+  float l = length(vTexC.xy);
+  if (l > 0.0)
+  {
+    float alpha = 0.5;
+    vTexC.xy /= l;
+    l = min(l, g_fGridSizeInMeter / (g_fElapsedTimeInSec) * alpha);
+    vTexC.xy *= l;
+  }
+
+    /*{
+        float fMinH = min( min( min( zL, zR ), min( zT, zB ) ), zC );
+        float fMaxH = max( max( max( zL, zR ), max( zT, zB ) ), zC );
+        float fW = clamp( ( fMaxH - fMinH )*g_fGridSizeInMeter/g_fHackBlurDepth, 0.0, 1.0 );
+
+        float fTexLW = min( (zL-zC)*(1.0/4.0), vTexL.z );
+        float fTexRW = min( (zR-zC)*(1.0/4.0), vTexR.z );
+        float fTexTW = min( (zT-zC)*(1.0/4.0), vTexT.z );
+        float fTexBW = min( (zB-zC)*(1.0/4.0), vTexB.z );
+
+        float fTexAddition = fTexLW + fTexRW + fTexTW + fTexBW;
+        vTexC.z += fTexAddition*0.99*fW;
+    }*/
+    
+  if (vTexC.z < 0.0)
+    vTexC.z = 0.0;
+
+  vec2 uv = gl_FragCoord.xy / iResolution.xy;
+  vTexC.w = SampleDepth(iChannel1, uv, iResolution.xy);
+
+  if (iMouse.z > 0.0)
+  {
+    float l = length((gl_FragCoord.xy - iMouse.xy) * 0.001);
+    l *= 20.0;
+    l = clamp(1.0 - l, 0.0, 1.0);
+    vTexC.z += 0.01 * (cos(l * PI) * -0.5 + 0.5);
+  }
+
+  if ((iFrame <= 1) || (iMouse.z > 0.0 && iMouse.x < 40.0 && iMouse.y < 40.0))
+  {
+    vTexC.xy = vec2(0.0);
+
+    vTexC.z = max(0.0 - vTexC.w, 0.0);
+
+    float l = abs(uv.x - 0.95);
+    l *= 10.0;
+    l = clamp(1.0 - l, 0.0, 1.0);
+    vTexC.z += 0.1 * (cos(l * PI) * -0.5 + 0.5);
+  }
+
+  float ll = abs(uv.x - 0.95);
+  ll *= 20.0;
+  ll = clamp(1.0 - ll, 0.0, 1.0);
+  vTexC.z += 0.001 * (cos(ll * PI) * -0.5 + 0.5) * sin(iTime * 1.6) * max(0.0, (10.0 - iTime) / 10.0);
+
+  gl_FragColor = vTexC;
+}

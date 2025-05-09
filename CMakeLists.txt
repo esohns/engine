@@ -2214,6 +2214,10 @@ set (engine_36_EXE_SRCS
      glut_762.h
      glut_763.cpp
      glut_763.h
+     glut_764.cpp
+     glut_764.h
+     glut_765.cpp
+     glut_765.h
      stdafx.h)
 
 set (EXECUTABLE_36 engine_36)
@@ -4154,6 +4158,16 @@ install (FILES
          "glut_762.frag"
          "glut_763.vert"
          "glut_763.frag"
+         "glut_764.vert"
+         "glut_764.frag"
+         "glut_764.frag_2"
+         "glut_764.frag_3"
+         "glut_764.frag_4"
+         "glut_765.vert"
+         "glut_765.frag"
+         "glut_765.frag_2"
+         "glut_765.frag_3"
+         "glut_765.frag_4"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
