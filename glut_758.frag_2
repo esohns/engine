@@ -1,0 +1,14 @@
+#version 130
+
+// glut_758_common.glsl
+#define RESOLUTION min(vec2(1280, 720), iResolution.xy)
+// glut_758_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+  gl_FragColor = texture(iChannel0, gl_FragCoord.xy * RESOLUTION / (iResolution.xy * iResolution.xy));
+}
