@@ -1,0 +1,133 @@
+#version 330
+
+// glut_767_common.glsl
+#define PI 3.14159265
+#define dt 0.5
+#define R iResolution.xy
+
+#define T(p) texelFetch(iChannel0, ivec2(mod(p,R)), 0)
+#define P(p) texture(iChannel0, mod(p,R)/R)
+#define C(p) texture(iChannel1, mod(p,R)/R)
+
+#define GS(x) exp(-dot(x,x))
+#define GS0(x) exp(-length(x))
+#define CI(x) smoothstep(1.0, 0.9, length(x))
+#define Dir(ang) vec2(cos(ang), sin(ang))
+#define Rot(ang) mat2(cos(ang), sin(ang), -sin(ang), cos(ang))
+#define loop(i,x) for(int i = 0; i < x; i++)
+#define range(i,a,b) for(int i = a; i <= b; i++)
+
+#define cooling 1.5
+
+float
+MF (vec2 dx)
+{
+  return -GS(0.75*dx) + 0.13*GS(0.4*dx);
+}
+
+float
+Ha (vec2 x)
+{
+  return ((x.x >= 0.)?1.:0.)*((x.y >= 0.)?1.:0.);
+}
+
+float
+Hb (vec2 x)
+{
+  return ((x.x > 0.)?1.:0.)*((x.y > 0.)?1.:0.);
+}
+
+#define PACK(X) ( uint(round(65534.0*clamp(0.5*X.x+0.5, 0., 1.))) + 65535u*uint(round(65534.0*clamp(0.5*X.y+0.5, 0., 1.))) )
+#define UNPACK(X) (clamp(vec2(X%65535u, X/65535u)/65534.0, 0.,1.)*2.0 - 1.0)              
+#define DECODE(X) UNPACK(floatBitsToUint(X))
+#define ENCODE(X) uintBitsToFloat(PACK(X))
+// glut_767_common.glsl
+
+uniform vec2 iResolution;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+
+float
+sdBox (vec2 p, vec2 b)
+{
+  vec2 d = abs(p) - b;
+  return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
+}
+
+float
+border (vec2 p)
+{
+  float bound = -sdBox(p - R * 0.5, R * vec2(0.49, 0.49));
+  float box = sdBox((p - R * vec2(0.5, 0.6)), R * vec2(0.05, 0.01));
+  float drain = -sdBox(p - R * vec2(0.5, 0.7), R * vec2(0.0, 0.0));
+  return bound;
+}
+
+#define h 1.
+vec3
+bN (vec2 p)
+{
+  vec3 dx = vec3(-h, 0, h);
+  vec4 idx = vec4(-1. / h, 0., 1. / h, 0.25);
+  vec3 r = idx.zyw * border(p + dx.zy)
+         + idx.xyw * border(p + dx.xy)
+         + idx.yzw * border(p + dx.yz)
+         + idx.yxw * border(p + dx.yx);
+  return vec3(normalize(r.xy), r.z + 1e-4);
+}
+
+void
+main ()
+{
+  vec4 U;
+  vec2 pos = gl_FragCoord.xy;
+  
+  vec2 uv = pos / R;
+  ivec2 p = ivec2(pos);
+
+  vec4 data = T(pos);
+  vec2 X = DECODE(data.x) + pos;
+  vec2 V = DECODE(data.y);
+  float M = data.z;
+    
+  if (M != 0.)
+  {
+    vec2 Fa = vec2(0.);
+    range(i, -2, 2) range(j, -2, 2)
+    {
+      vec2 tpos = pos + vec2(i, j);
+      vec4 data = T(tpos);
+
+      vec2 X0 = DECODE(data.x) + tpos;
+      vec2 V0 = DECODE(data.y);
+      float M0 = data.z;
+      vec2 dx = X0 - X;
+
+      Fa += M0 * MF(dx) * dx;
+    }
+
+    vec2 F = vec2(0.);
+    if (iMouse.z > 0.)
+    {
+      vec2 dx = pos - iMouse.xy;
+      F -= 0.03 * dx * GS(dx/30.);
+    }
+
+    F += 0.001 * vec2(0, -1);
+
+    V += (F + Fa) * dt / M;
+
+    X += cooling * Fa * dt / M;
+
+    vec3 BORD = bN(X);
+    V += 0.5 * smoothstep(0., 5., -BORD.z) * BORD.xy;
+
+    float v = length(V);
+    V /= (v > 1.) ? 1. * v : 1.;
+  }
+
+  X = X - pos;
+  U = vec4(ENCODE(X), ENCODE(V), M, 0.);
+
+  gl_FragColor = U;
+}
