@@ -1,0 +1,19 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+	vec2 uv = gl_FragCoord.xy / iResolution.xy;
+
+  gl_FragColor = 1. - textureLod(iChannel0, uv, 0.);
+
+  gl_FragColor.xyz *= .8;
+  gl_FragColor.xyz += 1.5 * vec3(.15, .3, .8);
+
+  gl_FragColor *= 1. - .17 * length(2. * uv - 1.);
+  gl_FragColor.xyz = clamp(gl_FragColor.xyz, 0., 1.);
+  gl_FragColor.xyz *= 0.5 + 0.5 * pow(16.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y), 0.1);
+}
