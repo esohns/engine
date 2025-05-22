@@ -2259,6 +2259,10 @@ set (engine_37_EXE_SRCS
      glut_777.h
      glut_778.cpp
      glut_778.h
+     glut_779.cpp
+     glut_779.h
+     glut_780.cpp
+     glut_780.h
      stdafx.h)
 
 set (EXECUTABLE_37 engine_37)
@@ -4268,6 +4272,11 @@ install (FILES
          "glut_777.frag"
          "glut_778.vert"
          "glut_778.frag"
+         "glut_779.vert"
+         "glut_779.frag"
+         "glut_780.vert"
+         "glut_780.frag"
+         "glut_780_channel0.png"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
