@@ -2298,6 +2298,14 @@ set (engine_38_EXE_SRCS
      main_38.cpp
      glut_790.cpp
      glut_790.h
+     glut_791.cpp
+     glut_791.h
+     glut_792.cpp
+     glut_792.h
+     glut_793.cpp
+     glut_793.h
+     glut_794.cpp
+     glut_794.h
      stdafx.h)
 
 set (EXECUTABLE_38 engine_38)
@@ -4363,6 +4371,14 @@ install (FILES
          "glut_790.vert"
          "glut_790.frag"
          "glut_790.frag_2"
+         "glut_791.vert"
+         "glut_791.frag"
+         "glut_792.vert"
+         "glut_792.frag"
+         "glut_793.vert"
+         "glut_793.frag"
+         "glut_794.vert"
+         "glut_794.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
