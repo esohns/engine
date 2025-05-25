@@ -1,0 +1,30 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+
+#define A(COORD) texture(iChannel0,(COORD)/iResolution.xy)
+
+float ln (vec3 p, vec3 a, vec3 b) {return length(p-a-(b-a)*min(dot(p-a,b-a),0.)/dot(b-a,b-a));}
+
+void
+main ()
+{
+  vec4 Q;
+  vec2 U = gl_FragCoord.xy;
+
+  Q = A(U);
+  vec4 pX = A(U + vec2(1,0));
+  vec4 pY = A(U + vec2(0,1));
+  vec4 nX = A(U - vec2(1,0));
+  vec4 nY = A(U - vec2(0,1));
+  vec3 n = normalize(vec3(pX.z-nX.z,pY.z-nY.z,1));
+  vec3 r = reflect(n,vec3(0,0,-1));
+  Q = (0.5+0.5*sin(iTime+atan(Q.x,Q.y)*vec4(3,2,1,4)));
+  float d = ln(vec3(.4,.4,6)*iResolution.xyy,
+               vec3(U,0),vec3(U,0)+r)/iResolution.y;
+  Q *= exp(-d*d)*.5+.5*exp(-3.*d*d);
+
+  gl_FragColor = Q;
+}
