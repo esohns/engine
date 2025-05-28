@@ -1,0 +1,357 @@
+#version 130
+
+// glut_801_common.glsl
+struct quaternion
+{
+  vec4 value;
+};
+
+struct bounds
+{
+  vec3 mini, maxi;
+};
+
+bool
+rayIntersectBounds (bounds b, vec3 rayOrig, vec3 rayDir, out vec3 nearHit, out vec3 farHit)
+{
+  b.mini -= rayOrig;
+  b.maxi -= rayOrig;
+
+  vec3 signs = sign(rayDir);
+
+  b.mini *= signs;
+  b.maxi *= signs;
+  rayDir *= signs;
+
+  vec3 maxBounds = max((b.mini), (b.maxi));
+
+  rayDir *= max(max(maxBounds.x, maxBounds.y),maxBounds.z) * 2.0; 
+
+  {
+    farHit = rayDir;
+    vec3 clamped = min(farHit, maxBounds);
+    
+    vec3 scale = max(vec3(0.0), clamped / farHit);
+    float minScale = min(min(scale.x, scale.y),scale.z); 
+    farHit = (farHit * minScale) * signs + rayOrig;
+  }
+
+  nearHit = rayOrig;
+
+  return true;
+}
+
+quaternion
+FromAngleAxis (vec3 angleAxis)
+{
+  float mag = length(angleAxis);
+  float halfAngle = mag * 0.5;
+  float scalar = sin(halfAngle) / max(mag, 0.00001);
+        
+  quaternion q;
+  q.value = vec4(angleAxis * scalar, cos(halfAngle));
+  return q;
+}
+
+quaternion
+FromToRotation (vec3 from, vec3 to)
+{
+  vec3 xyz = cross(from, to);
+  float w = sqrt(dot(from, from) * dot(to, to)) + dot(from, to);
+  vec4 value = vec4(xyz, w);
+  quaternion q;
+  q.value = normalize(value);
+  return q;
+}
+
+vec3
+mul (quaternion q, vec3 v)
+{
+  vec3 t = 2.0 * cross(q.value.xyz, v);
+  return v + vec3(q.value.w * t) + cross(q.value.xyz, t);
+}
+
+quaternion
+mul (quaternion a, quaternion b)
+{
+  quaternion q;
+  q.value = vec4 (a.value.wwww * b.value + (a.value.xyzx * b.value.wwwx + a.value.yzxy * b.value.zxyy) * vec4(1.0, 1.0, 1.0, -1.0) - a.value.zxyz * b.value.yzxz);
+  return q;
+}
+
+vec3 permute (vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+vec4 permute (vec4 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+vec4 taylorInvSqrt (vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+float
+snoise (vec2 v)
+{
+  const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                     -0.577350269189626, 0.024390243902439);
+  vec2 i  = floor(v + dot(v, C.yy) );
+  vec2 x0 = v -   i + dot(i, C.xx);
+  vec2 i1;
+  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+  vec4 x12 = x0.xyxy + C.xxzz;
+  x12.xy -= i1;
+  i = mod(i, 289.0);
+  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 ));
+  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+  m = m*m ;
+  m = m*m ;
+  vec3 x = 2.0 * fract(p * C.www) - 1.0;
+  vec3 h = abs(x) - 0.5;
+  vec3 ox = floor(x + 0.5);
+  vec3 a0 = x - ox;
+  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+  vec3 g;
+  g.x  = a0.x  * x0.x  + h.x  * x0.y;
+  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+  return 0.5+0.5*(130.0 * dot(m, g));
+}
+
+float
+snoise (float p)
+{
+  return snoise(vec2(p,0.));
+}
+
+float
+snoise (vec3 v)
+{
+  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+  const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+
+  vec3 i  = floor(v + dot(v, C.yyy) );
+  vec3 x0 =   v - i + dot(i, C.xxx) ;
+
+  vec3 g = step(x0.yzx, x0.xyz);
+  vec3 l = 1.0 - g;
+  vec3 i1 = min( g.xyz, l.zxy );
+  vec3 i2 = max( g.xyz, l.zxy );
+
+  vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+  vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+  vec3 x3 = x0 - 1. + 3.0 * C.xxx;
+
+  i = mod(i, 289.0 ); 
+  vec4 p = permute( permute( permute( 
+             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+           + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
+           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+
+  float n_ = 1.0/7.0;
+  vec3  ns = n_ * D.wyz - D.xzx;
+
+  vec4 j = p - 49.0 * floor(p * ns.z *ns.z);
+
+  vec4 x_ = floor(j * ns.z);
+  vec4 y_ = floor(j - 7.0 * x_ );
+
+  vec4 x = x_ *ns.x + ns.yyyy;
+  vec4 y = y_ *ns.x + ns.yyyy;
+  vec4 h = 1.0 - abs(x) - abs(y);
+
+  vec4 b0 = vec4( x.xy, y.xy );
+  vec4 b1 = vec4( x.zw, y.zw );
+
+  vec4 s0 = floor(b0)*2.0 + 1.0;
+  vec4 s1 = floor(b1)*2.0 + 1.0;
+  vec4 sh = -step(h, vec4(0.0));
+
+  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+  vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+
+  vec3 p0 = vec3(a0.xy,h.x);
+  vec3 p1 = vec3(a0.zw,h.y);
+  vec3 p2 = vec3(a1.xy,h.z);
+  vec3 p3 = vec3(a1.zw,h.w);
+
+  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+  p0 *= norm.x;
+  p1 *= norm.y;
+  p2 *= norm.z;
+  p3 *= norm.w;
+
+  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+  m = m * m;
+  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
+                                dot(p2,x2), dot(p3,x3) ) );
+}
+
+#define NUM_OCTAVES 16
+float
+fbm (float x)
+{
+  float v = 0.0;
+  float a = 0.5;
+  float shift = float(100);
+  for (int i = 0; i < NUM_OCTAVES; ++i)
+  {
+    v += a * snoise(x);
+    x = x * 2.0 + shift;
+    a *= 0.5;
+  }
+  return v;
+}
+
+float
+fbm (vec2 x)
+{
+  float v = 0.0;
+  float a = 0.5;
+  vec2 shift = vec2(100);
+  mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.50));
+  for (int i = 0; i < NUM_OCTAVES; ++i)
+  {
+    v += a * snoise(x);
+    x = rot * x * 2.0 + shift;
+    a *= 0.5;
+  }
+  return v;
+}
+
+float
+turbulent (vec2 x)
+{
+  float v = fbm(x);
+  return 1.-abs((v-0.5)*2.);
+}
+
+float
+fbm (vec3 x)
+{
+  float v = 0.0;
+  float a = 0.5;
+  vec3 shift = vec3(100);
+  for (int i = 0; i < NUM_OCTAVES; ++i)
+  {
+    v += a * snoise(x);
+    x = x * 2.0 + shift;
+    a *= 0.5;
+  }
+  return (v+1.)/2.;
+}
+
+float
+turbulent (vec3 x)
+{
+  float v = fbm(x);
+  return 1.-abs((v-0.5)*2.);
+}
+
+float
+pattern (vec2 p)
+{
+  vec2 q = vec2( fbm( p + vec2(0.0,0.0) ),
+                 fbm( p + vec2(5.2,1.3) ) );
+
+  return fbm( p + 4.0*q );
+}
+
+vec3
+hsv2rgb (vec3 c)
+{
+  vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+  vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+int radius = 1;
+// glut_801_common.glsl
+
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+//uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+
+float
+getOccupancy (vec2 uv)
+{
+  return texture(iChannel0, uv).r;
+}
+
+bool
+isIn (vec2 uv, float threshold)
+{
+  return getOccupancy(uv) > threshold;
+}
+
+float
+squaredDistanceBetween (vec2 uv1, vec2 uv2)
+{
+  vec2 difference = uv1 - uv2;
+  return dot(difference, difference);
+}
+
+void
+main ()
+{
+  vec2 uv = (gl_FragCoord.xy) / iResolution.xy;
+  vec4 oldColor = texture(iChannel2, uv);
+
+  if(oldColor.a == 0. || iMouse.z > 0.)
+  {
+    oldColor.rgb = vec3(25.);
+    oldColor.a = 50.;
+  }
+
+  if(oldColor.a > 512.)
+  {
+    gl_FragColor = oldColor;
+    return;
+  }
+
+  vec3 noise;
+  noise = vec3(iFrame, iFrame+1, iFrame+2);
+  noise *= 1.618033;
+  noise -= floor(noise);
+  //vec2 noiseUV = gl_FragCoord.xy / vec2 (textureSize (iChannel1, 0));
+  //noise += texture(iChannel1, noiseUV).r;
+  //noise -= floor(noise);
+  noise.xy -= 0.5f;
+
+  vec2 samplingCenter = gl_FragCoord.xy + noise.xy;
+  vec2 samplingCenterUV = samplingCenter / iResolution.xy;
+    
+  const float halfRange = 32.0;
+  const int iRange = int(halfRange);
+  const float maxSqrDist = halfRange*halfRange;
+  vec2 startPosition = samplingCenter;
+
+  bool fragIsIn = isIn(samplingCenterUV, noise.z);
+  float squaredDistanceToEdge = maxSqrDist*2.;
+
+  for(int dx=-iRange; dx <= iRange; dx++)
+    for(int dy=-iRange; dy <= iRange; dy++)
+    {
+      vec2 delta = vec2(dx, dy);
+      vec2 circlizer = abs(delta);
+      circlizer /= max(circlizer.x, circlizer.y);
+      delta /= length(circlizer);
+      vec2 scanPosition = startPosition + vec2(dx, dy);
+      float scanDistance = squaredDistanceBetween(samplingCenter, scanPosition);
+
+      bool scanIsIn = isIn(scanPosition / iResolution.xy, noise.z);
+      if (scanIsIn != fragIsIn)
+      {
+        if (scanDistance < squaredDistanceToEdge)
+          squaredDistanceToEdge = scanDistance;
+      }
+    }
+    
+  float distanceToEdge = sqrt(squaredDistanceToEdge);
+
+  if (fragIsIn)
+    distanceToEdge = 1.0-distanceToEdge;
+
+  distanceToEdge /= halfRange * 2.;
+
+  distanceToEdge = 0.5 - distanceToEdge;
+
+  distanceToEdge = smoothstep(0., 1., distanceToEdge);
+
+  gl_FragColor = vec4(distanceToEdge, distanceToEdge, distanceToEdge, 1.0);
+  gl_FragColor += oldColor;
+}
