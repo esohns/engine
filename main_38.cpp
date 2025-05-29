@@ -962,8 +962,8 @@ do_work (int argc_in,
       glPixelStorei (GL_PACK_ALIGNMENT, 1);
 
       glActiveTexture (GL_TEXTURE0);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       if (!cb_data_s.texture0.load (ACE_TEXT_ALWAYS_CHAR ("glut_795_channel1_3.png")))
       {
         ACE_DEBUG ((LM_ERROR,
@@ -972,12 +972,12 @@ do_work (int argc_in,
       } // end IF
       cb_data_s.texture0.bind ();
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-      glGenerateMipmap (GL_TEXTURE_2D);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      // glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE1);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       glGenTextures (1, &cb_data_s.textureS1.id_);
       ACE_ASSERT (cb_data_s.textureS1.id_);
       cb_data_s.textureS1.bind ();
@@ -990,8 +990,8 @@ do_work (int argc_in,
       glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE2);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       glGenTextures (1, &cb_data_s.textureS2.id_);
       ACE_ASSERT (cb_data_s.textureS2.id_);
       cb_data_s.textureS2.bind ();
@@ -1003,8 +1003,8 @@ do_work (int argc_in,
       //glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE3);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       glGenTextures (1, &cb_data_s.textureS3.id_);
       ACE_ASSERT (cb_data_s.textureS3.id_);
       cb_data_s.textureS3.bind ();
@@ -1016,8 +1016,8 @@ do_work (int argc_in,
       //glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE4);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       glGenTextures (1, &cb_data_s.textureS4.id_);
       ACE_ASSERT (cb_data_s.textureS4.id_);
       cb_data_s.textureS4.bind ();

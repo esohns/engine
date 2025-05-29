@@ -261,7 +261,6 @@ engine_glut_795_draw (void)
   glBindFramebuffer (GL_FRAMEBUFFER, 0);
 
   glActiveTexture (GL_TEXTURE1);
-  cb_data_p->textureS1.bind ();
   glGenerateMipmap (GL_TEXTURE_2D);
 
   // render pass 2
@@ -354,7 +353,6 @@ engine_glut_795_draw (void)
   glBindFramebuffer (GL_FRAMEBUFFER, 0);
 
   glActiveTexture (GL_TEXTURE4);
-  cb_data_p->textureS4.bind ();
   glGenerateMipmap (GL_TEXTURE_2D);
 
   // render pass 5

@@ -1,4 +1,4 @@
-#version 120
+#version 130
 
 uniform vec2 iResolution;
 uniform float iTime;

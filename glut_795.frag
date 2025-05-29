@@ -469,6 +469,9 @@ ggx (vec3 n, vec3 v, vec3 l, float rough, float f0)
 }
 // glut_795_common.glsl
 
+#define gl_FragColor fragColor
+out vec4 fragColor;
+
 uniform vec2 iResolution;
 uniform float iTime;
 uniform int iFrame;
