@@ -2353,6 +2353,8 @@ set (engine_39_EXE_SRCS
      main_39.cpp
      glut_810.cpp
      glut_810.h
+     glut_811.cpp
+     glut_811.h
      stdafx.h)
 
 set (EXECUTABLE_39 engine_39)
@@ -4493,6 +4495,9 @@ install (FILES
          "glut_809.frag"
          "glut_810.vert"
          "glut_810.frag"
+         "glut_811.vert"
+         "glut_811.frag"
+         "glut_811.frag_2"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
