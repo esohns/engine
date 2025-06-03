@@ -1,0 +1,24 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+#define MIST
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy/iResolution.xy;
+
+#ifdef MIST
+  gl_FragColor = 1.5 * texture(iChannel0, uv, .5);
+  gl_FragColor += 1. * texture(iChannel0, uv, 2.5);
+  gl_FragColor += .75 * texture(iChannel0, uv, 4.5);
+
+  gl_FragColor.xyz /= 3.25;
+#else
+  gl_FragColor=1.*texture(iChannel0,uv,0.);
+#endif
+
+  gl_FragColor.w = 1.;
+}

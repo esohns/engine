@@ -1,0 +1,69 @@
+#version 130
+
+// glut_818_common.glsl
+float gyroid (vec3 seed) { return dot(sin(seed),cos(seed.yzx)); }
+
+float
+fbm (vec3 seed)
+{
+  float result = 0., a = .5;
+  for (int i = 0; i < 3; ++i, a/=2.)
+    result += (gyroid(seed/a))*a;
+  return result;
+}
+
+float
+hash11 (float p)
+{
+  p = fract(p * .1031);
+  p *= p + 33.33;
+  p *= p + p;
+  return fract(p);
+}
+
+vec2
+hash21 (float p)
+{
+  vec3 p3 = fract(vec3(p) * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yzx + 33.33);
+  return fract((p3.xx+p3.yz)*p3.zy);
+}
+
+vec4
+hash41 (float p)
+{
+  vec4 p4 = fract(vec4(p) * vec4(.1031, .1030, .0973, .1099));
+  p4 += dot(p4, p4.wzxy+33.33);
+  return fract((p4.xxyz+p4.yzzw)*p4.zywx);
+}
+// glut_818_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+void
+main ()
+{
+  vec3 color = vec3(0);
+
+  vec2 uv = gl_FragCoord.xy/iResolution.xy;
+  float rng = texture(iChannel1, gl_FragCoord.xy/1024.).r;
+  vec2 aspect = vec2(iResolution.y/iResolution.x, 1.);
+
+  vec4 data = texture(iChannel0, uv);
+  float shade = data.r;
+  float mat = data.g;
+
+  color = .5+.5*cos(vec3(1,2,3)*4.9 + mat);
+
+  vec3 un = vec3(0.005*aspect, 0);
+#define T(un) texture(iChannel0, uv+un).r
+  vec3 normal = normalize(vec3(T(un.xz)-T(-un.xz),T(un.zy)-T(-un.zy), .5));
+  float d = dot(normal, normalize(vec3(0,-2,1)))*.5+.5;
+  color += pow(d, 10.);
+
+  color *= smoothstep(.0,.01,shade);
+
+  gl_FragColor = vec4(color, 1);
+}
