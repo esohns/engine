@@ -1,0 +1,238 @@
+#version 140
+
+// glut_823_common.glsl
+#define texel(a, p) texelFetch(a, ivec2(p), 0)
+#define ch0 iChannel0
+#define ch1 iChannel1
+#define ch2 iChannel2
+#define ch3 iChannel3
+#define R iResolution.xy
+#define PI 3.14159265
+
+#define dt 1.
+#define loop(i,x) for(int i = min(0, iFrame); i < x; i++)
+
+#define SC 3.
+
+#define smoothR 2.5
+#define density 0.05
+
+struct obj
+{
+  int id;
+  vec3 X;
+  float Rho;
+  vec3 V;
+  float Pressure;
+  vec3 Color;
+  float Scale;
+};
+
+float
+Force (float d)
+{
+  return 0.2*exp(-0.05*d)-2.*exp(-0.5*d);
+}
+
+#define P 0.5
+#define SN ivec2(6, 2)
+
+ivec2 N;
+ivec2 sN;
+int TN;
+
+ivec2
+i2xy (ivec3 sid)
+{
+  return sN*ivec2(sid.x%N.x, sid.x/N.x) + sid.yz;
+}
+
+ivec3
+xy2i (ivec2 p)
+{
+  ivec2 pi = p/sN;
+  return ivec3(pi.x + pi.y*N.x, p.x%sN.x, p.y%sN.y);
+}
+
+ivec2
+cross_distribution (int i)
+{
+  return (1<<(i/4)) * ivec2( ((i&2)/2)^1, (i&2)/2 ) * ( 2*(i%2) - 1 );
+}
+
+float
+sqr (float x)
+{
+  return x*x + 1e-2;
+}
+
+vec2
+hash22 (vec2 p)
+{
+  vec3 p3 = fract(vec3(p.xyx) * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yzx+33.33);
+  return fract((p3.xx+p3.yz)*p3.zy);
+}
+
+float
+hash13 (vec3 p3)
+{
+  p3  = fract(p3 * .1031);
+  p3 += dot(p3, p3.yzx + 33.33);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+vec3
+hash32 (vec2 p)
+{
+  vec3 p3 = fract(vec3(p.xyx) * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yxz+33.33);
+  return fract((p3.xxy+p3.yzz)*p3.zyx);
+}
+
+vec3
+hash33 (vec3 p3)
+{
+  p3 = fract(p3 * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yxz+33.33);
+  return fract((p3.xxy + p3.yxx)*p3.zyx);
+}
+
+vec3
+hash31 (float p)
+{
+  vec3 p3 = fract(vec3(p) * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yzx+33.33);
+  return fract((p3.xxy+p3.yzz)*p3.zyx); 
+}
+
+const float PHI = 0.5*(sqrt(5.) + 1.);
+
+vec2
+inverseSF (vec3 p, float n)
+{
+  float m = 1.0 - 1.0/n;
+
+  float phi = min(atan(p.y, p.x), PI), cosTheta = p.z;
+
+  float k  = max(2.0, floor( log(n * PI * sqrt(5.0) * (1.0 - cosTheta*cosTheta))/ log(PHI+1.0)));
+  float Fk = pow(PHI, k)/sqrt(5.0);
+  vec2  F  = vec2( round(Fk), round(Fk * PHI) ); // k, k+1
+
+  vec2 ka = 2.0*F/n;
+  vec2 kb = 2.0*PI*( fract((F+1.0)*PHI) - (PHI-1.0) );    
+
+  mat2 iB = mat2( ka.y, -ka.x, 
+                  kb.y, -kb.x ) / (ka.y*kb.x - ka.x*kb.y);
+
+  vec2 c = floor( iB * vec2(phi, cosTheta - m));
+  float d = 8.0;
+  float j = 0.0;
+  for( int s=0; s<4; s++ ) 
+  {
+    vec2 uv = vec2( float(s-2*(s/2)), float(s/2) );
+
+    float i = round(dot(F, uv + c));
+
+    float phi = 2.0*PI*fract(i*PHI);
+    float cosTheta = m - 2.0*i/n;
+    float sinTheta = sqrt(1.0 - cosTheta*cosTheta);
+
+    vec3 q = vec3( cos(phi)*sinTheta, sin(phi)*sinTheta, cosTheta );
+    float squaredDistance = dot(q-p, q-p);
+    if (squaredDistance < d) 
+    {
+      d = squaredDistance;
+      j = i;
+    }
+  }
+
+  return vec2( j, sqrt(d) );
+}
+
+mat4
+getPerspective (float fov, float aspect, float n, float f)
+{
+  float scale = tan(fov * PI / 360.) * n; 
+  float r = aspect * scale, l = -r; 
+  float t = scale, b = -t; 
+
+  return mat4(2. * n / (r - l), 0, 0, 0,
+              0, 2. * n / (t - b), 0, 0,
+              (r + l) / (r - l), (t + b) / (t - b), -(f + n) / (f - n), -1,
+              0, 0, -2. * f * n / (f - n), 0);
+}
+
+mat4
+getRot (vec2 a)
+{
+  mat4 theta_rot = mat4(1, 0, 0, 0,
+                        0, cos(a.y), sin(a.y), 0,
+                        0, -sin(a.y), cos(a.y), 0,
+                        0, 0, 0, 1); 
+        
+  mat4 phi_rot = mat4(cos(a.x), sin(a.x), 0, 0,
+                      -sin(a.x), cos(a.x), 0, 0,
+                      0, 0, 1, 0,
+                      0, 0, 0, 1); 
+
+  return transpose(phi_rot*theta_rot);
+}
+
+mat4
+getModel (vec3 dx)
+{
+  return transpose(mat4(1, 0, 0, dx.x,
+                        0, 1, 0, dx.y,
+                        0, 0, 1, dx.z,
+                        0, 0, 0, 1));
+}
+// glut_823_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel2;
+
+vec3
+ACESFilm (vec3 x)
+{
+  float a = 2.51;
+  float b = 0.03;
+  float c = 2.43;
+  float d = 0.59;
+  float e = 0.14;
+  return (x*(a*x+b))/(x*(c*x+d)+e);
+}
+
+mat3 gaussianFilter = mat3(41, 26, 7,
+                           26, 16, 4,
+                           7,  4,  1) / 273.;
+vec3
+bloom (float scale, vec2 fragCoord)
+{
+  float logScale = log2(scale);
+  vec3 bloom = vec3(0);
+  for(int y = -2; y <= 2; y++)
+    for(int x = -2; x <= 2; x++)
+      bloom += gaussianFilter[abs(x)][abs(y)] * textureLod(iChannel0, (fragCoord+vec2(x, y)*scale)/iResolution.xy, logScale+2.).rgb;
+
+  return bloom;
+}
+
+void
+main ()
+{
+  vec2 pos = gl_FragCoord.xy;
+
+  sN = SN; 
+  N = ivec2(R*P/vec2(sN));
+  TN = N.x*N.y;
+  ivec2 pi = ivec2(floor(pos));
+
+  vec3 bloomSum = vec3(0.);
+  //bloomSum += bloom(.4 * R.y, pos) * .07;
+  //bloomSum += bloom(.2 * R.y, pos) * .07;
+
+  gl_FragColor.xyz = texel(ch2, pi).xyz + 1.*bloomSum;
+  gl_FragColor.xyz = ACESFilm(2. * gl_FragColor.xyz);
+}
