@@ -1,0 +1,35 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel3;
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy / iResolution.xy;
+  vec2 pixelSize = 1. / iResolution.xy;
+  vec2 aspect = vec2(1.,iResolution.y/iResolution.x);
+
+  vec4 noise = texture(iChannel3, gl_FragCoord.xy / vec2(textureSize(iChannel3, 0).xy) + fract(vec2(42, 56) * iTime));
+
+  vec2 lightSize=vec2(4.);
+
+  vec2 d = pixelSize*2.;
+  vec4 dx = (texture(iChannel1, uv + vec2(1,0)*d) - texture(iChannel1, uv - vec2(1,0)*d))*0.5;
+  vec4 dy = (texture(iChannel1, uv + vec2(0,1)*d) - texture(iChannel1, uv - vec2(0,1)*d))*0.5;
+
+  d = pixelSize*1.;
+  dx += texture(iChannel0, uv + vec2(1,0)*d) - texture(iChannel0, uv - vec2(1,0)*d);
+  dy += texture(iChannel0, uv + vec2(0,1)*d) - texture(iChannel0, uv - vec2(0,1)*d);
+
+  vec2 displacement = vec2(dx.x,dy.x)*lightSize;
+  float light = pow(max(1.-distance(0.5+(uv-0.5)*aspect*lightSize + displacement,0.5+(iMouse.xy*pixelSize-0.5)*aspect*lightSize),0.),4.);
+
+  vec4 rd = vec4(texture(iChannel0,uv+vec2(dx.x,dy.x)*pixelSize*8.).x)*vec4(0.7,1.5,2.0,1.0)-vec4(0.3,1.0,1.0,1.0);
+
+  gl_FragColor = mix(rd,vec4(8.0,6.,2.,1.), light*0.75*vec4(1.-texture(iChannel0,uv+vec2(dx.x,dy.x)*pixelSize*8.).x)); 
+}

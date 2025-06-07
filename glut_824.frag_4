@@ -1,0 +1,14 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform vec4 iMouse;
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy / iResolution.xy;
+  vec2 pixelSize = 1. / iResolution.xy;
+  float eighth = 1./8.;
+  if(uv.x > 7.*eighth && uv.x < 8.*eighth && uv.y > 2.*eighth && uv.y < 3.*eighth)
+    gl_FragColor = vec4(iMouse.xy / iResolution.xy, iMouse.zw/* / iResolution.xy*/);
+}
