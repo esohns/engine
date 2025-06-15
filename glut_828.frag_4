@@ -1,0 +1,60 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec4 iMouse;
+uniform sampler2D iChannel0;
+
+const vec2 center = vec2(0,0);
+const int samples = 15;
+const float wCurveA = 1.;
+const float wCurveB = 1.;
+const float dspCurveA = 2.;
+const float dspCurveB = 1.;
+
+#define time iTime
+
+float
+wcurve (float x, float a, float b)
+{
+  float r = pow(a + b,a + b)/(pow(a, a)*pow(b, b));
+  return r*pow(x, a)*pow(1.0 - x, b);
+}
+
+float hash21 (vec2 n) { return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453); }
+
+void
+main ()
+{
+  vec2 p = gl_FragCoord.xy/iResolution.xy;
+  vec2 mo = iMouse.xy/iResolution.xy;
+
+  vec2 center= mo;
+  center = vec2(0.5,0.5);
+
+  vec3 col = vec3(0.0);
+  vec2 tc = center - p;
+
+  float w = 1.0;
+  float tw = 1.;
+    
+  float rnd = (hash21(p)-0.5)*0.75;
+
+  float x = time; //time*2.1 + ((1.0+sin(time + sin(time*0.4+ cos(time*0.1)))))*1.5
+  float drvT = 1.5 * cos(x + sin(0.4*x + cos(0.1*x)))*(cos(0.4*x + cos(0.1*x)) * (0.4 - 0.1*sin(0.1*x)) + 1.0) + 2.1;
+
+  float strength = 0.01 + drvT*0.01;
+
+  for(int i=0; i<samples; i++)
+  {
+    float sr = float(i)/float(samples);
+    float sr2 = (float(i) + rnd)/float(samples);
+    float weight = wcurve(sr2, wCurveA, wCurveB);
+    float displ = wcurve(sr2, dspCurveA, dspCurveB);
+    col += texture( iChannel0, p + (tc*sr2*strength*displ)).rgb*weight;
+    tw += .9*weight;
+  }
+  col /= tw;
+
+  gl_FragColor = vec4( col, 1.0 );
+}
