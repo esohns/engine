@@ -18,11 +18,15 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef DEFINES_39_H
+#ifndef DEFINES_40_H
 #define DEFINES_40_H
 
 // glut 830
 #define ENGINE_GLUT_830_DEFAULT_HEIGHT             834
 #define ENGINE_GLUT_830_DEFAULT_WIDTH              1112
+
+// glut 831
+#define ENGINE_GLUT_831_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_831_DEFAULT_WIDTH              1112
 
 #endif // DEFINES_40_H

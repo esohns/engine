@@ -1,0 +1,140 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+
+//#define SHOW_HEIGHMAP
+
+vec3
+tex3D (sampler2D tex, vec3 p, vec3 n)
+{
+  p = fract(p);
+
+  n = max(n*n, 0.001);
+  n /= (n.x + n.y + n.z ); 
+
+  return (texture(tex, p.yz)*n.x + texture(tex, p.zx)*n.y + texture(tex, p.xy)*n.z).xyz;
+}
+
+float
+heightMap (vec2 p)
+{
+  return texture(iChannel0, fract(p/2.), -100.).w;
+}
+
+float
+map (vec3 p)
+{
+  float c = heightMap(p.xy);
+
+  return 1. - p.z - c*.1;
+}
+
+vec3
+getNormal (vec3 pos)
+{
+  vec2 e = vec2(0.001, -0.001);
+  return normalize (
+    e.xyy * map(pos + e.xyy) + 
+    e.yyx * map(pos + e.yyx) + 
+    e.yxy * map(pos + e.yxy) + 
+    e.xxx * map(pos + e.xxx));
+}
+
+float
+calculateAO (vec3 p, vec3 n)
+{
+  const float AO_SAMPLES = 5.0;
+  float r = 1.0, w = 1.0;
+  for (float i=1.0; i<=AO_SAMPLES; i++)
+  {
+    float d0 = i/AO_SAMPLES;
+    r += w * (map(p + n * d0) - d0);
+    w *= 0.5;
+  }
+
+  return clamp(r, 0.0, 1.0);
+}
+
+float
+curve (vec3 p)
+{
+  const float eps = 0.0225, amp = 7.5, ampInit = 0.525;
+
+  vec2 e = vec2(-1., 1.)*eps;
+
+  float t1 = map(p + e.yxx), t2 = map(p + e.xxy);
+  float t3 = map(p + e.xyx), t4 = map(p + e.yyy);
+
+  return clamp((t1 + t2 + t3 + t4 - 4.*map(p))*amp + ampInit, 0., 1.);
+}
+
+void
+main ()
+{
+  vec3 rd = normalize(vec3(gl_FragCoord.xy - iResolution.xy*.5, min(iResolution.y*.75, 600.)));
+
+  float tm = iTime/2.;
+
+  vec2 th = sin(vec2(1.57, 0) + sin(tm/4.)*.3);
+  rd.xy = mat2(th, -th.y, th.x)*rd.xy;
+
+  vec3 ro = vec3(tm, cos(tm/4.), 0.);
+
+  vec3 lp = ro + vec3(cos(tm/4.)*.5, sin(tm/4.)*.5, -.5);
+
+  float d, t=0.;
+  for(int j=0; j<32; j++)
+  {
+    d = map(ro + rd*t);
+
+    if (d<0.001)
+      break;
+
+    t += d*.7;
+  }
+
+  vec3 sp = ro + rd*t;
+  vec3 sn = getNormal(sp);
+  vec3 ld = lp - sp;
+
+  const float tSize0 = 1./1.;
+
+  float c = heightMap(sp.xy);
+
+  vec3 oC = tex3D(iChannel0, sp*tSize0, sn);
+  oC *= pow(max(c*c*sn*.7 + 1., 0.), vec3(2))*c;
+
+  float lDist = max(length(ld), 0.001);
+  float atten = 1./(1. + lDist*.125);
+
+  ld /= lDist;
+
+  float diff = max(dot(ld, sn), 0.);
+  diff = pow(diff, 4.)*2.;
+  float spec = pow(max( dot( reflect(-ld, sn), -rd ), 0.0 ), 16.);
+  float fre = pow(clamp(dot(sn, rd) + 1., .0, 1.), 2.);
+
+  float Schlick = pow( 1. - max(dot(rd, normalize(rd + ld)), 0.), 5.);
+  float fre2 = mix(.5, 1., Schlick);
+
+  float crv = curve(sp);
+  crv = smoothstep(0., 1., crv)*.5 + crv*.25 + .25;
+
+  float ao = calculateAO(sp, sn);
+
+  vec3 col = (oC*(diff + .25 + vec3(.5, .7, 1)*spec*fre2*4. + vec3(1, .1, .2)*fre*8.));
+
+  col *= atten*crv*ao;
+
+#ifdef SHOW_HEIGHMAP
+  vec2 uv = gl_FragCoord.xy/iResolution.y;
+  uv = mat2(th, -th.y, th.x)*uv;
+  uv += vec2(iTime, cos(iTime/4.))/2.;
+  vec4 tex = texture(iChannel0, fract(uv/1.));
+  col = sqrt(tex.xyz)*tex.w;
+#endif
+
+  gl_FragColor = vec4(sqrt(clamp(col, 0., 1.)), 1.);
+}
