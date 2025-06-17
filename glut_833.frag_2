@@ -1,0 +1,29 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+  float val = texture(iChannel0, gl_FragCoord.xy/iResolution.xy).r;
+
+  gl_FragColor = vec4(val, val, val, 1.0);
+
+  vec4 color = pow(vec4(cos(val), tan(val), sin(val), 1.0) * 0.5 + 0.5, vec4(0.5));
+
+  vec2 q = gl_FragCoord.xy/iResolution.xy;
+
+  vec3 e = vec3(vec2(1.0)/iResolution.xy,0.);
+  float p10 = texture(iChannel0, q-e.zy).x;
+  float p01 = texture(iChannel0, q-e.xz).x;
+  float p21 = texture(iChannel0, q+e.xz).x;
+  float p12 = texture(iChannel0, q+e.zy).x;
+
+  vec3 grad = normalize(vec3(p21 - p01, p12 - p10, 1.));
+  vec3 light = normalize(vec3(.2,-.25,.7));
+  float diffuse = dot(grad,light);
+  float spec = pow(max(0.,-reflect(light,grad).z),32.0);
+
+  gl_FragColor = (color * diffuse) + spec;
+}

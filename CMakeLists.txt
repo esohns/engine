@@ -2410,6 +2410,12 @@ set (engine_40_EXE_SRCS
      glut_830.h
      glut_831.cpp
      glut_831.h
+     glut_832.cpp
+     glut_832.h
+     glut_833.cpp
+     glut_833.h
+     glut_834.cpp
+     glut_834.h
      stdafx.h)
 
 set (EXECUTABLE_40 engine_40)
@@ -4634,6 +4640,18 @@ install (FILES
          "glut_831.frag"
          "glut_831.frag_2"
          "glut_831_channel1.png"
+         "glut_832.vert"
+         "glut_832.frag"
+         "glut_833.vert"
+         "glut_833.frag"
+         "glut_833.frag_2"
+         "glut_834.vert"
+         "glut_834.frag"
+         "glut_834.frag_2"
+         "glut_834.frag_3"
+         "glut_834.frag_4"
+         "glut_834.frag_5"
+         "glut_834_S1channel0.png"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"

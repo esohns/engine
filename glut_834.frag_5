@@ -1,0 +1,17 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy/iResolution.xy;
+
+  vec4 tex = texture(iChannel1, uv);
+  vec4 texBlurred = texture(iChannel0, uv);
+  float vignet = length(uv - vec2(0.5))*1.5;
+
+  gl_FragColor = mix(tex, texBlurred * texBlurred, vignet) + texBlurred * texBlurred * 0.5;
+}

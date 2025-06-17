@@ -1,0 +1,22 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+vec2 sampleDist = vec2(4.0,4.0);
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy/iResolution.xy;
+
+  vec4 tex = vec4(0.0);
+  vec2 dist = sampleDist/iResolution.xy;
+
+  for(int x = -2; x <= 2; x++)
+    for(int y = -2; y <= 2; y++)
+      tex += texture(iChannel0, uv + vec2(x,y)*dist);
+  tex /= 25.0;
+
+  gl_FragColor = tex;
+}
