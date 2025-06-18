@@ -1,0 +1,21 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+#define PI 3.141592653589793
+
+void
+main ()
+{
+  vec4 o;
+  vec2 p = gl_FragCoord.xy;
+
+  vec4 c = texture(iChannel0, p.xy / iResolution.xy);
+  o.rgb = .6 + .6 * cos(6.3 * atan(c.y,c.x)/(2.*PI) + vec3(0,23,21));
+  o.rgb *= c.w/5.;
+  o.rgb += clamp(c.z - 1., 0., 1.)/10.;
+  o.a = 1.;
+
+  gl_FragColor = o;
+}
