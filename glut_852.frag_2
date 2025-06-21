@@ -1,0 +1,153 @@
+// glut_852_common.glsl
+//#define VORONOI
+//#define TRACKGRID
+
+#define smoothfac 0.9
+#define swirlrad 200.
+#define swirlstrength 1.5
+#define wallsqueeze 5.
+#define colormagnitude 16.
+#define fakeior 4.
+#define hashEdge 2
+#define diameter 64.
+#define particleEdge ivec2(floor(iResolution/diameter))
+#define stiffness 0.05
+#define damping 0.1
+#define gravity 0.05
+
+vec2
+noise2D (vec2 p)
+{
+  vec3 p3 = fract(vec3(p.xyx) * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yzx+33.33);
+  return fract((p3.xx+p3.yz)*p3.zy);
+}
+// glut_852_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec4 iMouse;
+uniform bvec4 iKeyboard; // shift, z
+uniform sampler2D iChannel0;
+
+vec2
+hardstep (vec2 h)
+{
+  return step(0., h) * 2. - 1.;
+}
+
+void
+main ()
+{
+  vec4 state;
+
+  ivec2 maxIndex = particleEdge * hashEdge;
+  ivec2 ind = ivec2(floor(gl_FragCoord.xy));
+  ivec2 id = ind/hashEdge;
+  ivec2 hashOffset = ind % hashEdge;
+
+  float collisionsize = 0.95 * diameter;
+
+  if (ind.x >= maxIndex.x || ind.y >= maxIndex.y)
+    discard;
+
+  state = texelFetch(iChannel0, ind, 0);
+  vec2 impulse = vec2(0.);
+
+  if (iMouse.z > 0.)
+  {
+    bool shiftstate = iKeyboard.x;
+    bool zstate = iKeyboard.y;
+    if (shiftstate)
+    {
+      if (length(iMouse.xy - state.xy) < diameter * 0.5)
+        state = vec4(-1., -1., 0., 0.);
+    }
+    else if (zstate)
+    {
+      vec2 dr = iMouse.xy - state.xy;
+      dr = vec2(dr.y, -dr.x);
+      float ld = length(dr);
+      dr /= ld;
+      if (ld < swirlrad && ld > 0.)
+        impulse += swirlstrength * dr * smoothstep(swirlrad, 0., ld);
+    }
+    else
+    {
+      if (length(iMouse.xy*float(hashEdge)/diameter-gl_FragCoord.xy)<float(hashEdge) && hashOffset == ivec2(hashEdge - 1))
+        state = vec4(vec2(id) * diameter + diameter * .5, (noise2D(gl_FragCoord.xy + iTime * vec2(1002., -5523.6)) * 2. - 1.) * diameter * 0.1);
+    }
+  }
+
+  if (state.xy != vec2(-1.))
+  {
+    for (int i=-1; i<=1; i++)
+      for (int j=-1; j<=1; j++)
+      {
+        ivec2 disp = ivec2(i, j);
+        ivec2 otherid = id + disp;
+        if (otherid.x < 0 || otherid.y < 0 || otherid.x >= particleEdge.x || otherid.y >= particleEdge.y)
+          continue;
+        for (int k=0; k<hashEdge; k++)
+          for (int l=0; l<hashEdge; l++)
+          {
+            ivec2 offset = ivec2(k, l);
+            ivec2 otherind = otherid*hashEdge + offset;
+            if (otherind == ind)
+              continue;
+            vec4 otherstate = texelFetch(iChannel0, otherind, 0);
+
+            if (otherstate.xy == state.xy && ind.x < otherind.x)
+            {
+              state.xy = vec2(-1.);
+              continue;
+            }
+            if (otherstate.xy == vec2(-1.))
+              continue;
+            vec2 r = state.xy-otherstate.xy;
+
+            vec2 v_cm = (state.zw+otherstate.zw)/2.;
+            vec2 v0 = state.zw-v_cm;
+
+            float rn = length(r);
+            float vproj = dot(v0, r)/rn;
+            float r2 = collisionsize-rn;
+            float force = stiffness * max(0., r2);
+            force -= step(0., r2) * vproj * damping;
+            if (rn > 0.)
+              impulse += r/rn*force;
+          }
+      }
+    if (state.xy == vec2(-1.))
+    {
+      gl_FragColor = state;
+      return;
+    }
+
+    vec2 upperbounds = diameter*vec2(particleEdge) - collisionsize * 0.5 -1.;
+    float lowerbounds = collisionsize * 0.5;
+    vec2 lowerforce = 2. * stiffness * max(vec2(0.), lowerbounds - state.xy);
+    impulse += lowerforce;
+    vec2 upperforce = 2. * stiffness * min(vec2(0.), upperbounds - state.xy);
+    impulse += upperforce;
+
+    state.zw += impulse;
+    state.w -= gravity;
+    float speed = length(state.zw);
+    float speedfac = speed > 0. ? min(speed, diameter) / speed : 1.;
+    state.zw *= speedfac;
+    state.xy += state.zw;
+
+    upperbounds = diameter*vec2(particleEdge)-1.;
+    lowerbounds = 1.;
+
+    if (state.xy != vec2(-1.))
+    {
+      state.zw *= hardstep(state.xy - lowerbounds)*hardstep(upperbounds - state.xy);
+      state.xy = min(state.xy, upperbounds);
+      state.xy = max(state.xy, lowerbounds);
+    }
+  }
+
+  gl_FragColor = state;
+}

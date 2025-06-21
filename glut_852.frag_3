@@ -1,0 +1,162 @@
+// glut_852_common.glsl
+//#define VORONOI
+//#define TRACKGRID
+
+#define smoothfac 0.9
+#define swirlrad 200.
+#define swirlstrength 1.5
+#define wallsqueeze 5.
+#define colormagnitude 16.
+#define fakeior 4.
+#define hashEdge 2
+#define diameter 64.
+#define particleEdge ivec2(floor(iResolution/diameter))
+#define stiffness 0.05
+#define damping 0.1
+#define gravity 0.05
+
+vec2
+noise2D (vec2 p)
+{
+  vec3 p3 = fract(vec3(p.xyx) * vec3(.1031, .1030, .0973));
+  p3 += dot(p3, p3.yzx+33.33);
+  return fract((p3.xx+p3.yz)*p3.zy);
+}
+// glut_852_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+vec3
+velToColor (vec2 vel)
+{
+  return (1. / diameter) * vec3(-vel.x, vel.y, vel.x);
+}
+
+float
+softmax (float a, float b, float k)
+{
+  return log((exp(a * k) + exp(b * k)) / k);
+}
+
+vec4
+checker (vec2 uv)
+{
+  ivec2 id = ivec2(floor(uv));
+  ivec2 stripes = id % 2;
+  return vec4(mix(vec3(0.2, 0.3, 0.5), vec3(0.2, 0.1, 0.1), float(abs(stripes.x - stripes.y))), 1.);
+}
+
+vec4
+softchecker (vec2 uv, float smoothness)
+{
+  vec2 stripesi = mod(uv - 0.5, 2.);
+  vec2 stripes = smoothstep(0.5 - smoothness, 0.5 + smoothness, abs(stripesi - 1.));
+  return vec4(mix(vec3(0.2, 0.5, 0.7), vec3(0.2, 0.2, 0.4), float(abs(stripes.x - stripes.y))), 1.);
+}
+
+void
+main ()
+{
+  vec4 col;
+
+  vec2 uv = gl_FragCoord.xy/diameter;
+  ivec2 id = ivec2(floor(uv));
+  ivec2 ind = ivec2(floor(uv*float(hashEdge)));
+
+  vec3 basecolor = vec3(0.5, 0.6, 0.7);
+
+  vec2 center = (vec2(id) + 0.5) * diameter;
+  ivec2 q = ivec2(step(center, gl_FragCoord.xy));
+
+  vec2 mp1=vec2(-90.),mp2=vec2(-90.);
+  vec2 d = vec2(900.);
+
+  col = checker(uv);
+
+  vec3 velcol = vec3(0.);
+  for (int i=0; i<=1; i++)
+    for (int j=0; j<=1; j++)
+    {
+      ivec2 disp = ivec2(i, j) * (q * 2 - 1);
+      ivec2 otherid = id+disp;
+            
+      if (otherid.x < 0 || otherid.y < 0 || otherid.x >= particleEdge.x || otherid.y >= particleEdge.y)
+        continue;
+      for (int k=0; k<hashEdge; k++)
+        for (int l=0; l<hashEdge; l++)
+        {
+          ivec2 offset = ivec2(k, l);
+          vec4 state = texelFetch(iChannel0, otherid*hashEdge+offset,0);
+          if (state.xy == vec2(-1.))
+            continue;
+          float r = length(state.xy-gl_FragCoord.xy);
+
+          if (r < d.x)
+          {
+            velcol = velToColor(state.zw);
+            d.y = d.x;
+            mp2 = mp1;
+            d.x = r;
+            mp1 = state.xy;
+          }
+          else if (r < d.y)
+          {
+            d.y = r;
+            mp2 = state.xy;
+          }
+        }
+    }
+
+  if (d.x > 50.)
+  {
+    gl_FragColor = col;
+    return;
+  }
+
+  vec2 edge = (mp2 - mp1);
+  vec2 p = gl_FragCoord.xy - 0.5 * (mp1 + mp2);
+  vec2 orth = dot(p, edge) / dot(edge, edge) * edge;
+  float vd = length(orth);
+    
+  float pd = d.x - diameter * .5;
+  pd = softmax(pd, -vd, smoothfac);
+
+  vec2 upperbounds = diameter * vec2(particleEdge) - wallsqueeze;
+  pd = softmax(pd, wallsqueeze - gl_FragCoord.x, smoothfac);
+  pd = softmax(pd, wallsqueeze - gl_FragCoord.y, smoothfac);
+  pd = softmax(pd, gl_FragCoord.x - upperbounds.x, smoothfac);
+  pd = softmax(pd, gl_FragCoord.y - upperbounds.y, smoothfac);
+    
+  float opacity = smoothstep(0.5, -0.5, pd);
+    
+  vec3 lightdir = normalize(vec3(1., 1., 1.));
+    
+  float h = pd;
+  vec2 nv = vec2(dFdx(h), dFdy(h));
+  vec3 n = mix(normalize(vec3(-h, nv)), vec3(1., 0., 0.), smoothstep(0., diameter * 0.1, -pd));
+  vec3 incolor = basecolor + colormagnitude * velcol * 0.1 * dot(n, vec3(1., 1., 1.));
+  vec3 rimcolor = basecolor + 5. * colormagnitude * velcol * 0.1 * dot(n, lightdir);
+  velcol = mix(rimcolor, incolor, smoothstep(0., 4., -pd));
+
+  velcol = mix(velcol, softchecker((uv - (gl_FragCoord.xy - mp1) / diameter * 0.2) - n.yz * fakeior, 0.07).xyz, 0.15 + 0.2 * smoothstep(0., 10., -pd));
+
+  vec3 halfvec = 0.8 * normalize(vec3(1., vec2(2.)));
+  velcol += smoothstep(0.6, 0.8, dot(n, halfvec));
+
+  halfvec = 0.8 * normalize(vec3(1., -vec2(2.)));
+  velcol += vec3(0.2, 0.3, 0.4) * smoothstep(0.1, 0.8, dot(n, halfvec));
+
+  col.xyz = mix(col.xyz, velcol, opacity);
+
+#ifdef VORONOI
+  vec3 voro = vec3(pow(vd, 0.5));
+  col.xyz += voro * 0.10;
+#endif
+
+#ifdef TRACKGRID
+  col.xyz += vec3(0.1,0.8,0.0) * (1.-step(0.,-texelFetch(iChannel0, ind, 0).x)) * col.w;
+#endif
+
+  gl_FragColor = col;
+}
