@@ -178,15 +178,15 @@ packvec3 (vec3 v)
   int exp = clamp(int(ceil(log2(maxv))), -15, 15);
   float scale = exp2(-float(exp));
   uvec3 sv = uvec3(round(clamp(v*scale, -1.0, 1.0) * 255.0) + 255.0);
-  uint packed = uint(exp + 15) | (sv.x << 5) | (sv.y << 14) | (sv.z << 23);
-  return packed;
+  uint packed_ = uint(exp + 15) | (sv.x << 5) | (sv.y << 14) | (sv.z << 23);
+  return packed_;
 }
 
 vec3
-unpackvec3 (uint packed)
+unpackvec3 (uint packed_)
 {
-  int exp = int(packed & 0x1Fu) - 15;
-  vec3 sv = vec3((packed >> 5) & 0x1FFu, (packed >> 14) & 0x1FFu, (packed >> 23) & 0x1FFu);
+  int exp = int(packed_ & 0x1Fu) - 15;
+  vec3 sv = vec3((packed_ >> 5) & 0x1FFu, (packed_ >> 14) & 0x1FFu, (packed_ >> 23) & 0x1FFu);
   vec3 v = (sv - 255.0) / 255.0;
   v *= exp2(float(exp));
   return v;
@@ -208,10 +208,10 @@ packMassPos (uint mass, vec3 pos)
 }
 
 void
-unpackMassPos (uint packed, out uint mass, out vec3 pos)
+unpackMassPos (uint packed_, out uint mass, out vec3 pos)
 {
-  mass = packed & 0xFFu;
-  uvec3 pos0 = uvec3((packed >> 8) & 0xFFu, (packed >> 16) & 0xFFu, (packed >> 24) & 0xFFu);
+  mass = packed_ & 0xFFu;
+  uvec3 pos0 = uvec3((packed_ >> 8) & 0xFFu, (packed_ >> 16) & 0xFFu, (packed_ >> 24) & 0xFFu);
   pos = vec3(pos0) / 255.0;
 }
 
@@ -232,9 +232,9 @@ packParticles (Particle p0, Particle p1, vec3 pos)
 }
 
 void
-unpackParticles (vec4 packed, vec3 pos, out Particle p0, out Particle p1)
+unpackParticles (vec4 packed_, vec3 pos, out Particle p0, out Particle p1)
 {
-  uvec4 data = floatBitsToUint(packed);
+  uvec4 data = floatBitsToUint(packed_);
     
   unpackMassPos(data.x, p0.mass, p0.pos);
   unpackMassPos(data.y, p1.mass, p1.pos);
@@ -642,6 +642,6 @@ main ()
   if(p0.mass == 0u && p1.mass > 0u)
     SplitParticle(p1, p0);
 
-  vec4 packed = packParticles(p0, p1, pos);
-  gl_FragColor = packed;
+  vec4 packed_ = packParticles(p0, p1, pos);
+  gl_FragColor = packed_;
 }

@@ -1,3 +1,5 @@
+#version 130
+
 // glut_852_common.glsl
 //#define VORONOI
 //#define TRACKGRID

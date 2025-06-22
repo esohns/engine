@@ -3,7 +3,7 @@ uniform float iTime;
 uniform vec4 iMouse;
 
 // glut_839_common.glsl
-const float PI = radians(180.);
+const float PI = 3.14159265359;
 
 struct Camera
 {
