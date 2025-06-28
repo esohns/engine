@@ -2491,6 +2491,16 @@ set (engine_41_EXE_SRCS
      glut_863.h
      glut_864.cpp
      glut_864.h
+     glut_865.cpp
+     glut_865.h
+     glut_866.cpp
+     glut_866.h
+     glut_867.cpp
+     glut_867.h
+     glut_868.cpp
+     glut_868.h
+     glut_869.cpp
+     glut_869.h
      stdafx.h)
 
 set (EXECUTABLE_41 engine_41)
@@ -4820,6 +4830,16 @@ install (FILES
          "glut_863.frag_2"
          "glut_864.vert"
          "glut_864.frag"
+         "glut_865.vert"
+         "glut_865.frag"
+         "glut_866.vert"
+         "glut_866.frag"
+         "glut_867.vert"
+         "glut_867.frag"
+         "glut_868.vert"
+         "glut_868.frag"
+         "glut_869.vert"
+         "glut_869.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
