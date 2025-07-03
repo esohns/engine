@@ -2534,6 +2534,12 @@ set (engine_42_EXE_SRCS
      glut_877.h
      glut_878.cpp
      glut_878.h
+     glut_879.cpp
+     glut_879.h
+     glut_880.cpp
+     glut_880.h
+     glut_881.cpp
+     glut_881.h
      stdafx.h)
 
 set (EXECUTABLE_42 engine_42)
@@ -3764,6 +3770,12 @@ install (FILES
          "glut_484.frag_3"
          "glut_484.vert_4"
          "glut_484.frag_4"
+         "glut_484_negz.jpg"
+         "glut_484_posz.jpg"
+         "glut_484_posy.jpg"
+         "glut_484_negy.jpg"
+         "glut_484_negx.jpg"
+         "glut_484_posx.jpg"
          "glut_485.vert"
          "glut_485.frag"
          "glut_485.vert_2"
@@ -4919,6 +4931,18 @@ install (FILES
          "glut_877_channel1.jpg"
          "glut_878.vert"
          "glut_878.frag"
+         "glut_879.vert"
+         "glut_879.frag"
+         "glut_880.vert"
+         "glut_880.frag"
+         "glut_880_negz.jpg"
+         "glut_880_posz.jpg"
+         "glut_880_posy.jpg"
+         "glut_880_negy.jpg"
+         "glut_880_negx.jpg"
+         "glut_880_posx.jpg"
+         "glut_881.vert"
+         "glut_881.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
