@@ -2517,6 +2517,8 @@ do_work (int argc_in,
 
       cb_data_s.shader.reset ();
 
+      cb_data_s.texture0.reset ();
+
       result = true;
 
       break;
