@@ -58,8 +58,11 @@ engine_glut_890_key (unsigned char key_in,
   switch (key_in)
   {
     case 27: /* Escape */
+    {
+      glutDestroyWindow (cb_data_p->windowId); cb_data_p->windowId = 0;
       glutLeaveMainLoop ();
       break;
+    }
   } // end SWITCH
 }
 
@@ -173,15 +176,18 @@ engine_glut_890_mouse_move (int x, int y)
 void
 engine_glut_890_timer (int v)
 {
-  struct Engine_OpenGL_GLUT_890_CBData* cb_data_p =
-    static_cast<struct Engine_OpenGL_GLUT_890_CBData*> (glutGetWindowData ());
-  ACE_ASSERT (cb_data_p);
+  //struct Engine_OpenGL_GLUT_890_CBData* cb_data_p =
+  //  static_cast<struct Engine_OpenGL_GLUT_890_CBData*> (glutGetWindowData ());
+  //ACE_ASSERT (cb_data_p);
 
-  glutPostRedisplay ();
+  if (v)
+  {
+    glutPostRedisplay ();
 
-  glutTimerFunc (1000 / 60,
-                 engine_glut_890_timer,
-                 v);
+    glutTimerFunc (1000 / 60,
+                   engine_glut_890_timer,
+                   1);
+  } // end IF
 }
 
 void
@@ -254,4 +260,10 @@ engine_glut_890_visible (int vis)
     glutIdleFunc (engine_glut_890_idle);
   else
     glutIdleFunc (NULL);
+}
+
+void
+engine_glut_890_close (void)
+{
+  glutLeaveMainLoop ();
 }

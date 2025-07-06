@@ -27,6 +27,7 @@ void engine_glut_890_timer (int);
 void engine_glut_890_draw (void);
 void engine_glut_890_idle (void);
 void engine_glut_890_visible (int);
+void engine_glut_890_close (void);
 
 struct Engine_OpenGL_GLUT_890_CBData
 {
@@ -57,6 +58,9 @@ struct Engine_OpenGL_GLUT_890_CBData
   int                               mouseX;
   int                               mouseY;
   bool                              mouseLMBPressed;
+
+  bool                              isRunning;
+  int                               windowId;
 };
 
 #endif // GLUT_890_H

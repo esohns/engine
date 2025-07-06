@@ -148,7 +148,7 @@ engine_glut_229_draw (void)
 #endif // ACE_WIN32 || ACE_WIN64 || ACE_LINUX
   std::chrono::duration<float, std::milli> elapsed_time = time_point - cb_data_p->lastTimeStamp;
   float fps_f = 1000.0f / elapsed_time.count ();
-  std::stringstream stream;
+  std::ostringstream stream;
   stream << std::fixed << std::setprecision (2) << fps_f;
   std::string s = stream.str ();
   s = ACE_TEXT_ALWAYS_CHAR ("engine GLUT 229 - ") + s;
