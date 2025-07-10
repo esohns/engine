@@ -112,16 +112,12 @@ if (DEFINED CMAKE_BUILD_TYPE)
 endif (DEFINED CMAKE_BUILD_TYPE)
 
 # user interface
-option (GUI_SUPPORT "enable graphical user interface support" ON)
-if (GUI_SUPPORT)
- add_definitions (-DGUI_SUPPORT)
- set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/src/ui/scripts")
- include (PreUIFramework)
- include (SetUIFramework)
- if (GTK_SUPPORT)
-  include (SetGTKVersion)
- endif (GTK_SUPPORT)
-endif (GUI_SUPPORT)
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/src/ui/scripts")
+include (PreUIFramework)
+include (SetUIFramework)
+if (GTK_SUPPORT)
+ include (SetGTKVersion)
+endif (GTK_SUPPORT)
 
 #set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${COMMON_ROOT_DIR}/src/gl/scripts")
 include (glm)
@@ -2577,6 +2573,12 @@ set (engine_43_EXE_SRCS
      glut_891.h
      glut_892.cpp
      glut_892.h
+     glut_893.cpp
+     glut_893.h
+     glut_894.cpp
+     glut_894.h
+     glut_895.cpp
+     glut_895.h
      stdafx.h)
 
 set (EXECUTABLE_43 engine_43)
@@ -5037,6 +5039,12 @@ install (FILES
          "glut_891.frag_5"
          "glut_892.vert"
          "glut_892.frag"
+         "glut_893.vert"
+         "glut_893.frag"
+         "glut_894.vert"
+         "glut_894.frag"
+         "glut_895.vert"
+         "glut_895.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
