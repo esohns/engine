@@ -50,4 +50,18 @@
 #define ENGINE_GLUT_895_DEFAULT_HEIGHT             834
 #define ENGINE_GLUT_895_DEFAULT_WIDTH              1112
 
+// glut 896
+#define ENGINE_GLUT_896_DEFAULT_SCALE_FACTOR       30
+#define ENGINE_GLUT_896_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_896_DEFAULT_WIDTH              1112
+
+// glut 897
+#define ENGINE_GLUT_897_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_897_DEFAULT_WIDTH              1112
+
+// glut 898
+#define ENGINE_GLUT_898_DEFAULT_SCALE_FACTOR       30
+#define ENGINE_GLUT_898_DEFAULT_HEIGHT             834
+#define ENGINE_GLUT_898_DEFAULT_WIDTH              1112
+
 #endif // DEFINES_43_H

@@ -1,0 +1,30 @@
+#version 330
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+vec3
+DpthFld (sampler2D iCh, vec2 uv)
+{
+  const float focD = 3.5, coc = 2.;
+
+  float l = abs(texture(iCh, uv).w - focD - coc) - coc;
+  float dof = clamp(l/coc, 0., 1.);
+
+  vec3 acc = vec3(0);
+  for(int i = 0; i<25; i++)
+    acc += texture(iCh, uv + (vec2(i/5, i%5) - 2.)/vec2(800, 450)*dof).xyz;
+
+  return acc /= 25.;
+}
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy/iResolution;
+
+  vec4 col = DpthFld(iChannel0, uv).xyzz;
+  col = mix(col, col.yzxw, smoothstep(.35, .6, length(uv - .5)));
+
+  gl_FragColor = pow(max(col, 0.), vec4(1./2.2));
+}
