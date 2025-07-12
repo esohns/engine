@@ -2585,6 +2585,12 @@ set (engine_43_EXE_SRCS
      glut_897.h
      glut_898.cpp
      glut_898.h
+     glut_899.cpp
+     glut_899.h
+     glut_900.cpp
+     glut_900.h
+     glut_901.cpp
+     glut_901.h
      stdafx.h)
 
 set (EXECUTABLE_43 engine_43)
@@ -5058,6 +5064,12 @@ install (FILES
          "glut_897.frag_2"
          "glut_898.vert"
          "glut_898.frag"
+         "glut_899.vert"
+         "glut_899.frag"
+         "glut_900.vert"
+         "glut_900.frag"
+         "glut_901.vert"
+         "glut_901.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
