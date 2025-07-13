@@ -2591,6 +2591,18 @@ set (engine_43_EXE_SRCS
      glut_900.h
      glut_901.cpp
      glut_901.h
+     glut_902.cpp
+     glut_902.h
+     glut_903.cpp
+     glut_903.h
+     glut_904.cpp
+     glut_904.h
+     glut_905.cpp
+     glut_905.h
+     glut_906.cpp
+     glut_906.h
+     glut_907.cpp
+     glut_907.h
      stdafx.h)
 
 set (EXECUTABLE_43 engine_43)
@@ -5070,6 +5082,20 @@ install (FILES
          "glut_900.frag"
          "glut_901.vert"
          "glut_901.frag"
+         "glut_902.vert"
+         "glut_902.frag"
+         "glut_903.vert"
+         "glut_903.frag"
+         "glut_904.vert"
+         "glut_904.frag"
+         "glut_905.vert"
+         "glut_905.frag"
+         "glut_905_channel0.png"
+         "glut_905_channel2.jpg"
+         "glut_906.vert"
+         "glut_906.frag"
+         "glut_907.vert"
+         "glut_907.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
