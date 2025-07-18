@@ -2642,6 +2642,8 @@ set (engine_44_EXE_SRCS
      glut_918.h
      glut_919.cpp
      glut_919.h
+     glut_920.cpp
+     glut_920.h
      stdafx.h)
 
 set (EXECUTABLE_44 engine_44)
@@ -5192,6 +5194,12 @@ install (FILES
          "glut_919.vert"
          "glut_919.frag"
          "glut_919.frag_2"
+         "glut_920.vert"
+         "glut_920.frag"
+         "glut_920.frag_2"
+         "glut_920.frag_3"
+         "glut_920.frag_4"
+         "glut_920.frag_5"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
