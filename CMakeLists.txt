@@ -2644,6 +2644,18 @@ set (engine_44_EXE_SRCS
      glut_919.h
      glut_920.cpp
      glut_920.h
+     glut_921.cpp
+     glut_921.h
+     glut_922.cpp
+     glut_922.h
+     glut_923.cpp
+     glut_923.h
+     glut_924.cpp
+     glut_924.h
+     glut_925.cpp
+     glut_925.h
+     glut_926.cpp
+     glut_926.h
      stdafx.h)
 
 set (EXECUTABLE_44 engine_44)
@@ -5200,6 +5212,22 @@ install (FILES
          "glut_920.frag_3"
          "glut_920.frag_4"
          "glut_920.frag_5"
+         "glut_921.vert"
+         "glut_921.frag"
+         "glut_921.frag_2"
+         "glut_921.frag_3"
+         "glut_921.frag_4"
+         "glut_921.frag_5"
+         "glut_922.vert"
+         "glut_922.frag"
+         "glut_923.vert"
+         "glut_923.frag"
+         "glut_924.vert"
+         "glut_924.frag"
+         "glut_925.vert"
+         "glut_925.frag"
+         "glut_926.vert"
+         "glut_926.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
