@@ -1,0 +1,151 @@
+#version 130
+
+// glut_931_common.glsl
+vec2
+hash (vec2 p)
+{
+  p = vec2( dot(p,vec2(127.1,311.7)),
+            dot(p,vec2(269.5,183.3)) );
+  return -1.0 + 2.0*fract(sin(p)*43758.5453123);
+}
+
+float
+noise (vec2 p)
+{
+  const float K1 = 0.366025404;
+  const float K2 = 0.211324865;
+
+  vec2 i = floor( p + (p.x+p.y)*K1 );
+  
+  vec2 a = p - i + (i.x+i.y)*K2;
+  vec2 o = step(a.yx,a.xy);    
+  vec2 b = a - o + K2;
+  vec2 c = a - 1.0 + 2.0*K2;
+
+  vec3 h = max( 0.5-vec3(dot(a,a), dot(b,b), dot(c,c) ), 0.0 );
+
+  vec3 n = h*h*h*h*vec3( dot(a,hash(i+0.0)), dot(b,hash(i+o)), dot(c,hash(i+1.0)));
+
+  return dot( n, vec3(70.0) );
+}
+
+float
+G1V (float dnv, float k)
+{
+  return 1.0/(dnv*(1.0-k)+k);
+}
+
+float
+ggx (vec3 n, vec3 v, vec3 l, float rough, float f0)
+{
+  float alpha = rough*rough;
+  vec3 h = normalize(v+l);
+  float dnl = clamp(dot(n,l), 0.0, 1.0);
+  float dnv = clamp(dot(n,v), 0.0, 1.0);
+  float dnh = clamp(dot(n,h), 0.0, 1.0);
+  float dlh = clamp(dot(l,h), 0.0, 1.0);
+  float f, d, vis;
+  float asqr = alpha*alpha;
+  const float pi = 3.14159;
+  float den = dnh*dnh*(asqr-1.0)+1.0;
+  d = asqr/(pi * den * den);
+  dlh = pow(1.0-dlh, 5.0);
+  f = f0 + (1.0-f0)*dlh;
+  float k = alpha/1.0;
+  vis = G1V(dnl, k)*G1V(dnv, k);
+  float spec = dnl * d * f * vis;
+  return spec;
+}
+// glut_931_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+
+//#define SIMPLE
+#define SRC_DIST 8.0
+#define BUMP 10.0
+
+vec3
+normz (vec3 x)
+{
+	return x == vec3(0) ? vec3(0) : normalize(x);
+}
+
+void
+main ()
+{
+  vec2 texel = 1. / iResolution;
+  vec2 uv = gl_FragCoord.xy / iResolution;
+
+  vec2 n  = vec2(0.0, texel.y);
+  vec2 e  = vec2(texel.x, 0.0);
+  vec2 s  = vec2(0.0, -texel.y);
+  vec2 w  = vec2(-texel.x, 0.0);
+
+  float d   = texture(iChannel0, uv).x;
+#ifdef SIMPLE
+  gl_FragColor = 0.5+0.02*vec4(d);
+#else
+  float d_n  = texture(iChannel0, fract(uv+n)  ).x;
+  float d_e  = texture(iChannel0, fract(uv+e)  ).x;
+  float d_s  = texture(iChannel0, fract(uv+s)  ).x;
+  float d_w  = texture(iChannel0, fract(uv+w)  ).x; 
+  float d_ne = texture(iChannel0, fract(uv+n+e)).x;
+  float d_se = texture(iChannel0, fract(uv+s+e)).x;
+  float d_sw = texture(iChannel0, fract(uv+s+w)).x;
+  float d_nw = texture(iChannel0, fract(uv+n+w)).x; 
+
+  float dxn[3];
+  float dyn[3];
+  float dcn[3];
+    
+  dcn[0] = 0.5;
+  dcn[1] = 1.0; 
+  dcn[2] = 0.5;
+
+  dyn[0] = d_nw - d_sw;
+  dyn[1] = d_n  - d_s; 
+  dyn[2] = d_ne - d_se;
+
+  dxn[0] = d_ne - d_nw; 
+  dxn[1] = d_e  - d_w; 
+  dxn[2] = d_se - d_sw; 
+
+  vec3 sp = vec3(uv-0.5, 0);
+  vec3 light = vec3(cos(iTime/2.0)*0.5, sin(iTime/2.0)*0.5, -SRC_DIST);
+  vec3 ld = light - sp;
+  float lDist = max(length(ld), 0.001);
+  ld /= lDist;
+  float aDist = max(distance(vec3(light.xy,0),sp) , 0.001);
+  float atten = min(0.07/(0.25 + aDist*0.5 + aDist*aDist*0.05), 1.);
+  vec3 rd = normalize(vec3(uv - 0.5, 1.));
+
+  float spec = 0.0;
+  float den = 0.0;
+
+  vec3 avd = vec3(0);
+  for(int i = 0; i < 3; i++)
+    for(int j = 0; j < 3; j++)
+    {
+      vec2 dxy = vec2(dxn[i], dyn[j]);
+      float w = dcn[i] * dcn[j];
+      vec3 bn = reflect(normalize(vec3(BUMP*dxy, -1.0)), vec3(0,1,0));
+      avd += w * bn;
+      den += w;
+    }
+  avd /= den;
+  
+  spec += ggx(avd, vec3(0,1,0), ld, 0.7, 0.3);
+
+  float occ = 0.0;
+  for (float m = 1.0; m <= 10.0; m +=1.0)
+  {
+    float dm = texture(iChannel0, uv, m).x;
+    occ += smoothstep(-8.0, 2.0, (d - dm))/(m*m);
+  }
+  occ = pow(occ / 1.5, 2.0);
+
+  gl_FragColor = occ * vec4(0.9,0,0.05,0) + 2.5*vec4(0.9, 0.85, 0.8, 1)*spec;
+#endif
+}
