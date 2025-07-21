@@ -135,7 +135,7 @@ main ()
       den += w;
     }
   avd /= den;
-  
+
   spec += ggx(avd, vec3(0,1,0), ld, 0.7, 0.3);
 
   float occ = 0.0;

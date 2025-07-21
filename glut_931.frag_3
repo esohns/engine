@@ -63,7 +63,7 @@ uniform sampler2D iChannel0;
 uniform sampler2D iChannel1;
 
 float
-laplacian (sampler2D sampler, vec2 fragCoord)
+laplacian (vec2 fragCoord)
 {
   vec2 vUv = fragCoord / iResolution;
   vec2 texel = 1. / iResolution;
@@ -79,15 +79,15 @@ laplacian (sampler2D sampler, vec2 fragCoord)
   vec2 w  = vec2(-step_x, 0.0);
   vec2 nw = vec2(-step_x, step_y);
 
-  vec4 uv =    texture(sampler, fract(vUv));
-  vec4 uv_n =  texture(sampler, fract(vUv+n));
-  vec4 uv_e =  texture(sampler, fract(vUv+e));
-  vec4 uv_s =  texture(sampler, fract(vUv+s));
-  vec4 uv_w =  texture(sampler, fract(vUv+w));
-  vec4 uv_nw = texture(sampler, fract(vUv+nw));
-  vec4 uv_sw = texture(sampler, fract(vUv+sw));
-  vec4 uv_ne = texture(sampler, fract(vUv+ne));
-  vec4 uv_se = texture(sampler, fract(vUv+se));
+  vec4 uv = texture(iChannel0, fract(vUv));
+  vec4 uv_n = texture(iChannel0, fract(vUv + n));
+  vec4 uv_e = texture(iChannel0, fract(vUv + e));
+  vec4 uv_s = texture(iChannel0, fract(vUv + s));
+  vec4 uv_w = texture(iChannel0, fract(vUv + w));
+  vec4 uv_nw = texture(iChannel0, fract(vUv + nw));
+  vec4 uv_sw = texture(iChannel0, fract(vUv + sw));
+  vec4 uv_ne = texture(iChannel0, fract(vUv + ne));
+  vec4 uv_se = texture(iChannel0, fract(vUv + se));
 
   vec2 diff = vec2(
     0.5 * (uv_e.x - uv_w.x) + 0.25 * (uv_ne.x - uv_nw.x + uv_se.x - uv_sw.x),
@@ -103,5 +103,5 @@ main ()
   vec2 uv = gl_FragCoord.xy / iResolution;
   float la = length(texture(iChannel0, uv).zw);
   float lh = 0.9 * texture(iChannel1, uv, 3.5).w + 0.1 * la;
-  gl_FragColor = vec4(-laplacian(iChannel0, gl_FragCoord.xy), 0, 0, lh);
+  gl_FragColor = vec4(-laplacian(gl_FragCoord.xy), 0, 0, lh);
 }

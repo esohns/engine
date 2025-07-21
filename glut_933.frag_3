@@ -1,0 +1,20 @@
+#version 130
+
+// glut_933_common.glsl
+#define M void main () { vec4 o; vec2 i = gl_FragCoord.xy; o=
+#define f vec2(1.1)
+#define S 2.5 + fract(iTime/3.5)
+#define G 0.8*cos(8.*i.x/iResolution.x)
+#define T(d,l) texture(iChannel0, (i+d)/iResolution, l)
+// glut_933_common.glsl
+
+uniform vec2 iResolution;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+
+M
+  T(-f*float(2*iFrame),0.);
+  o.rgb = smoothstep (.4,.5,o.a) * cos(o.r*vec3(1,2,4));
+
+  gl_FragColor = o;
+}

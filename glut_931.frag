@@ -188,28 +188,28 @@ main ()
   float di_e  = nl(distance(u_e + e, u));
   float di_s  = nl(distance(u_s + s, u));
 
-  float di_nne = nl(distance((diagV(u, u_n, u_e, u_ne) + vec3(+ vx, + vy, 0.0)), u));
-  float di_ene = nl(distance((diagH(u, u_n, u_e, u_ne) + vec3(+ hx, + hy, 0.0)), u));
-  float di_ese = nl(distance((diagH(u, u_s, u_e, u_se) + vec3(+ hx, - hy, 0.0)), u));
-  float di_sse = nl(distance((diagV(u, u_s, u_e, u_se) + vec3(+ vx, - vy, 0.0)), u));    
-  float di_ssw = nl(distance((diagV(u, u_s, u_w, u_sw) + vec3(- vx, - vy, 0.0)), u));
-  float di_wsw = nl(distance((diagH(u, u_s, u_w, u_sw) + vec3(- hx, - hy, 0.0)), u));
-  float di_wnw = nl(distance((diagH(u, u_n, u_w, u_nw) + vec3(- hx, + hy, 0.0)), u));
-  float di_nnw = nl(distance((diagV(u, u_n, u_w, u_nw) + vec3(- vx, + vy, 0.0)), u));
+  float di_nne = nl(distance((diagV(u, u_n, u_e, u_ne) + vec3(+vx, +vy, 0.0)), u));
+  float di_ene = nl(distance((diagH(u, u_n, u_e, u_ne) + vec3(+hx, +hy, 0.0)), u));
+  float di_ese = nl(distance((diagH(u, u_s, u_e, u_se) + vec3(+hx, -hy, 0.0)), u));
+  float di_sse = nl(distance((diagV(u, u_s, u_e, u_se) + vec3(+vx, -vy, 0.0)), u));    
+  float di_ssw = nl(distance((diagV(u, u_s, u_w, u_sw) + vec3(-vx, -vy, 0.0)), u));
+  float di_wsw = nl(distance((diagH(u, u_s, u_w, u_sw) + vec3(-hx, -hy, 0.0)), u));
+  float di_wnw = nl(distance((diagH(u, u_n, u_w, u_nw) + vec3(-hx, +hy, 0.0)), u));
+  float di_nnw = nl(distance((diagV(u, u_n, u_w, u_nw) + vec3(-vx, +vy, 0.0)), u));
 
   vec3 xy_n  = u_n + n - u;
   vec3 xy_w  = u_w + w - u;
   vec3 xy_e  = u_e + e - u;
   vec3 xy_s  = u_s + s - u;
 
-  vec3 xy_nne = (diagV(u, u_n, u_e, u_ne) + vec3(+ vx, + vy, 0.0)) - u;
-  vec3 xy_ene = (diagH(u, u_n, u_e, u_ne) + vec3(+ hx, + hy, 0.0)) - u;
-  vec3 xy_ese = (diagH(u, u_s, u_e, u_se) + vec3(+ hx, - hy, 0.0)) - u;
-  vec3 xy_sse = (diagV(u, u_s, u_e, u_se) + vec3(+ vx, - vy, 0.0)) - u;
-  vec3 xy_ssw = (diagV(u, u_s, u_w, u_sw) + vec3(- vx, - vy, 0.0)) - u;
-  vec3 xy_wsw = (diagH(u, u_s, u_w, u_sw) + vec3(- hx, - hy, 0.0)) - u;
-  vec3 xy_wnw = (diagH(u, u_n, u_w, u_nw) + vec3(- hx, + hy, 0.0)) - u;
-  vec3 xy_nnw = (diagV(u, u_n, u_w, u_nw) + vec3(- vx, + vy, 0.0)) - u;
+  vec3 xy_nne = (diagV(u, u_n, u_e, u_ne) + vec3(+vx, +vy, 0.0)) - u;
+  vec3 xy_ene = (diagH(u, u_n, u_e, u_ne) + vec3(+hx, +hy, 0.0)) - u;
+  vec3 xy_ese = (diagH(u, u_s, u_e, u_se) + vec3(+hx, -hy, 0.0)) - u;
+  vec3 xy_sse = (diagV(u, u_s, u_e, u_se) + vec3(+vx, -vy, 0.0)) - u;
+  vec3 xy_ssw = (diagV(u, u_s, u_w, u_sw) + vec3(-vx, -vy, 0.0)) - u;
+  vec3 xy_wsw = (diagH(u, u_s, u_w, u_sw) + vec3(-hx, -hy, 0.0)) - u;
+  vec3 xy_wnw = (diagH(u, u_n, u_w, u_nw) + vec3(-hx, +hy, 0.0)) - u;
+  vec3 xy_nnw = (diagV(u, u_n, u_w, u_nw) + vec3(-vx, +vy, 0.0)) - u;
 
   float t0 = clamp(acos(dot(xy_n, xy_nne)   / (length(xy_n)   * length(xy_nne))), 0.0, PI);
   float t1 = clamp(acos(dot(xy_nne, xy_ene) / (length(xy_nne) * length(xy_ene))), 0.0, PI);
