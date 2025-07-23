@@ -56,6 +56,11 @@
 #include "glut_936.h"
 #include "glut_937.h"
 #include "glut_938.h"
+#include "glut_939.h"
+#include "glut_940.h"
+#include "glut_941.h"
+#include "glut_942.h"
+#include "glut_943.h"
 
 enum Engine_ModeType
 {
@@ -68,6 +73,11 @@ enum Engine_ModeType
   ENGINE_MODE_936,
   ENGINE_MODE_937,
   ENGINE_MODE_938,
+  ENGINE_MODE_939,
+  ENGINE_MODE_940,
+  ENGINE_MODE_941,
+  ENGINE_MODE_942,
+  ENGINE_MODE_943,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -1503,6 +1513,472 @@ do_work (int argc_in,
 
       if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_938.vert"),
                                           ACE_TEXT_ALWAYS_CHAR ("glut_938.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+
+      cb_data_s.shader.use ();
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      cb_data_s.shader.reset ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_939:
+    {
+      struct Engine_OpenGL_GLUT_939_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_939_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_939_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_939_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.mouseX = ENGINE_GLUT_939_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_939_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_939_DEFAULT_WIDTH, ENGINE_GLUT_939_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 939");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                 ACE_TEXT ("using GLEW version: %s\n"),
+                 ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_939_draw);
+      glutReshapeFunc (engine_glut_939_reshape);
+      glutVisibilityFunc (engine_glut_939_visible);
+
+      glutKeyboardFunc (engine_glut_939_key);
+      glutKeyboardUpFunc (engine_glut_939_key_up);
+      glutSpecialFunc (engine_glut_939_key_special);
+      glutMouseFunc (engine_glut_939_mouse_button);
+      glutMotionFunc (engine_glut_939_mouse_move);
+      glutPassiveMotionFunc (engine_glut_939_mouse_move);
+
+      glutTimerFunc (100, engine_glut_939_timer, 0);
+
+      glutCreateMenu (engine_glut_939_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_939.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_939.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+
+      cb_data_s.shader.use ();
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      cb_data_s.shader.reset ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_940:
+    {
+      struct Engine_OpenGL_GLUT_940_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_940_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_940_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_940_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.mouseX = ENGINE_GLUT_940_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_940_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_940_DEFAULT_WIDTH, ENGINE_GLUT_940_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 940");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                 ACE_TEXT ("using GLEW version: %s\n"),
+                 ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_940_draw);
+      glutReshapeFunc (engine_glut_940_reshape);
+      glutVisibilityFunc (engine_glut_940_visible);
+
+      glutKeyboardFunc (engine_glut_940_key);
+      glutKeyboardUpFunc (engine_glut_940_key_up);
+      glutSpecialFunc (engine_glut_940_key_special);
+      glutMouseFunc (engine_glut_940_mouse_button);
+      glutMotionFunc (engine_glut_940_mouse_move);
+      glutPassiveMotionFunc (engine_glut_940_mouse_move);
+
+      glutTimerFunc (100, engine_glut_940_timer, 0);
+
+      glutCreateMenu (engine_glut_940_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_940.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_940.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+
+      cb_data_s.shader.use ();
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      cb_data_s.shader.reset ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_941:
+    {
+      struct Engine_OpenGL_GLUT_941_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_941_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_941_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_941_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+      cb_data_s.channel0Loc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.mouseX = ENGINE_GLUT_941_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_941_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_941_DEFAULT_WIDTH, ENGINE_GLUT_941_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 941");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                 ACE_TEXT ("using GLEW version: %s\n"),
+                 ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_941_draw);
+      glutReshapeFunc (engine_glut_941_reshape);
+      glutVisibilityFunc (engine_glut_941_visible);
+
+      glutKeyboardFunc (engine_glut_941_key);
+      glutKeyboardUpFunc (engine_glut_941_key_up);
+      glutSpecialFunc (engine_glut_941_key_special);
+      glutMouseFunc (engine_glut_941_mouse_button);
+      glutMotionFunc (engine_glut_941_mouse_move);
+      glutPassiveMotionFunc (engine_glut_941_mouse_move);
+
+      glutTimerFunc (100, engine_glut_941_timer, 0);
+
+      glutCreateMenu (engine_glut_941_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      glClampColor (GL_CLAMP_READ_COLOR, GL_FALSE);
+      glClampColor (GL_CLAMP_VERTEX_COLOR, GL_FALSE);
+      glClampColor (GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+      glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
+      glPixelStorei (GL_PACK_ALIGNMENT, 1);
+
+      glActiveTexture (GL_TEXTURE0);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      if (!cb_data_s.texture0.load (ACE_TEXT_ALWAYS_CHAR ("glut_905_channel0.png"))) // *TODO*: use custom texture
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load texture, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.texture0.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_2D);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_941.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_941.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+
+      cb_data_s.shader.use ();
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+      cb_data_s.channel0Loc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
+      ACE_ASSERT (cb_data_s.channel0Loc != -1);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      cb_data_s.shader.reset ();
+
+      cb_data_s.texture0.reset ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_942:
+    {
+      struct Engine_OpenGL_GLUT_942_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_942_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_942_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_942_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.mouseX = ENGINE_GLUT_942_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_942_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_942_DEFAULT_WIDTH, ENGINE_GLUT_942_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 942");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                 ACE_TEXT ("using GLEW version: %s\n"),
+                 ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_942_draw);
+      glutReshapeFunc (engine_glut_942_reshape);
+      glutVisibilityFunc (engine_glut_942_visible);
+
+      glutKeyboardFunc (engine_glut_942_key);
+      glutKeyboardUpFunc (engine_glut_942_key_up);
+      glutSpecialFunc (engine_glut_942_key_special);
+      glutMouseFunc (engine_glut_942_mouse_button);
+      glutMotionFunc (engine_glut_942_mouse_move);
+      glutPassiveMotionFunc (engine_glut_942_mouse_move);
+
+      glutTimerFunc (100, engine_glut_942_timer, 0);
+
+      glutCreateMenu (engine_glut_942_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_942.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_942.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+
+      cb_data_s.shader.use ();
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      cb_data_s.shader.reset ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_943:
+    {
+      struct Engine_OpenGL_GLUT_943_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_943_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_943_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_943_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.mouseX = ENGINE_GLUT_943_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_943_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_943_DEFAULT_WIDTH, ENGINE_GLUT_943_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 943");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                 ACE_TEXT ("using GLEW version: %s\n"),
+                 ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_943_draw);
+      glutReshapeFunc (engine_glut_943_reshape);
+      glutVisibilityFunc (engine_glut_943_visible);
+
+      glutKeyboardFunc (engine_glut_943_key);
+      glutKeyboardUpFunc (engine_glut_943_key_up);
+      glutSpecialFunc (engine_glut_943_key_special);
+      glutMouseFunc (engine_glut_943_mouse_button);
+      glutMotionFunc (engine_glut_943_mouse_move);
+      glutPassiveMotionFunc (engine_glut_943_mouse_move);
+
+      glutTimerFunc (100, engine_glut_943_timer, 0);
+
+      glutCreateMenu (engine_glut_943_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_943.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_943.frag")))
       {
         ACE_DEBUG ((LM_ERROR,
                     ACE_TEXT ("failed to load shader, aborting\n")));
