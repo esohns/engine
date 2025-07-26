@@ -1,0 +1,61 @@
+#version 130
+
+// glut_949_common.glsl
+#define PI 3.14159265359
+#define HALFPI 1.57079632679
+
+#define HASHSCALE1 .1031
+#define HASHSCALE3 vec3(.1031, .1030, .0973)
+#define HASHSCALE4 vec4(.1031, .1030, .0973, .1099)
+
+vec2
+hash21 (float p)
+{
+  vec3 p3 = fract(vec3(p) * HASHSCALE3);
+  p3 += dot(p3, p3.yzx + 19.19);
+  return fract((p3.xx+p3.yz)*p3.zy);
+}
+
+vec4
+hash42 (vec2 p)
+{
+  vec4 p4 = fract(vec4(p.xyxy) * HASHSCALE4);
+  p4 += dot(p4, p4.wzxy+19.19);
+  return fract((p4.xxyz+p4.yzzw)*p4.zywx);
+}
+
+mat2
+rot (float a) 
+{
+  vec2 s = sin(vec2(a, a + HALFPI));
+  return mat2(s.y,s.x,-s.x,s.y);
+}
+
+vec2
+CalculateUv (vec2 coord, float time)
+{
+  vec2 uv = coord;
+  uv *= rot(time*0.1);
+  uv += sin(vec2(time*0.2, time*0.3 + HALFPI)) * 0.35;
+
+  vec4 disto = sin(uv.xxyy * vec4(8.1, 7.8, 7.7, 8.3) + vec4(0.3, -0.4, 0.25, -0.3) * time) * vec4(0.01, 0.015, 0.007, 0.012);
+  uv.x += disto.z + disto.w;
+  uv.y += disto.x + disto.y;
+  return uv;
+}
+// glut_949_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+  float r = iResolution.x / iResolution.y;
+  vec2 uv = gl_FragCoord.xy/iResolution;
+
+  float v = max(0.0, length(uv - 0.5) * 7.0 - 2.0);
+  vec4 col = textureLod(iChannel0, uv, v);
+
+  gl_FragColor = pow(col, vec4(2.0));
+}
