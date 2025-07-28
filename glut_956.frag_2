@@ -1,0 +1,60 @@
+#version 140
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+
+float hash11B (float x) { return fract(sin(mod(x,6.2831853))*43758.5453); }
+
+vec4
+bokeh (sampler2D iCh, vec2 uv)
+{
+  const float focD = 2.4, coc = .7;
+
+  float l = abs(texture(iCh, uv).w - focD - coc) - coc;
+
+  float ra = clamp(l/coc, 0., 2.);
+
+  const int iter = 96;
+  float rad = 1.6;
+  float r = 1.;
+  vec4 tot = vec4(0), div = tot;
+  vec2 vangle = vec2(0., rad*.01/sqrt(float(iter)));
+#define GA 2.3999632
+  const mat2 rot = mat2(cos(GA), sin(GA), -sin(GA), cos(GA));
+
+  vec2 aspect = vec2(iResolution.y/iResolution.x, 1);
+
+  for (int i = 0; i<iter; i++)
+  {
+#if 1
+    r += 1./r;
+    vangle = rot*vangle;
+    vec4 col = texture(iCh, uv - (r - 1.)*vangle*aspect, iResolution.y/450.*1.5);
+#else
+    float fi = float(i) + fract(iTime);
+    vec2 rnd2 = vec2(hash11B(fi), hash11B(fi + .1)*6.2831);
+    vec2 offs = 6.*sqrt(rnd2.x)*vec2(cos(rnd2.y), sin(rnd2.y));
+    offs *= rad;
+    vec4 col = texture(iCh, uv - offs/iResolution.xy, iResolution.y/450.*1.5);  
+#endif
+
+    vec4 bokeh = pow(col, vec4(4));
+    tot += bokeh*col*col;
+    div += bokeh;
+  }
+
+  vec4 colOrig = texture(iCh, uv);
+
+  return mix(colOrig, colOrig*.25 + tot/div*4., ra);
+}
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy/iResolution;
+
+  vec4 col = bokeh(iChannel0, uv);
+
+  gl_FragColor = pow(max(col, 0.), vec4(1./2.2)); 
+}

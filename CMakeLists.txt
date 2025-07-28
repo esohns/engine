@@ -2742,6 +2742,12 @@ set (engine_46_EXE_SRCS
      glut_953.h
      glut_954.cpp
      glut_954.h
+     glut_955.cpp
+     glut_955.h
+     glut_956.cpp
+     glut_956.h
+     glut_957.cpp
+     glut_957.h
      stdafx.h)
 
 set (EXECUTABLE_46 engine_46)
@@ -5430,6 +5436,13 @@ install (FILES
          "glut_953.frag"
          "glut_954.vert"
          "glut_954.frag"
+         "glut_955.vert"
+         "glut_955.frag"
+         "glut_956.vert"
+         "glut_956.frag"
+         "glut_956.frag_2"
+         "glut_957.vert"
+         "glut_957.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
