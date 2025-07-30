@@ -1,0 +1,734 @@
+#version 330
+
+// glut_963_common.glsl
+const float wrap = 8.;
+const float cubeMapRes = 64.;
+
+uint
+hash (uint x)
+{
+  x += ( x << 10u ); x ^= ( x >>  6u );
+  x += ( x <<  3u ); x ^= ( x >> 11u );
+  x += ( x << 15u );
+  return x;
+}
+
+uint hash (uvec2 v) { return hash( v.x ^ hash(v.y) ); }
+uint hash (uvec3 v) { return hash( v.x ^ hash(v.y) ^ hash(v.z) ); }
+uint hash (uvec4 v) { return hash( v.x ^ hash(v.y) ^ hash(v.z) ^ hash(v.w) ); }
+
+float
+hash41 (vec4 f)
+{
+  const uint mantissaMask = 0x007FFFFFu;
+  const uint one          = 0x3F800000u;
+
+  uint h = hash( floatBitsToUint( f ) );
+  h &= mantissaMask;
+  h |= one;
+
+  float  r2 = uintBitsToFloat( h );
+  return r2 - 1.;
+}
+
+float
+hash31 (vec3 f)
+{
+  const uint mantissaMask = 0x007FFFFFu;
+  const uint one          = 0x3F800000u;
+
+  uint h = hash( floatBitsToUint( f ) );
+  h &= mantissaMask;
+  h |= one;
+
+  float  r2 = uintBitsToFloat( h );
+  return r2 - 1.;
+}
+
+float
+hash21 (vec2 f)
+{
+  const uint mantissaMask = 0x007FFFFFu;
+  const uint one          = 0x3F800000u;
+
+  uint h = hash( floatBitsToUint( f ) );
+  h &= mantissaMask;
+  h |= one;
+
+  float  r2 = uintBitsToFloat( h );
+  return r2 - 1.;
+}
+
+vec3
+convertCoord (vec2 p)
+{
+  p = mod(floor(p), cubeMapRes); 
+
+  float i = p.x + p.y*cubeMapRes;
+
+  return mod(vec3(i, floor(i/wrap), floor(i/(wrap*wrap))), wrap);
+}
+
+vec2
+convertCoord (vec3 p)
+{
+  p = mod(floor(p), wrap);
+
+  float i = p.x + (p.y + p.z*wrap)*wrap;
+
+  return mod(vec2(i, floor(i/cubeMapRes)), cubeMapRes);
+}
+
+const vec3[6] e = vec3[6](vec3(-1, 0, 0), vec3(1, 0, 0), vec3(0, -1, 0), vec3(0, 1, 0),
+                          vec3(0, 0, -1), vec3(0, 0, 1));
+ 
+vec3
+indexToDir (float i)
+{
+  return e[int(i)]; 
+}
+
+float
+dirToIndex (vec3 p)
+{
+  for(int i = 0; i<6; i++)
+    if(p == e[i])
+      return float(i);
+
+  return 0.;
+}
+
+float
+rndDirIndex (vec4 ut)
+{
+  return mod(floor(96.*hash41(ut)), 6.);
+}
+
+float
+rndDirIndex (vec4 ut, float maxM)
+{
+  return mod(floor(72.*hash41(ut)), maxM);
+}
+
+vec3
+rndDir (vec4 u)
+{
+  return indexToDir(rndDirIndex(u));
+}
+
+vec3
+rndDir (vec4 u, float maxM)
+{
+  return indexToDir(rndDirIndex(u, maxM));
+}
+
+float
+sBoxS (vec2 p, vec2 b, float sf)
+{
+  p = abs(p) - b + sf;
+
+  return length(max(p, 0.)) + min(max(p.x, p.y), 0.) - sf;
+}
+
+const float PI = 3.14159265;
+
+float
+D_GGX (float NoH, float roughness)
+{
+  float alpha = pow(roughness, 4.);
+  float b = (NoH*NoH*(alpha - 1.) + 1.);
+
+  return alpha/(PI*b*b);
+}
+
+float
+G1_GGX_Schlick (float NoV, float roughness)
+{
+  float r = .5 + .5*roughness;
+  float k = (r*r)/2.;
+  float denom = NoV*(1. - k) + k;
+
+  return max(NoV, .001)/denom;
+}
+
+float
+G_Smith (float NoV, float NoL, float roughness)
+{
+  float g1_l = G1_GGX_Schlick(NoL, roughness);
+  float g1_v = G1_GGX_Schlick(NoV, roughness);
+
+  return g1_l*g1_v;
+}
+
+vec3
+BRDF (vec3 col, vec3 n, vec3 l, vec3 v, float type, float rough, float fresRef)
+{
+  vec3 h = normalize(v + l);
+
+  float nv = clamp(dot(n, v), 0., 1.);
+  float nl = clamp(dot(n, l), 0., 1.);
+  float nh = clamp(dot(n, h), 0., 1.);
+  float vh = clamp(dot(v, h), 0., 1.);  
+
+  vec3 f0 = vec3(.16*(fresRef*fresRef)); 
+
+  f0 = mix(f0, col, type);
+  vec3 F = f0 + (1. - f0)*pow(1. - vh, 5.);
+
+  float D = D_GGX(nh, rough); 
+
+  float G = G_Smith(nv, nl, rough); 
+
+  vec3 spec = F*D*G/(4.*max(nv, .001));
+
+  vec3 diff = vec3(nl);
+  diff *= 1. - F;
+  diff *= (1. - type);
+
+  return (col*diff + spec*PI);
+}
+
+vec4
+Truchet (vec2 p, vec3 cellID, float faceID, inout vec2 scl)
+{
+  vec2 oP = p;
+
+  vec2 oScl = scl;
+  vec2 id2 = floor(p/scl) + .5;
+  p -= (id2)*scl;
+
+  vec3 id3 = cellID + vec3(id2/12., faceID/12.);
+
+  int divN = 0;
+  if(hash31(id3 + .09)<.5)
+  {
+    scl /= 2.; 
+    p = oP;
+    id2 = floor(p/scl) + .5;
+
+    p -= (id2)*scl;
+
+    id3 = cellID + vec3(id2/12., faceID/12.);
+
+    divN++;
+  }
+
+  if(hash31(id3 + .42)<.5)
+    p = p.yx*vec2(-1, 1);
+
+  vec2 dd = vec2(1e5);
+
+  if(hash31(id3 + .12)<.65)
+  {
+    if(hash31(id3 + .19)<.65)
+    {
+      dd.x = length(p - scl/2.);
+      dd.x = abs(dd.x - scl.x/2.);
+    }
+    else
+    {
+      dd.x = length(p - vec2(1, 0)*scl/2.);
+      dd.x = min(dd.x, length(p - vec2(0, 1)*scl/2.));
+    }
+
+    if(hash31(id3 + .21)<.65)
+    {
+      dd.y = length(p + scl/2.);
+      dd.y = abs(dd.y - scl.y/2.);
+    }
+    else
+    {
+      dd.y = length(p - vec2(-1, 0)*scl/2.);
+      dd.y = min(dd.y, length(p - vec2(0, -1)*scl/2.));
+    }  
+  }
+  else
+  {
+    if(hash31(id3 + .13)<.65)
+      dd.x = abs(p.y);
+    else
+    {
+      dd.x = length(p - vec2(-1, 0)*scl/2.);
+      dd.x = min(dd.x, length(p - vec2(1, 0)*scl/2.));
+    }
+
+    if(hash31(id3 + .14)<.65)
+      dd.y = abs(p.x);
+    else
+    {
+      dd.y = length(p - vec2(0, -1)*scl/2.);
+      dd.y = min(dd.y, length(p - vec2(0, 1)*scl/2.));
+    }
+  }
+
+  float lNum = 12./oScl.x;
+  float offs = divN==0? .5 : .5;
+  vec2 pat = (abs(fract(dd*lNum + offs) - .5) - .2)/lNum;
+
+  if(divN == 0)
+    dd = abs(dd - .25*scl.x);
+
+  dd.xy -= .24/2.*oScl;
+
+  if(hash31(id3 + .15)<.5)
+  {
+    dd = dd.yx;
+    pat = pat.yx;
+  }
+
+  return vec4(dd, pat);  
+}
+// glut_963_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform int iFrame;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+uniform samplerCube iChannel3;
+
+#define FAR 20.
+
+//#define GOLD
+
+float objID;
+
+mat2 rot2 (float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+vec3
+tex3D (sampler2D tex, vec3 p, vec3 n)
+{
+  n = max(n*n - .2, .001);
+  n /= dot(n, vec3(1));
+
+  vec3 tx = texture(tex, p.yz).xyz;
+  vec3 ty = texture(tex, p.zx).xyz;
+  vec3 tz = texture(tex, p.xy).xyz;
+
+  return mat3(tx*tx, ty*ty, tz*tz)*n;
+}
+
+vec3
+getTex (sampler2D iCh, vec2 p)
+{
+  vec3 tx = texture(iCh, p).xyz;
+
+  return tx*tx;
+}
+
+vec4
+cubeMap (vec3 p)
+{
+  vec3 f = abs(p); f = step(f.zxy, f)*step(f.yzx, f); 
+
+  ivec3 idF = ivec3(step(0., p))*2 - 1;
+  ivec3 faceID = (idF + 1)/2 + ivec3(0, 2, 4);
+
+  return f.x>.5? vec4(p.yz/p.x/2. + .5, idF.x, faceID.x) : 
+         f.y>.5? vec4(p.xz/p.y/2. + .5, idF.y, faceID.y) : 
+                 vec4(p.xy/p.z/2. + .5, idF.z, faceID.z);
+}
+
+float
+sBoxS (vec3 p, vec3 b, float sf)
+{
+  p = abs(p) - b + sf;
+
+  return min(max(p.x, max(p.y, p.z)), 0.) + length(max(p, 0.)) - sf;
+}
+
+vec4 gCell;
+vec3 gTmDir;
+vec3 gID3;
+
+vec3
+getAutomata (vec3 p, inout vec3 sc)
+{
+  vec2 uv = convertCoord(mod(floor(p/sc), wrap));
+  vec4 cell = texelFetch(iChannel0, ivec2(uv), 0);
+
+  cell.z = smoothstep(.15, .85, cell.z); 
+  float tm = mix(cell.z, 1. - cell.z, cell.w);
+
+  vec3 iq = mod(vec3(cell.x, floor(cell.x/wrap), floor(cell.x/(wrap*wrap))), wrap);
+
+  vec3 q = mod(p, sc) -.5*sc; 
+
+  vec3 dir = indexToDir(cell.y);
+
+  gCell = cell;
+
+  gTmDir = tm*dir*sc;
+
+  gID3 = iq*sc;
+
+  return q;
+}
+
+vec3 gDir;
+vec3 gRd;
+float gCD;
+vec3 gSc; 
+vec3 gP;
+
+vec4
+blocks (vec3 q3)
+{
+  vec3 sc = vec3(1./16.);
+
+  vec3 p = getAutomata(q3, sc);
+  vec3 id3 = gID3;
+
+  vec3 rC = (gDir*sc - vec3(p))/gRd;
+
+  gCD = max(min(min(rC.x, rC.y), rC.z), 0.) + .0015;
+
+  sc -= .005;
+
+  p -= gTmDir;
+
+  float d = sBoxS(p, sc/2., .05*sc.x);
+
+  if(gCell.z==1. && gCell.w == 0.)
+    d = 1e5;
+
+  if(floor(q3.z) != -1.)
+    d = 1e5; 
+
+  gSc = sc;
+  gP = p;
+
+  return vec4(d, id3);
+}
+
+vec4 gID, svGID;
+
+float
+map (vec3 p)
+{
+  float fl = -p.z - .5;
+
+  vec4 d4 = blocks(p);
+  gID = d4;
+
+  objID = fl<d4.x? 1. : 0.;
+
+  return  min(fl, d4.x);
+}
+
+float
+trace (vec3 ro, vec3 rd)
+{
+  float d, t = 0.;
+
+  gDir = step(0., rd) - .5;
+  gRd = rd; 
+
+  int i;
+  const int iMax = 128;
+  for (i = min(iFrame, 0); i<iMax; i++)
+  {
+    d = map(ro + rd*t);       
+
+    if(abs(d)<.001 || t>FAR)
+      break;
+
+    t += min(d*.9, gCD); 
+  }
+
+  return min(t, FAR);
+}
+
+vec3
+getNormal (vec3 p, float t)
+{
+  const vec2 e = vec2(.001, 0);
+
+  float sgn = 1.;
+  float mp[6];
+  vec3[3] e6 = vec3[3](e.xyy, e.yxy, e.yyx);
+  for(int i = min(iFrame, 0); i<6; i++)
+  {
+    mp[i] = map(p + sgn*e6[i/2]);
+    sgn = -sgn;
+    if(sgn>2.)
+      break;
+  }
+
+  return normalize(vec3(mp[0] - mp[1], mp[2] - mp[3], mp[4] - mp[5]));
+}
+
+float
+softShadow (vec3 ro, vec3 lp, vec3 n, float k)
+{
+  const int maxIterationsShad = 64; 
+
+  ro += n*.0015;
+  vec3 rd = lp - ro;
+
+  float shade = 1.;
+  float t = 0.; 
+  float end = max(length(rd), 0.0001);
+
+  rd /= end;
+
+  gDir = step(0., rd) - .5;
+  gRd = rd;
+
+  for (int i = min(iFrame, 0); i<maxIterationsShad; i++)
+  {
+    float d = map(ro + rd*t);
+
+    shade = min(shade, k*d/t);
+
+    t += clamp(min(d*.9, gCD), .01, .25); 
+
+    if (d<0. || t>end)
+      break;
+  }
+
+  return max(shade, 0.); 
+}
+
+float
+calcAO (vec3 p, vec3 n)
+{
+  float sca = 2., occ = 0.;
+  for(int i = 0; i<5; i++)
+  {
+    float hr = float(i + 1)*.125/5.;        
+    float d = map(p + n*hr);
+    occ += (hr - d)*sca;
+    sca *= .7;
+  }
+
+  return clamp(1. - occ, 0., 1.);    
+}
+
+float
+bumpSurf3D (vec3 p, vec3 n)
+{
+  vec3 id3 = svGID.yzw;
+  vec4 c4 = cubeMap(p);
+  vec2 tuv = c4.xy;
+  float faceID = c4.w;
+
+  vec2 oTuv = tuv;
+
+  vec2 scl = vec2(1);
+  vec2 oScl = scl;
+
+  vec4 d = Truchet(tuv, id3, faceID, scl);
+
+  float ew2 = .03*oScl.x;
+  float sf2 = .02*oScl.x;
+
+  float objCol = (.25);
+
+  d.xy -= ew2*2.;
+
+  vec2 sh = max(-d.xy/oScl.x*4., 0.);
+  sh = smoothstep(0., .65, sh);
+
+  for(int i = 0; i<2; i++)
+  {
+
+    float lnCol = mix(.5, .35, 1. - smoothstep(0., sf2, d[i + 2]));
+
+    lnCol *= .25 + sh[i]*.75;
+
+    objCol = mix(objCol, 0., (1. - smoothstep(0., sf2*4., d[i]))*.5);
+    objCol = mix(objCol, 0., 1. - smoothstep(0., sf2, d[i]));
+    objCol = mix(objCol, lnCol, 1. - smoothstep(0., sf2, d[i] + ew2));
+  }  
+
+  return objCol;
+}
+
+vec3
+doBumpMap (vec3 p, vec3 n, float bumpfactor)
+{
+  const vec2 e = vec2(.001, 0);  
+    
+  mat4x3 p4 = mat4x3(p, p - e.xyy, p - e.yxy, p - e.yyx);
+
+  vec4 b4;
+  for(int i = min(iFrame, 0); i<4; i++)
+  {
+    b4[i] = bumpSurf3D(p4[i], n);
+    if(n.x>1e5)
+      break;
+  }
+
+  vec3 grad = (b4.yzw - b4.x)/e.x; 
+
+  grad -= n*dot(n, grad);          
+
+  return normalize(n + grad*bumpfactor);
+}
+
+void
+main ()
+{
+  vec2 uv = (gl_FragCoord.xy - iResolution*.5)/iResolution.y;
+
+  vec3 lk = vec3(iTime/32., .036, -1);
+  vec3 ro = lk + vec3(-.04, .12, -.3);
+
+  vec3 lp = ro + vec3(1, .38, -.5);
+
+  float FOV = 3.14159/3.;
+  vec3 fwd = normalize(lk - ro);
+  vec3 rgt = normalize(vec3(fwd.z, 0., -fwd.x ));
+  vec3 up = cross(fwd, rgt); 
+
+  vec3 rd = normalize(uv.x*rgt + uv.y*up + fwd/FOV);
+
+  rd = normalize(vec3(rd.xy, sqrt(max(rd.z*rd.z - dot(rd.xy, rd.xy)*.125, 0.))));
+
+  rd.xy *= rot2(-.02);
+
+  /*
+  if(iMouse.z>1.)
+  {
+    rd.yz *= rot2(-(iMouse.y - iResolution.y*.5)/iResolution.y*3.1459);  
+    rd.xz *= rot2(-(iMouse.x - iResolution.x*.5)/iResolution.x*3.1459);  
+  } 
+  */
+
+  float t = trace(ro, rd);
+
+  svGID = gID;
+
+  float svObjID = objID;
+
+  vec3 svSc = gSc;
+  vec3 svP = gP;
+
+  vec3 svDir = gTmDir;
+
+  vec3 col = vec3(0);
+
+  if(t < FAR)
+  {
+    vec3 sp = ro + rd*t;
+
+    vec3 sn = getNormal(sp, t);
+
+    vec3 ld = lp - sp;
+
+    float lDist = max(length(ld), .001);
+    ld /= lDist;
+
+    vec3 objCol; 
+
+    vec3 svTx;
+
+    if(svObjID<.5)
+    {
+      vec3 txP = svP;
+
+      vec3 id3 = svGID.yzw;
+
+      vec2 id2 = convertCoord(floor(id3/svSc.x));
+      vec3 col1 = getTex(iChannel1, id2*svSc.x/2.);
+      col1 = smoothstep(.0, .5, col1);
+
+      vec3 col2 = getTex(iChannel2, id2*svSc.x/2.);
+      col2 = smoothstep(-.1, .35, col2);
+
+      vec3 tx1 = tex3D(iChannel1, (id3 + txP)*2., sn);
+      vec3 tx2 = tex3D(iChannel1, (id3 + txP)*4., sn);
+      tx1 = smoothstep(.0, .5, tx1);
+
+      objCol = (hash31(id3 + .22)<.333)? col2 : col1;
+
+      objCol *= vec3(1.5, 1.25, 1)*(tx2*3. + .25);
+#ifdef GOLD 
+      objCol = vec3(.3 + hash31(id3 + .51)*.4);
+      if(hash31(id3 + .21)<1.5)
+        objCol = .5 + .45*cos(6.2831853*hash31(id3 + .32)/8. + vec3(0, 1.2, 2) + .25);
+      objCol *= vec3(1, 1.1, 1.2);
+      objCol *= (tx2*3. + .25);
+#endif
+
+      vec4 c4 = cubeMap(svP);
+      vec2 tuv = c4.xy;
+      float faceID = c4.w;
+
+      vec2 oTuv = tuv;
+
+      vec2 scl = vec2(1);
+      vec2 oScl = scl;
+
+      vec4 d = Truchet(tuv, id3, faceID, scl);
+
+      float ew2 = .03*oScl.x;
+      float sf2 = .01*oScl.x;
+
+      objCol = mix(objCol, objCol/(1./3. + dot(objCol, vec3(.299, .587, .114))), .5);
+
+      vec3 svCol = objCol;
+      objCol /= 2.;
+
+      d.xy -= ew2*2.;
+
+      vec2 sh = max(-d.xy/oScl.x*4., 0.);
+      sh = smoothstep(0., .65, sh);
+
+      for(int i = 0; i<2; i++)
+      {
+        vec3 lnCol = svCol*1.;
+        lnCol = mix(lnCol, svCol*.25, 1. - smoothstep(0., sf2, d[i + 2]));
+
+        lnCol *= .75 + sh[i]*.5;
+
+        objCol = mix(objCol, vec3(0), (1. - smoothstep(0., sf2*8., d[i]))*.5);
+        objCol = mix(objCol, svCol*.125, 1. - smoothstep(0., sf2, d[i]));
+        objCol = mix(objCol, lnCol, 1. - smoothstep(0., sf2, d[i] + ew2));
+      }
+
+      sn = doBumpMap(svP, sn, .003);
+
+      svTx = (id3 + txP)*2.;
+    }
+    else
+    {
+      vec3 tx = tex3D(iChannel1, sp*4., sn);
+      objCol = vec3(1.5, 1.25, 1)*(tx*3. + .05)/2.;
+
+      svTx = sp*4.;
+    }
+
+    float sh = softShadow(sp, lp, sn, 16.);
+    float ao = calcAO(sp, sn);
+
+    float atten = 1./(1. + lDist*.05);
+
+    float roughness = min(dot(objCol, vec3(.299, .587, .114))*.75 + .15, 1.);
+    float reflectance = .5;
+    float matType = 1.;
+
+    // cheap specular reflections
+    float speR = pow(max(dot(normalize(ld - rd), sn), 0.), 5.);
+    vec3 rf = reflect(rd, sn);
+    vec3 rTx = texture(iChannel3, rf.xzy*vec3(1, -1, -1)).xyz; rTx *= rTx;
+    float spF = 2.;
+    objCol = objCol + objCol*speR*rTx*spF;
+
+    float am = length(sin(sn*2.)*.5 + .5)/sqrt(3.)*smoothstep(-1., 1., -sn.z);
+
+    vec3 ct = BRDF(objCol, sn, ld, -rd, matType, roughness, reflectance);
+
+    col = (objCol*am*(sh*.5 + .5) + ct*(sh));        
+
+    col *= ao*atten;
+  }
+
+  col = mix(col, vec3(1), smoothstep(.25, .9, t/FAR));
+
+  col = col/(1. + col/3.);
+
+  gl_FragColor = vec4(sqrt(max(col, 0.)), 1);
+}
