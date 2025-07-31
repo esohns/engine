@@ -1,0 +1,31 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform vec4 iMouse;
+uniform sampler2D iChannel2;
+
+vec2 R;
+
+vec4 C (vec2 U) {return texture(iChannel2,U/R);}
+
+void
+main ()
+{
+  vec4 Q;
+  vec2 U = gl_FragCoord.xy;
+
+  R = iResolution.xy;
+  vec2 M = iMouse.z>0.?iMouse.xy:0.5*R;
+  vec2 r = 2.*(U-M)/R.y;
+  r = r/sqrt(length(r));
+  Q = vec4(0);
+  for (float i = 1.; i < 10.; i++)
+  {
+    vec4 c = C(U-i*r);
+    Q += c*c*exp(-.2*i);
+  }
+
+  Q = mix(C(U),.8*Q*exp(-1.5*length(r)),.5);
+
+  gl_FragColor = Q;
+}

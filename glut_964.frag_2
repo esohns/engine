@@ -1,0 +1,39 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+vec4
+uTone (vec4 x)
+{
+  return ((x*(x*.6 + .1) + .004)/(x*(x*.6 + 1.)  + .06) - .0667)*1.933526;    
+}
+
+void
+main ()
+{
+  float maxRes = iResolution.y;
+  vec2 uv = gl_FragCoord.xy/iResolution;
+  if(iResolution.y>maxRes)
+    uv = (gl_FragCoord.xy/iResolution.xy - .5)*maxRes/iResolution.y + .5;
+
+  vec4 col = texture(iChannel0, uv);
+
+  float a = 1., w = 1.;
+  vec4 col2 = vec4(0);
+  for (int i = 0; i<6; i++)
+  {
+    vec2 jit = (texture(iChannel1, uv + float(i)/6. + fract(iTime)).xy - .5)/iResolution.y;
+    col2 += texture(iChannel0, uv + jit, float(i)/2.)*w;
+    a += w;
+  }
+  col2 /= a;
+
+  col += smoothstep(.3, 1., col2);
+
+  col = uTone(col); 
+
+  gl_FragColor = pow(max(col, 0.), vec4(1./2.2));
+}

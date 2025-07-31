@@ -1,0 +1,28 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+vec2 R;
+
+vec4 A (vec2 U) {return texture(iChannel0,U/R);}
+
+void
+main ()
+{
+  vec4 C;
+  vec2 U = gl_FragCoord.xy;
+
+  R = iResolution;
+  float n = A(U+vec2(0,1)).z,
+        e = A(U+vec2(1,0)).z,
+        s = A(U-vec2(0,1)).z,
+        w = A(U-vec2(1,0)).z;
+#define N 2.
+  for (float i = 0.; i < N; i++)
+    U -= A(U).xy/N;
+  C.xy = U;
+  C.zw = vec2(e-w,n-s);
+
+  gl_FragColor = C;
+}

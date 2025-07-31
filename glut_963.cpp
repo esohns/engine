@@ -260,11 +260,11 @@ engine_glut_963_draw (void)
 
   glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel0Loc,
                       static_cast<GLint> (1));
-  glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S2channel1Loc,
+  glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel1Loc,
                       static_cast<GLint> (0));
-  glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S2channel2Loc,
+  glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel2Loc,
                       static_cast<GLint> (5));
-  glProgramUniform1i (cb_data_p->shader1.id_, cb_data_p->S2channel3Loc,
+  glProgramUniform1i (cb_data_p->shader2.id_, cb_data_p->S2channel3Loc,
                       static_cast<GLint> (6));
 
   // draw render pass 2 to screen

@@ -61,6 +61,10 @@
 #include "glut_961.h"
 #include "glut_962.h"
 #include "glut_963.h"
+#include "glut_964.h"
+#include "glut_965.h"
+#include "glut_966.h"
+#include "glut_967.h"
 
 enum Engine_ModeType
 {
@@ -78,6 +82,10 @@ enum Engine_ModeType
   ENGINE_MODE_961,
   ENGINE_MODE_962,
   ENGINE_MODE_963,
+  ENGINE_MODE_964,
+  ENGINE_MODE_965,
+  ENGINE_MODE_966,
+  ENGINE_MODE_967,
   ////////////////////////////////////////
   ENGINE_MODE_MAX,
   ENGINE_MODE_INVALID
@@ -2006,8 +2014,8 @@ do_work (int argc_in,
       } // end IF
       cb_data_s.texture0.bind ();
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      //glGenerateMipmap (GL_TEXTURE_2D);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_2D);
 
       glActiveTexture (GL_TEXTURE1);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2161,6 +2169,795 @@ do_work (int argc_in,
 
       cb_data_s.shader1.reset ();
       cb_data_s.shader2.reset ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_964:
+    {
+      struct Engine_OpenGL_GLUT_964_CBData cb_data_s;
+
+      cb_data_s.S1resolutionLoc = -1;
+      cb_data_s.S1timeLoc = -1;
+      cb_data_s.S1frameLoc = -1;
+      cb_data_s.S1channel0Loc = -1;
+      cb_data_s.S1channel1Loc = -1;
+      cb_data_s.S1channel3Loc = -1;
+
+      cb_data_s.S2resolutionLoc = -1;
+      cb_data_s.S2timeLoc = -1;
+      cb_data_s.S2channel0Loc = -1;
+      cb_data_s.S2channel1Loc = -1;
+
+      cb_data_s.FBO1 = 0;
+
+      cb_data_s.VAO = 0;
+      cb_data_s.VBO = 0;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.mouseX = ENGINE_GLUT_964_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_964_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      //glutInitContextVersion (3, 3);
+      //glutInitContextProfile (GLUT_CORE_PROFILE);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_964_DEFAULT_WIDTH, ENGINE_GLUT_964_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 964");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      //glEnable (GL_TEXTURE_2D);
+      //glDisable (GL_DEPTH_TEST);
+      //glDisable (GL_BLEND);
+      ////glBlendFunc (GL_SRC_ALPHA, GL_DST_ALPHA);
+      //glEnable (GL_CULL_FACE);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_964_draw);
+      glutReshapeFunc (engine_glut_964_reshape);
+      glutVisibilityFunc (engine_glut_964_visible);
+
+      glutKeyboardFunc (engine_glut_964_key);
+      glutKeyboardUpFunc (engine_glut_964_key_up);
+      glutSpecialFunc (engine_glut_964_key_special);
+      glutSpecialUpFunc (engine_glut_964_key_special_up);
+
+      glutMouseFunc (engine_glut_964_mouse_button);
+      glutMotionFunc (engine_glut_964_mouse_move);
+      glutPassiveMotionFunc (engine_glut_964_mouse_move);
+
+      glutTimerFunc (100, engine_glut_964_timer, 0);
+
+      glutCreateMenu (engine_glut_964_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader1.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_964.vert"),
+                                           ACE_TEXT_ALWAYS_CHAR ("glut_964.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      if (!cb_data_s.shader2.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_964.vert"),
+                                           ACE_TEXT_ALWAYS_CHAR ("glut_964.frag_2")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+
+      glClampColor (GL_CLAMP_READ_COLOR, GL_FALSE);
+      glClampColor (GL_CLAMP_VERTEX_COLOR, GL_FALSE);
+      glClampColor (GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+      glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
+      glPixelStorei (GL_PACK_ALIGNMENT, 1);
+
+      glActiveTexture (GL_TEXTURE0);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      if (!cb_data_s.texture0.load (ACE_TEXT_ALWAYS_CHAR ("glut_964_S1channel0.jpg"), false))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load texture, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.texture0.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      //glGenerateMipmap (GL_TEXTURE_2D);
+
+      glActiveTexture (GL_TEXTURE1);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+      glGenTextures (1, &cb_data_s.textureS1.id_);
+      ACE_ASSERT (cb_data_s.textureS1.id_);
+      cb_data_s.textureS1.bind ();
+      std::vector<GLfloat> initial_values_a (ENGINE_GLUT_964_DEFAULT_WIDTH * ENGINE_GLUT_964_DEFAULT_HEIGHT * 4, 0.0f);
+      // *IMPORTANT NOTE*: generate a floating point-format texture to contain
+      //                   the result of shader1
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_964_DEFAULT_WIDTH, ENGINE_GLUT_964_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      //glGenerateMipmap (GL_TEXTURE_2D);
+
+      glActiveTexture (GL_TEXTURE5);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      if (!cb_data_s.texture5.load (ACE_TEXT_ALWAYS_CHAR ("glut_877_channel0.jpg"), false)) // *TODO*: use custom texture
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load texture, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.texture5.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_2D);
+
+      glActiveTexture (GL_TEXTURE6);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      if (!cb_data_s.texture6.load (ACE_TEXT_ALWAYS_CHAR ("glut_964_S2channel1.png"), false))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load texture, aborting\n")));
+        break;
+      } // end IF
+      cb_data_s.texture6.bind ();
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glGenerateMipmap (GL_TEXTURE_2D);
+
+      cb_data_s.shader1.use ();
+      cb_data_s.S1resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.S1resolutionLoc != -1);
+      cb_data_s.S1timeLoc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.S1timeLoc != -1);
+      cb_data_s.S1frameLoc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
+      ACE_ASSERT (cb_data_s.S1frameLoc != -1);
+      cb_data_s.S1channel0Loc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
+      ACE_ASSERT (cb_data_s.S1channel0Loc != -1);
+      cb_data_s.S1channel1Loc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
+      ACE_ASSERT (cb_data_s.S1channel1Loc != -1);
+      cb_data_s.S1channel3Loc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel3"));
+      ACE_ASSERT (cb_data_s.S1channel3Loc != -1);
+
+      cb_data_s.shader2.use ();
+      cb_data_s.S2resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.S2resolutionLoc != -1);
+      cb_data_s.S2timeLoc =
+        glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.S2timeLoc != -1);
+      cb_data_s.S2channel0Loc =
+        glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
+      ACE_ASSERT (cb_data_s.S2channel0Loc != -1);
+      cb_data_s.S2channel1Loc =
+        glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
+      ACE_ASSERT (cb_data_s.S2channel1Loc != -1);
+
+      glGenFramebuffers (1, &cb_data_s.FBO1);
+      ACE_ASSERT (cb_data_s.FBO1);
+      // draw render pass 1 to framebuffer object (--> textureS1)
+      glBindFramebuffer (GL_FRAMEBUFFER, cb_data_s.FBO1);
+      glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cb_data_s.textureS1.id_, 0);
+      ACE_ASSERT (glCheckFramebufferStatus (GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+      glBindFramebuffer (GL_FRAMEBUFFER, 0);
+
+      glGenVertexArrays (1, &cb_data_s.VAO);
+      ACE_ASSERT (cb_data_s.VAO);
+      glGenBuffers (1, &cb_data_s.VBO);
+      ACE_ASSERT (cb_data_s.VBO);
+
+      glBindVertexArray (cb_data_s.VAO);
+      GLfloat vertices_a[] =
+      {
+        // Triangle vertices (Texture Coordinates: 0,0 = bottom left... 1,1 = top right)
+        //-------------------------
+        -1.0f ,  1.0f, 0.0f,  0.0f, 1.0f, // left top ......... 0
+        -1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......1
+         1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........2
+ 
+         1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........3
+        -1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......4
+         1.0f , -1.0f, 0.0f,  1.0f, 0.0f, // right bottom ......5
+
+        // *WARNING*: GL_QUADS have been removed from core OpenGL 3.1 and above. see: https://www.khronos.org/opengl/wiki/Primitive#Quads
+        // Quad vertices (Texture Coordinates: 0,0 = bottom left... 1,1 = top right)
+        //-------------------------
+        //-1.0f, -1.0f, 0.0f,     0.0f, 0.0f, // left bottom        0
+        // 1.0f, -1.0f, 0.0f,     1.0f, 0.0f, // right bottom       1
+        // 1.0f,  1.0f, 0.0f,     1.0f, 1.0f, // right top          2
+        //-1.0f,  1.0f, 0.0f,     0.0f, 1.0f  // left top           4
+      };
+      glBindBuffer (GL_ARRAY_BUFFER, cb_data_s.VBO);
+      glBufferData (GL_ARRAY_BUFFER, sizeof (vertices_a), vertices_a, GL_STATIC_DRAW);
+
+      // position attribute
+      glEnableVertexAttribArray (0);
+      glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (GLfloat), (void*)NULL);
+      //// color attribute
+      //glVertexAttribPointer (2, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (GLfloat), (void*)(3 * sizeof (GLfloat)));
+      //glEnableVertexAttribArray (2);
+      // texture coord attribute
+      glEnableVertexAttribArray (1);
+      glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof (GLfloat), (void*)(3 * sizeof (GLfloat)));
+
+      glBindBuffer (GL_ARRAY_BUFFER, 0);
+      glBindVertexArray (0);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      glDeleteBuffers (1, &cb_data_s.VBO);
+      glDeleteVertexArrays (1, &cb_data_s.VAO);
+
+      glDeleteFramebuffers (1, &cb_data_s.FBO1);
+
+      cb_data_s.texture0.reset ();
+      cb_data_s.textureS1.reset ();
+      cb_data_s.texture5.reset ();
+      cb_data_s.texture6.reset ();
+
+      cb_data_s.shader1.reset ();
+      cb_data_s.shader2.reset ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_965:
+    {
+      struct Engine_OpenGL_GLUT_965_CBData cb_data_s;
+
+      cb_data_s.S1resolutionLoc = -1;
+      cb_data_s.S1timeLoc = -1;
+      cb_data_s.S1frameLoc = -1;
+      cb_data_s.S1channel0Loc = -1;
+      cb_data_s.S1channel1Loc = -1;
+      cb_data_s.S1channel3Loc = -1;
+
+      cb_data_s.S2resolutionLoc = -1;
+      cb_data_s.S2channel0Loc = -1;
+
+      cb_data_s.S3resolutionLoc = -1;
+      cb_data_s.S3channel1Loc = -1;
+      cb_data_s.S3channel2Loc = -1;
+
+      cb_data_s.S4resolutionLoc = -1;
+      cb_data_s.S4mouseLoc = -1;
+      cb_data_s.S4channel0Loc = -1;
+
+      cb_data_s.S5resolutionLoc = -1;
+      cb_data_s.S5mouseLoc = -1;
+      cb_data_s.S5channel2Loc = -1;
+
+      cb_data_s.FBO1 = 0;
+      cb_data_s.FBO2 = 0;
+      cb_data_s.FBO3 = 0;
+      cb_data_s.FBO4 = 0;
+
+      cb_data_s.VAO = 0;
+      cb_data_s.VBO = 0;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.mouseX = ENGINE_GLUT_965_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_965_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      //glutInitContextVersion (3, 3);
+      //glutInitContextProfile (GLUT_CORE_PROFILE);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_965_DEFAULT_WIDTH, ENGINE_GLUT_965_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 965");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                  ACE_TEXT ("using GLEW version: %s\n"),
+                  ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      //glEnable (GL_TEXTURE_2D);
+      //glDisable (GL_DEPTH_TEST);
+      //glDisable (GL_BLEND);
+      ////glBlendFunc (GL_SRC_ALPHA, GL_DST_ALPHA);
+      //glEnable (GL_CULL_FACE);
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+
+      glutDisplayFunc (engine_glut_965_draw);
+      glutReshapeFunc (engine_glut_965_reshape);
+      glutVisibilityFunc (engine_glut_965_visible);
+
+      glutKeyboardFunc (engine_glut_965_key);
+      glutKeyboardUpFunc (engine_glut_965_key_up);
+      glutSpecialFunc (engine_glut_965_key_special);
+      glutSpecialUpFunc (engine_glut_965_key_special_up);
+      glutMouseFunc (engine_glut_965_mouse_button);
+      glutMotionFunc (engine_glut_965_mouse_move);
+      glutPassiveMotionFunc (engine_glut_965_mouse_move);
+      glutTimerFunc (100, engine_glut_965_timer, 0);
+
+      glutCreateMenu (engine_glut_965_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader1.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_965.vert"),
+                                           ACE_TEXT_ALWAYS_CHAR ("glut_965.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      if (!cb_data_s.shader2.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_965.vert"),
+                                           ACE_TEXT_ALWAYS_CHAR ("glut_965.frag_2")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      if (!cb_data_s.shader3.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_965.vert"),
+                                           ACE_TEXT_ALWAYS_CHAR ("glut_965.frag_3")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      if (!cb_data_s.shader4.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_965.vert"),
+                                           ACE_TEXT_ALWAYS_CHAR ("glut_965.frag_4")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+      if (!cb_data_s.shader5.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_965.vert"),
+                                           ACE_TEXT_ALWAYS_CHAR ("glut_965.frag_5")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+
+      glClampColor (GL_CLAMP_READ_COLOR, GL_FALSE);
+      glClampColor (GL_CLAMP_VERTEX_COLOR, GL_FALSE);
+      glClampColor (GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+      glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
+      glPixelStorei (GL_PACK_ALIGNMENT, 1);
+
+      glActiveTexture (GL_TEXTURE1);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+      glGenTextures (1, &cb_data_s.textureS1.id_);
+      ACE_ASSERT (cb_data_s.textureS1.id_);
+      cb_data_s.textureS1.bind ();
+      std::vector<GLfloat> initial_values_a (ENGINE_GLUT_965_DEFAULT_WIDTH * ENGINE_GLUT_965_DEFAULT_HEIGHT * 4, 0.0f);
+      // *IMPORTANT NOTE*: generate a floating point-format texture to contain
+      //                   the result of shader1
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_965_DEFAULT_WIDTH, ENGINE_GLUT_965_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      //glGenerateMipmap (GL_TEXTURE_2D);
+
+      glActiveTexture (GL_TEXTURE2);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+      glGenTextures (1, &cb_data_s.textureS2.id_);
+      ACE_ASSERT (cb_data_s.textureS2.id_);
+      cb_data_s.textureS2.bind ();
+      // *IMPORTANT NOTE*: generate a floating point-format texture to contain
+      //                   the result of shader2
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_965_DEFAULT_WIDTH, ENGINE_GLUT_965_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      //glGenerateMipmap (GL_TEXTURE_2D);
+
+      glActiveTexture (GL_TEXTURE3);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+      glGenTextures (1, &cb_data_s.textureS3.id_);
+      ACE_ASSERT (cb_data_s.textureS3.id_);
+      cb_data_s.textureS3.bind ();
+      // *IMPORTANT NOTE*: generate a floating point-format texture to contain
+      //                   the result of shader3
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_965_DEFAULT_WIDTH, ENGINE_GLUT_965_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      //glGenerateMipmap (GL_TEXTURE_2D);
+
+      glActiveTexture (GL_TEXTURE4);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+      glGenTextures (1, &cb_data_s.textureS4.id_);
+      ACE_ASSERT (cb_data_s.textureS4.id_);
+      cb_data_s.textureS4.bind ();
+      // *IMPORTANT NOTE*: generate a floating point-format texture to contain
+      //                   the result of shader4
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA32F, ENGINE_GLUT_965_DEFAULT_WIDTH, ENGINE_GLUT_965_DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, initial_values_a.data ());
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      //glGenerateMipmap (GL_TEXTURE_2D);
+
+      cb_data_s.shader1.use ();
+      cb_data_s.S1resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.S1resolutionLoc != -1);
+      cb_data_s.S1timeLoc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.S1timeLoc != -1);
+      cb_data_s.S1frameLoc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iFrame"));
+      ACE_ASSERT (cb_data_s.S1frameLoc != -1);
+      cb_data_s.S1channel0Loc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
+      ACE_ASSERT (cb_data_s.S1channel0Loc != -1);
+      cb_data_s.S1channel1Loc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
+      ACE_ASSERT (cb_data_s.S1channel1Loc != -1);
+      cb_data_s.S1channel3Loc =
+        glGetUniformLocation (cb_data_s.shader1.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel3"));
+      ACE_ASSERT (cb_data_s.S1channel3Loc != -1);
+
+      cb_data_s.shader2.use ();
+      cb_data_s.S2resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.S2resolutionLoc != -1);
+      cb_data_s.S2channel0Loc =
+        glGetUniformLocation (cb_data_s.shader2.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
+      ACE_ASSERT (cb_data_s.S2channel0Loc != -1);
+
+      cb_data_s.shader3.use ();
+      cb_data_s.S3resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.S3resolutionLoc != -1);
+      cb_data_s.S3channel1Loc =
+        glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel1"));
+      ACE_ASSERT (cb_data_s.S3channel1Loc != -1);
+      cb_data_s.S3channel2Loc =
+        glGetUniformLocation (cb_data_s.shader3.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel2"));
+      ACE_ASSERT (cb_data_s.S3channel2Loc != -1);
+
+      cb_data_s.shader4.use ();
+      cb_data_s.S4resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.S4resolutionLoc != -1);
+      cb_data_s.S4mouseLoc =
+        glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iMouse"));
+      ACE_ASSERT (cb_data_s.S4mouseLoc != -1);
+      cb_data_s.S4channel0Loc =
+        glGetUniformLocation (cb_data_s.shader4.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
+      ACE_ASSERT (cb_data_s.S4channel0Loc != -1);
+
+      cb_data_s.shader5.use ();
+      cb_data_s.S5resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.S5resolutionLoc != -1);
+      cb_data_s.S5mouseLoc =
+        glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iMouse"));
+      ACE_ASSERT (cb_data_s.S5mouseLoc != -1);
+      cb_data_s.S5channel2Loc =
+        glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel2"));
+      ACE_ASSERT (cb_data_s.S5channel2Loc != -1);
+
+      glGenFramebuffers (1, &cb_data_s.FBO1);
+      ACE_ASSERT (cb_data_s.FBO1);
+      // draw render pass 1 to framebuffer object (--> textureS1)
+      glBindFramebuffer (GL_FRAMEBUFFER, cb_data_s.FBO1);
+      glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cb_data_s.textureS1.id_, 0);
+      ACE_ASSERT (glCheckFramebufferStatus (GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+      glBindFramebuffer (GL_FRAMEBUFFER, 0);
+
+      glGenFramebuffers (1, &cb_data_s.FBO2);
+      ACE_ASSERT (cb_data_s.FBO2);
+      // draw render pass 2 to framebuffer object (--> textureS2)
+      glBindFramebuffer (GL_FRAMEBUFFER, cb_data_s.FBO2);
+      glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cb_data_s.textureS2.id_, 0);
+      ACE_ASSERT (glCheckFramebufferStatus (GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+      glBindFramebuffer (GL_FRAMEBUFFER, 0);
+
+      glGenFramebuffers (1, &cb_data_s.FBO3);
+      ACE_ASSERT (cb_data_s.FBO3);
+      // draw render pass 3 to framebuffer object (--> textureS3)
+      glBindFramebuffer (GL_FRAMEBUFFER, cb_data_s.FBO3);
+      glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cb_data_s.textureS3.id_, 0);
+      ACE_ASSERT (glCheckFramebufferStatus (GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+      glBindFramebuffer (GL_FRAMEBUFFER, 0);
+
+      glGenFramebuffers (1, &cb_data_s.FBO4);
+      ACE_ASSERT (cb_data_s.FBO4);
+      // draw render pass 4 to framebuffer object (--> textureS4)
+      glBindFramebuffer (GL_FRAMEBUFFER, cb_data_s.FBO4);
+      glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cb_data_s.textureS4.id_, 0);
+      ACE_ASSERT (glCheckFramebufferStatus (GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+      glBindFramebuffer (GL_FRAMEBUFFER, 0);
+
+      glGenVertexArrays (1, &cb_data_s.VAO);
+      ACE_ASSERT (cb_data_s.VAO);
+      glGenBuffers (1, &cb_data_s.VBO);
+      ACE_ASSERT (cb_data_s.VBO);
+
+      glBindVertexArray (cb_data_s.VAO);
+      GLfloat vertices_a[] =
+      {
+        // Triangle vertices (Texture Coordinates: 0,0 = bottom left... 1,1 = top right)
+        //-------------------------
+        -1.0f ,  1.0f, 0.0f,  0.0f, 1.0f, // left top ......... 0
+        -1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......1
+         1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........2
+ 
+         1.0f ,  1.0f, 0.0f,  1.0f, 1.0f, // right top .........3
+        -1.0f , -1.0f, 0.0f,  0.0f, 0.0f, // left bottom .......4
+         1.0f , -1.0f, 0.0f,  1.0f, 0.0f, // right bottom ......5
+
+        // *WARNING*: GL_QUADS have been removed from core OpenGL 3.1 and above. see: https://www.khronos.org/opengl/wiki/Primitive#Quads
+        // Quad vertices (Texture Coordinates: 0,0 = bottom left... 1,1 = top right)
+        //-------------------------
+        //-1.0f, -1.0f, 0.0f,     0.0f, 0.0f, // left bottom        0
+        // 1.0f, -1.0f, 0.0f,     1.0f, 0.0f, // right bottom       1
+        // 1.0f,  1.0f, 0.0f,     1.0f, 1.0f, // right top          2
+        //-1.0f,  1.0f, 0.0f,     0.0f, 1.0f  // left top           4
+      };
+      glBindBuffer (GL_ARRAY_BUFFER, cb_data_s.VBO);
+      glBufferData (GL_ARRAY_BUFFER, sizeof (vertices_a), vertices_a, GL_STATIC_DRAW);
+
+      // position attribute
+      glEnableVertexAttribArray (0);
+      glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (GLfloat), (void*)NULL);
+      //// color attribute
+      //glVertexAttribPointer (2, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (GLfloat), (void*)(3 * sizeof (GLfloat)));
+      //glEnableVertexAttribArray (2);
+      // texture coord attribute
+      glEnableVertexAttribArray (1);
+      glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof (GLfloat), (void*)(3 * sizeof (GLfloat)));
+
+      glBindBuffer (GL_ARRAY_BUFFER, 0);
+      glBindVertexArray (0);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      glDeleteBuffers (1, &cb_data_s.VBO);
+      glDeleteVertexArrays (1, &cb_data_s.VAO);
+      glDeleteFramebuffers (1, &cb_data_s.FBO1);
+      glDeleteFramebuffers (1, &cb_data_s.FBO2);
+      glDeleteFramebuffers (1, &cb_data_s.FBO3);
+      glDeleteFramebuffers (1, &cb_data_s.FBO4);
+
+      cb_data_s.textureS1.reset ();
+      cb_data_s.textureS2.reset ();
+      cb_data_s.textureS3.reset ();
+      cb_data_s.textureS4.reset ();
+
+      cb_data_s.shader1.reset ();
+      cb_data_s.shader2.reset ();
+      cb_data_s.shader3.reset ();
+      cb_data_s.shader4.reset ();
+      cb_data_s.shader5.reset ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_966:
+    {
+      struct Engine_OpenGL_GLUT_966_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_966_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_966_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_966_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.mouseX = ENGINE_GLUT_966_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_966_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_966_DEFAULT_WIDTH, ENGINE_GLUT_966_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 966");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                 ACE_TEXT ("using GLEW version: %s\n"),
+                 ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_966_draw);
+      glutReshapeFunc (engine_glut_966_reshape);
+      glutVisibilityFunc (engine_glut_966_visible);
+
+      glutKeyboardFunc (engine_glut_966_key);
+      glutKeyboardUpFunc (engine_glut_966_key_up);
+      glutSpecialFunc (engine_glut_966_key_special);
+      glutMouseFunc (engine_glut_966_mouse_button);
+      glutMotionFunc (engine_glut_966_mouse_move);
+      glutPassiveMotionFunc (engine_glut_966_mouse_move);
+
+      glutTimerFunc (100, engine_glut_966_timer, 0);
+
+      glutCreateMenu (engine_glut_966_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_966.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_966.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+
+      cb_data_s.shader.use ();
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      cb_data_s.shader.reset ();
+
+      result = true;
+
+      break;
+    }
+    case ENGINE_MODE_967:
+    {
+      struct Engine_OpenGL_GLUT_967_CBData cb_data_s;
+
+      cb_data_s.scaleFactor = ENGINE_GLUT_967_DEFAULT_SCALE_FACTOR;
+      cb_data_s.columns = ENGINE_GLUT_967_DEFAULT_WIDTH / cb_data_s.scaleFactor;
+      cb_data_s.rows = ENGINE_GLUT_967_DEFAULT_HEIGHT / cb_data_s.scaleFactor;
+
+      cb_data_s.resolutionLoc = -1;
+      cb_data_s.timeLoc = -1;
+
+      cb_data_s.wireframe = false;
+
+      cb_data_s.mouseX = ENGINE_GLUT_967_DEFAULT_WIDTH / 2;
+      cb_data_s.mouseY = ENGINE_GLUT_967_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBPressed = false;
+
+      // initialize GLUT
+      glutInit (&argc_in, argv_in);
+      glutSetOption (GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+      glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+      glutInitWindowSize (ENGINE_GLUT_967_DEFAULT_WIDTH, ENGINE_GLUT_967_DEFAULT_HEIGHT);
+
+      int window_i = glutCreateWindow ("engine GLUT 967");
+      glutSetWindow (window_i);
+      glutSetWindowData (&cb_data_s);
+
+      // initialize GLEW
+      GLenum err = glewInit ();
+      if (GLEW_OK != err)
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to glewInit(): \"%s\", aborting\n"),
+                    ACE_TEXT (glewGetErrorString (err))));
+        break;
+      } // end IF
+      ACE_DEBUG ((LM_DEBUG,
+                 ACE_TEXT ("using GLEW version: %s\n"),
+                 ACE_TEXT (glewGetString (GLEW_VERSION))));
+
+      glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
+      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
+
+      glutDisplayFunc (engine_glut_967_draw);
+      glutReshapeFunc (engine_glut_967_reshape);
+      glutVisibilityFunc (engine_glut_967_visible);
+
+      glutKeyboardFunc (engine_glut_967_key);
+      glutKeyboardUpFunc (engine_glut_967_key_up);
+      glutSpecialFunc (engine_glut_967_key_special);
+      glutMouseFunc (engine_glut_967_mouse_button);
+      glutMotionFunc (engine_glut_967_mouse_move);
+      glutPassiveMotionFunc (engine_glut_967_mouse_move);
+
+      glutTimerFunc (100, engine_glut_967_timer, 0);
+
+      glutCreateMenu (engine_glut_967_menu);
+      glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
+
+      if (!cb_data_s.shader.loadFromFile (ACE_TEXT_ALWAYS_CHAR ("glut_967.vert"),
+                                          ACE_TEXT_ALWAYS_CHAR ("glut_967.frag")))
+      {
+        ACE_DEBUG ((LM_ERROR,
+                    ACE_TEXT ("failed to load shader, aborting\n")));
+        break;
+      } // end IF
+
+      cb_data_s.shader.use ();
+      cb_data_s.resolutionLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
+      ACE_ASSERT (cb_data_s.resolutionLoc != -1);
+      cb_data_s.timeLoc =
+        glGetUniformLocation (cb_data_s.shader.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
+      ACE_ASSERT (cb_data_s.timeLoc != -1);
+
+      // START TIMING
+      cb_data_s.tp1 = std::chrono::high_resolution_clock::now ();
+
+      glutMainLoop ();
+
+      cb_data_s.shader.reset ();
 
       result = true;
 
