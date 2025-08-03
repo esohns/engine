@@ -1,3 +1,5 @@
+#version 130
+
 // glut_970_common.glsl
 const float PI = 3.14159265358979323846;
 

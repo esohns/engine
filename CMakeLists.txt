@@ -2795,6 +2795,10 @@ set (engine_47_EXE_SRCS
      glut_972.h
      glut_973.cpp
      glut_973.h
+     glut_974.cpp
+     glut_974.h
+     glut_975.cpp
+     glut_975.h
      stdafx.h)
 
 set (EXECUTABLE_47 engine_47)
@@ -5557,6 +5561,11 @@ install (FILES
          "glut_973.vert"
          "glut_973.frag"
          "glut_973.frag_2"
+         "glut_974.vert"
+         "glut_974.frag"
+         "glut_974.frag_2"
+         "glut_975.vert"
+         "glut_975.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
