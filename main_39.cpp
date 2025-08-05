@@ -2959,7 +2959,7 @@ do_work (int argc_in,
 
       glutTimerFunc (100, engine_glut_828_timer, 0);
 
-      glutCreateMenu (engine_glut_823_menu);
+      glutCreateMenu (engine_glut_828_menu);
       glutAddMenuEntry (ACE_TEXT_ALWAYS_CHAR ("wireframe"), 0);
       glutAttachMenu (GLUT_RIGHT_BUTTON);
 

@@ -1,0 +1,54 @@
+#version 130
+
+// glut_977_common.glsl
+float
+hash (float x)
+{
+  return fract(x * 0.9125 + sin(x * 234.1412) * 231.612 + cos(x * 9151.524) * 12451.512);
+}
+
+float
+hash (vec3 x)
+{
+  float hz = hash(x.z * 6.1212);
+
+  return hash(hash(x.x * 0.92342 + hz * 23.612) + hash(x.y * 12.2352 + hz * 125.523));
+}
+
+const float a = 0.9;
+const float blend = 0.01;
+// glut_977_common.glsl
+
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+
+//#define fullExposure
+
+float
+clength (vec3 color)
+{
+  color = abs(color);
+
+  return max(max(color.x, color.y), color.z);
+}
+
+void
+main ()
+{
+#ifdef fullExposure
+  gl_FragColor.x = texelFetch(iChannel0, ivec2(gl_FragCoord.xy), 0).w;
+  gl_FragColor.y = texelFetch(iChannel1, ivec2(gl_FragCoord.xy), 0).w;
+  gl_FragColor.z = texelFetch(iChannel2, ivec2(gl_FragCoord.xy), 0).w;
+  gl_FragColor *= 0.2;
+#else
+  gl_FragColor.x = texelFetch(iChannel0, ivec2(gl_FragCoord.xy), 0).z;
+  gl_FragColor.y = texelFetch(iChannel1, ivec2(gl_FragCoord.xy), 0).z;
+  gl_FragColor.z = texelFetch(iChannel2, ivec2(gl_FragCoord.xy), 0).z;
+  gl_FragColor *= 250.;
+#endif
+  gl_FragColor.xyz = pow(gl_FragColor.xyz, vec3(1.5));
+  gl_FragColor.xyz = 1. - exp(-gl_FragColor.xyz * 2.0);
+  //gl_FragColor = 1.-exp(-gl_FragColor*0.02);
+  //gl_FragColor *= 20.;
+}

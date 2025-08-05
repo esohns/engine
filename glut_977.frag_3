@@ -1,0 +1,36 @@
+#version 130
+
+// glut_977_common.glsl
+float
+hash (float x)
+{
+  return fract(x * 0.9125 + sin(x * 234.1412) * 231.612 + cos(x * 9151.524) * 12451.512);
+}
+
+float
+hash (vec3 x)
+{
+  float hz = hash(x.z * 6.1212);
+
+  return hash(hash(x.x * 0.92342 + hz * 23.612) + hash(x.y * 12.2352 + hz * 125.523));
+}
+
+const float a = 0.9;
+const float blend = 0.01;
+// glut_977_common.glsl
+
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+const float k = 0.55;
+const float m = 0.01;
+
+void
+main ()
+{
+  float x = texelFetch(iChannel0, ivec2(gl_FragCoord.xy), 0).z;
+  vec4 old = texelFetch(iChannel1, ivec2(gl_FragCoord.xy), 0);
+  float acc = x - old.x*k;
+  
+  gl_FragColor = vec4(old.x * a + old.y + acc, old.y + acc, mix(old.z, abs(old.x), blend), old.w + abs(old.x));
+}
