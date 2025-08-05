@@ -15,7 +15,7 @@ calc (vec2 p, float time)
 
   vec2 c = vec2( -0.745, 0.186 ) - 0.045*zoom*(1.0-ltime*0.5);
 
-  p = (2.0*p-iResolution)/iResolution.y;
+  p = (2.0 * p - iResolution)/(iResolution.x / 2.0);
   vec2 z = cen + (p-cen)*zoom;
 
 #if 0
