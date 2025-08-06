@@ -1,0 +1,75 @@
+#version 130
+
+// glut_983_common.glsl
+const float g = 9.81;
+const float l1 = 0.5;
+const float l2 = 0.5;
+const float m1 = 1.0;
+const float m2 = 1.0;
+const float dt = 0.016;
+const vec2 origin = vec2(0.0, 0.3);
+
+float
+drawLine (vec2 uv, vec2 a, vec2 b, float thickness)
+{
+  vec2 pa = uv - a;
+  vec2 ba = b - a;
+  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+  float d = length(pa - ba * h);
+
+  return smoothstep(thickness, thickness * 0.5, d);
+}
+
+float
+drawCircle (vec2 uv, vec2 center, float radius)
+{
+  float dist = length(uv - center);
+
+  return smoothstep(radius, radius * 0.9, dist);
+}
+
+vec2
+getJoint (vec2 start, float len, float angle)
+{
+  return start + len * vec2(sin(angle), -cos(angle));
+}
+// glut_983_common.glsl
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy / iResolution;
+  vec2 tex = uv;
+
+  uv = uv * 2.0 - 1.0;
+  uv.x *= iResolution.x / iResolution.y;
+
+  vec4 state = texelFetch(iChannel0, ivec2(0, 0), 0);
+  float a1 = state.x;
+  float a2 = state.y;
+
+  vec2 joint1 = getJoint(origin, l1, a1);
+  vec2 joint2 = getJoint(joint1, l2, a2);
+
+  float l1_draw = drawLine(uv, origin, joint1, 0.01);
+  float l2_draw = drawLine(uv, joint1, joint2, 0.01);
+  float c0 = drawCircle(uv, origin, 0.04);
+  float c1 = drawCircle(uv, joint1, 0.04);
+  float c2 = drawCircle(uv, joint2, 0.04);
+
+  vec3 trail = texture(iChannel1, tex).rgb;
+
+  vec3 color = vec3(0.0);
+  color = mix(color, trail, 1.0);
+  color = mix(color, vec3(1.0), l1_draw);
+  color = mix(color, vec3(1.0), l2_draw);
+  color = mix(color, vec3(1.0), c0);
+  color = mix(color, vec3(0.0, 0.6, 1.0), c1);
+  color = mix(color, vec3(0.0, 0.6, 1.0), c2);
+
+  gl_FragColor = vec4(color, 1.0);
+}
