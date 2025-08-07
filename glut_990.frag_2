@@ -1,0 +1,82 @@
+#version 130
+
+// glut_990_common.glsl
+const float dissipation 	= 0.95;
+
+const float ballRadius		= 0.06;
+const float fogHeigth		= ballRadius * 2.;
+const int	nbSlice			= 32;
+const float fogSlice		= fogHeigth / float(nbSlice);
+const int	nbSphere 		= 3;
+const float ShadowDensity 	= 25.;
+const float FogDensity 		= 20.;
+
+const float tau =  radians(360.);
+
+vec2
+rotate (float angle, float radius)
+{
+  return vec2(cos(angle),-sin(angle)) * radius;
+}
+
+bool
+floorIntersect (vec3 ro, vec3 rd, float floorHeight, out float t)
+{
+  ro.y -= floorHeight;
+  if(rd.y < -0.01)
+  {
+    t = ro.y / - rd.y;
+    return true;
+  }
+
+  return false;
+} 
+
+vec2
+sphIntersect (vec3 ro, vec3 rd, vec3 ce, float ra)
+{
+  vec3 oc = ro - ce;
+  float b = dot( oc, rd );
+  float c = dot( oc, oc ) - ra*ra;
+  float h = b*b - c;
+  if ( h<0.0 ) return vec2(-1.0);
+  h = sqrt( h );
+
+  return vec2( -b-h, -b+h );
+}
+
+vec2
+boxIntersection (vec3 ro, vec3 rd, vec3 rad, vec3 center, out vec3 oN)
+{
+  ro -= center;
+  vec3 m = 1.0/rd;
+  vec3 n = m*ro;
+  vec3 k = abs(m)*rad;
+  vec3 t1 = -n - k;
+  vec3 t2 = -n + k;
+
+  float tN = max( max( t1.x, t1.y ), t1.z );
+  float tF = min( min( t2.x, t2.y ), t2.z );
+
+  if( tN>tF || tF<0.0) return vec2(-1.0);
+
+  oN = -sign(rd)*step(t1.yzx,t1.xyz)*step(t1.zxy,t1.xyz);
+
+  return vec2( tN, tF );
+}
+// glut_990_common.glsl
+
+uniform sampler2D iChannel0;
+
+void
+main ()
+{
+  ivec2 icoord = ivec2(gl_FragCoord.xy);
+  float vel_x_left	= texelFetch(iChannel0, icoord + ivec2(-1,  0) , 0).x;
+  float vel_x_right	= texelFetch(iChannel0, icoord + ivec2( 1,  0) , 0).x;
+  float vel_y_bottom	= texelFetch(iChannel0, icoord + ivec2( 0, -1) , 0).y;
+  float vel_y_top		= texelFetch(iChannel0, icoord + ivec2( 0,  1) , 0).y;
+  float divergence	= (vel_x_right - vel_x_left + vel_y_top - vel_y_bottom) * 0.5;
+
+  gl_FragColor = vec4(divergence,vec3(1));
+}
