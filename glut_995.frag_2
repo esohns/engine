@@ -1,0 +1,42 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform sampler2D iChannel0;
+
+float hash21 (vec2 p) { return fract(sin(dot(p, vec2(27.619, 57.583)))*43758.5453); }
+
+vec4
+bloom (sampler2D iCh, vec2 uv)
+{
+	vec4 tot = vec4(0);
+
+  const float focD = 2.5, coc = 1.;
+
+  float l = abs(texture(iCh, uv).w - focD - coc) - coc;
+
+  float r = clamp(l/coc, 0., 1.);
+
+  const int n = 4;
+  for (int j = -n; j<=n; j++)
+    for (int i = -n; i<=n; i++)
+    {
+      vec2 rnd2 = vec2(hash21(vec2(i, j)), hash21(vec2(i, j) + .1)*6.2831);
+      vec2 offs = float(n)*rnd2.x*vec2(cos(rnd2.y), sin(rnd2.y));
+            
+      vec4 c = texture(iCh, uv + offs/vec2(800, 450)*r, r*iResolution.y/450.*.7); 
+      tot += mix(c, pow(c, vec4(1.25))*3.4, rnd2.x*rnd2.x);
+    }
+
+	return tot/float((n*2 + 1)*(n*2 + 1));
+}
+
+void
+main ()
+{
+  vec2 uv = gl_FragCoord.xy/iResolution;
+  vec4 col;
+//  col = texture(iChannel0, uv);
+  col = bloom(iChannel0, uv);
+
+  gl_FragColor = pow(max(col, 0.), vec4(1./2.2));
+}
