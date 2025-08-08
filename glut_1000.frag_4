@@ -1,0 +1,212 @@
+#version 130
+
+// glut_1000_common.glsl
+struct ColorTheme
+{
+  vec3 colorX;
+  vec3 colorY;
+  vec3 colorZ;
+  vec3 diffuseColor;
+  vec3 specularColor;
+  vec3 lightDirection;
+  float specularPower;
+  float lightIntensity;
+};
+
+#define KERNEL_CONVOLUTION_SIZE_HIGH 6.0
+
+#define uAntiAliasingLevel 4
+
+#define uMouseAngle 5.0
+#define uMouseFactor -0.2
+#define uMouseScale 10.0
+
+#define uRotationAngle 1.5
+#define uRotationIntensity 0.4
+
+#define uTimeStart 7.5
+#define uThemeVariationSpeed 0.05
+#define uNormalDirection 1.0
+
+#define uBufferMove iChannel0
+#define uBufferProp iChannel1
+#define uBufferNorm iChannel2
+#define uBufferTrail iChannel3
+
+#define getMove(coord) texture(uBufferMove,(coord)/iResolution)
+#define getProp(coord) texture(uBufferProp,(coord)/iResolution)
+#define getNorm(coord) texture(uBufferNorm,(coord)/iResolution)
+#define getTrail(coord) texture(uBufferTrail,(coord)/iResolution)
+
+const int uKernelRadius = 6;
+const float normKernRad = 3.0 / float(uKernelRadius);
+
+const vec2 RESET_ACTION_CELL = vec2(0,0);
+const vec2 DRAW_MODE_ACTION_CELL = vec2(1,0);
+const vec2 THEME_MODE_ACTION_CELL = vec2(2,0);
+const vec2 CURRENT_THEME_CELL = vec2(3,0);
+
+const int KEY_RESET_VIEW   = 32; // Space Key : Reset canvas and animation
+const int KEY_DRAW_MODE    = 68; // D key     : switching between auto/free draw mode
+const int KEY_THEME_MODE   = 82; // R key     : switching between auto/select theme mode
+const int KEY_SWITCH_THEME = 84; // T key     : switch all available themes
+
+const int ThemesCount = 3;
+const ColorTheme[] THEMES_ARRAY = ColorTheme[] (
+  ColorTheme(
+    vec3(0,1,0),
+    vec3(0,0,1),
+    vec3(1,1,1),
+    vec3(0.6,0.6,0),            
+    vec3(0.3,0.6,0.8),         
+    vec3(0.1,-1.0,0.5),       
+    8.0,        
+    0.6
+  ),
+  ColorTheme(
+    vec3(1,1,1),
+    vec3(0,0.4,1),
+    vec3(0.6,0.9,1.0),
+    vec3(1.0,0.3,0.1),            
+    vec3(0.3,0.6,0.8),         
+    vec3(0.1,-1.0,0.5),       
+    8.0,        
+    0.6       
+  ),
+  ColorTheme(
+    vec3(0,1,0),
+    vec3(1,1,1),
+    vec3(1,1,1),
+    vec3(0.2,1.0,0.2),             
+    vec3(0.3,0.6,0.8),        
+    vec3(0.1,-1.0,0.5),       
+    8.0,        
+    0.6       
+  )
+);
+
+bool isInside (vec2 p, vec2 c) { vec2 d = abs(p-0.5-c) - 0.5; return (-max(d.x,d.y) > 0.0); }
+
+vec2
+rotateVector (vec2 vector_, float angleInRadians)
+{
+  float cosAngle = cos(angleInRadians);
+  float sinAngle = sin(angleInRadians);
+  return vec2(
+    vector_.x * cosAngle - vector_.y * sinAngle,
+    vector_.x * sinAngle + vector_.y * cosAngle
+  );
+}                           
+
+float
+getGaussWeight (vec2 p, float k)
+{
+  return exp(k-dot(p, p));
+}
+
+ColorTheme
+mixColorTheme (ColorTheme a, ColorTheme b, float ratio)
+{
+  ColorTheme ret;
+  ret.colorX = mix(a.colorX, b.colorX, vec3(ratio));
+  ret.colorY = mix(a.colorY, b.colorY, vec3(ratio));
+  ret.colorZ = mix(a.colorZ, b.colorZ, vec3(ratio));
+  ret.diffuseColor = mix(a.diffuseColor, b.diffuseColor, vec3(ratio));
+  ret.specularColor = mix(a.specularColor, b.specularColor, vec3(ratio));
+  ret.lightDirection = mix(a.lightDirection, b.lightDirection, vec3(ratio));
+  ret.specularPower = mix(a.specularPower, b.specularPower, ratio);
+  ret.lightIntensity = mix(a.lightIntensity, b.lightIntensity, ratio);
+
+  return ret;
+}
+
+float
+getThemeMixingRatio (float time)
+{
+  float lim = max(float(ThemesCount - 0), 1.0);
+  time = (time * uThemeVariationSpeed - lim * 3.14159 / 2.0) / lim;
+
+  return (sin(time) * 0.5 + 0.5) * lim;
+}
+// glut_1000_common.glsl
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform int iFrame;
+uniform vec4 iMouse;
+uniform bvec4 iKeyboard; // space, d, r, t
+uniform sampler2D iChannel2;
+uniform sampler2D iChannel3;
+
+vec4 loadValue (vec2 re) { return texture( uBufferTrail, (0.5+re) / iResolution, -100.0 ); }
+
+vec2
+injectAtPos (vec2 g, vec2 p)
+{
+	vec2 mouseForce = (51.0-clamp(uMouseScale, 0.0, 50.0))*(g-p)/iResolution.y;
+	float a = uMouseAngle;
+	mouseForce *= mat2(cos(a),-sin(a), sin(a),cos(a));
+
+	return mouseForce * getGaussWeight(mouseForce, 0.0) * uMouseFactor;
+}
+
+void
+main ()
+{
+  vec2 g = gl_FragCoord.xy;
+
+  gl_FragColor = vec4(0);
+  gl_FragColor.w = getTrail(g).w;
+
+  for(int i=-1; i<=1; i++)
+    for(int j=-1; j<=1; j++)
+    {
+      vec2 p = vec2(i,j);
+      vec4 normData = getNorm(g+p);
+      float weight = getGaussWeight(normData.xy - p, 0.1) * normData.z;
+      gl_FragColor.xy += weight * normData.xy;
+      gl_FragColor.z += weight;
+    }
+
+  float densityFactor = 0.0;
+  if (gl_FragColor.z != 0.0)
+    densityFactor = 1.0 / gl_FragColor.z;
+  gl_FragColor.xy *= densityFactor;
+
+  if(iMouse.z > 0.0)
+    gl_FragColor.xy += injectAtPos(g, iMouse.xy);
+     
+  float time = iTime - loadValue(RESET_ACTION_CELL).w;
+  float a = 3.14159 * 0.5;
+  if (time > uTimeStart)
+    a += (time - uTimeStart) * 0.5;
+    
+  bool autoDrawMode = (loadValue(DRAW_MODE_ACTION_CELL).w > 0.5);
+  if (autoDrawMode)
+  {
+    vec2 midScreen = iResolution.xy / 2.;
+    vec2 p = vec2(cos(a) * 2.0, sin(a) * cos(a) * 2.0) * midScreen.y * 0.8 + midScreen;
+    gl_FragColor.xy += injectAtPos(g, p);
+  }
+
+  gl_FragColor.rgb = clamp(gl_FragColor.rgb, -2.0, 2.0);
+
+  bool resetViewAction = iKeyboard.x;
+  if (iFrame < 1 || resetViewAction)
+    gl_FragColor = vec4(0);
+    
+  if (resetViewAction && isInside(g, RESET_ACTION_CELL))
+    gl_FragColor.w = iTime;
+    
+  if (isInside(g, DRAW_MODE_ACTION_CELL))
+    gl_FragColor.w = iKeyboard.y ? 0.0 : 1.0;
+  else if (isInside(g, THEME_MODE_ACTION_CELL))
+    gl_FragColor.w = iKeyboard.z ? 0.0 : 1.0;
+  else if (isInside(g, CURRENT_THEME_CELL))
+  {
+    if (loadValue(THEME_MODE_ACTION_CELL).w > 0.5)
+      gl_FragColor.w = getThemeMixingRatio(iTime);
+    else if (iKeyboard.w)
+      gl_FragColor.w = mod(gl_FragColor.w + 1.0, float(ThemesCount));
+  }
+}
