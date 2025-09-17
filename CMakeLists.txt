@@ -26,7 +26,7 @@ include (CPU)
 include (OS)
 include (compiler_init)
 
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.5)
 
 project (engine
          LANGUAGES CXX C)
@@ -5808,8 +5808,8 @@ endif (WIN32)
 file (TO_CMAKE_PATH "$ENV{LIB_ROOT}/cmake-modules" CMAKE_MODUDULES_PATH)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_MODUDULES_PATH})
 #include(UseBackportedModules)
-cmake_policy (SET CMP0026 OLD)
-cmake_policy (SET CMP0053 OLD)
+#cmake_policy (SET CMP0026 OLD)
+#cmake_policy (SET CMP0053 OLD)
 include (CreateLaunchers)
 
 set (ARGS "-l -m1")
