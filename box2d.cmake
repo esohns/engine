@@ -9,7 +9,7 @@ if (UNIX)
  else ()
   find_library (BOX2D_LIBRARY liquidfun
                 PATHS $ENV{LIB_ROOT}/liquidfun/build/gcc/Box2D
-                PATH_SUFFIXES Debug
+                PATH_SUFFIXES ${CMAKE_BUILD_TYPE}
                 DOC "searching for liquidfun"
                 NO_DEFAULT_PATH)
   if (NOT BOX2D_LIBRARY)
@@ -20,7 +20,7 @@ if (UNIX)
    set (BOX2D_FOUND TRUE)
    set (BOX2D_INCLUDE_DIRS "$ENV{LIB_ROOT}/liquidfun/liquidfun/Box2D")
    set (BOX2D_LIBRARIES ${BOX2D_LIBRARY})
-#  set (BOX2D_LIB_DIR "$ENV{LIB_ROOT}/liquidfun/build/gcc/Box2D/Debug")
+#  set (BOX2D_LIB_DIR "$ENV{LIB_ROOT}/liquidfun/build/gcc/Box2D/${CMAKE_BUILD_TYPE}")
   endif (BOX2D_LIBRARY)
  endif (PKG_BOX2D_FOUND)
 elseif (WIN32)
@@ -35,12 +35,6 @@ elseif (WIN32)
   endif (BOX2D_FOUND)
  endif (VCPKG_USE)
  if (NOT BOX2D_FOUND)
-#  set (LIB_FILE_SUFFIX "")
-  set (PATH_SUFFIX "Release")
-  if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-#   set (LIB_FILE_SUFFIX "d")
-   set (PATH_SUFFIX "Debug")
-  endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
   if (EXISTS $ENV{BOX2D_ROOT})
    set (BOX2D_ROOT $ENV{BOX2D_ROOT})
   else ()
@@ -49,7 +43,7 @@ elseif (WIN32)
   file (TO_CMAKE_PATH "${BOX2D_ROOT}" BOX2D_ROOT)
   find_library (BOX2D_LIBRARY liquidfun.lib
                 PATHS ${BOX2D_ROOT}/build/msvc/Box2D
-                PATH_SUFFIXES ${PATH_SUFFIX}
+                PATH_SUFFIXES ${CMAKE_BUILD_TYPE}
                 DOC "searching for liquidfun.lib"
                 NO_CACHE
                 NO_DEFAULT_PATH)
