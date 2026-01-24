@@ -16,6 +16,7 @@ class PGE_102
 
  private:
   uint8_t* cells_;
+  uint8_t* next_;
 
   void brush ();
 };
