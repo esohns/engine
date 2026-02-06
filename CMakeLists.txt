@@ -137,6 +137,7 @@ include_directories (${ACE_INCLUDE_DIR})
 include_directories (${COMMON_ROOT_DIR})
 include_directories (${COMMON_ROOT_DIR}/src)
 include_directories (${COMMON_ROOT_DIR}/src/gl)
+include_directories (${COMMON_ROOT_DIR}/src/input)
 include_directories (${COMMON_ROOT_DIR}/src/log)
 include_directories (${COMMON_ROOT_DIR}/src/math)
 include_directories (${COMMON_ROOT_DIR}/src/timer)
@@ -152,8 +153,10 @@ set (engine_EXE_SRCS
 #     ${CMAKE_CURRENT_BINARY_DIR}/ImportToLibreOffice.dir/Debug/resource.res
      camera.cpp
      camera.h
-     engine_common.h
      defines.h
+     engine_common.h
+     engine_timer_handler.cpp
+     engine_timer_handler.h
      main.cpp
      pge.cpp
      pge.h
@@ -3085,6 +3088,7 @@ target_link_libraries (${EXECUTABLE} ${ACE_LIBRARY})
 
 target_link_libraries (${EXECUTABLE} Common)
 target_link_libraries (${EXECUTABLE} CommonError)
+target_link_libraries (${EXECUTABLE} CommonInput)
 target_link_libraries (${EXECUTABLE} CommonLog)
 target_link_libraries (${EXECUTABLE} CommonOpenGL)
 target_link_libraries (${EXECUTABLE} CommonTimer)

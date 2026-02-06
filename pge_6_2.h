@@ -27,8 +27,8 @@ class PGE_6_2
   void blur (int); // offset
 
 #define RGB_R(x) uint8_t(x >> 24)
-#define RGB_G(x) uint8_t((x & 0xFFFFFF) >> 16)
-#define RGB_B(x) uint8_t((x & 0xFFFF) >> 8)
+#define RGB_G(x) uint8_t((x & 0xFF0000) >> 16)
+#define RGB_B(x) uint8_t((x & 0xFF00) >> 8)
 #define RGB_A(x) uint8_t(x & 0xFF)
 #define BRIGHTNESS(x) ((RGB_R(x) + RGB_G (x) + RGB_B (x)) / 3);
 

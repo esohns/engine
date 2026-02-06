@@ -88,9 +88,10 @@
 #define ENGINE_PGE_5_DEFAULT_WIDTH              320
 
 // pge 6
-#define ENGINE_PGE_6_DEFAULT_HEIGHT             400
-#define ENGINE_PGE_6_DEFAULT_WIDTH              600
+#define ENGINE_PGE_6_DEFAULT_HEIGHT             600
+#define ENGINE_PGE_6_DEFAULT_WIDTH              800
 #define ENGINE_PGE_6_DEFAULT_NUMBER_OF_FIRES    75
+
 #define ENGINE_PGE_6_2_DEFAULT_HEIGHT           240
 #define ENGINE_PGE_6_2_DEFAULT_WIDTH            320
 #define ENGINE_PGE_6_2_DEFAULT_NUMBER_OF_FIRE_LINES 3 // #bottom lines
@@ -134,6 +135,8 @@
 #define ENGINE_PGE_15_DEFAULT_PARTICLES         700
 
 // glut 16
+#define ENGINE_GLUT_16_DEFAULT_HEIGHT           480
+#define ENGINE_GLUT_16_DEFAULT_WIDTH            640
 #define ENGINE_GLUT_16_DEFAULT_M                7.0F
 #define ENGINE_GLUT_16_DEFAULT_N1               0.2F
 #define ENGINE_GLUT_16_DEFAULT_N2               1.7F

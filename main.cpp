@@ -8,7 +8,6 @@
 #endif // GLEW_SUPPORT
 #include "GL/freeglut.h"
 
-#include "ace/config-lite.h"
 #include "ace/ACE.h"
 #include "ace/Get_Opt.h"
 #include "ace/High_Res_Timer.h"
@@ -27,6 +26,7 @@
 
 #include "common_log_tools.h"
 
+#include "common_timer_manager_common.h"
 #include "common_timer_tools.h"
 
 #include "common_ui_gtk_common.h"
@@ -40,6 +40,7 @@
 
 #include "defines.h"
 #include "engine_common.h"
+#include "engine_timer_handler.h"
 
 #define OLC_PGE_APPLICATION
 #include "pge.h"
@@ -141,6 +142,10 @@ do_print_usage (const std::string& programName_in)
             << ENGINE_MODE_DEFAULT
             << ACE_TEXT_ALWAYS_CHAR ("]")
             << std::endl;
+  std::cout << ACE_TEXT_ALWAYS_CHAR ("-r         : showcase mode [")
+            << false
+            << ACE_TEXT_ALWAYS_CHAR ("]")
+            << std::endl;
   std::cout << ACE_TEXT_ALWAYS_CHAR ("-t         : trace information [")
             << false
             << ACE_TEXT_ALWAYS_CHAR ("]")
@@ -157,6 +162,7 @@ do_process_arguments (int argc_in,
                       std::string& UIDefinitionFilePath_out,
                       bool& logToFile_out,
                       enum Engine_ModeType& mode_out,
+                      bool& showCaseMode_out,
                       bool& traceInformation_out,
                       bool& printVersionAndExit_out)
 {
@@ -170,12 +176,13 @@ do_process_arguments (int argc_in,
     ACE_TEXT_ALWAYS_CHAR (ENGINE_GLUT_16_UI_DEFINITION_FILE);
   logToFile_out = false;
   mode_out = ENGINE_MODE_DEFAULT;
+  showCaseMode_out = false;
   traceInformation_out = false;
   printVersionAndExit_out = false;
 
   ACE_Get_Opt argument_parser (argc_in,
                                argv_in,
-                               ACE_TEXT ("g::lm:tv"),
+                               ACE_TEXT ("g::lm:rtv"),
                                1,                         // skip command name
                                1,                         // report parsing errors
                                ACE_Get_Opt::PERMUTE_ARGS, // ordering
@@ -206,6 +213,11 @@ do_process_arguments (int argc_in,
         int i = 0;
         converter >> i;
         mode_out = static_cast<enum Engine_ModeType> (i);
+        break;
+      }
+      case 'r':
+      {
+        showCaseMode_out = true;
         break;
       }
       case 't':
@@ -256,7 +268,8 @@ bool
 do_work (int argc_in,
          ACE_TCHAR* argv_in[],
          const std::string& UIDefinitionFilePath_in,
-         enum Engine_ModeType mode_in)
+         enum Engine_ModeType mode_in,
+         bool showCaseMode_in)
 {
   bool result = false;
 
@@ -266,6 +279,30 @@ do_work (int argc_in,
 #else
   Common_Tools::initialize (true); // initialize RNG
 #endif // ACE_WIN32 || ACE_WIN64
+  Common_Timer_Tools::initialize ();
+
+  Engine_Timer_Handler timer_handler;
+  Common_Timer_Manager_t* timer_manager_p =
+    COMMON_TIMERMANAGER_SINGLETON::instance ();
+  ACE_ASSERT (timer_manager_p);
+  long timer_id = -1;
+
+  if (unlikely (showCaseMode_in))
+  {
+    ACE_Time_Value interval_time = ACE_Time_Value (60, 0);
+    timer_id = timer_manager_p->schedule_timer (&timer_handler,
+                                                NULL, // asynchronous completion token
+                                                interval_time, // expiration time (relative)
+                                                interval_time); // set periodic interval ?
+    ACE_ASSERT (timer_id != -1);
+  } // end IF
+
+next:
+  if (unlikely (showCaseMode_in))
+  {
+    mode_in =
+      static_cast<enum Engine_ModeType> (Common_Tools::getRandomNumber (static_cast<int> (ENGINE_MODE_DEFAULT), ENGINE_MODE_MAX - 1));
+  } // end IF
 
   switch (mode_in)
   {
@@ -643,14 +680,25 @@ do_work (int argc_in,
     }
     case ENGINE_MODE_6:
     {
-      PGE_6_2 example;
-      if (example.Construct (ENGINE_PGE_6_2_DEFAULT_WIDTH, ENGINE_PGE_6_2_DEFAULT_HEIGHT,
-                             2, 2,
+      PGE_6 example;
+      if (example.Construct (ENGINE_PGE_6_DEFAULT_WIDTH, ENGINE_PGE_6_DEFAULT_HEIGHT,
+                             1, 1,
                              false,  // fullscreen ?
                              false,  // vsync ?
                              false)) // cohesion ?
       {
         example.Start ();
+        result = true;
+      } // end IF
+
+      PGE_6_2 example_2;
+      if (example_2.Construct (ENGINE_PGE_6_2_DEFAULT_WIDTH, ENGINE_PGE_6_2_DEFAULT_HEIGHT,
+                               1, 1,
+                               false,  // fullscreen ?
+                               false,  // vsync ?
+                               false)) // cohesion ?
+      {
+        example_2.Start ();
         result = true;
       } // end IF
 
@@ -870,7 +918,7 @@ do_work (int argc_in,
       // initialize GLUT
       glutInit (&argc_in, argv_in);
       glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
-      glutInitWindowSize (640, 480);
+      glutInitWindowSize (ENGINE_GLUT_16_DEFAULT_WIDTH, ENGINE_GLUT_16_DEFAULT_HEIGHT);
 
       int window_i = glutCreateWindow ("engine GLUT 16");
       glutSetWindow (window_i);
@@ -1195,7 +1243,18 @@ do_work (int argc_in,
     }
   } // end SWITCH
 
+  if (unlikely (showCaseMode_in))
+    goto next;
+
 //clean:
+  if (unlikely (timer_id != -1))
+  {
+    result = timer_manager_p->cancel_timer (timer_id, NULL);
+    ACE_ASSERT (result == 0);
+    timer_id = -1;
+  } // end IF
+  Common_Timer_Tools::finalize ();
+
   return result;
 }
 
@@ -1236,6 +1295,7 @@ ACE_TMAIN (int argc_in,
   bool log_to_file = false;
   std::string log_file_name;
   enum Engine_ModeType mode_type_e = ENGINE_MODE_DEFAULT;
+  bool showcase_mode = false;
   bool trace_information = false;
   bool print_version_and_exit = false;
 
@@ -1245,6 +1305,7 @@ ACE_TMAIN (int argc_in,
                              ui_definition_file_path,
                              log_to_file,
                              mode_type_e,
+                             showcase_mode,
                              trace_information,
                              print_version_and_exit))
   {
@@ -1327,7 +1388,8 @@ ACE_TMAIN (int argc_in,
   result_3 = do_work (argc_in,
                       argv_in,
                       ui_definition_file_path,
-                      mode_type_e);
+                      mode_type_e,
+                      showcase_mode);
   timer.stop ();
   if (!result_3)
   {
