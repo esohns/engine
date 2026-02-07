@@ -281,6 +281,16 @@ do_work (int argc_in,
 #endif // ACE_WIN32 || ACE_WIN64
   Common_Timer_Tools::initialize ();
 
+  Common_UI_GTK_Configuration_t gtk_configuration;
+  gtk_configuration.argc = argc_in;
+  gtk_configuration.argv = argv_in;
+  Common_UI_GtkBuilderDefinition_t gtk_ui_definition;
+  Common_UI_GTK_Manager_t* gtk_manager_p =
+    COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
+  ACE_ASSERT (gtk_manager_p);
+  Common_UI_GTK_State_t& state_r =
+    const_cast<Common_UI_GTK_State_t&> (gtk_manager_p->getR ());
+
   Engine_Timer_Handler timer_handler;
   Common_Timer_Manager_t* timer_manager_p =
     COMMON_TIMERMANAGER_SINGLETON::instance ();
@@ -876,18 +886,9 @@ next:
       cb_data_s.b = 1.0F;
 
       // initialize GTK
-      Common_UI_GTK_Configuration_t gtk_configuration;
       struct Engine_UI_GTK_16_CBData ui_cb_data;
       ui_cb_data.GLUT_CBData = &cb_data_s;
-      Common_UI_GtkBuilderDefinition_t gtk_ui_definition;
-      Common_UI_GTK_Manager_t* gtk_manager_p =
-        COMMON_UI_GTK_MANAGER_SINGLETON::instance ();
-      ACE_ASSERT (gtk_manager_p);
-      Common_UI_GTK_State_t& state_r =
-        const_cast<Common_UI_GTK_State_t&> (gtk_manager_p->getR ());
 
-      gtk_configuration.argc = argc_in;
-      gtk_configuration.argv = argv_in;
       gtk_configuration.CBData = &ui_cb_data;
       gtk_configuration.eventHooks.finiHook = idle_finalize_UI_16_cb;
       gtk_configuration.eventHooks.initHook = idle_initialize_UI_16_cb;
@@ -912,6 +913,7 @@ next:
       {
         ACE_DEBUG ((LM_ERROR,
                     ACE_TEXT ("failed to start GTK event dispatch, aborting\n")));
+        delete [] cb_data_s.globe;
         return false;
       } // end IF
 
@@ -949,6 +951,8 @@ next:
 
       gtk_manager_p->stop (true,   // wait ?
                            false);
+
+      delete [] cb_data_s.globe;
 
       result = true;
 
