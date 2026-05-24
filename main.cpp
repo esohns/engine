@@ -43,6 +43,8 @@
 #include "engine_timer_handler.h"
 
 #define OLC_PGE_APPLICATION
+//#define OLC_PGEX_CUSTOMFONT
+//#define OLC_PGEX_FONT
 #include "pge.h"
 #include "pge_2.h"
 #include "glut_3.h"

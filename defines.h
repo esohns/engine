@@ -21,20 +21,20 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define MAKE_VERSION_STRING_VARIABLE(program,version,variable) std::string variable; do {                                \
-  variable = program; variable += ACE_TEXT_ALWAYS_CHAR (" ");                                                            \
-  variable += version; variable += ACE_TEXT_ALWAYS_CHAR (" compiled on ");                                               \
-  variable += ACE_TEXT_ALWAYS_CHAR (COMPILATION_DATE_TIME);                                                              \
-  variable += ACE_TEXT_ALWAYS_CHAR (" host platform "); variable += Common_Tools::compilerPlatformName ();               \
-  variable += ACE_TEXT_ALWAYS_CHAR (" with "); variable += Common_Tools::compilerName ();                                \
-  variable += ACE_TEXT_ALWAYS_CHAR (" "); variable += Common_Tools::compilerVersion ();                                  \
-  variable += ACE_TEXT_ALWAYS_CHAR (" against ACE "); variable += Common_Tools::compiledVersion_ACE ();                  \
-  variable += ACE_TEXT_ALWAYS_CHAR (" , Common "); variable += ACE_TEXT_ALWAYS_CHAR (Common_PACKAGE_VERSION_FULL);       \
+#define MAKE_VERSION_STRING_VARIABLE(program, version, variable) std::string variable; do {                        \
+  variable = program; variable += ACE_TEXT_ALWAYS_CHAR (" ");                                                      \
+  variable += version; variable += ACE_TEXT_ALWAYS_CHAR (" compiled on ");                                         \
+  variable += ACE_TEXT_ALWAYS_CHAR (COMPILATION_DATE_TIME);                                                        \
+  variable += ACE_TEXT_ALWAYS_CHAR (" host platform "); variable += Common_Tools::compilerPlatformName ();         \
+  variable += ACE_TEXT_ALWAYS_CHAR (" with "); variable += Common_Tools::compilerName ();                          \
+  variable += ACE_TEXT_ALWAYS_CHAR (" "); variable += Common_Tools::compilerVersion ();                            \
+  variable += ACE_TEXT_ALWAYS_CHAR (" against ACE "); variable += Common_Tools::compiledVersion_ACE ();            \
+  variable += ACE_TEXT_ALWAYS_CHAR (" , Common "); variable += ACE_TEXT_ALWAYS_CHAR (Common_PACKAGE_VERSION_FULL); \
 } while (0)
 
 // pge
-#define ENGINE_PGE_DEFAULT_HEIGHT               1080
-#define ENGINE_PGE_DEFAULT_WIDTH                1920
+#define ENGINE_PGE_DEFAULT_WIDTH                1280
+#define ENGINE_PGE_DEFAULT_HEIGHT               1024
 
 // pge 2
 //#define IX(i, j) i + j * resolution_

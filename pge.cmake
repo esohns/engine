@@ -25,12 +25,26 @@ else ()
  set (OLC_PGE_FOUND TRUE)
 endif (NOT PGE_INCLUDE_DIR)
 
+if (DEFINED ENV{LIB_ROOT})
+ set (PGE_FONT_DIR "$ENV{LIB_ROOT}/olcPGEX_Font")
+endif (DEFINED ENV{LIB_ROOT})
+find_path (PGE_FONT_INCLUDE_DIR
+           olcPGEX_Font.h
+           HINTS ${PGE_FONT_DIR})
+if (NOT PGE_FONT_INCLUDE_DIR)
+ message (WARNING "could not find olcPGEX_Font.h, continuing")
+else ()
+ message (STATUS "Found PGE font header @ \"${PGE_FONT_INCLUDE_DIR}\"")
+ set (OLC_PGE_FONT_FOUND TRUE)
+endif (NOT PGE_FONT_INCLUDE_DIR)
+
 if (OLC_CGE_FOUND)
  option (OLC_CGE_SUPPORT "enable OLC Console Game Engine support" ON)
  if (OLC_CGE_SUPPORT)
   add_definitions (-DOLC_CGE_SUPPORT)
  endif (OLC_CGE_SUPPORT)
 endif (OLC_CGE_FOUND)
+
 if (OLC_PGE_FOUND)
  option (OLC_PGE_SUPPORT "enable OLC Pixel Game Engine support" ON)
  if (OLC_PGE_SUPPORT)
