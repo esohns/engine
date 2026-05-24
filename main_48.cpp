@@ -456,13 +456,13 @@ do_work (int argc_in,
       cb_data_s.shader5.use ();
       cb_data_s.S5resolutionLoc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iResolution"));
-      ACE_ASSERT (cb_data_s.S5resolutionLoc != -1);
+      // ACE_ASSERT (cb_data_s.S5resolutionLoc != -1);
       cb_data_s.S5timeLoc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iTime"));
-      ACE_ASSERT (cb_data_s.S5timeLoc != -1);
+      // ACE_ASSERT (cb_data_s.S5timeLoc != -1);
       cb_data_s.S5mouseLoc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iMouse"));
-      ACE_ASSERT (cb_data_s.S5mouseLoc != -1);
+      // ACE_ASSERT (cb_data_s.S5mouseLoc != -1);
       cb_data_s.S5channel0Loc =
         glGetUniformLocation (cb_data_s.shader5.id_, ACE_TEXT_ALWAYS_CHAR ("iChannel0"));
       ACE_ASSERT (cb_data_s.S5channel0Loc != -1);

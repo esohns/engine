@@ -72,7 +72,6 @@ uniform vec4 iMouse;
 uniform sampler2D iChannel0;
 
 #define RENDER3D 1
-
 #if RENDER3D
 
 #define AA 0
@@ -235,14 +234,27 @@ main ()
 #else //AA
     vec2 p = (-iResolution + 2.0 * gl_FragCoord.xy) / iResolution.y;
 #endif //AA
- 
-    float theta	= radians(360.)*(iMouse.x/iResolution.x-0.5) - radians(90.);
-    float phi	= -radians(30.);
+
+    float theta, phi;
+    if (iMouse.z != 0.0)
+    {
+      theta	= radians(360.)*(iMouse.x/iResolution.x-0.5) - radians(90.);
+      phi = radians(180.)*(iMouse.y/iResolution.y-0.5) - radians(90.);
+    }
+    else
+    {
+      theta = radians(360.)*(iTime*50.0/iResolution.x-0.5) - radians(90.);
+      phi = -radians(30.);
+      // *TODO*: automatic camera rotation requires more work...
+//      phi = radians(180.)*(iTime*100.0/iResolution.y-0.5) + radians(90.);
+//      phi = -(abs (sin (iTime*0.1)) * radians(60.)) + radians(60.);
+//      phi = -(abs (sin (iTime*0.1)) * radians(60.)) - radians(30.);
+    }
     vec3 ro = 2. * vec3( sin(phi)*cos(theta),cos(phi),sin(phi)*sin(theta));
     vec3 ta = vec3( 0 );
     mat3 ca = setCamera( ro, ta );
 
-    vec3 rd =  ca*normalize(vec3(p,1.5));        
+    vec3 rd =  ca*normalize(vec3(p,1.5));
 
     vec3 col = Render(ro ,rd, 6.);
 
@@ -258,6 +270,6 @@ main ()
 void
 main ()
 {
-  gl_FragColor = vec4(vec3(texelFetch(iChannel0, ivec2(gl_FragCoord.xy), 0).z), 1);
+  gl_FragColor = vec4 (vec3 (texelFetch (iChannel0, ivec2 (gl_FragCoord.xy), 0).z), 1);
 }
 #endif	// RENDER3D
