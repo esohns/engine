@@ -35,6 +35,7 @@
 // pge
 #define ENGINE_PGE_DEFAULT_WIDTH                1280
 #define ENGINE_PGE_DEFAULT_HEIGHT               1024
+#define ENGINE_PGE_DEFAULT_ALPHA_DECAY          1
 
 // pge 2
 //#define IX(i, j) i + j * resolution_

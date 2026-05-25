@@ -20,12 +20,15 @@ class PGE
   class symbol
   {
    public:
-    symbol (int32_t x_in, int32_t y_in, bool first_in)
+    symbol (int32_t x_in, int32_t y_in, bool isFirst_in)
+     : x (x_in)
+     , y (y_in)
+     , value (0)
+     , switchInterval (Common_Tools::getRandomNumber (50, 500))
+     , first (isFirst_in)
     {
-      x = x_in; y = y_in;
-      switchInterval = Common_Tools::getRandomNumber (15, 20);
-      first = first_in;
       setRandom (switchInterval);
+      ACE_ASSERT (value);
     }
 
     void setRandom (int32_t frameCount_in)
@@ -49,9 +52,9 @@ class PGE
 
     int32_t x, y;
     //uint16_t value;
-    char value;
+    char    value;
     int32_t switchInterval;
-    bool first;
+    bool    first;
   };
 
   class stream
@@ -70,7 +73,7 @@ class PGE
     }
 
     void make (int32_t x_in,
-               int32_t symbolSize_in)
+               int32_t symbolSizeY_in)
     {
       for (std::vector<PGE::symbol*>::iterator iterator = symbols.begin ();
            iterator != symbols.end ();
@@ -79,27 +82,27 @@ class PGE
       symbols.clear ();
 
       int32_t y = Common_Tools::getRandomNumber (-250, 0);
-      bool first_b = Common_Tools::getRandomNumber (0, 4) == 0;
+      bool highlight_first_b = Common_Tools::getRandomNumber (0, 4) == 0;
       int32_t numberOfSymbols = Common_Tools::getRandomNumber (5, 30);
       for (int32_t i = 0; i < numberOfSymbols; ++i)
       {
-        PGE::symbol* symbol_p = new PGE::symbol (x_in, y, first_b);
+        PGE::symbol* symbol_p = new PGE::symbol (x_in, y, highlight_first_b);
         ACE_ASSERT (symbol_p);
-        y -= symbolSize_in;
+        highlight_first_b = false;
+        y -= symbolSizeY_in;
         symbols.push_back (symbol_p);
-        first_b = false;
       } // end FOR
     }
 
     void reset (int32_t x_in,
-                int32_t symbolSize_in)
+                int32_t symbolSizeY_in)
     {
       speed = Common_Tools::getRandomNumber (1, 3);
-      make (x_in, symbolSize_in);
+      make (x_in, symbolSizeY_in);
     }
 
     std::vector<PGE::symbol*> symbols;
-    int32_t speed;
+    int32_t                   speed;
   };
 
   PGE ();
@@ -119,7 +122,7 @@ class PGE
 
  private:
    void renderSymbol (symbol& symbol_in,
-                     int32_t frameCount_in)
+                      int32_t frameCount_in)
   {
     //std::wstring wide_string (1, symbol_in.value);
     //std::string c_string =
@@ -152,18 +155,14 @@ class PGE
 
   void renderStream (stream& stream_in,
                      int32_t height_in,
+                     int32_t symbolSizeY_in,
                      int32_t frameCount_in)
   {
-    static int32_t symbol_size_i =// SYMBOL_SIZE;
-      //olc::PixelGameEngine::GetTextSize (ACE_TEXT_ALWAYS_CHAR ("T")).y;
-      font->GetTextSize (ACE_TEXT_ALWAYS_CHAR ("a")).y * textScale;
-
     bool reset_b = false;
     int32_t x = (*stream_in.symbols.begin ())->x;
-next:
     for (std::vector<PGE::symbol*>::iterator iterator = stream_in.symbols.begin ();
          iterator != stream_in.symbols.end ();
-         ++iterator)
+         )
     {
       renderSymbol (**iterator, frameCount_in);
       (*iterator)->update (height_in,
@@ -173,13 +172,14 @@ next:
         delete *iterator;
         if (std::next (iterator) == stream_in.symbols.end ())
           reset_b = true;
-        stream_in.symbols.erase (iterator);
-        goto next;
+        iterator = stream_in.symbols.erase (iterator);
+        continue;
       } // end IF
+      ++iterator;
     } // end FOR
     if (reset_b)
       stream_in.reset (x,
-                       symbol_size_i);
+                       symbolSizeY_in);
   }
 
   olc::Font*                font;
