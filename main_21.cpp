@@ -1138,6 +1138,7 @@ do_work (int argc_in,
 
       cb_data_s.mouseX = ENGINE_GLUT_460_DEFAULT_WIDTH / 2;
       cb_data_s.mouseY = ENGINE_GLUT_460_DEFAULT_HEIGHT / 2;
+      cb_data_s.mouseLMBDown = false;
 
       // initialize GLUT
       glutInit (&argc_in, argv_in);
@@ -1208,7 +1209,14 @@ do_work (int argc_in,
       std::vector<float> positionColorData;
       std::string line_string;
       // *NOTE*: see https://raw.githubusercontent.com/cansik/p5js-pointcloud/master/data/forest-blk360_centered.ply
-      std::ifstream input_file_stream ("forest-blk360_centered.ply");
+      std::string model_path_string = ACE_OS::getenv (ACE_TEXT_ALWAYS_CHAR ("LIB_ROOT"));
+      model_path_string += ACE_DIRECTORY_SEPARATOR_STR_A;
+      model_path_string += COMMON_LOCATION_PARENT_SUBDIRECTORY;
+      model_path_string += ACE_DIRECTORY_SEPARATOR_STR_A;
+      model_path_string += ACE_TEXT_ALWAYS_CHAR ("models");
+      model_path_string += ACE_DIRECTORY_SEPARATOR_STR_A;
+      model_path_string += ACE_TEXT_ALWAYS_CHAR ("forest-blk360_centered.ply");
+      std::ifstream input_file_stream (model_path_string);
       bool in_header_b = true;
       while (input_file_stream.good ())
       {

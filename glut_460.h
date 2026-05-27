@@ -47,6 +47,7 @@ struct Engine_OpenGL_GLUT_460_CBData
   // mouse
   int                               mouseX;
   int                               mouseY;
+  bool                              mouseLMBDown;
 };
 
 #endif // GLUT_460_H

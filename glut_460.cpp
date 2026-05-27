@@ -111,10 +111,7 @@ engine_glut_460_mouse_button (int button, int state, int x, int y)
   {
     case GLUT_LEFT_BUTTON:
     {
-      if (state == GLUT_DOWN)
-      {
-      } // end IF
-
+      cb_data_p->mouseLMBDown = (state == GLUT_DOWN);
       break;
     }
     default:
@@ -156,7 +153,31 @@ engine_glut_460_draw (void)
 
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  cb_data_p->camera.mouseLook (cb_data_p->mouseX, cb_data_p->mouseY);
+  if (cb_data_p->mouseLMBDown)
+  {
+    //cb_data_p->camera.mouseLook (cb_data_p->mouseX, cb_data_p->mouseY);
+#if defined (GLM_SUPPORT)
+    glm::vec2 current_mouse_position (cb_data_p->mouseX, cb_data_p->mouseY);
+
+    static glm::vec2 old_mouse_position;
+    static bool first_b = true;
+    if (first_b)
+    { first_b = false;
+      old_mouse_position = current_mouse_position;
+    } // end IF
+    glm::vec2 mouse_delta = old_mouse_position - current_mouse_position;
+    mouse_delta *= COMMON_GL_CAMERA_DEFAULT_MOUSE_LOOK_FACTOR;
+    cb_data_p->camera.position_ = glm::rotate (cb_data_p->camera.position_,
+                                               glm::radians (mouse_delta.x),
+                                               cb_data_p->camera.up_); // y
+    cb_data_p->camera.position_ = glm::rotate (cb_data_p->camera.position_,
+                                               glm::radians (mouse_delta.y),
+                                               {1.0f, 0.0f, 0.0f}); // x
+    old_mouse_position = current_mouse_position;
+#endif // GLM_SUPPORT
+  } // end IF
+  else
+    cb_data_p->camera.position_ = {0, 0, 1500.0f};
 
   static int frame_count_i = 1;
 #if defined (GLM_SUPPORT)
