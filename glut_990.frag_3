@@ -7,7 +7,7 @@ const float ballRadius		= 0.06;
 const float fogHeigth		= ballRadius * 2.;
 const int	nbSlice			= 32;
 const float fogSlice		= fogHeigth / float(nbSlice);
-const int	nbSphere 		= 3;
+const int	nbSphere 		= 5;
 const float ShadowDensity 	= 25.;
 const float FogDensity 		= 20.;
 
