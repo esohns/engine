@@ -40,23 +40,23 @@ struct Engine_GL_Camera
 
   inline void forward (float speed_in)
   {
-    position += looking_at * (speed_in * COMMON_GL_CAMERA_DEFAULT_ZOOM_FACTOR);
+    position += looking_at * (speed_in * COMMON_GL_CAMERA_DEFAULT_ZOOM_FACTOR_F);
   }
   inline void backward (float speed_in)
   {
-    position -= looking_at * (speed_in * COMMON_GL_CAMERA_DEFAULT_ZOOM_FACTOR);
+    position -= looking_at * (speed_in * COMMON_GL_CAMERA_DEFAULT_ZOOM_FACTOR_F);
   }
   void left (float speed_in)
   {
     glm::vec3 right = glm::cross (looking_at, up);
     position +=
-      right * (speed_in * COMMON_GL_CAMERA_DEFAULT_TRANSLATION_FACTOR);
+      right * (speed_in * COMMON_GL_CAMERA_DEFAULT_TRANSLATION_FACTOR_F);
   }
   void right (float speed_in)
   {
     glm::vec3 right = glm::cross (looking_at, up);
     position -=
-      right * (speed_in * COMMON_GL_CAMERA_DEFAULT_TRANSLATION_FACTOR);
+      right * (speed_in * COMMON_GL_CAMERA_DEFAULT_TRANSLATION_FACTOR_F);
   }
 
   glm::vec2 old_mouse_position;
@@ -72,7 +72,7 @@ struct Engine_GL_Camera
     } // end IF
 
     glm::vec2 mouse_delta = old_mouse_position - current_mouse_position;
-    mouse_delta *= COMMON_GL_CAMERA_DEFAULT_MOUSE_LOOK_FACTOR;
+    mouse_delta *= COMMON_GL_CAMERA_DEFAULT_MOUSE_LOOK_FACTOR_F;
     looking_at = glm::rotate (looking_at, glm::radians (mouse_delta.x), up);
 
     old_mouse_position = current_mouse_position;

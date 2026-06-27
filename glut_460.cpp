@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "glut_460.h"
 
@@ -166,7 +166,7 @@ engine_glut_460_draw (void)
       old_mouse_position = current_mouse_position;
     } // end IF
     glm::vec2 mouse_delta = old_mouse_position - current_mouse_position;
-    mouse_delta *= COMMON_GL_CAMERA_DEFAULT_MOUSE_LOOK_FACTOR;
+    mouse_delta *= COMMON_GL_CAMERA_DEFAULT_MOUSE_LOOK_FACTOR_F;
     cb_data_p->camera.position_ = glm::rotate (cb_data_p->camera.position_,
                                                glm::radians (mouse_delta.x),
                                                cb_data_p->camera.up_); // y
