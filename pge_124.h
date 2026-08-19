@@ -128,12 +128,12 @@ class PGE_124
 
     bool almost_equal (triangle& other)
     {
-      return (Common_Math_Tools::almost_equal (p1->x, other.p1->x, 2) &&
-              Common_Math_Tools::almost_equal (p1->y, other.p1->y, 2) &&
-              Common_Math_Tools::almost_equal (p2->x, other.p2->x, 2) &&
-              Common_Math_Tools::almost_equal (p2->y, other.p2->y, 2) &&
-              Common_Math_Tools::almost_equal (p3->x, other.p3->x, 2) &&
-              Common_Math_Tools::almost_equal (p3->y, other.p3->y, 2));
+      return (Common_Math_Tools::almost_equal_digits (p1->x, other.p1->x, 2) &&
+              Common_Math_Tools::almost_equal_digits (p1->y, other.p1->y, 2) &&
+              Common_Math_Tools::almost_equal_digits (p2->x, other.p2->x, 2) &&
+              Common_Math_Tools::almost_equal_digits (p2->y, other.p2->y, 2) &&
+              Common_Math_Tools::almost_equal_digits (p3->x, other.p3->x, 2) &&
+              Common_Math_Tools::almost_equal_digits (p3->y, other.p3->y, 2));
     }
 
     //bool containsVertex (olc::vf2d& v)
@@ -281,14 +281,14 @@ class PGE_124
       }
       bool almost_equal (edge& other)
       {
-        return ((Common_Math_Tools::almost_equal (p1->x, other.p1->x, 2) &&
-                 Common_Math_Tools::almost_equal (p2->x, other.p2->x, 2) &&
-                 Common_Math_Tools::almost_equal (p1->y, other.p1->y, 2) &&
-                 Common_Math_Tools::almost_equal (p2->y, other.p2->y, 2)) ||
-                (Common_Math_Tools::almost_equal (p1->x, other.p2->x, 2) &&
-                 Common_Math_Tools::almost_equal (p2->x, other.p1->x, 2) &&
-                 Common_Math_Tools::almost_equal (p1->y, other.p2->y, 2) &&
-                 Common_Math_Tools::almost_equal (p2->y, other.p1->y, 2)));
+        return ((Common_Math_Tools::almost_equal_digits (p1->x, other.p1->x, 2) &&
+                 Common_Math_Tools::almost_equal_digits (p2->x, other.p2->x, 2) &&
+                 Common_Math_Tools::almost_equal_digits (p1->y, other.p1->y, 2) &&
+                 Common_Math_Tools::almost_equal_digits (p2->y, other.p2->y, 2)) ||
+                (Common_Math_Tools::almost_equal_digits (p1->x, other.p2->x, 2) &&
+                 Common_Math_Tools::almost_equal_digits (p2->x, other.p1->x, 2) &&
+                 Common_Math_Tools::almost_equal_digits (p1->y, other.p2->y, 2) &&
+                 Common_Math_Tools::almost_equal_digits (p2->y, other.p1->y, 2)));
       }
     };
 
