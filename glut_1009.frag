@@ -1,0 +1,46 @@
+#version 130
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+
+vec4
+fire (vec3 p)
+{
+  float s, i, d, n, T = iTime;
+  vec4 o = vec4(0);
+  p += cos(p.z+T+p.yzx*.5)*.6;
+  s = 5.-length(p.xy);
+  p.xy *= mat2(cos(T+vec4(0,33,11,0)));
+  for (n = 1.6; n < 32.; n += n )
+    s -= abs(dot(sin( p.z + 8.*T + p*n ), vec3(.5))) / n;
+  s = (.01 + abs(s)*.15);
+  o += 2. / s;
+  return (vec4(7,2,1,1) * o * o );
+}
+
+void
+main ()
+{
+  vec4 o;
+  vec2 u = gl_FragCoord.xy;
+  float d=.5*texelFetch(iChannel0, ivec2(u)%1024, 0).a,
+        i = 0.0,s = 0.0,w,l, T = iTime;
+  vec3  q = vec3 (0.0),p = vec3 (iResolution.xy, 0.0);
+  u = ( u - p.xy/2. ) / p.y;
+  for (o = vec4 (0.0); i++ < 1e2; o += d / s + 4. * fire (q))
+  {
+    q = p = vec3( u*d, d + T * 4.),
+    p.xy *= mat2(cos(-.6*T+p.z*.2+vec4(0,33,11,0)));
+    p *= .5;
+    p.xy += 1.5;
+    w = .75;
+    for (int j = 0; j++ < 8; w *= l)
+      p *= l = 3./dot( p = sin(p) , p);
+    d += s = .002+abs(length(p)/w) ;
+  }
+  o = mix(o, o.zyxw, smoothstep(.2, 1., dot(u, u)));
+  o = tanh(max(o/2e5/length(u)/d, .0));
+
+  gl_FragColor = o;
+}
