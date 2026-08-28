@@ -4,8 +4,8 @@ uniform vec2 iResolution;
 uniform float iTime;
 uniform sampler2D iChannel0;
 
-#define FAR 80. // Maximum ray distance. Analogous to the far plane.
-//#define HIGHER_CAMERA // Gives a slightly more overhead view of the gorge.
+#define FAR 80.
+//#define HIGHER_CAMERA
 
 //mat2 r2(float th) { vec2 a = sin(vec2(1.5707963, 0) + th); return mat2(a, -a.y, a.x); }
 mat2 r2 (float a) { float c = cos(a), s = sin(a); return mat2 (c, s, -s, c); }
@@ -303,7 +303,7 @@ getObjectColor (vec3 p, vec3 n)
 {
   //p.xy -= path(p.z);
 
-  vec3 tx = tex3D(iChannel0, p/8., n );
+  vec3 tx = tex3D(iChannel0, p/8., n);
   vec3 gr = mix(vec3(1), vec3(.8, 1.3, .2), smoothstep(.5, 1., n.y)); 
 
   return mix(tx, tx*gr, smoothstep(.7, 1., (n.y)));
