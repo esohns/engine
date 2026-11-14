@@ -2909,6 +2909,8 @@ set (engine_49_EXE_SRCS
      glut_1012.h
      glut_1013.cpp
      glut_1013.h
+     glut_1014.cpp
+     glut_1014.h
      stdafx.h)
 
 set (EXECUTABLE_49 engine_49)
@@ -5824,6 +5826,8 @@ install (FILES
          "glut_1012.frag"
          "glut_1013.vert"
          "glut_1013.frag"
+         "glut_1014.vert"
+         "glut_1014.frag"
          "pge_2.gtk2"
          "pge_2.gtk3"
          "pge_27.gtk2"
